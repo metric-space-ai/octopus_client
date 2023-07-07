@@ -33,6 +33,8 @@ module.exports = {
     'react/no-children-prop': 'off',
     'dot-notation': 'error',
     'no-unused-vars': 'off',
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', {varsIgnorePattern: '_$', argsIgnorePattern: '_$'}],
     '@typescript-eslint/no-var-requires': 'off',
     'sort-imports': [
