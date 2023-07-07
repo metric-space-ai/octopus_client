@@ -88,14 +88,13 @@ export function SideBar(props: {className?: string}) {
   // drag side bar
   const {shouldNarrow} = useDragSideBar();
   const router = useRouter();
-  const config = useAppConfig();
 
   useHotKey();
 
   return (
     <div
       className={classNames(
-        'flex flex-col w-[300px] p-5 bg-background-dark border-box rounded-[20px]',
+        'w-[320px] hidden sm:flex flex-col p-5 bg-background-dark border-box rounded-[20px]',
         props.className,
       )}
     >
