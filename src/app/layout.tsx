@@ -1,5 +1,7 @@
 import './globals.css';
 
+import {Poppins} from 'next/font/google';
+
 import {getClientConfig} from '../config/client';
 
 export const metadata = {
@@ -20,9 +22,15 @@ export const metadata = {
   },
 };
 
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
+
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang='en'>
+    <html lang='en' className={poppins.className}>
       <head>
         <meta name='config' content={JSON.stringify(getClientConfig())} />
       </head>
