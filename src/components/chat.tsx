@@ -377,34 +377,19 @@ export function Chat() {
   const clearContextIndex = (session.clearContextIndex ?? -1) >= 0 ? session.clearContextIndex! + context.length : -1;
 
   // preview messages
-  const messages = context
-    .concat(session.messages as RenderMessage[])
-    .concat(
-      isLoading
-        ? [
-            {
-              ...createMessage({
-                role: 'assistant',
-                content: '……',
-              }),
-              preview: true,
-            },
-          ]
-        : [],
-    )
-    .concat(
-      userInput.length > 0 && config.sendPreviewBubble
-        ? [
-            {
-              ...createMessage({
-                role: 'user',
-                content: userInput,
-              }),
-              preview: true,
-            },
-          ]
-        : [],
-    );
+  const messages = context.concat(session.messages as RenderMessage[]).concat(
+    isLoading
+      ? [
+          {
+            ...createMessage({
+              role: 'assistant',
+              content: '……',
+            }),
+            preview: true,
+          },
+        ]
+      : [],
+  );
 
   const renameSession = () => {
     const newTopic = prompt(Locale.Chat.Rename, session.topic);
@@ -453,7 +438,6 @@ export function Chat() {
         {messages.map((message, i) => {
           const isUser = message.role === 'user';
           const showActions = !isUser && i > 0 && !(message.preview || message.content.length === 0);
-          const showTyping = message.preview || message.streaming;
 
           const shouldShowClearContextDivider = i === clearContextIndex - 1;
 
@@ -464,7 +448,6 @@ export function Chat() {
                   <div className='mt-[20px]'>
                     {message.role === 'user' ? <Avatar avatar={config.avatar} /> : <MaskAvatar mask={session.mask} />}
                   </div>
-                  {showTyping && <div className='mt-[5px] text-12'>{Locale.Chat.Typing}</div>}
                   <div className='relative max-w-[50vw] border-box mt-[10px] rounded-[10px] bg-border-default p-[10px] border break-words'>
                     {showActions && (
                       <div className='group-hover:opacity-50 absolute min-w-[120px] right-0 top-[-26px] left-[30px] text-12 flex flex-row-reverse opacity-0 gap-1'>
