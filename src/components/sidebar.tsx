@@ -131,7 +131,7 @@ export function SideBar(props: {className?: string}) {
           <IconButton iconBefore={<PlusIcon className='w-5 h-5 text-white' />} />
           <Button
             className='w-full'
-            title={shouldNarrow ? '' : Locale.Home.NewChat}
+            title={shouldNarrow ? '' : Locale.Home.NewTicket}
             onClick={() => {
               chatStore.newSession();
               router.push(Path.Chat);

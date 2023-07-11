@@ -90,7 +90,7 @@ const en = {
       'Resetting will clear the current conversation history and historical memory. Are you sure you want to reset?',
   },
   Home: {
-    NewChat: 'New Chat',
+    NewTicket: 'New Ticket',
     DeleteChat: 'Confirm to delete the selected conversation?',
     DeleteToast: 'Chat Deleted',
     Revert: 'Revert',

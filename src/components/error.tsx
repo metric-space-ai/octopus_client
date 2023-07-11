@@ -2,7 +2,7 @@ import React from 'react';
 
 import {ArrowPathIcon} from '@heroicons/react/24/solid';
 
-import {IconButton} from './buttons';
+import {Button} from './buttons';
 import GithubIcon from '../icons/github.svg';
 import Locale from '../locales';
 import {downloadAs} from '../utils';
@@ -46,13 +46,12 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
 
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <a href='' className='report'>
-              <IconButton text='Report This Error' icon={<GithubIcon />} bordered />
+              <Button title='Report This Error' iconBefore={<GithubIcon />} />
             </a>
-            <IconButton
-              icon={<ArrowPathIcon className='w-4 h-4' />}
-              text='Clear All Data'
+            <Button
+              iconBefore={<ArrowPathIcon className='w-4 h-4' />}
+              title='Clear All Data'
               onClick={() => confirm(Locale.Settings.Actions.ConfirmClearAll) && this.clearAndSaveData()}
-              bordered
             />
           </div>
         </div>

@@ -418,7 +418,7 @@ export function Chat() {
             />
           </div>
           <div>
-            <IconButton iconBefore={<PencilIcon className='text-white' />} onClick={renameSession} />
+            <IconButton iconBefore={<PencilIcon className='w-4 h-4 text-white' />} onClick={renameSession} />
           </div>
         </div>
       </div>

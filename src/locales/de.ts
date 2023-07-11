@@ -52,7 +52,7 @@ const de: PartialLocaleType = {
       'Das Zurücksetzen löscht den aktuellen Gesprächsverlauf und das Langzeit-Gedächtnis. Möchten Sie wirklich zurücksetzen?',
   },
   Home: {
-    NewChat: 'Neuer Chat',
+    NewTicket: 'Neuer Ticket',
     DeleteChat: 'Bestätigen Sie, um das ausgewählte Gespräch zu löschen?',
     DeleteToast: 'Chat gelöscht',
     Revert: 'Zurücksetzen',
