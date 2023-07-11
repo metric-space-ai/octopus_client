@@ -16,7 +16,7 @@ import dynamic from 'next/dynamic';
 import {useRouter} from 'next/navigation';
 import {useDebouncedCallback} from 'use-debounce';
 
-import {IconButton} from './buttons';
+import {Button, IconButton} from './buttons';
 import {Avatar} from './emoji';
 import {MaskAvatar} from './mask';
 import {ChatControllerPool} from '../client/controller';
@@ -411,15 +411,14 @@ export function Chat() {
         </div>
         <div className='flex gap-2'>
           <div className='sm:hidden'>
-            <IconButton
-              icon={<ArrowUturnLeftIcon className='text-white' />}
-              bordered
+            <Button
+              iconBefore={<ArrowUturnLeftIcon className='text-white' />}
               title={Locale.Chat.Actions.ChatList}
               onClick={() => router.push(Path.Home)}
             />
           </div>
           <div>
-            <IconButton icon={<PencilIcon className='text-white' />} bordered onClick={renameSession} />
+            <IconButton iconBefore={<PencilIcon className='text-white' />} onClick={renameSession} />
           </div>
         </div>
       </div>
@@ -530,11 +529,11 @@ export function Chat() {
               fontSize: config.fontSize,
             }}
           />
-          <IconButton
-            icon={<PaperAirplaneIcon className='text-white' />}
-            text={Locale.Chat.Send}
+          <Button
             className='absolute right-[30px] bottom-[32px]'
-            type='primary'
+            size='default'
+            iconBefore={<PaperAirplaneIcon className='w-6 h-6 text-white' />}
+            title='Send'
             onClick={() => doSubmit(userInput)}
           />
         </div>

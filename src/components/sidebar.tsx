@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import dynamic from 'next/dynamic';
 import {useRouter} from 'next/navigation';
 
-import {IconButton} from './buttons';
+import {Button, IconButton} from './buttons';
 import {SearchBar} from './search';
 import {MAX_SIDEBAR_WIDTH, MIN_SIDEBAR_WIDTH, NARROW_SIDEBAR_WIDTH, Path} from '../constant';
 import Locale from '../locales';
@@ -118,7 +118,7 @@ export function SideBar(props: {className?: string}) {
         <div className='inline-flex'>
           <div className='hidden'>
             <IconButton
-              icon={<XMarkIcon className='text-white' />}
+              iconBefore={<XMarkIcon className='text-white' />}
               onClick={() => {
                 if (confirm(Locale.Home.DeleteChat)) {
                   chatStore.deleteSession(chatStore.currentSessionIndex);
@@ -127,16 +127,17 @@ export function SideBar(props: {className?: string}) {
             />
           </div>
         </div>
-        <IconButton
-          className='w-full'
-          icon={<PlusIcon className='text-white' />}
-          text={shouldNarrow ? undefined : Locale.Home.NewChat}
-          onClick={() => {
-            chatStore.newSession();
-            router.push(Path.Chat);
-          }}
-          shadow
-        />
+        <div className='flex items-center'>
+          <IconButton iconBefore={<PlusIcon className='w-5 h-5 text-white' />} />
+          <Button
+            className='w-full'
+            title={shouldNarrow ? '' : Locale.Home.NewChat}
+            onClick={() => {
+              chatStore.newSession();
+              router.push(Path.Chat);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

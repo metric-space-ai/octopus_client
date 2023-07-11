@@ -1,40 +1,46 @@
-import * as React from 'react';
+import classnames from 'classnames';
 
-import classNames from 'classnames';
-
-export function IconButton(props: {
-  onClick?: () => void;
-  icon?: JSX.Element;
-  type?: 'primary' | 'danger';
-  text?: string;
-  bordered?: boolean;
-  shadow?: boolean;
+type ButtonProps = {
+  variant?: 'primary' | 'disabled';
+  loading?: boolean;
+  disabled?: boolean;
+  iconBefore?: React.ReactNode;
+  iconAfter?: React.ReactNode;
   className?: string;
   title?: string;
-  disabled?: boolean;
-}) {
-  const styles = {
-    primary: 'bg-black',
-    danger: 'bg-content-primary',
-  };
-  return (
-    <button
-      className={classNames(
-        'flex items-center justify-center cursor-pointer border-none outline-none px-3 py-2 rounded-[8px] gap-2',
-        `${props.bordered && 'border'} ${props.shadow && ''} ${props.className ?? ''} clickable ${
-          styles[props.type ?? 'primary']
-        }`,
-      )}
-      onClick={props.onClick}
-      title={props.title}
-      disabled={props.disabled}
-      role='button'
-    >
-      {props.icon && (
-        <div className={classNames('w-4 h-4', `${props.type === 'primary' && 'no-dark'}`)}>{props.icon}</div>
-      )}
+  href?: string;
+  children?: React.ReactNode;
+  onClick?: () => void;
+};
 
-      {props.text && <div className='text-white'>{props.text}</div>}
+const ButtonStyle = {
+  primary: 'bg-content-accent',
+  disabled: 'bg-content-disabled',
+};
+
+export const IconButton = ({
+  className,
+  href,
+  variant = 'primary',
+  iconBefore,
+  children,
+  onClick,
+  ...props
+}: ButtonProps) => {
+  const style = ButtonStyle[variant];
+  const content = (
+    <button
+      className={classnames('flex items-center p-2 justify-center gap-2 rounded-full', style, className)}
+      {...props}
+      onClick={onClick}
+    >
+      {iconBefore && iconBefore}
+      {children && children}
     </button>
   );
-}
+
+  if (href) {
+    return <a href={href}>{content}</a>;
+  }
+  return content;
+};
