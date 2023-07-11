@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import {useRouter} from 'next/navigation';
 
 import {IconButton} from './buttons';
+import {SearchBar} from './search';
 import {MAX_SIDEBAR_WIDTH, MIN_SIDEBAR_WIDTH, NARROW_SIDEBAR_WIDTH, Path} from '../constant';
 import Locale from '../locales';
 import {useAppConfig, useChatStore} from '../store';
@@ -94,13 +95,14 @@ export function SideBar(props: {className?: string}) {
   return (
     <div
       className={classNames(
-        'w-[320px] hidden sm:flex flex-col p-5 bg-background-dark border-box rounded-[20px]',
+        'w-[320px] hidden sm:flex flex-col px-4 py-6 bg-content-grey-900 border-box rounded-[20px]',
         props.className,
       )}
     >
       <div className='flex items-center'>
-        <h2 className='text-18 font-bold text-content-white'>Ticket</h2>
+        <h2 className='text-18 font-semibold text-content-white'>Ticket</h2>
       </div>
+      <SearchBar className='mt-6' />
       <div
         className='mt-5 flex-1'
         onClick={(e) => {

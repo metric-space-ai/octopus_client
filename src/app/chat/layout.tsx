@@ -25,7 +25,7 @@ export default function ChatLayout({children}: {children: React.ReactNode}) {
   }
 
   return (
-    <div className='py-4 px-3 h-screen flex bg-content-primary gap-4'>
+    <div className='py-4 px-3 h-screen flex bg-content-black gap-4'>
       <SideBar />
       <div className='w-full'>{children}</div>
     </div>
