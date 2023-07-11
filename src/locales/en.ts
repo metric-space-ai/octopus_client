@@ -46,8 +46,9 @@ const en = {
       if (submitKey === String(SubmitKey.Enter)) {
         inputHints += ', Shift + Enter to wrap';
       }
-      return inputHints + ', / to search prompts';
+      return inputHints;
     },
+    InputPlaceholder: 'Ask anything',
     Send: 'Send',
     Config: {
       Reset: 'Reset to Default',

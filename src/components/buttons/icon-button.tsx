@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 
 type ButtonProps = {
-  variant?: 'primary' | 'disabled';
+  variant?: 'default' | 'primary' | 'secondary' | 'disabled';
   loading?: boolean;
   disabled?: boolean;
   iconBefore?: React.ReactNode;
@@ -14,14 +14,16 @@ type ButtonProps = {
 };
 
 const ButtonStyle = {
+  default: 'bg-transparent',
   primary: 'bg-content-accent',
+  secondary: 'bg-content-grey-900',
   disabled: 'bg-content-disabled',
 };
 
 export const IconButton = ({
   className,
   href,
-  variant = 'primary',
+  variant = 'default',
   iconBefore,
   children,
   onClick,

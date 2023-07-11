@@ -2,12 +2,12 @@
 
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 
+import {PaperAirplaneIcon} from '@heroicons/react/24/outline';
 import {
   ArrowUturnLeftIcon,
   ChevronDoubleDownIcon,
   Cog8ToothIcon,
   EllipsisHorizontalIcon,
-  PaperAirplaneIcon,
   PauseCircleIcon,
   PencilIcon,
 } from '@heroicons/react/24/solid';
@@ -217,11 +217,11 @@ export function Chat() {
   );
 
   // auto grow input
-  const [inputRows, setInputRows] = useState(2);
+  const [inputRows, setInputRows] = useState(1);
   const measure = useDebouncedCallback(
     () => {
       const rows = inputRef.current ? autoGrowTextArea(inputRef.current) : 1;
-      const inputRows = Math.min(20, Math.max(2 + Number(!isMobileScreen), rows));
+      const inputRows = Math.min(20, Math.max(1, rows));
       setInputRows(inputRows);
     },
     100,
@@ -230,7 +230,6 @@ export function Chat() {
       trailing: true,
     },
   );
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(measure, [userInput]);
 
@@ -418,7 +417,11 @@ export function Chat() {
             />
           </div>
           <div>
-            <IconButton iconBefore={<PencilIcon className='w-4 h-4 text-white' />} onClick={renameSession} />
+            <IconButton
+              variant='secondary'
+              iconBefore={<PencilIcon className='w-4 h-4 text-white' />}
+              onClick={renameSession}
+            />
           </div>
         </div>
       </div>
@@ -513,11 +516,11 @@ export function Chat() {
             onSearch('');
           }}
         />
-        <div className='flex-1 flex'>
+        <div className='relative flex-1 flex'>
           <textarea
             ref={inputRef}
-            className='w-full h-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none'
-            placeholder={Locale.Chat.Input(submitKey)}
+            className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none'
+            placeholder={Locale.Chat.InputPlaceholder}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}
@@ -529,11 +532,9 @@ export function Chat() {
               fontSize: config.fontSize,
             }}
           />
-          <Button
-            className='absolute right-[30px] bottom-[32px]'
-            size='default'
-            iconBefore={<PaperAirplaneIcon className='w-6 h-6 text-white' />}
-            title='Send'
+          <IconButton
+            className='absolute right-2 top-[2px]'
+            iconBefore={<PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />}
             onClick={() => doSubmit(userInput)}
           />
         </div>

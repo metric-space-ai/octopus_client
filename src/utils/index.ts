@@ -1,7 +1,5 @@
 import {useEffect, useState} from 'react';
 
-import Locale from '../locales';
-
 export function trimTopic(topic: string) {
   return topic.replace(/[，。！？”“"、,.!?]*$/, '');
 }
@@ -152,7 +150,7 @@ export function autoGrowTextArea(dom: HTMLTextAreaElement) {
   const singleLineHeight = parseFloat(window.getComputedStyle(singleLineDom).height);
 
   const rows = Math.round(height / singleLineHeight) + (endWithEmptyLine ? 1 : 0);
-
+  console.log('#######', rows);
   return rows;
 }
 
