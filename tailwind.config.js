@@ -56,10 +56,11 @@ module.exports = {
         24: '24px',
         38: '38px',
         40: '40px',
+        44: '44px',
         48: '48px',
       },
       fontFamily: {
-        'neue-haas': ['Neue Haas Grotesk Display Pro', defaultTheme.fontFamily.sans],
+        poppins: ['var(--font-poppins)', defaultTheme.fontFamily.sans],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

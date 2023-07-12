@@ -2,8 +2,9 @@ import React from 'react';
 
 import {ArrowPathIcon} from '@heroicons/react/24/solid';
 
+import GithubIcon from '@/assets/icons/github.svg';
+
 import {Button} from './buttons';
-import GithubIcon from '../icons/github.svg';
 import Locale from '../locales';
 import {downloadAs} from '../utils';
 

@@ -1,6 +1,6 @@
 import {EllipsisHorizontalIcon} from '@heroicons/react/24/solid';
 
-import BotIcon from '../icons/bot.svg';
+import BotIcon from '@/assets/icons/bot.svg';
 
 export function Loading(props: {noLogo?: boolean}) {
   return (

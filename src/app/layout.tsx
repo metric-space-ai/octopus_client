@@ -26,15 +26,16 @@ const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
 });
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang='en' className={poppins.className}>
+    <html lang='en' className={`${poppins.variable}`}>
       <head>
         <meta name='config' content={JSON.stringify(getClientConfig())} />
       </head>
-      <body>{children}</body>
+      <body className='font-poppins'>{children}</body>
     </html>
   );
 }
