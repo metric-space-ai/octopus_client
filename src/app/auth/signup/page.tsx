@@ -17,7 +17,7 @@ const SignupPage = () => {
             <Input placeholder='Last name' />
           </div>
           <Input placeholder='Job title' />
-          <Input placeholder='Email' />
+          <Input type='email' placeholder='Email' />
           <Input type='password' placeholder='Password' />
           <Input type='password' placeholder='Repeat password' />
           <Button className='mt-1 w-full h-11 rounded-[40px]' title='Sign Up' />

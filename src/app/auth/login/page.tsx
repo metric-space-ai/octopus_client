@@ -12,7 +12,7 @@ const LoginPage = () => {
       <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
         <h1 className='text-44 font-semibold text-content-black'>Log In</h1>
         <form className='w-full mt-10'>
-          <Input placeholder='Email' />
+          <Input type='email' placeholder='Email' />
           <Input className='mt-5' type='password' placeholder='Password' />
           <div className='mt-3 flex justify-end'>
             <Link href='/forgot-password'>
