@@ -119,17 +119,20 @@ export function SideBar(props: {className?: string}) {
           <div className='hidden'>
             <IconButton
               variant='default'
-              iconBefore={<XMarkIcon className='text-white' />}
               onClick={() => {
                 if (confirm(Locale.Home.DeleteChat)) {
                   chatStore.deleteSession(chatStore.currentSessionIndex);
                 }
               }}
-            />
+            >
+              <XMarkIcon className='text-white' />
+            </IconButton>
           </div>
         </div>
         <div className='flex items-center'>
-          <IconButton variant='primary' iconBefore={<PlusIcon className='w-5 h-5 text-white' />} />
+          <IconButton variant='primary'>
+            <PlusIcon className='w-5 h-5 text-white' />
+          </IconButton>
           <Button
             className='w-full'
             title={shouldNarrow ? '' : Locale.Home.NewTicket}

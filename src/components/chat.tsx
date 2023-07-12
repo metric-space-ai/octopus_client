@@ -417,11 +417,9 @@ export function Chat() {
             />
           </div>
           <div>
-            <IconButton
-              variant='secondary'
-              iconBefore={<PencilIcon className='w-4 h-4 text-white' />}
-              onClick={renameSession}
-            />
+            <IconButton variant='secondary' onClick={renameSession}>
+              <PencilIcon className='w-4 h-4 text-white' />
+            </IconButton>
           </div>
         </div>
       </div>
@@ -532,11 +530,9 @@ export function Chat() {
               fontSize: config.fontSize,
             }}
           />
-          <IconButton
-            className='absolute right-2 top-[2px]'
-            iconBefore={<PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />}
-            onClick={() => doSubmit(userInput)}
-          />
+          <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
+            <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
+          </IconButton>
         </div>
       </div>
 

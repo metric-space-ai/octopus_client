@@ -4,10 +4,7 @@ type ButtonProps = {
   variant?: 'default' | 'primary' | 'secondary' | 'disabled';
   loading?: boolean;
   disabled?: boolean;
-  iconBefore?: React.ReactNode;
-  iconAfter?: React.ReactNode;
   className?: string;
-  title?: string;
   href?: string;
   children?: React.ReactNode;
   onClick?: () => void;
@@ -20,15 +17,7 @@ const ButtonStyle = {
   disabled: 'bg-content-disabled',
 };
 
-export const IconButton = ({
-  className,
-  href,
-  variant = 'default',
-  iconBefore,
-  children,
-  onClick,
-  ...props
-}: ButtonProps) => {
+export const IconButton = ({className, href, variant = 'default', children, onClick, ...props}: ButtonProps) => {
   const style = ButtonStyle[variant];
   const content = (
     <button
@@ -36,7 +25,6 @@ export const IconButton = ({
       {...props}
       onClick={onClick}
     >
-      {iconBefore && iconBefore}
       {children && children}
     </button>
   );
