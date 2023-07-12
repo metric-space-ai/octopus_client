@@ -35,7 +35,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <head>
         <meta name='config' content={JSON.stringify(getClientConfig())} />
       </head>
-      <body className='font-poppins'>{children}</body>
+      <body className='font-poppins bg-content-black'>{children}</body>
     </html>
   );
 }
