@@ -19,6 +19,11 @@ const ButtonStyle = {
   disabled: 'bg-content-disabled',
 };
 
+const ButtonHoverStyle = {
+  primary: 'hover:bg-content-accent-hover',
+  disabled: 'hover:bg-content-disabled',
+};
+
 const TextStyle = {
   primary: 'text-content-white',
   disabled: 'text-content-primary',
@@ -44,13 +49,19 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const style = ButtonStyle[variant];
+  const hoverStyle = ButtonHoverStyle[variant];
   const textStyle = TextStyle[variant];
   const sizeStyle = Sizes[size];
 
   return (
     <button
       disabled={disabled}
-      className={classNames('h-9 flex items-center justify-center px-4 gap-[6px] rounded-[20px]', style, className)}
+      className={classNames(
+        'h-9 flex items-center justify-center px-4 gap-[6px] rounded-[20px]',
+        style,
+        hoverStyle,
+        className,
+      )}
       {...props}
       onClick={onClick}
     >
