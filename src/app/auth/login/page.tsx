@@ -10,8 +10,9 @@ const LoginPage = () => {
     <div className='min-h-full grid sm:grid-cols-2 gap-1'>
       <div className='flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
         <Image className='absolute left-10 top-10' src={Logo44} alt='logo' />
+        <h1 className='text-32 font-semibold text-content-black text-center'>Welcome back to Octopus AI</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
-          <h1 className='text-44 font-semibold text-content-black'>Log In</h1>
+          <p className='mt-2 text-16 font-medium text-content-grey-600'>Please enter your details</p>
           <form className='w-full mt-10'>
             <Input type='email' placeholder='Email' />
             <Input className='mt-5' type='password' placeholder='Password' />
@@ -36,12 +37,12 @@ const LoginPage = () => {
           </span>
         </div>
       </div>
-      <div className='box-border	px-20 flex flex-col items-center justify-center bg-auth-background bg-no-repeat bg-cover rounded-[20px]'>
+      <div className='relative px-20 flex flex-col items-center justify-center bg-auth-background bg-no-repeat bg-cover rounded-[20px]'>
         <span className='text-32 font-semibold text-content-white text-center'>
           “Unlock Efficiency and <span className='text-content-accent-100'>Be More Productive”</span>
         </span>
-        <div className='absolute bottom-10 flex gap-4'>
-          <div className='text-12 font-semibold text-content-white border border-content-white rounded-[32px] px-5 py-2'>
+        <div className='absolute bottom-10 flex flex-col sm:flex-row gap-4'>
+          <div className='text-12 font-semibold text-content-white text-center border border-content-white rounded-[32px] px-5 py-2'>
             Increased Efficiency
           </div>
           <div className='text-12 font-semibold text-content-white border border-content-white rounded-[32px] px-5 py-2'>
