@@ -1,7 +1,7 @@
 import de from './de';
 import type {LocaleType} from './en';
 import en from './en';
-import {merge} from '../utils/merge';
+import {merge} from '../helpers/merge';
 export type {LocaleType, PartialLocaleType} from './en';
 
 const ALL_LANGS = {

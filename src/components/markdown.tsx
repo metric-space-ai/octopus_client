@@ -11,7 +11,7 @@ import RemarkGfm from 'remark-gfm';
 import RemarkMath from 'remark-math';
 import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
 
-import {copyToClipboard} from '../utils';
+import {copyToClipboard} from '../helpers';
 
 export function Mermaid(props: {code: string}) {
   const ref = useRef<HTMLDivElement>(null);

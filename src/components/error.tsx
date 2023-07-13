@@ -6,7 +6,7 @@ import GithubIcon from '@/assets/icons/github.svg';
 
 import {Button} from './buttons';
 import Locale from '../locales';
-import {downloadAs} from '../utils';
+import {downloadAs} from '../helpers';
 
 interface IErrorBoundaryState {
   hasError: boolean;

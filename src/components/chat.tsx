@@ -33,8 +33,8 @@ import {
   useChatStore,
 } from '../store';
 import {Prompt, usePromptStore} from '../store/prompt';
-import {autoGrowTextArea, copyToClipboard, selectOrCopy, useMobileScreen} from '../utils';
-import {prettyObject} from '../utils/format';
+import {autoGrowTextArea, copyToClipboard, selectOrCopy, useMobileScreen} from '../helpers';
+import {prettyObject} from '../helpers/format';
 
 const Markdown = dynamic(async () => (await import('./markdown')).Markdown, {
   loading: () => <EllipsisHorizontalIcon className='text-content-primary w-4 h-4' />,

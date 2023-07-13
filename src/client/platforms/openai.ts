@@ -2,7 +2,7 @@ import {EventStreamContentType, fetchEventSource} from '@fortaine/fetch-event-so
 
 import {OpenaiPath, REQUEST_TIMEOUT_MS} from '@/constant';
 import {useAccessStore, useAppConfig, useChatStore} from '@/store';
-import {prettyObject} from '@/utils/format';
+import {prettyObject} from '@/helpers/format';
 
 import Locale from '../../locales';
 import {ChatOptions, LLMApi, LLMUsage, getHeaders} from '../api';

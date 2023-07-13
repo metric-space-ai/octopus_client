@@ -7,9 +7,9 @@ import {RequestMessage, api} from '../client/api';
 import {ChatControllerPool} from '../client/controller';
 import {DEFAULT_INPUT_TEMPLATE, StoreKey} from '../constant';
 import Locale, {getLang} from '../locales';
-import {trimTopic} from '../utils';
-import {prettyObject} from '../utils/format';
-import {estimateTokenLength} from '../utils/token';
+import {trimTopic} from '../helpers';
+import {prettyObject} from '../helpers/format';
+import {estimateTokenLength} from '../helpers/token';
 
 export type ChatMessage = RequestMessage & {
   date: string;

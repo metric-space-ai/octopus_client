@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
 
 import {OpenaiPath} from '@/constant';
-import {prettyObject} from '@/utils/format';
+import {prettyObject} from '@/helpers/format';
 
 import {auth} from '../../auth';
 import {requestOpenai} from '../../common';

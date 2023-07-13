@@ -10,7 +10,7 @@ import {SearchBar} from './search';
 import {MAX_SIDEBAR_WIDTH, MIN_SIDEBAR_WIDTH, NARROW_SIDEBAR_WIDTH, Path} from '../constant';
 import Locale from '../locales';
 import {useAppConfig, useChatStore} from '../store';
-import {useMobileScreen} from '../utils';
+import {useMobileScreen} from '../helpers';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
