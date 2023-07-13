@@ -32,7 +32,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-full grid sm:grid-cols-2 gap-1'>
+    <div className='min-h-full grid sm:grid-cols-2 gap-3'>
       <div className='flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
         <Image className='absolute left-10 top-10' src={Logo44} alt='logo' />
         <h1 className='text-32 font-semibold text-content-black text-center'>Welcome back to Octopus AI</h1>

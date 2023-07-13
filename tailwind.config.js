@@ -65,7 +65,7 @@ module.exports = {
         poppins: ['var(--font-poppins)', defaultTheme.fontFamily.sans],
       },
       backgroundImage: {
-        'auth-background': "url('/images/auth-background.png')",
+        'auth-background': "url('/images/auth-background.jpg')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
