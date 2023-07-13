@@ -13,7 +13,8 @@ import {authValidator} from '@/helpers/validators';
 
 interface IFormInputs {
   email: string;
-  username: string;
+  firstName: string;
+  lastName: string;
   password: string;
 }
 
@@ -26,7 +27,7 @@ const SignupPage = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: IFormInputs) => {
-    const {email, password, username} = data;
+    const {email, password, firstName, lastName} = data;
     // setLoading(true);
     // const variables = {email, password, username};
     // await createUser({variables});
@@ -42,7 +43,6 @@ const SignupPage = () => {
             <Input placeholder='First name' />
             <Input placeholder='Last name' />
           </div>
-          <Input placeholder='Job title' />
           <Input
             type='email'
             placeholder='Email'
