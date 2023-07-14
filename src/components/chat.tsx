@@ -21,6 +21,8 @@ import {Avatar} from './emoji';
 import {MaskAvatar} from './mask';
 import {ChatControllerPool} from '../client/controller';
 import {LAST_INPUT_KEY, Path, REQUEST_TIMEOUT_MS} from '../constant';
+import {autoGrowTextArea, copyToClipboard, selectOrCopy, useMobileScreen} from '../helpers';
+import {prettyObject} from '../helpers/format';
 import Locale from '../locales';
 import {
   BOT_HELLO,
@@ -33,8 +35,6 @@ import {
   useChatStore,
 } from '../store';
 import {Prompt, usePromptStore} from '../store/prompt';
-import {autoGrowTextArea, copyToClipboard, selectOrCopy, useMobileScreen} from '../helpers';
-import {prettyObject} from '../helpers/format';
 
 const Markdown = dynamic(async () => (await import('./markdown')).Markdown, {
   loading: () => <EllipsisHorizontalIcon className='text-content-primary w-4 h-4' />,
