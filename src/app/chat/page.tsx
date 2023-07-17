@@ -9,5 +9,9 @@ const Chat = dynamic(async () => (await import('../../components/chat')).Chat, {
 });
 
 export default function ChatPage() {
-  return <Chat />;
+  return (
+    <div className='h-full flex flex-col'>
+      <Chat />
+    </div>
+  );
 }
