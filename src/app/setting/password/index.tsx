@@ -32,8 +32,20 @@ const PasswordPage = () => {
   return (
     <div className='w-full pt-[84px] flex flex-col items-center'>
       <form className='w-[360px] flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
-        <Input label='Current Password' placeholder='Current Password' />
-        <Input label='New Password' placeholder='New Password' />
+        <Input
+          type='password'
+          label='Current Password'
+          placeholder='Current Password'
+          errors={errors.currentPassword && errors.currentPassword.message}
+          rules={register('currentPassword', authValidator.password)}
+        />
+        <Input
+          type='password'
+          label='New Password'
+          placeholder='New Password'
+          errors={errors.newPassword && errors.newPassword.message}
+          rules={register('newPassword', authValidator.password)}
+        />
         <Input
           type='password'
           label='Confirm Password'
@@ -43,7 +55,7 @@ const PasswordPage = () => {
         />
         <div className='flex justify-between gap-4'>
           <Button className='flex-1' title='Save' />
-          <Button className='flex-1' title='Cancel' />
+          <Button variant='outline' className='flex-1' title='Cancel' />
         </div>
       </form>
     </div>

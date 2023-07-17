@@ -45,7 +45,7 @@ const MyDetailPage = () => {
         />
         <div className='flex justify-between gap-4'>
           <Button className='flex-1' title='Save' />
-          <Button className='flex-1' title='Cancel' />
+          <Button variant='outline' className='flex-1' title='Cancel' />
         </div>
       </form>
     </div>
