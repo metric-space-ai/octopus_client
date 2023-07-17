@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import {Spinner} from '../spinner';
 
 type ButtonProps = {
-  variant?: 'primary' | 'disabled';
+  variant?: 'primary' | 'secondary' | 'transparent' | 'disabled';
   size?: 'default' | 'large' | 'medium' | 'small';
   loading?: boolean;
   disabled?: boolean;
@@ -16,16 +16,22 @@ type ButtonProps = {
 
 const ButtonStyle = {
   primary: 'bg-content-accent',
+  secondary: 'bg-content-black',
+  transparent: 'bg-transparent',
   disabled: 'bg-content-disabled',
 };
 
 const ButtonHoverStyle = {
   primary: 'hover:bg-content-accent-hover',
+  secondary: 'hover:bg-content-grey-600',
+  transparent: 'hover:bg-transparent',
   disabled: 'hover:bg-content-disabled',
 };
 
 const TextStyle = {
   primary: 'text-content-white',
+  secondary: 'text-content-white',
+  transparent: 'text-content-black',
   disabled: 'text-content-primary',
 };
 
