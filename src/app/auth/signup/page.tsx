@@ -1,7 +1,5 @@
 'use client';
 
-import {useState} from 'react';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
@@ -9,28 +7,30 @@ import {useForm} from 'react-hook-form';
 import Logo44 from '@/assets/icons/logo-44.png';
 import {Button, GoogleButton} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
 interface IFormInputs {
   email: string;
-  firstName: string;
-  lastName: string;
+  username: string;
   password: string;
+  repeat_password: string;
 }
 
 const SignupPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: {errors},
   } = useForm<IFormInputs>();
-  const [loading, setLoading] = useState(false);
+  const {loading, onRegister} = useAuthContext();
 
   const onSubmit = async (data: IFormInputs) => {
-    const {email, password, firstName, lastName} = data;
+    const {email, username, password, repeat_password} = data;
     // setLoading(true);
-    // const variables = {email, password, username};
-    // await createUser({variables});
+    const payload = {email, name: username, password, repeat_password, job_title: 'worker'};
+    onRegister(payload);
   };
 
   return (
@@ -39,10 +39,11 @@ const SignupPage = () => {
       <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
         <h1 className='text-44 font-semibold text-content-black'>Sign Up</h1>
         <form className='w-full mt-10 flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
-          <div className='flex gap-4'>
-            <Input placeholder='First name' />
-            <Input placeholder='Last name' />
-          </div>
+          <Input
+            placeholder='Username'
+            errors={errors.username && errors.username.message}
+            rules={register('username', authValidator.username)}
+          />
           <Input
             type='email'
             placeholder='Email'
@@ -55,8 +56,20 @@ const SignupPage = () => {
             errors={errors.password && 'Password length must be 5, including letter, number and special character.'}
             rules={register('password', authValidator.password)}
           />
-          <Input type='password' placeholder='Repeat password' />
-          <Button className='mt-1 w-full !h-11 rounded-[40px]' title='Sign Up' />
+          <Input
+            type='password'
+            placeholder='Repeat password'
+            errors={errors.repeat_password && 'Password do not match'}
+            rules={register('repeat_password', {
+              required: true,
+              validate: (val: string) => {
+                if (watch('password') !== val) {
+                  return 'Your password does not match.';
+                }
+              },
+            })}
+          />
+          <Button className='mt-1 w-full !h-11 rounded-[40px]' loading={loading} title='Sign Up' />
         </form>
         <div className='mt-6 w-full flex items-center gap-2'>
           <div className='flex-1 h-[1px] bg-content-black opacity-10' />
