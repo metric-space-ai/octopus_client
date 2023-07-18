@@ -2,6 +2,8 @@ import './globals.css';
 
 import {Poppins} from 'next/font/google';
 
+import AuthProvider from '@/contexts/authContext';
+
 import {getClientConfig} from '../config/client';
 
 export const metadata = {
@@ -35,7 +37,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <head>
         <meta name='config' content={JSON.stringify(getClientConfig())} />
       </head>
-      <body className='font-poppins bg-content-black'>{children}</body>
+      <body className='font-poppins bg-content-black'>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

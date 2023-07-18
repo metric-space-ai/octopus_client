@@ -1,7 +1,5 @@
 'use client';
 
-import {useState} from 'react';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
@@ -9,6 +7,7 @@ import {useForm} from 'react-hook-form';
 import Logo44 from '@/assets/icons/logo-44.png';
 import {Button, GoogleButton} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
 interface IFormInputs {
@@ -22,13 +21,11 @@ const LoginPage = () => {
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
-  const [loading, setLoading] = useState(false);
+  const {loading, onLogin} = useAuthContext();
 
   const onSubmit = async (data: IFormInputs) => {
     const {email, password} = data;
-    setLoading(true);
-    const variables = {email, password};
-    // await login({variables});
+    onLogin(email, password);
   };
 
   return (
@@ -57,7 +54,7 @@ const LoginPage = () => {
                 <p className='text-12 text-content-grey-600'>Forgot password?</p>
               </Link>
             </div>
-            <Button className='mt-6 w-full !h-11 rounded-[40px]' title='Log In' />
+            <Button className='mt-6 w-full !h-11 rounded-[40px]' loading={loading} title='Log In' />
           </form>
           <div className='mt-6 w-full flex items-center gap-2'>
             <div className='flex-1 h-[1px] bg-content-black opacity-10' />
