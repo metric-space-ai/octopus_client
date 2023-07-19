@@ -42,9 +42,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       setUser(null);
       setAuthLoading(false);
       router.push('/auth/login');
-      return;
-    } else {
-      router.push('/chat');
     }
   }, [accessToken]); // eslint-disable-line react-hooks/exhaustive-deps
 

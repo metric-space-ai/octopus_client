@@ -3,6 +3,7 @@ import './globals.css';
 import {Poppins} from 'next/font/google';
 import {Toaster} from 'react-hot-toast';
 
+import {RedirectPath} from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
 
 import {getClientConfig} from '../config/client';
@@ -39,7 +40,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <meta name='config' content={JSON.stringify(getClientConfig())} />
       </head>
       <body className='font-poppins bg-content-black'>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <RedirectPath>{children}</RedirectPath>
+        </AuthProvider>
         <Toaster position='top-right' />
       </body>
     </html>

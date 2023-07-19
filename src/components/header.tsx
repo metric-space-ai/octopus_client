@@ -4,9 +4,12 @@ import {Menu, Transition} from '@headlessui/react';
 import {ArrowLeftOnRectangleIcon, Cog8ToothIcon, UserCircleIcon} from '@heroicons/react/24/outline';
 
 import {Tab, Tabs} from '@/components/tabs';
+import {useAuthContext} from '@/contexts/authContext';
 import {useWorkspaceStore} from '@/store';
 
 const MenuItem = () => {
+  const {onLogout} = useAuthContext();
+
   return (
     <Menu as='div' className='z-10 relative inline-block text-left'>
       <div>
@@ -25,7 +28,7 @@ const MenuItem = () => {
       >
         <Menu.Items className='absolute right-0 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='px-2 py-2 '>
-            <Menu.Item>
+            <Menu.Item as='a' href='chat/setting'>
               {({active}) => (
                 <button
                   className={`${
@@ -43,6 +46,7 @@ const MenuItem = () => {
                   className={`${
                     active ? 'bg-content-black text-white' : 'text-white'
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  onClick={onLogout}
                 >
                   <ArrowLeftOnRectangleIcon className='mr-2 h-5 w-5' aria-hidden='true' />
                   Logout
