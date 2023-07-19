@@ -20,7 +20,7 @@ export const useApiClient = () => {
     apiHub.interceptors.request.use(
       (config) => {
         if (accessToken && config.headers) {
-          config.headers.authorization = `Bearer ${accessToken}`;
+          config.headers['X-Auth-Token'] = `${accessToken}`;
         }
         return config;
       },
