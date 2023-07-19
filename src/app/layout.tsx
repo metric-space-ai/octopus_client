@@ -1,6 +1,7 @@
 import './globals.css';
 
 import {Poppins} from 'next/font/google';
+import {Toaster} from 'react-hot-toast';
 
 import AuthProvider from '@/contexts/authContext';
 
@@ -39,6 +40,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       </head>
       <body className='font-poppins bg-content-black'>
         <AuthProvider>{children}</AuthProvider>
+        <Toaster position='top-right' />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import React, {PropsWithChildren, useEffect, useState} from 'react';
 
 import {useRouter} from 'next/navigation';
+import {toast} from 'react-hot-toast';
 
 import {useApiClient, useLocalStorage} from '@/hooks';
 import {IRegisterPayload} from '@/types/auth';
@@ -42,6 +43,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       setAuthLoading(false);
       router.push('/auth/login');
       return;
+    } else {
+      router.push('/chat');
     }
   }, [accessToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -51,11 +54,13 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       .then((res) => {
         const token = res.data.id;
         setAccessToken(token);
+        toast.success('Login successful.');
         setLoading(false);
-        router.push('/');
+        router.push('/chat');
       })
       .catch((error) => {
         console.log(error);
+        toast.error(error.message);
         setLoading(false);
       });
   };
@@ -67,10 +72,11 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         const token = res.data.id;
         setAccessToken(token);
         setLoading(false);
-        router.push('/');
+        router.push('/chat');
       })
       .catch((error) => {
         console.log(error);
+        toast.error(error.message);
         setLoading(false);
       });
   };
