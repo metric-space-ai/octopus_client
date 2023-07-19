@@ -1,11 +1,12 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
+import {getHeaders} from '@/client/api';
+import {getClientConfig} from '@/config/client';
+import {DEFAULT_API_HOST, StoreKey} from '@/constant';
+
 import {BOT_HELLO} from './chat';
 import {ALL_MODELS} from './config';
-import {getHeaders} from '../client/api';
-import {getClientConfig} from '../config/client';
-import {DEFAULT_API_HOST, StoreKey} from '../constant';
 
 export interface AccessControlStore {
   accessCode: string;

@@ -2,7 +2,7 @@ import EmojiPicker, {Emoji, EmojiStyle, Theme as EmojiTheme} from 'emoji-picker-
 
 import BlackBotIcon from '@/assets/icons/black-bot.svg';
 import BotIcon from '@/assets/icons/bot.svg';
-import {ModelType} from '@/store';
+import {ModelType} from '@/store/old';
 
 export function getEmojiUrl(unified: string, style: EmojiStyle) {
   return `https://cdn.staticfile.org/emoji-datasource-apple/14.0.0/img/${style}/64/${unified}.png`;

@@ -2,8 +2,8 @@ import Fuse from 'fuse.js';
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
-import {StoreKey} from '../constant';
-import {getLang} from '../locales';
+import {StoreKey} from '@/constant';
+import {getLang} from '@/locales';
 
 export interface Prompt {
   id?: number;
@@ -145,7 +145,7 @@ export const usePromptStore = create<PromptStore>()(
           .then((res) => res.json())
           .then((res) => {
             let fetchPrompts = [res.en, res.cn];
-            if (getLang() === 'cn') {
+            if (getLang() === 'en') {
               fetchPrompts = fetchPrompts.reverse();
             }
             const builtinPrompts = fetchPrompts.map((promptList: PromptList) => {

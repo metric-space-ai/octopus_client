@@ -1,5 +1,6 @@
+import {SubmitKey} from '@/store/old/config';
+
 import type {PartialLocaleType} from './index';
-import {SubmitKey} from '../store/config';
 
 const de: PartialLocaleType = {
   WIP: 'In Bearbeitung...',

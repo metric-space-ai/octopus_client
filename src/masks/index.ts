@@ -1,6 +1,7 @@
+import {Mask} from '@/store/old/mask';
+
 import {EN_MASKS} from './en';
 import {type BuiltinMask} from './typing';
-import {Mask} from '../store/mask';
 export {type BuiltinMask} from './typing';
 
 export const BUILTIN_MASK_ID = 100000;

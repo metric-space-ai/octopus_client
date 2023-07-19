@@ -1,15 +1,15 @@
 import {useEffect, useRef} from 'react';
 
-import {DragDropContext, OnDragEndResponder} from '@hello-pangea/dnd';
 import {XCircleIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import {useRouter} from 'next/navigation';
 
+import {useChatStore} from '@/store/old';
+import {Mask} from '@/store/old/mask';
+
 import {MaskAvatar} from './mask';
 import {Path} from '../constant';
 import Locale from '../locales';
-import {useChatStore} from '../store';
-import {Mask} from '../store/mask';
 
 export function ChatItem(props: {
   onClick?: () => void;

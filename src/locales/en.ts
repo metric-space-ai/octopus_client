@@ -1,4 +1,4 @@
-import {SubmitKey} from '../store/config';
+import {SubmitKey} from '@/store/old/config';
 
 const en = {
   WIP: 'Coming Soon...',

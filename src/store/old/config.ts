@@ -1,8 +1,8 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
-import {getClientConfig} from '../config/client';
-import {DEFAULT_INPUT_TEMPLATE, StoreKey} from '../constant';
+import {getClientConfig} from '@/config/client';
+import {DEFAULT_INPUT_TEMPLATE, StoreKey} from '@/constant';
 
 export enum SubmitKey {
   Enter = 'Enter',

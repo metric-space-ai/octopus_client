@@ -1,9 +1,9 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
-import {api} from '../client/api';
-import {getClientConfig} from '../config/client';
-import {StoreKey} from '../constant';
+import {api} from '@/client/api';
+import {getClientConfig} from '@/config/client';
+import {StoreKey} from '@/constant';
 
 export interface UpdateStore {
   lastUpdate: number;

@@ -150,7 +150,6 @@ export function autoGrowTextArea(dom: HTMLTextAreaElement) {
   const singleLineHeight = parseFloat(window.getComputedStyle(singleLineDom).height);
 
   const rows = Math.round(height / singleLineHeight) + (endWithEmptyLine ? 1 : 0);
-  console.log('#######', rows);
   return rows;
 }
 
