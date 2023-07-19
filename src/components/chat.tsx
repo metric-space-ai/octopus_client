@@ -401,7 +401,7 @@ export function Chat() {
   const autoFocus = !isMobileScreen;
 
   return (
-    <div className='relative flex flex-col h-full bg-white rounded-[20px]' key={session.id}>
+    <div className='relative flex flex-col h-full bg-content-grey-100 rounded-b-[20px]' key={session.id}>
       <div className='flex px-5 py-[14px] justify-between' data-tauri-drag-region>
         <div className='window-header-title'>
           <div className='text-18 font-medium max-w-[50vw]' onClickCapture={renameSession}>
