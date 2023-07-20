@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
 import {ArrowLeftOnRectangleIcon, Cog8ToothIcon, UserCircleIcon} from '@heroicons/react/24/outline';
@@ -61,21 +61,20 @@ const MenuItem = () => {
 };
 
 export const Header = () => {
-  const {workspaces, getWorkspaces} = useWorkspaceStore();
-  const [selectedTabIndex, setSelectedTabIndex] = useState('tab1');
+  const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useWorkspaceStore();
 
   useEffect(() => {
     getWorkspaces();
   }, [getWorkspaces]);
 
   const handleTab = (idx: string) => {
-    setSelectedTabIndex(idx);
+    setWorkspaceId(idx);
   };
 
   return (
     <div className='flex justify-between items-center'>
       <div className='flex'>
-        <Tabs selectedId={selectedTabIndex} onChange={handleTab}>
+        <Tabs selectedId={currentWorkspaceId} onChange={handleTab}>
           {workspaces?.map((tab) => (
             <Tab key={tab.id} tabId={tab.id} title={tab.name} />
           ))}
