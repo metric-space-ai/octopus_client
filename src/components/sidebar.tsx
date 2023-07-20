@@ -1,13 +1,11 @@
 import {PlusIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import dynamic from 'next/dynamic';
-import {useRouter} from 'next/navigation';
 
-import {useChatStore} from '@/store/old';
+import {useChatStore} from '@/store';
 
 import {Button, IconButton} from './buttons';
 import {SearchBar} from './search';
-import {Path} from '../constant';
 import Locale from '../locales';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
@@ -16,8 +14,6 @@ const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
 
 export function SideBar(props: {className?: string}) {
   const chatStore = useChatStore();
-
-  const router = useRouter();
 
   return (
     <div
@@ -41,8 +37,7 @@ export function SideBar(props: {className?: string}) {
           className='w-full'
           title={Locale.Home.NewTicket}
           onClick={() => {
-            chatStore.newSession();
-            router.push(Path.Chat);
+            chatStore.newTicket();
           }}
         />
       </div>

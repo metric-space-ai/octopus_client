@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
-import {getTickets, getWorkspaces} from '@/services/chat.service';
+import {deleteTicketApi, getTicketsApi, getWorkspacesApi} from '@/services/chat.service';
 import {ITicket, IWorkspace} from '@/types';
 
 interface ChatStore {
@@ -9,9 +9,12 @@ interface ChatStore {
   tickets: ITicket[];
   currentWorkspaceId: string;
   currentTicketId: string;
+  isNewTicket: boolean;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
-  setTicketId: (idx: string) => void;
+  selectTicketId: (idx: string) => void;
+  newTicket: () => void;
+  deleteTicket: (idx: string) => void;
   loading: boolean;
 }
 
@@ -22,9 +25,10 @@ export const useChatStore = create<ChatStore>()(
       tickets: [],
       currentWorkspaceId: '',
       currentTicketId: '',
+      isNewTicket: false,
       loading: false,
       getWorkspaces() {
-        getWorkspaces().then((res) => {
+        getWorkspacesApi().then((res) => {
           const currentIdx = get().currentWorkspaceId;
           set({workspaces: res.data});
           if (res.data.length > 0) {
@@ -36,18 +40,32 @@ export const useChatStore = create<ChatStore>()(
       },
       setWorkspaceId(idx: string) {
         set({currentWorkspaceId: idx});
-        getTickets(idx).then((res) => {
-          const currentIdx = get().currentTicketId;
-          set({tickets: res.data});
-          if (res.data.length > 0) {
-            if (!res.data.some((ticket) => ticket.id === currentIdx)) {
-              get().setWorkspaceId(res.data[0].id);
+        getTicketsApi(idx)
+          .then((res) => {
+            const currentIdx = get().currentTicketId;
+            set({tickets: res.data});
+            if (res.data.length > 0) {
+              if (!res.data.some((ticket) => ticket.id === currentIdx)) {
+                get().selectTicketId(res.data[0].id);
+              }
             }
-          }
-        });
+          })
+          .catch(() => {
+            set({tickets: []});
+          });
       },
-      setTicketId(idx: string) {
+      selectTicketId(idx: string) {
         set({currentTicketId: idx});
+      },
+      newTicket() {
+        set({isNewTicket: true});
+      },
+      deleteTicket(idx: string) {
+        const currentIdx = get().currentWorkspaceId;
+        deleteTicketApi(currentIdx, idx).then(() => {
+          const updatedTickets = get().tickets.filter((ticket) => ticket.id !== idx);
+          set({tickets: updatedTickets});
+        });
       },
     }),
     {

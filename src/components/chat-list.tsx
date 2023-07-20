@@ -1,27 +1,20 @@
 import {useEffect, useRef} from 'react';
 
+import {ChatBubbleLeftRightIcon} from '@heroicons/react/24/outline';
 import {XCircleIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
-import {useRouter} from 'next/navigation';
 
-import {useChatStore} from '@/store/old';
-import {Mask} from '@/store/old/mask';
+import {useChatStore} from '@/store';
 
-import {MaskAvatar} from './mask';
-import {Path} from '../constant';
 import Locale from '../locales';
 
 export function ChatItem(props: {
   onClick?: () => void;
   onDelete?: () => void;
   title: string;
-  count: number;
   time: string;
   selected: boolean;
-  id: number;
-  index: number;
   narrow?: boolean;
-  mask: Mask;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -38,14 +31,10 @@ export function ChatItem(props: {
         props.selected && 'border-background-white',
       )}
       onClick={props.onClick}
-      title={`${props.title}\n${Locale.ChatItem.ChatItemCount(props.count)}`}
     >
       {props.narrow ? (
         <div className='flex flex-col'>
-          <div className='flex opacity-20 absolute'>
-            <MaskAvatar mask={props.mask} />
-          </div>
-          <div className='text-24 text-center opacity-60'>{props.count}</div>
+          <div className='text-24 text-center opacity-60'>{<ChatBubbleLeftRightIcon />}</div>
         </div>
       ) : (
         <>
@@ -53,9 +42,6 @@ export function ChatItem(props: {
             {props.title}
           </div>
           <div className='flex justify-between text-12 mt-2 text-content-white'>
-            <div className='overflow-hidden text-ellipsis whitespace-nowrap'>
-              {Locale.ChatItem.ChatItemCount(props.count)}
-            </div>
             <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
           </div>
         </>
@@ -69,37 +55,25 @@ export function ChatItem(props: {
 }
 
 export function ChatList(props: {narrow?: boolean}) {
-  const [sessions, selectedIndex, selectSession] = useChatStore((state) => [
-    state.sessions,
-    state.currentSessionIndex,
-    state.selectSession,
-    state.moveSession,
-  ]);
-  const chatStore = useChatStore();
-  const router = useRouter();
+  const {tickets, currentTicketId, selectTicketId, deleteTicket} = useChatStore();
 
   return (
     <div className='min-w-[280px] flex flex-col gap-2'>
-      {sessions.map((item, i) => (
+      {tickets.map((ticket) => (
         <ChatItem
-          title={item.topic}
-          time={new Date(item.lastUpdate).toLocaleString()}
-          count={item.messages.length}
-          key={item.id}
-          id={item.id}
-          index={i}
-          selected={i === selectedIndex}
+          key={ticket.id}
+          title={ticket.name}
+          time={new Date(ticket.updated_at).toLocaleString()}
+          selected={ticket.id === currentTicketId}
           onClick={() => {
-            router.push(Path.Chat);
-            selectSession(i);
+            selectTicketId(ticket.id);
           }}
           onDelete={() => {
             if (!props.narrow || confirm(Locale.Home.DeleteChat)) {
-              chatStore.deleteSession(i);
+              deleteTicket(ticket.id);
             }
           }}
           narrow={props.narrow}
-          mask={item.mask}
         />
       ))}
     </div>
