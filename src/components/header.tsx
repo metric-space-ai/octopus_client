@@ -1,7 +1,13 @@
 import {Fragment, useEffect} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
-import {ArrowLeftOnRectangleIcon, Cog8ToothIcon, UserCircleIcon} from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  Cog8ToothIcon,
+  LockClosedIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 
 import {Tab, Tabs} from '@/components/tabs';
 import {useAuthContext} from '@/contexts/authContext';
@@ -76,7 +82,22 @@ export const Header = () => {
       <div className='flex'>
         <Tabs selectedId={currentWorkspaceId} onChange={handleTab}>
           {workspaces?.map((tab) => (
-            <Tab key={tab.id} tabId={tab.id} title={tab.name} />
+            <Tab
+              key={tab.id}
+              tabId={tab.id}
+              title={tab.name}
+              icon={
+                tab.type === 'Public' ? (
+                  <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-400/10'>
+                    <UserGroupIcon className='w-4 h-4 text-content-accent-400' />
+                  </div>
+                ) : (
+                  <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-light/10'>
+                    <LockClosedIcon className='w-4 h-4 text-content-blue-light' />
+                  </div>
+                )
+              }
+            />
           ))}
         </Tabs>
       </div>

@@ -5,13 +5,13 @@ import classNames from 'classnames';
 export type TabProps = {
   tabId: string;
   title?: string;
-  Icon?: React.ReactNode;
+  icon?: React.ReactNode;
   isFocused?: boolean;
   isDisabled?: boolean;
   onClick?: () => void;
 };
 
-export const Tab = ({tabId, title, Icon, onClick, isFocused, isDisabled}: TabProps) => {
+export const Tab = ({tabId, title, icon, onClick, isFocused, isDisabled}: TabProps) => {
   const classSelected = isFocused
     ? 'bg-content-grey-100 text-black before:bg-content-grey-100'
     : 'bg-content-grey-900 text-content-white';
@@ -21,13 +21,13 @@ export const Tab = ({tabId, title, Icon, onClick, isFocused, isDisabled}: TabPro
     <div id={tabId} onClick={onClick}>
       <button
         className={classNames(
-          'relative h-10 flex items-center justify-center px-4 rounded-t-[20px] text-14 font-semibold tracking-[2.5px]',
+          'relative h-10 flex items-center justify-center px-4 rounded-t-[20px] text-14 font-semibold',
           // beforeClass,
           classSelected,
         )}
         disabled={isDisabled}
       >
-        {Icon && Icon}
+        {icon && <div className='mr-2'>{icon}</div>}
         {title && title}
       </button>
     </div>
