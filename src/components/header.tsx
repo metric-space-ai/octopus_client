@@ -11,7 +11,7 @@ import {
 
 import {Tab, Tabs} from '@/components/tabs';
 import {useAuthContext} from '@/contexts/authContext';
-import {useWorkspaceStore} from '@/store';
+import {useChatStore} from '@/store';
 
 const MenuItem = () => {
   const {onLogout} = useAuthContext();
@@ -67,7 +67,7 @@ const MenuItem = () => {
 };
 
 export const Header = () => {
-  const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useWorkspaceStore();
+  const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
 
   useEffect(() => {
     getWorkspaces();
