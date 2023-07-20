@@ -53,7 +53,7 @@ const SignupPage = () => {
           <Input
             type='password'
             placeholder='Password'
-            errors={errors.password && 'Password length must be 5, including letter, number and special character.'}
+            errors={errors.password && 'Password length must be 5, including letter and number.'}
             rules={register('password', authValidator.password)}
           />
           <Input

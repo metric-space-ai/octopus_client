@@ -8,7 +8,7 @@ export const authValidator = {
   },
   password: {
     required: 'This field is mandatory',
-    pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&?@^"/\-+=*]).*$/i,
+    pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
     minLength: 5,
   },
 };

@@ -46,7 +46,7 @@ const LoginPage = () => {
               className='mt-5'
               type='password'
               placeholder='Password'
-              errors={errors.password && 'Password length must be 5, including letter, number and special character.'}
+              errors={errors.password && 'Password length must be 5, including letter and number.'}
               rules={register('password', authValidator.password)}
             />
             <div className='mt-3 flex justify-end'>
