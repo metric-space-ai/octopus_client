@@ -58,32 +58,31 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     setLoading(true);
     login(email, password)
       .then((res) => {
+        setLoading(false);
         const authData = res.data;
         setAuthData(authData);
         toast.success('Login successful.');
-        setLoading(false);
         router.push('/chat');
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.message);
         setLoading(false);
+        toast.error(error.message);
       });
   };
 
   const handleRegister = (payload: IRegisterPayload) => {
     setLoading(true);
     register(payload)
-      .then((res) => {
-        const authData = res.data;
-        setAuthData(authData);
+      .then(() => {
         setLoading(false);
-        router.push('/chat');
+        toast.success('Signup success! Please login again');
+        router.push('login');
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error.message);
         setLoading(false);
+        toast.error(error.message);
       });
   };
 
