@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {PaperAirplaneIcon} from '@heroicons/react/24/outline';
 import {
@@ -16,6 +16,7 @@ import dynamic from 'next/dynamic';
 import {useRouter} from 'next/navigation';
 import {useDebouncedCallback} from 'use-debounce';
 
+import {useScrollToBottom} from '@/hooks';
 import {
   BOT_HELLO,
   ChatMessage,
@@ -119,30 +120,6 @@ function ChatAction(props: {text: string; icon: JSX.Element; onClick: () => void
       </div>
     </div>
   );
-}
-
-function useScrollToBottom() {
-  // for auto-scroll
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [autoScroll, setAutoScroll] = useState(true);
-  const scrollToBottom = () => {
-    const dom = scrollRef.current;
-    if (dom) {
-      setTimeout(() => (dom.scrollTop = dom.scrollHeight), 1);
-    }
-  };
-
-  // auto scroll
-  useLayoutEffect(() => {
-    autoScroll && scrollToBottom();
-  });
-
-  return {
-    scrollRef,
-    autoScroll,
-    setAutoScroll,
-    scrollToBottom,
-  };
 }
 
 export function ChatActions(props: {
