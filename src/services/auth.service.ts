@@ -9,7 +9,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (payload: IRegisterPayload) => {
-  return apiHub.post<IAuthData>('/api/v1/auth/register', payload);
+  return apiHub.post('/api/v1/auth/register', payload);
 };
 
 export const getProfile = async (id: string) => {
