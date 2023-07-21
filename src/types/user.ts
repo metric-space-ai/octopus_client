@@ -1,6 +1,8 @@
 export interface IUser {
-  email: string;
+  id: string;
   name: string;
   job_title: string;
-  avatarUrl?: string;
+  language: string;
+  text_size: number;
+  roles: string[];
 }

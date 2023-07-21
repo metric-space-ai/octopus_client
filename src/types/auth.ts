@@ -1,5 +1,10 @@
-export interface IAuthResponse {
+export interface IAuthData {
   id: string;
+  user_id: string;
+  expired_at: string;
+  data: {
+    roles: string[];
+  };
 }
 
 export interface IRegisterPayload {
