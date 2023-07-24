@@ -6,3 +6,14 @@ export interface ITicket {
   updated_at: string;
   workspace_id: string;
 }
+
+export interface IChatMessage {
+  id: string;
+  created_at: string;
+  estimated_response_at: string;
+  chat_id: string;
+  message: string;
+  response: string;
+  status: string;
+  updated_at: string;
+}
