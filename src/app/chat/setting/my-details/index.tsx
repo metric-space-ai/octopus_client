@@ -10,8 +10,7 @@ import {authValidator} from '@/helpers/validators';
 
 interface IFormInputs {
   email: string;
-  firstName: string;
-  lastName: string;
+  username: string;
 }
 
 const MyDetailPage = () => {
@@ -23,7 +22,7 @@ const MyDetailPage = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data: IFormInputs) => {
-    const {email, firstName, lastName} = data;
+    const {email, username} = data;
     // setLoading(true);
     // const variables = {email, password, username};
     // await createUser({variables});
@@ -32,10 +31,12 @@ const MyDetailPage = () => {
   return (
     <div className='w-full pt-[84px] flex flex-col items-center'>
       <form className='w-[360px] flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
-        <div className='flex gap-4'>
-          <Input label='First Name' placeholder='First name' />
-          <Input label='Last Name' placeholder='Last name' />
-        </div>
+        <Input
+          label='Username'
+          placeholder='Username'
+          errors={errors.username && errors.username.message}
+          rules={register('username', authValidator.username)}
+        />
         <Input
           type='email'
           label='Email'
