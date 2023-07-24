@@ -66,6 +66,8 @@ module.exports = {
       },
       backgroundImage: {
         'auth-background': "url('/images/auth-background.jpg')",
+        'prompt-background1': "url('/images/prompts/image-01.png')",
+        'prompt-background2': "url('/images/prompts/image-02.png')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
