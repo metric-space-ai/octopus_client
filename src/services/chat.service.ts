@@ -18,9 +18,13 @@ export const deleteTicketApi = async (workspaceId: string, ticketId: string) => 
   return apiHub.delete(`/api/v1/chats/${workspaceId}/${ticketId}`);
 };
 
-export const createChatMessageApi = async (chatId: string, message: string) => {
+export const getChatMessagesApi = async (ticketId: string) => {
+  return apiHub.get<IChatMessage[]>(`/api/v1/chat-messages/${ticketId}`);
+};
+
+export const createChatMessageApi = async (ticketId: string, message: string) => {
   const payload = {message};
-  return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${chatId}`, payload);
+  return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${ticketId}`, payload);
 };
 
 export const getChatMessageApi = async (chatId: string, chatMessageId: string) => {
