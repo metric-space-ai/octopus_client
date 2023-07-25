@@ -57,35 +57,33 @@ export default function ChatPage() {
   };
 
   return (
-    <div className='h-full flex flex-col'>
-      <div className='relative flex flex-col h-full bg-content-grey-100 rounded-b-[20px]'>
-        <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
-          {loading ? (
-            <Loading />
-          ) : showChatPrompt ? (
-            <ChatPrompt />
-          ) : (
-            messages.map((item) => <MessageItem key={item.id} item={item} />)
-          )}
-        </div>
-        <div className='relative w-full p-5 border-box flex flex-col'>
-          <div className='relative flex-1 flex'>
-            <textarea
-              ref={inputRef}
-              className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none'
-              placeholder='Ask anything'
-              onInput={(e) => onInput(e.currentTarget.value)}
-              value={userInput}
-              onKeyDown={onInputKeyDown}
-              onFocus={() => setAutoScroll(true)}
-              onBlur={() => setAutoScroll(false)}
-              rows={inputRows}
-              autoFocus={true}
-            />
-            <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
-              <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
-            </IconButton>
-          </div>
+    <div className='relative flex flex-col h-chat-screen-height bg-content-grey-100 rounded-b-[20px]'>
+      <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
+        {loading ? (
+          <Loading />
+        ) : showChatPrompt ? (
+          <ChatPrompt />
+        ) : (
+          messages.map((item) => <MessageItem key={item.id} item={item} />)
+        )}
+      </div>
+      <div className='relative w-full p-5 border-box flex flex-col'>
+        <div className='relative flex-1 flex'>
+          <textarea
+            ref={inputRef}
+            className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none'
+            placeholder='Ask anything'
+            onInput={(e) => onInput(e.currentTarget.value)}
+            value={userInput}
+            onKeyDown={onInputKeyDown}
+            onFocus={() => setAutoScroll(true)}
+            onBlur={() => setAutoScroll(false)}
+            rows={inputRows}
+            autoFocus={true}
+          />
+          <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
+            <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
+          </IconButton>
         </div>
       </div>
     </div>
