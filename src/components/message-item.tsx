@@ -10,7 +10,7 @@ interface IMessageItem {
 
 export const MessageItem = ({item}: IMessageItem) => {
   return (
-    <div className='text-15 font-medium'>
+    <div className='mt-3 text-15 font-medium'>
       <div className='flex gap-3 items-center'>
         <UserCircleIcon className='w-9 h-9 text-content-grey-900' />
         {item.message}

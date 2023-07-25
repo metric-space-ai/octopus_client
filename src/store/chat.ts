@@ -72,6 +72,7 @@ export const useChatStore = create<ChatStore>()(
       },
       selectTicketId(idx: string) {
         set({currentTicketId: idx});
+        set({isNewTicket: false});
         getChatMessagesApi(idx)
           .then((res) => {
             set({messages: res.data});
@@ -106,6 +107,7 @@ export const useChatStore = create<ChatStore>()(
               createChatMessageApi(ticketId, message).then((res) => {
                 const messages = get().messages;
                 set({messages: [...messages, {...res.data}]});
+                set({isNewTicket: false});
               });
             })
             .catch((e) => {
@@ -117,6 +119,7 @@ export const useChatStore = create<ChatStore>()(
           createChatMessageApi(currentTicketId, message).then((res) => {
             const messages = get().messages;
             set({messages: [...messages, {...res.data}]});
+            set({isNewTicket: false});
           });
         }
       },

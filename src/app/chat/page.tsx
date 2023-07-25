@@ -16,9 +16,9 @@ import {useChatStore} from '@/store';
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
-  const {loading, messages, newMessage} = useChatStore();
+  const {loading, isNewTicket, messages, newMessage} = useChatStore();
   const {scrollRef, setAutoScroll, scrollToBottom} = useScrollToBottom();
-  const showChatPrompt = messages.length === 0;
+  const showChatPrompt = messages.length === 0 || isNewTicket;
   // auto grow input
   const [inputRows, setInputRows] = useState(1);
   const measure = useDebouncedCallback(

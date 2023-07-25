@@ -67,7 +67,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       .catch((error) => {
         console.log(error);
         setLoading(false);
-        toast.error(error.message);
+        toast.error(error.response?.data?.error);
       });
   };
 
@@ -82,7 +82,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       .catch((error) => {
         console.log(error);
         setLoading(false);
-        toast.error(error.message);
+        toast.error(error.response?.data?.error);
       });
   };
 
