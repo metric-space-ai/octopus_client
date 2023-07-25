@@ -1,7 +1,14 @@
 import {create} from 'zustand';
 import {persist} from 'zustand/middleware';
 
-import {deleteTicketApi, getChatMessagesApi, getTicketsApi, getWorkspacesApi} from '@/services/chat.service';
+import {
+  createChatMessageApi,
+  createTicketApi,
+  deleteTicketApi,
+  getChatMessagesApi,
+  getTicketsApi,
+  getWorkspacesApi,
+} from '@/services/chat.service';
 import {IChatMessage, ITicket, IWorkspace} from '@/types';
 
 interface ChatStore {
@@ -16,6 +23,7 @@ interface ChatStore {
   selectTicketId: (idx: string) => void;
   newTicket: () => void;
   deleteTicket: (idx: string) => void;
+  newMessage: (message: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -72,8 +80,31 @@ export const useChatStore = create<ChatStore>()(
           set({tickets: updatedTickets});
         });
       },
-      newMessage() {
-        
+      async newMessage(message: string) {
+        const isNewTicket = get().isNewTicket;
+        const currentWorkspaceId = get().currentWorkspaceId;
+        if (isNewTicket) {
+          // create new ticket
+          createTicketApi(currentWorkspaceId)
+            .then((res) => {
+              const ticketId = res.data.id;
+              // send new message
+              createChatMessageApi(ticketId, message).then((res) => {
+                const messages = get().messages;
+                set({messages: [...messages, {...res.data}]});
+              });
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else {
+          // todo// send new message
+          const currentTicketId = get().currentTicketId;
+          createChatMessageApi(currentTicketId, message).then((res) => {
+            const messages = get().messages;
+            set({messages: [...messages, {...res.data}]});
+          });
+        }
       },
     }),
     {

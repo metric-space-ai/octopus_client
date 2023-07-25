@@ -15,7 +15,7 @@ import {useChatStore} from '@/store';
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
-  const {messages} = useChatStore();
+  const {messages, newMessage} = useChatStore();
   const {scrollRef, setAutoScroll, scrollToBottom} = useScrollToBottom();
   const showChatPrompt = messages.length === 0;
   // auto grow input
@@ -42,6 +42,17 @@ export default function ChatPage() {
 
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
+    newMessage(userInput);
+    setUserInput('');
+  };
+
+  const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key !== 'Enter') return false;
+    if (e.key === 'Enter' && e.nativeEvent.isComposing) return false;
+    if (e.altKey || e.ctrlKey || e.shiftKey) {
+      doSubmit(userInput);
+      e.preventDefault();
+    }
   };
 
   return (
@@ -58,6 +69,7 @@ export default function ChatPage() {
               placeholder='Ask anything'
               onInput={(e) => onInput(e.currentTarget.value)}
               value={userInput}
+              onKeyDown={onInputKeyDown}
               onFocus={() => setAutoScroll(true)}
               onBlur={() => setAutoScroll(false)}
               rows={inputRows}
