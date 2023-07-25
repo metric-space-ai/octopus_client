@@ -50,6 +50,7 @@ export const useChatStore = create<ChatStore>()(
       },
       setWorkspaceId(idx: string) {
         set({currentWorkspaceId: idx});
+        set({loading: true});
         getTicketsApi(idx)
           .then((res) => {
             const currentIdx = get().currentTicketId;
@@ -58,17 +59,30 @@ export const useChatStore = create<ChatStore>()(
               if (!res.data.some((ticket) => ticket.id === currentIdx)) {
                 get().selectTicketId(res.data[0].id);
               }
+            } else {
+              set({currentTicketId: ''});
+              set({messages: []});
+              set({loading: false});
             }
           })
           .catch(() => {
             set({tickets: []});
+            set({loading: false});
           });
       },
       selectTicketId(idx: string) {
         set({currentTicketId: idx});
-        getChatMessagesApi(idx).then((res) => {
-          set({messages: res.data});
-        });
+        getChatMessagesApi(idx)
+          .then((res) => {
+            set({messages: res.data});
+          })
+          .catch((e) => {
+            // catch
+            console.log(e);
+          })
+          .finally(() => {
+            set({loading: false});
+          });
       },
       newTicket() {
         set({isNewTicket: true});

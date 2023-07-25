@@ -7,6 +7,7 @@ import {useDebouncedCallback} from 'use-debounce';
 
 import {IconButton} from '@/components/buttons';
 import {ChatPrompt} from '@/components/chat-prompt';
+import {Loading} from '@/components/loading';
 import {MessageItem} from '@/components/message-item';
 import {autoGrowTextArea} from '@/helpers';
 import {useScrollToBottom} from '@/hooks';
@@ -15,7 +16,7 @@ import {useChatStore} from '@/store';
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
-  const {messages, newMessage} = useChatStore();
+  const {loading, messages, newMessage} = useChatStore();
   const {scrollRef, setAutoScroll, scrollToBottom} = useScrollToBottom();
   const showChatPrompt = messages.length === 0;
   // auto grow input
@@ -59,7 +60,13 @@ export default function ChatPage() {
     <div className='h-full flex flex-col'>
       <div className='relative flex flex-col h-full bg-content-grey-100 rounded-b-[20px]'>
         <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
-          {showChatPrompt ? <ChatPrompt /> : messages.map((item) => <MessageItem key={item.chat_id} item={item} />)}
+          {loading ? (
+            <Loading />
+          ) : showChatPrompt ? (
+            <ChatPrompt />
+          ) : (
+            messages.map((item) => <MessageItem key={item.chat_id} item={item} />)
+          )}
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>
           <div className='relative flex-1 flex'>
