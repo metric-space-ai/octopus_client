@@ -24,6 +24,7 @@ interface ChatStore {
   newTicket: () => void;
   deleteTicket: (idx: string) => void;
   newMessage: (message: string) => Promise<void>;
+  updateMessage: (chatMessage: IChatMessage) => void;
   loading: boolean;
 }
 
@@ -71,6 +72,7 @@ export const useChatStore = create<ChatStore>()(
           });
       },
       selectTicketId(idx: string) {
+        set({loading: true});
         set({currentTicketId: idx});
         set({isNewTicket: false});
         getChatMessagesApi(idx)
@@ -121,6 +123,14 @@ export const useChatStore = create<ChatStore>()(
             set({messages: [...messages, {...res.data}]});
             set({isNewTicket: false});
           });
+        }
+      },
+      updateMessage(chatMessage: IChatMessage) {
+        const messages = get().messages;
+        const index = messages.findIndex((message) => message.id === chatMessage.id);
+        if (index !== -1) {
+          messages[index] = chatMessage;
+          set({messages});
         }
       },
     }),

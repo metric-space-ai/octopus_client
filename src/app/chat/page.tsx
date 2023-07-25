@@ -65,7 +65,7 @@ export default function ChatPage() {
           ) : showChatPrompt ? (
             <ChatPrompt />
           ) : (
-            messages.map((item) => <MessageItem key={item.chat_id} item={item} />)
+            messages.map((item) => <MessageItem key={item.id} item={item} />)
           )}
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>
