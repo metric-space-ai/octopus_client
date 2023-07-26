@@ -1,7 +1,6 @@
 import axios from 'axios';
-import {useRouter} from 'next/navigation';
 
-import {useLocalStorage} from './useLocalStorage';
+import {useAuthStore} from '@/store';
 
 const apiHub = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -12,8 +11,7 @@ const apiHub = axios.create({
 });
 
 export const useApiClient = () => {
-  const router = useRouter();
-  const [, setAccessToken] = useLocalStorage<string | null>('accessToken', null);
+  const {setAuthData} = useAuthStore();
 
   const setAxiosConfiguration = async (accessToken: string | null) => {
     // provide token with every request
@@ -33,8 +31,7 @@ export const useApiClient = () => {
       (response) => response,
       (error) => {
         if (error.response.status === 401) {
-          setAccessToken(null);
-          router.push('/auth/login');
+          setAuthData(null);
         }
         return Promise.reject(error);
       },

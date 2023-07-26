@@ -5,8 +5,9 @@ import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {toast} from 'react-hot-toast';
 
-import {useApiClient, useLocalStorage} from '@/hooks';
-import {IAuthData, IRegisterPayload} from '@/types/auth';
+import {useApiClient} from '@/hooks';
+import {useAuthStore} from '@/store';
+import {IRegisterPayload} from '@/types/auth';
 import {IUser} from '@/types/user';
 
 import {getProfile, login, register} from '../services/auth.service';
@@ -26,7 +27,7 @@ const AuthContext = React.createContext<IAuthContext>(null!);
 
 const AuthProvider = ({children}: PropsWithChildren) => {
   const router = useRouter();
-  const [authData, setAuthData] = useLocalStorage<IAuthData | null>('authToken', null);
+  const {authData, setAuthData} = useAuthStore();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
