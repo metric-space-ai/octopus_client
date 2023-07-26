@@ -95,6 +95,13 @@ export const useChatStore = create<ChatStore>()(
         deleteTicketApi(currentIdx, idx).then(() => {
           const updatedTickets = get().tickets.filter((ticket) => ticket.id !== idx);
           set({tickets: updatedTickets});
+          if (get().currentTicketId === idx) {
+            if (updatedTickets.length > 0) {
+              get().selectTicketId(updatedTickets[0].id);
+            } else {
+              set({messages: [], isNewTicket: true});
+            }
+          }
         });
       },
       async newMessage(message: string) {
