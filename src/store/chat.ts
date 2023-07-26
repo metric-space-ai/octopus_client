@@ -100,7 +100,8 @@ export const useChatStore = create<ChatStore>()(
       async newMessage(message: string) {
         const isNewTicket = get().isNewTicket;
         const currentWorkspaceId = get().currentWorkspaceId;
-        if (isNewTicket) {
+        const currentTicketId = get().currentTicketId;
+        if (isNewTicket || !currentTicketId) {
           // create new ticket
           createTicketApi(currentWorkspaceId)
             .then((res) => {
@@ -115,9 +116,8 @@ export const useChatStore = create<ChatStore>()(
             .catch((e) => {
               console.log(e);
             });
-        } else {
+        } else if (currentTicketId) {
           // todo// send new message
-          const currentTicketId = get().currentTicketId;
           createChatMessageApi(currentTicketId, message).then((res) => {
             const messages = get().messages;
             set({messages: [...messages, {...res.data}]});
