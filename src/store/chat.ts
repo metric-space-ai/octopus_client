@@ -18,6 +18,7 @@ interface ChatStore {
   currentTicketId: string;
   isNewTicket: boolean;
   messages: IChatMessage[];
+  loading: boolean;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
   selectTicketId: (idx: string) => void;
@@ -25,7 +26,6 @@ interface ChatStore {
   deleteTicket: (idx: string) => void;
   newMessage: (message: string) => Promise<void>;
   updateMessage: (chatMessage: IChatMessage) => void;
-  loading: boolean;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -118,7 +118,6 @@ export const useChatStore = create<ChatStore>()(
               console.log(e);
             });
         } else if (currentTicketId) {
-          // todo// send new message
           createChatMessageApi(currentTicketId, message).then((res) => {
             const messages = get().messages;
             set({messages: [...messages, {...res.data}]});
@@ -131,10 +130,9 @@ export const useChatStore = create<ChatStore>()(
         const tickets = get().tickets;
         const existingTicket = tickets.some((ticket) => ticket.id === chatMessage.chat_id);
         if (!existingTicket) {
-          getTicketsApi(get().currentWorkspaceId)
-          .then((res) => {
+          getTicketsApi(get().currentWorkspaceId).then((res) => {
             set({tickets: res.data, currentTicketId: chatMessage.chat_id});
-          })
+          });
         }
         const index = messages.findIndex((message) => message.id === chatMessage.id);
         if (index !== -1) {
@@ -144,7 +142,7 @@ export const useChatStore = create<ChatStore>()(
       },
     }),
     {
-      name: 'WorkspaceStore',
+      name: 'ChatStore',
     },
   ),
 );
