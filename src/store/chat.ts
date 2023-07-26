@@ -103,6 +103,7 @@ export const useChatStore = create<ChatStore>()(
         const currentTicketId = get().currentTicketId;
         if (isNewTicket || !currentTicketId) {
           // create new ticket
+          set({messages: []});
           createTicketApi(currentWorkspaceId)
             .then((res) => {
               const ticketId = res.data.id;
@@ -127,6 +128,14 @@ export const useChatStore = create<ChatStore>()(
       },
       updateMessage(chatMessage: IChatMessage) {
         const messages = get().messages;
+        const tickets = get().tickets;
+        const existingTicket = tickets.some((ticket) => ticket.id === chatMessage.chat_id);
+        if (!existingTicket) {
+          getTicketsApi(get().currentWorkspaceId)
+          .then((res) => {
+            set({tickets: res.data, currentTicketId: chatMessage.chat_id});
+          })
+        }
         const index = messages.findIndex((message) => message.id === chatMessage.id);
         if (index !== -1) {
           messages[index] = chatMessage;
