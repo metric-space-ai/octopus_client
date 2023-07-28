@@ -71,7 +71,7 @@ export default function ChatPage() {
         <div className='relative flex-1 flex'>
           <textarea
             ref={inputRef}
-            className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none'
+            className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
             placeholder='Ask anything'
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
