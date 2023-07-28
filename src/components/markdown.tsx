@@ -84,9 +84,9 @@ export function PreCode(props: {children: any}) {
   return (
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
-      <pre className='overflow-auto' ref={ref}>
+      <pre className='relative text-12 p-2.5 bg-content-grey-900 rounded-[6px] overflow-auto' ref={ref}>
         <span
-          className='copy-code-button'
+          className="absolute right-2 top-2 cursor-pointer after:content-['Copy']"
           onClick={() => {
             if (ref.current) {
               const code = ref.current.innerText;
@@ -103,6 +103,7 @@ export function PreCode(props: {children: any}) {
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
+      className='flex flex-col text-white gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[
         RehypeKatex,

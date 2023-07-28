@@ -8,6 +8,7 @@ import {getChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
+import {MarkdownContent} from './markdown';
 import {AnimateDots} from './svgs';
 
 interface IMessageItem {
@@ -60,7 +61,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           alt='logo'
         />
         <div className='py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
-          {loading ? <AnimateDots /> : <p className='text-white'>{item.response}</p>}
+          {loading ? <AnimateDots /> : <MarkdownContent content={item.response} />}
         </div>
       </div>
     </div>
