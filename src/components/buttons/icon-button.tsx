@@ -21,7 +21,7 @@ export const IconButton = ({className, href, variant = 'default', children, onCl
   const style = ButtonStyle[variant];
   const content = (
     <button
-      className={classnames('flex items-center p-2 justify-center gap-2 rounded-full', style, className)}
+      className={classnames('flex items-center p-2 justify-center gap-2 rounded-full cursor-pointer', style, className)}
       {...props}
       onClick={onClick}
     >

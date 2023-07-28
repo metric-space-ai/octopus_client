@@ -5,6 +5,7 @@ import {
   ArrowLeftOnRectangleIcon,
   Cog8ToothIcon,
   LockClosedIcon,
+  PlusIcon,
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
@@ -12,6 +13,8 @@ import {
 import {Tab, Tabs} from '@/components/tabs';
 import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
+
+import {IconButton} from './buttons';
 
 const MenuItem = () => {
   const {onLogout} = useAuthContext();
@@ -77,6 +80,10 @@ export const Header = () => {
     setWorkspaceId(idx);
   };
 
+  const handleAddNewTab = () => {
+    // add new tab
+  };
+
   return (
     <div className='flex justify-between items-center'>
       <div className='flex'>
@@ -100,6 +107,9 @@ export const Header = () => {
             />
           ))}
         </Tabs>
+        <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
+          <PlusIcon className='w-4 h-4 text-content-white' />
+        </IconButton>
       </div>
       <MenuItem />
     </div>
