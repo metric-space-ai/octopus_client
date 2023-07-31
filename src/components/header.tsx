@@ -1,4 +1,4 @@
-import {Fragment, useEffect} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
 import {
@@ -15,6 +15,7 @@ import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
 
 import {IconButton} from './buttons';
+import {CreateNewTabModal} from './modals';
 
 const MenuItem = () => {
   const {onLogout} = useAuthContext();
@@ -71,6 +72,7 @@ const MenuItem = () => {
 
 export const Header = () => {
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
+  const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
 
   useEffect(() => {
     getWorkspaces();
@@ -81,7 +83,7 @@ export const Header = () => {
   };
 
   const handleAddNewTab = () => {
-    // add new tab
+    setShowCreateNewTabModal(true);
   };
 
   return (
@@ -112,6 +114,7 @@ export const Header = () => {
         </IconButton>
       </div>
       <MenuItem />
+      <CreateNewTabModal open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
     </div>
   );
 };
