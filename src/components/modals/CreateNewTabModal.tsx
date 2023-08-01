@@ -1,4 +1,4 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, LockClosedIcon, UserGroupIcon, XMarkIcon} from '@heroicons/react/24/outline';
@@ -7,11 +7,13 @@ import {useForm} from 'react-hook-form';
 import {TabModes} from '@/constant';
 import {authValidator} from '@/helpers/validators';
 import {useChatStore} from '@/store';
+import {IWorkspace} from '@/types';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
 
 interface ModalProps {
+  tab: IWorkspace | null;
   open: boolean;
   onClose: () => void;
 }
@@ -20,12 +22,14 @@ interface IFormInputs {
   name: string;
 }
 
-export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
+export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
   const {createNewWorkspace} = useChatStore();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(TabModes[0]);
+
   const {
     register,
+    setValue,
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
@@ -33,10 +37,19 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
   const onSubmit = async (data: IFormInputs) => {
     const {name} = data;
     setLoading(true);
-    await createNewWorkspace(name, selected.name);
+    if (tab) {
+      await createNewWorkspace(name, selected.name);
+    } else {
+      await createNewWorkspace(name, selected.name);
+    }
     setLoading(false);
     onClose();
   };
+
+  useEffect(() => {
+    setSelected({name: tab?.type ?? 'Public'});
+    setValue('name', tab?.name ?? '');
+  }, [setValue, tab]);
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -68,7 +81,7 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
                   <XMarkIcon className='w-4 h-4 text-content-primary' />
                 </IconButton>
                 <Dialog.Title as='h3' className='text-24 font-semibold text-content-primary'>
-                  Create a new tab
+                  {tab ? 'Rename tab' : 'Create a new tab'}
                 </Dialog.Title>
                 <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
                   <Input

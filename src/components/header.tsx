@@ -13,6 +13,7 @@ import {
 import {Tab, Tabs} from '@/components/tabs';
 import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
+import {IWorkspace} from '@/types';
 
 import {IconButton} from './buttons';
 import {CreateNewTabModal} from './modals';
@@ -73,6 +74,7 @@ const MenuItem = () => {
 export const Header = () => {
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
   const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
+  const [modalTab, setModalTab] = useState<IWorkspace | null>(null);
 
   useEffect(() => {
     getWorkspaces();
@@ -83,6 +85,7 @@ export const Header = () => {
   };
 
   const handleAddNewTab = () => {
+    setModalTab(null);
     setShowCreateNewTabModal(true);
   };
 
@@ -106,6 +109,10 @@ export const Header = () => {
                   </div>
                 )
               }
+              onRename={() => {
+                setModalTab(tab);
+                setShowCreateNewTabModal(true);
+              }}
             />
           ))}
         </Tabs>
@@ -114,7 +121,7 @@ export const Header = () => {
         </IconButton>
       </div>
       <MenuItem />
-      <CreateNewTabModal open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
+      <CreateNewTabModal tab={modalTab} open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
     </div>
   );
 };

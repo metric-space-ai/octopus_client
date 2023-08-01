@@ -4,8 +4,8 @@ import {Menu, Transition} from '@headlessui/react';
 import {EllipsisVerticalIcon} from '@heroicons/react/24/outline';
 
 interface TabMenuProps {
-  onRename: () => void;
-  onDelete: () => void;
+  onRename?: () => void;
+  onDelete?: () => void;
 }
 
 export const TabMenu = ({onRename, onDelete}: TabMenuProps) => {
@@ -24,7 +24,7 @@ export const TabMenu = ({onRename, onDelete}: TabMenuProps) => {
         leaveTo='transform opacity-0 scale-95'
       >
         <Menu.Items
-          className='absolute right-0 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+          className='absolute mt-4 -right-4 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
           onClick={(e) => e.stopPropagation()}
         >
           <div className='px-2 py-2 '>

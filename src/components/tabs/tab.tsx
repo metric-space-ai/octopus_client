@@ -11,9 +11,11 @@ export type TabProps = {
   isFocused?: boolean;
   isDisabled?: boolean;
   onClick?: () => void;
+  onRename?: () => void;
+  onDelete?: () => void;
 };
 
-export const Tab = ({tabId, title, icon, onClick, isFocused, isDisabled}: TabProps) => {
+export const Tab = ({tabId, title, icon, onClick, onRename, onDelete, isFocused, isDisabled}: TabProps) => {
   const classSelected = isFocused
     ? 'bg-content-grey-100 text-black before:bg-content-grey-100'
     : 'bg-content-grey-900 text-content-white';
@@ -31,7 +33,7 @@ export const Tab = ({tabId, title, icon, onClick, isFocused, isDisabled}: TabPro
       >
         {icon && <div className='mr-2'>{icon}</div>}
         {title && title}
-        {isFocused && <TabMenu onRename={() => null} onDelete={() => null} />}
+        {isFocused && <TabMenu onRename={onRename} onDelete={onDelete} />}
       </button>
     </div>
   );
