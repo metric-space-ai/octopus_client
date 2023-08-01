@@ -4,6 +4,7 @@ import {persist} from 'zustand/middleware';
 import {
   createChatMessageApi,
   createTicketApi,
+  createWorkspaceApi,
   deleteTicketApi,
   getChatMessagesApi,
   getTicketsApi,
@@ -19,6 +20,7 @@ interface ChatStore {
   isNewTicket: boolean;
   messages: IChatMessage[];
   loading: boolean;
+  createNewWorkspace: (name: string, type: string) => void;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
   selectTicketId: (idx: string) => void;
@@ -47,6 +49,12 @@ export const useChatStore = create<ChatStore>()(
               get().setWorkspaceId(res.data[0].id);
             }
           }
+        });
+      },
+      createNewWorkspace(name: string, type: string) {
+        createWorkspaceApi(name, type).then((res) => {
+          set({workspaces: [...get().workspaces, res.data]});
+          get().setWorkspaceId(res.data.id);
         });
       },
       setWorkspaceId(idx: string) {

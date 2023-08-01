@@ -6,6 +6,7 @@ import {useForm} from 'react-hook-form';
 
 import {TabModes} from '@/constant';
 import {authValidator} from '@/helpers/validators';
+import {useChatStore} from '@/store';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
@@ -20,6 +21,8 @@ interface IFormInputs {
 }
 
 export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
+  const {createNewWorkspace} = useChatStore();
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(TabModes[0]);
   const {
     register,
@@ -29,6 +32,10 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
 
   const onSubmit = async (data: IFormInputs) => {
     const {name} = data;
+    setLoading(true);
+    await createNewWorkspace(name, selected.name);
+    setLoading(false);
+    onClose();
   };
 
   return (
@@ -117,7 +124,7 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
                       </Transition>
                     </div>
                   </Listbox>
-                  <Button className='mt-2 w-full h-11' variant='primary' title='Create a tab' />
+                  <Button className='mt-2 w-full h-11' variant='primary' title='Create a tab' loading={loading} />
                 </form>
               </Dialog.Panel>
             </Transition.Child>
