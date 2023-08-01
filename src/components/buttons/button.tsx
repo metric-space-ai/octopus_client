@@ -2,17 +2,16 @@ import classNames from 'classnames';
 
 import {Spinner} from '../spinner';
 
-type ButtonProps = {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'transparent' | 'outline' | 'disabled';
   size?: 'default' | 'large' | 'medium' | 'small';
   loading?: boolean;
-  disabled?: boolean;
   iconBefore?: React.ReactNode;
   iconAfter?: React.ReactNode;
   className?: string;
   title: string;
   onClick?: () => void;
-};
+}
 
 const ButtonStyle = {
   primary: 'bg-content-accent',

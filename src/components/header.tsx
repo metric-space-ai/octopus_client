@@ -16,7 +16,7 @@ import {useChatStore} from '@/store';
 import {IWorkspace} from '@/types';
 
 import {IconButton} from './buttons';
-import {CreateNewTabModal} from './modals';
+import {CreateNewTabModal, DeleteTabModal} from './modals';
 
 const MenuItem = () => {
   const {onLogout} = useAuthContext();
@@ -74,6 +74,7 @@ const MenuItem = () => {
 export const Header = () => {
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
   const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
+  const [showDeleteabModal, setShowDeleteTabModal] = useState(false);
   const [modalTab, setModalTab] = useState<IWorkspace | null>(null);
 
   useEffect(() => {
@@ -113,6 +114,10 @@ export const Header = () => {
                 setModalTab(tab);
                 setShowCreateNewTabModal(true);
               }}
+              onDelete={() => {
+                setModalTab(tab);
+                setShowDeleteTabModal(true);
+              }}
             />
           ))}
         </Tabs>
@@ -122,6 +127,7 @@ export const Header = () => {
       </div>
       <MenuItem />
       <CreateNewTabModal tab={modalTab} open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
+      <DeleteTabModal tab={modalTab} open={showDeleteabModal} onClose={() => setShowDeleteTabModal(false)} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {
   createTicketApi,
   createWorkspaceApi,
   deleteTicketApi,
+  deleteWorkspaceApi,
   getChatMessagesApi,
   getTicketsApi,
   getWorkspacesApi,
@@ -23,6 +24,7 @@ interface ChatStore {
   loading: boolean;
   createNewWorkspace: (name: string, type: string) => void;
   updateWorkspace: (idx: string, name: string, type: string) => void;
+  deleteWorkspace: (idx: string) => void;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
   selectTicketId: (idx: string) => void;
@@ -63,6 +65,11 @@ export const useChatStore = create<ChatStore>()(
         updateWorkspaceApi(idx, name, type).then((res) => {
           const filteredWorkspaces = get().workspaces.filter((workspace) => workspace.id !== idx) ?? [];
           set({workspaces: [...filteredWorkspaces, res.data]});
+        });
+      },
+      deleteWorkspace(idx: string) {
+        deleteWorkspaceApi(idx).then(() => {
+          get().getWorkspaces();
         });
       },
       setWorkspaceId(idx: string) {
