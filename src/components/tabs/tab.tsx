@@ -2,6 +2,8 @@ import React from 'react';
 
 import classNames from 'classnames';
 
+import {TabMenu} from './menu';
+
 export type TabProps = {
   tabId: string;
   title?: string;
@@ -21,7 +23,7 @@ export const Tab = ({tabId, title, icon, onClick, isFocused, isDisabled}: TabPro
     <div id={tabId} onClick={onClick}>
       <button
         className={classNames(
-          'relative h-10 flex items-center justify-center px-4 rounded-t-[20px] text-14 font-semibold',
+          'relative h-10 flex items-center justify-center pl-4 pr-3 rounded-t-[20px] text-14 font-semibold',
           // beforeClass,
           classSelected,
         )}
@@ -29,6 +31,7 @@ export const Tab = ({tabId, title, icon, onClick, isFocused, isDisabled}: TabPro
       >
         {icon && <div className='mr-2'>{icon}</div>}
         {title && title}
+        {isFocused && <TabMenu onRename={() => null} onDelete={() => null} />}
       </button>
     </div>
   );
