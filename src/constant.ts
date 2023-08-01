@@ -52,3 +52,5 @@ Act as a virtual assistant powered by model: '{{model}}', my input is:
 {{input}}
 '''
 `;
+
+export const TabModes = [{name: 'Private'}, {name: 'Public'}];

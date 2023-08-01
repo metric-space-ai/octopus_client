@@ -7,3 +7,5 @@ export interface IWorkspace {
   type: WorkspaceType;
   created_at: string;
 }
+
+export type TabMode = 'Public' | 'Private';

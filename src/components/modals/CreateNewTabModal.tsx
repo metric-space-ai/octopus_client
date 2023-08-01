@@ -1,20 +1,35 @@
 import {Fragment, useState} from 'react';
 
 import {Dialog, Listbox, Transition} from '@headlessui/react';
-import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {CheckIcon, ChevronDownIcon, LockClosedIcon, UserGroupIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {useForm} from 'react-hook-form';
+
+import {TabModes} from '@/constant';
+import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-
-const people = [{name: 'Private'}, {name: 'Public'}];
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
 }
 
+interface IFormInputs {
+  name: string;
+}
+
 export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
-  const [selected, setSelected] = useState(people[0]);
+  const [selected, setSelected] = useState(TabModes[0]);
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<IFormInputs>();
+
+  const onSubmit = async (data: IFormInputs) => {
+    const {name} = data;
+  };
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -48,13 +63,24 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
                 <Dialog.Title as='h3' className='text-24 font-semibold text-content-primary'>
                   Create a new tab
                 </Dialog.Title>
-                <form className='flex flex-col mt-5 gap-5'>
-                  <Input placeholder='Tab name' />
+                <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
+                  <Input
+                    placeholder='Tab name'
+                    errors={errors.name && errors.name.message}
+                    rules={register('name', authValidator.username)}
+                  />
                   <Listbox value={selected} onChange={setSelected}>
                     <div className='relative mt-1'>
                       <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
-                        <span className='block truncate'>{selected.name}</span>
-                        <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
+                        <div className='flex gap-1 items-center'>
+                          {selected.name === 'Public' ? (
+                            <UserGroupIcon className='w-4 h-4 text-content-grey-900' />
+                          ) : (
+                            <LockClosedIcon className='w-4 h-4 text-content-grey-900' />
+                          )}
+                          <span className='text-16 text-content-grey-900'>{selected.name}</span>
+                        </div>
+                        <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                           <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
                         </span>
                       </Listbox.Button>
@@ -65,23 +91,21 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
                         leaveTo='opacity-0'
                       >
                         <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-content-primary'>
-                          {people.map((person, personIdx) => (
+                          {TabModes.map((tab, tabIdx) => (
                             <Listbox.Option
-                              key={personIdx}
+                              key={tabIdx}
                               className={({active}) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                  active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                                `relative select-none py-2 pl-10 pr-4 ${
+                                  active ? 'bg-content-grey-100' : 'text-gray-900'
                                 }`
                               }
-                              value={person}
+                              value={tab}
                             >
                               {({selected}) => (
                                 <>
-                                  <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                                    {person.name}
-                                  </span>
+                                  <span className='block truncate'>{tab.name}</span>
                                   {selected ? (
-                                    <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600'>
+                                    <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-content-primary'>
                                       <CheckIcon className='h-5 w-5' aria-hidden='true' />
                                     </span>
                                   ) : null}
@@ -93,8 +117,8 @@ export const CreateNewTabModal = ({open, onClose}: ModalProps) => {
                       </Transition>
                     </div>
                   </Listbox>
+                  <Button className='mt-2 w-full h-11' variant='primary' title='Create a tab' />
                 </form>
-                <Button className='mt-8 w-full h-11' variant='primary' title='Create a tab' onClick={onClose} />
               </Dialog.Panel>
             </Transition.Child>
           </div>
