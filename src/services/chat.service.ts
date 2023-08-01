@@ -7,6 +7,11 @@ export const createWorkspaceApi = async (name: string, type: string) => {
   return apiHub.post<IWorkspace>('/api/v1/workspaces', payload);
 };
 
+export const updateWorkspaceApi = async (idx: string, name: string, type: string) => {
+  const payload = {name, type};
+  return apiHub.put<IWorkspace>(`/api/v1/workspaces/${idx}`, payload);
+};
+
 export const getWorkspacesApi = async () => {
   return apiHub.get<IWorkspace[]>('/api/v1/workspaces');
 };

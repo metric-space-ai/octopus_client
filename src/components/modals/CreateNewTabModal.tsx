@@ -23,7 +23,7 @@ interface IFormInputs {
 }
 
 export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
-  const {createNewWorkspace} = useChatStore();
+  const {createNewWorkspace, updateWorkspace} = useChatStore();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(TabModes[0]);
 
@@ -38,7 +38,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
     const {name} = data;
     setLoading(true);
     if (tab) {
-      await createNewWorkspace(name, selected.name);
+      await updateWorkspace(tab.id, name, selected.name);
     } else {
       await createNewWorkspace(name, selected.name);
     }
@@ -137,7 +137,12 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                       </Transition>
                     </div>
                   </Listbox>
-                  <Button className='mt-2 w-full h-11' variant='primary' title='Create a tab' loading={loading} />
+                  <Button
+                    className='mt-2 w-full h-11'
+                    variant='primary'
+                    title={tab ? 'Update tab' : 'Create a tab'}
+                    loading={loading}
+                  />
                 </form>
               </Dialog.Panel>
             </Transition.Child>

@@ -9,6 +9,7 @@ import {
   getChatMessagesApi,
   getTicketsApi,
   getWorkspacesApi,
+  updateWorkspaceApi,
 } from '@/services/chat.service';
 import {IChatMessage, ITicket, IWorkspace} from '@/types';
 
@@ -21,6 +22,7 @@ interface ChatStore {
   messages: IChatMessage[];
   loading: boolean;
   createNewWorkspace: (name: string, type: string) => void;
+  updateWorkspace: (idx: string, name: string, type: string) => void;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
   selectTicketId: (idx: string) => void;
@@ -55,6 +57,12 @@ export const useChatStore = create<ChatStore>()(
         createWorkspaceApi(name, type).then((res) => {
           set({workspaces: [...get().workspaces, res.data]});
           get().setWorkspaceId(res.data.id);
+        });
+      },
+      updateWorkspace(idx: string, name: string, type: string) {
+        updateWorkspaceApi(idx, name, type).then((res) => {
+          const filteredWorkspaces = get().workspaces.filter((workspace) => workspace.id !== idx) ?? [];
+          set({workspaces: [...filteredWorkspaces, res.data]});
         });
       },
       setWorkspaceId(idx: string) {
