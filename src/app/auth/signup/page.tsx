@@ -80,7 +80,7 @@ const SignupPage = () => {
         <span className='mt-10 text-12 font-medium text-content-grey-600'>
           Already have an account?{' '}
           <Link href='login'>
-            <span className='text-14 text-content-accent'>Log In</span>
+            <span className='text-14 text-content-accent underline'>Log In</span>
           </Link>
         </span>
       </div>

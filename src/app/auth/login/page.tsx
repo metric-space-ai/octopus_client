@@ -67,7 +67,7 @@ const LoginPage = () => {
           <span className='mt-10 text-12 font-medium text-content-grey-600'>
             Don’t have an account?{' '}
             <Link href='signup'>
-              <span className='text-14 text-content-accent'>Sign up</span>
+              <span className='text-14 text-content-accent underline'>Sign up</span>
             </Link>
           </span>
         </div>

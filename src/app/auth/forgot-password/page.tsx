@@ -55,7 +55,7 @@ const ForgotPasswordPage = () => {
             <Button className='mt-6 w-full !h-11 rounded-[40px]' loading={loading} title='Reset password' />
           </form>
           <Link className='mt-10' href='login'>
-            <span className='text-14 text-content-accent'>Back to Log in</span>
+            <span className='text-14 text-content-accent underline'>Back to Log in</span>
           </Link>
         </div>
       </div>
