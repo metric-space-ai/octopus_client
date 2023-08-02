@@ -127,9 +127,11 @@ export const Header = () => {
             />
           ))}
         </Tabs>
-        <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
-          <PlusIcon className='w-4 h-4 text-content-white' />
-        </IconButton>
+        {isAdmin && (
+          <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
+            <PlusIcon className='w-4 h-4 text-content-white' />
+          </IconButton>
+        )}
       </div>
       <MenuItem />
       <CreateNewTabModal tab={modalTab} open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
