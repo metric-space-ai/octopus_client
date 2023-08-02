@@ -14,7 +14,12 @@ export const register = async (payload: IRegisterPayload) => {
 
 export const forgotPassword = async (email: string) => {
   const payload = {email};
-  return apiHub.post('/api/v1/auth/forgot-password', payload);
+  return apiHub.post('/api/v1/password-resets', payload);
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  const payload = {password, repeat_password: password};
+  return apiHub.put(`/api/v1/password-resets/${token}`, payload);
 };
 
 export const getProfile = async (id: string) => {

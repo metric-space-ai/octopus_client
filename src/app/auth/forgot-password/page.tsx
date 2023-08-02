@@ -5,6 +5,7 @@ import {useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
+import {toast} from 'react-hot-toast';
 
 import Logo44 from '@/assets/icons/logo-44.png';
 import {Button} from '@/components/buttons';
@@ -31,6 +32,7 @@ const ForgotPasswordPage = () => {
     setLoading(true);
     try {
       await forgotPassword(email);
+      toast.success('We sent a link to the reset password page. Please check your email.');
     } finally {
       setLoading(false);
     }
