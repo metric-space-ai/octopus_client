@@ -72,16 +72,21 @@ const MenuItem = () => {
 };
 
 export const Header = () => {
+  const {user} = useAuthContext();
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
   const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
   const [showDeleteabModal, setShowDeleteTabModal] = useState(false);
   const [modalTab, setModalTab] = useState<IWorkspace | null>(null);
+  const isAdmin = user?.roles.includes('ROLE_COMPANY_ADMIN_USER');
 
   useEffect(() => {
     getWorkspaces();
   }, [getWorkspaces]);
 
   const handleTab = (idx: string) => {
+    if (idx === currentWorkspaceId) {
+      return;
+    }
     setWorkspaceId(idx);
   };
 
@@ -110,6 +115,7 @@ export const Header = () => {
                   </div>
                 )
               }
+              editable={isAdmin}
               onRename={() => {
                 setModalTab(tab);
                 setShowCreateNewTabModal(true);
