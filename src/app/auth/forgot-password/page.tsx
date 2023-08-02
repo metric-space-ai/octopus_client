@@ -4,6 +4,7 @@ import {useState} from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {useForm} from 'react-hook-form';
 import {toast} from 'react-hot-toast';
 
@@ -20,6 +21,7 @@ interface IFormInputs {
 }
 
 const ForgotPasswordPage = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -30,12 +32,16 @@ const ForgotPasswordPage = () => {
   const onSubmit = async (data: IFormInputs) => {
     const {email} = data;
     setLoading(true);
-    try {
-      await forgotPassword(email);
-      toast.success('We sent a link to the reset password page. Please check your email.');
-    } finally {
-      setLoading(false);
-    }
+    forgotPassword(email)
+      .then(() => {
+        toast.success('We sent a link to the reset password page. Please check your email.');
+        router.push('/auth/reset-password');
+        setLoading(false);
+      })
+      .catch((e) => {
+        toast.error(e.response?.data?.error ?? 'Something went wrong.');
+        setLoading(false);
+      });
   };
 
   return (

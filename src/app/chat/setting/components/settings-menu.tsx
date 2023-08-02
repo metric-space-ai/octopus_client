@@ -1,6 +1,5 @@
 'use client';
 
-import {Tab} from '@headlessui/react';
 import {Cog6ToothIcon, KeyIcon, UserIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
