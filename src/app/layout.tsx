@@ -6,8 +6,6 @@ import {Toaster} from 'react-hot-toast';
 import {RedirectPath} from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
 
-import {getClientConfig} from '../config/client';
-
 export const metadata = {
   title: 'Octopus',
   description: 'Your personal ChatGPT Chat Bot.',
@@ -36,9 +34,6 @@ const poppins = Poppins({
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang='en' className={`${poppins.variable}`}>
-      <head>
-        <meta name='config' content={JSON.stringify(getClientConfig())} />
-      </head>
       <body className='font-poppins bg-content-black'>
         <AuthProvider>
           <RedirectPath>{children}</RedirectPath>

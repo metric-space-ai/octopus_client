@@ -42,7 +42,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     if (!authData) {
       setUser(null);
       setAuthLoading(false);
-      router.push('/auth/login');
     } else {
       getProfile(authData.user_id)
         .then((res) => {

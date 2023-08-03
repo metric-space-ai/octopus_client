@@ -1,5 +1,3 @@
-import {SubmitKey} from '@/store/old/config';
-
 const en = {
   WIP: 'Coming Soon...',
   Error: {
@@ -42,10 +40,7 @@ const en = {
     Rename: 'Rename Chat',
     Typing: 'Typing…',
     Input: (submitKey: string) => {
-      let inputHints = `${submitKey} to send`;
-      if (submitKey === String(SubmitKey.Enter)) {
-        inputHints += ', Shift + Enter to wrap';
-      }
+      const inputHints = `${submitKey} to send`;
       return inputHints;
     },
     InputPlaceholder: 'Ask anything',

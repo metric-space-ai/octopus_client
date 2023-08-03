@@ -1,5 +1,3 @@
-import {SubmitKey} from '@/store/old/config';
-
 import type {PartialLocaleType} from './index';
 
 const de: PartialLocaleType = {
@@ -24,10 +22,7 @@ const de: PartialLocaleType = {
     Rename: 'Chat umbenennen',
     Typing: 'Tippen...',
     Input: (submitKey: string) => {
-      let inputHints = `${submitKey} um zu Senden`;
-      if (submitKey === String(SubmitKey.Enter)) {
-        inputHints += ', Umschalt + Eingabe für Zeilenumbruch';
-      }
+      const inputHints = `${submitKey} um zu Senden`;
       return inputHints;
     },
     InputPlaceholder: 'Ask anything',
