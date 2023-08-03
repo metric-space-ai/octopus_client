@@ -1,6 +1,11 @@
-export const LogoIcon = () => {
+interface LogoIconProps {
+  width?: number;
+  height?: number;
+}
+
+export const LogoIcon = ({width = 48, height = 32}: LogoIconProps) => {
   return (
-    <svg width='48' height='32' viewBox='0 0 48 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg width={width} height={height} viewBox='0 0 48 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <g id='Group'>
         <path
           id='Vector'

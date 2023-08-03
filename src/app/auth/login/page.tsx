@@ -1,12 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
 
-import Logo44 from '@/assets/icons/logo-44.png';
 import {Button, GoogleButton} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {Logo} from '@/components/logo';
 import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
@@ -33,7 +32,7 @@ const LoginPage = () => {
   return (
     <div className='min-h-full grid sm:grid-cols-2 gap-3'>
       <div className='flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
-        <Image className='absolute left-10 top-10' src={Logo44} alt='logo' />
+        <Logo className='absolute left-10 top-10' withText />
         <h1 className='text-32 font-semibold text-content-black text-center'>Welcome back to Octopus AI</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
           <p className='mt-2 text-16 font-medium text-content-grey-600'>Please enter your details</p>

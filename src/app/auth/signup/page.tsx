@@ -1,12 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import {useForm} from 'react-hook-form';
 
-import Logo44 from '@/assets/icons/logo-44.png';
 import {Button, GoogleButton} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {Logo} from '@/components/logo';
 import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
@@ -35,7 +34,7 @@ const SignupPage = () => {
 
   return (
     <div className='min-h-full flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
-      <Image className='absolute left-10 top-10' src={Logo44} alt='logo' />
+      <Logo className='absolute left-10 top-10' withText />
       <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
         <h1 className='text-44 font-semibold text-content-black'>Sign Up</h1>
         <form className='w-full mt-10 flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
