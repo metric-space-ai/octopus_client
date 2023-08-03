@@ -13,10 +13,9 @@ export const RedirectPath = ({children}: {children: React.ReactNode}): React.Rea
 
   if (!protectedPaths.includes(pathname) && isAuthenticated) {
     redirect(paths.chat);
-    return null;
   }
 
-  if (!pathname.includes('auth') && !isAuthenticated) {
+  if (!pathname.includes('auth') && !pathname.includes('installation') && !isAuthenticated) {
     redirect('/auth/login');
   }
 
