@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import {useForm} from 'react-hook-form';
 
 import {Button} from '@/components/buttons';
@@ -16,7 +15,7 @@ interface IFormInputs {
   repeat_password: string;
 }
 
-const SignupPage = () => {
+const InstallationPage = () => {
   const {
     register,
     handleSubmit,
@@ -34,7 +33,7 @@ const SignupPage = () => {
 
   return (
     <div className='min-h-full flex flex-col items-center justify-center'>
-      <div className='w-full sm:w-[940px] py-[64px] flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
+      <div className='w-full md:w-[940px] py-[64px] flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
         <div className='flex flex-col items-center px-4 w-full sm:w-[640px]'>
           <div className='flex gap-4'>
             <h1 className='text-32 font-semibold text-content-black'>Welcome to Octopus AI</h1>
@@ -89,4 +88,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default InstallationPage;
