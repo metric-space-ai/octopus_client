@@ -13,10 +13,11 @@ const apiHub = axios.create({
 export const useApiClient = () => {
   const {setAuthData} = useAuthStore();
 
-  const setAxiosConfiguration = async (accessToken: string | null) => {
+  const setAxiosConfiguration = async () => {
     // provide token with every request
     apiHub.interceptors.request.use(
       (config) => {
+        const accessToken = localStorage.getItem('token');
         if (accessToken && config.headers) {
           config.headers['X-Auth-Token'] = `${accessToken}`;
         }

@@ -28,7 +28,7 @@ const AuthContext = React.createContext<IAuthContext>(null!);
 const AuthProvider = ({children}: PropsWithChildren) => {
   const router = useRouter();
   const {authData, setAuthData} = useAuthStore();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
@@ -36,13 +36,13 @@ const AuthProvider = ({children}: PropsWithChildren) => {
 
   useEffect(() => {
     setAuthLoading(true);
-    setAxiosConfiguration(authData?.id ?? null);
     setIsAuthenticated(!!authData?.id);
 
     if (!authData) {
       setUser(null);
       setAuthLoading(false);
     } else {
+      setAxiosConfiguration();
       getProfile(authData.user_id)
         .then((res) => {
           setUser({...res.data, roles: authData.data.roles});
@@ -61,8 +61,9 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         setLoading(false);
         const authData = res.data;
         setAuthData(authData);
+        localStorage.setItem('token', authData.id);
         toast.success('Login successful.');
-        router.push('/chat');
+        router.refresh();
       })
       .catch((error) => {
         console.log(error);
@@ -88,6 +89,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
 
   const handleLogout = () => {
     setAuthData(null);
+    localStorage.removeItem('token');
     router.push('/auth/login');
   };
 
