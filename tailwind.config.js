@@ -37,6 +37,7 @@ module.exports = {
           'accent-400': '#B466F1',
           'blue-dark': '#0048B5',
           'blue-light': '#5896F2',
+          disabled: '#AEAEAE',
           green: '#67A800',
           red: '#DB3A34',
         },

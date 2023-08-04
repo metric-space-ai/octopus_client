@@ -1,16 +1,19 @@
 'use client';
 
+import {useEffect, useState} from 'react';
+
 import {useForm} from 'react-hook-form';
+import {toast} from 'react-hot-toast';
 
 import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {Logo} from '@/components/logo';
-import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
+import {checkSetupApi, setupApi} from '@/services/auth.service';
 
 interface IFormInputs {
   email: string;
-  username: string;
+  company_name: string;
   password: string;
   repeat_password: string;
 }
@@ -22,13 +25,30 @@ const InstallationPage = () => {
     watch,
     formState: {errors},
   } = useForm<IFormInputs>();
-  const {loading, onRegister} = useAuthContext();
+  const [setupRequired, setSetupRequired] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const disabled = !setupRequired;
+
+  useEffect(() => {
+    checkSetupApi().then((res) => {
+      setSetupRequired(res.data?.setup_required ?? false);
+    });
+  }, []);
 
   const onSubmit = async (data: IFormInputs) => {
-    const {email, username, password, repeat_password} = data;
-    // setLoading(true);
-    const payload = {email, name: username, password, repeat_password, job_title: 'worker'};
-    onRegister(payload);
+    const {email, company_name, password, repeat_password} = data;
+    setLoading(true);
+    const payload = {email, company_name, password, repeat_password};
+    setupApi(payload)
+      .then(() => {
+        setLoading(false);
+        setSetupRequired(false);
+        toast.success('Company account registered successfully!.');
+      })
+      .catch(() => {
+        toast.error('Something went wrong. Please try again.');
+        setLoading(false);
+      });
   };
 
   return (
@@ -45,9 +65,9 @@ const InstallationPage = () => {
           </p>
           <form className='max-w-[370px] w-full mt-10 flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
             <Input
-              placeholder='Username'
-              errors={errors.username && errors.username.message}
-              rules={register('username', authValidator.username)}
+              placeholder='Company Name'
+              errors={errors.company_name && errors.company_name.message}
+              rules={register('company_name', authValidator.username)}
             />
             <Input
               type='email'
@@ -77,7 +97,12 @@ const InstallationPage = () => {
             <span className='text-10 font-medium text-center text-content-grey-600'>
               Important: Please keep this password as you will need it for login.
             </span>
-            <Button className='mt-4 w-full !h-11 rounded-[40px]' loading={loading} title='Install Octopus AI' />
+            <Button
+              className='mt-4 w-full !h-11 rounded-[40px]'
+              disabled={disabled}
+              loading={loading}
+              title='Install Octopus AI'
+            />
           </form>
           <span className='mt-2 text-12 font-medium text-content-grey-600'>
             Please double-check your information before proceeding.

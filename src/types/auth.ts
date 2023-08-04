@@ -14,3 +14,10 @@ export interface IRegisterPayload {
   password: string;
   repeat_password: string;
 }
+
+export interface ICompanyRegisterPayload {
+  email: string;
+  company_name: string;
+  password: string;
+  repeat_password: string;
+}

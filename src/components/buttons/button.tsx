@@ -34,7 +34,7 @@ const TextStyle = {
   secondary: 'text-content-white',
   transparent: 'text-content-black',
   outline: 'text-content-black',
-  disabled: 'text-content-primary',
+  disabled: 'text-content-white',
 };
 
 const Sizes = {
@@ -56,9 +56,9 @@ export const Button = ({
   onClick,
   ...props
 }: ButtonProps) => {
-  const style = ButtonStyle[variant];
-  const hoverStyle = ButtonHoverStyle[variant];
-  const textStyle = TextStyle[variant];
+  const style = ButtonStyle[disabled ? 'disabled' : variant];
+  const hoverStyle = ButtonHoverStyle[disabled ? 'disabled' : variant];
+  const textStyle = TextStyle[disabled ? 'disabled' : variant];
   const sizeStyle = Sizes[size];
 
   return (
