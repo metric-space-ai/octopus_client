@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import {Tab, Tabs} from '@/components/tabs';
+import {paths} from '@/config/path';
 import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
 import {IWorkspace} from '@/types';
@@ -39,7 +40,7 @@ const MenuItem = () => {
       >
         <Menu.Items className='absolute right-0 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='px-2 py-2 '>
-            <Menu.Item as='a' href='chat/setting'>
+            <Menu.Item as='a' href={paths.setting}>
               {({active}) => (
                 <button
                   className={`${
