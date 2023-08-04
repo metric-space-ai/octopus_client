@@ -3,7 +3,7 @@ import './globals.css';
 import {Poppins} from 'next/font/google';
 import {Toaster} from 'react-hot-toast';
 
-import {RedirectPath} from '@/components/redirect-path';
+import {RedirectPathProvider} from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
 
 export const metadata = {
@@ -36,7 +36,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang='en' className={`${poppins.variable}`}>
       <body className='font-poppins bg-content-black'>
         <AuthProvider>
-          <RedirectPath>{children}</RedirectPath>
+          <RedirectPathProvider>{children}</RedirectPathProvider>
         </AuthProvider>
         <Toaster position='top-right' />
       </body>
