@@ -5,8 +5,8 @@ import {ArrowPathIcon} from '@heroicons/react/24/solid';
 import GithubIcon from '@/assets/icons/github.svg';
 
 import {Button} from './buttons';
-import Locale from '../locales';
 import {downloadAs} from '../helpers';
+import Locale from '../locales';
 
 interface IErrorBoundaryState {
   hasError: boolean;
