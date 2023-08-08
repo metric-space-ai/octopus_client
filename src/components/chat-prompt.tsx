@@ -1,14 +1,13 @@
 import {ArrowLongRightIcon, ArrowTrendingUpIcon, PlusIcon} from '@heroicons/react/24/outline';
-import Image from 'next/image';
 
-import Logo44 from '@/assets/icons/logo-44.png';
+import {Logo} from './logo';
 
 export const ChatPrompt = () => {
   return (
     <div className='h-full flex flex-col justify-center items-center'>
       <div className='flex flex-col gap-4 max-w-[1136px]'>
         <div className='flex gap-4 items-center'>
-          <Image src={Logo44} alt='logo' />
+          <Logo />
           <h1 className='text-44 font-semibold text-content-black'>Get started:</h1>
         </div>
         <div className='flex gap-4 h-[220px]'>
