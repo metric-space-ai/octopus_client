@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import {useChatStore} from '@/store';
 
 import {Button, IconButton} from './buttons';
+import {AlertModal} from './modals';
 import {SearchBar} from './search';
 import Locale from '../locales';
 
@@ -19,6 +20,7 @@ const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
 export function SideBar(props: {className?: string}) {
   const chatStore = useChatStore();
   const [enabled, setEnabled] = useState(false);
+  const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
 
   return (
     <div
@@ -42,7 +44,13 @@ export function SideBar(props: {className?: string}) {
           </div>
           <Switch
             checked={enabled}
-            onChange={setEnabled}
+            onChange={(checked) => {
+              if (!checked) {
+                setShowDeactivateConfirmationModal(true);
+              } else {
+                setEnabled(true);
+              }
+            }}
             className={`${enabled ? 'bg-content-accent' : 'bg-content-disabled'}
           relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
           >
@@ -68,6 +76,21 @@ export function SideBar(props: {className?: string}) {
           }}
         />
       </div>
+      {showDeactivateConfirmationModal && (
+        <AlertModal
+          headTitle='Disable Content Safety'
+          title='Disable Content Safety'
+          description='With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
+          open={showDeactivateConfirmationModal}
+          onConfirm={() => {
+            setEnabled(false);
+            setShowDeactivateConfirmationModal(false);
+          }}
+          onClose={() => {
+            setShowDeactivateConfirmationModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }
