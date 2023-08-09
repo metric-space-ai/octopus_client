@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react';
 
+import {toast} from 'react-hot-toast';
+
 export function trimTopic(topic: string) {
   return topic.replace(/[，。！？”“"、,.!?]*$/, '');
 }
@@ -7,7 +9,7 @@ export function trimTopic(topic: string) {
 export async function copyToClipboard(text: string) {
   try {
     await navigator.clipboard.writeText(text);
-    // showToast(Locale.Copy.Success);
+    toast.success('Copied to the clipboard');
   } catch (error) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
