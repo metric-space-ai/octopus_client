@@ -67,7 +67,7 @@ export const DeleteTabModal = ({tab, open, onClose}: ModalProps) => {
                   <Button
                     type='button'
                     className='h-11'
-                    variant='secondary'
+                    variant='dangerous'
                     title='Delete Tab'
                     loading={loading}
                     onClick={onDelete}
