@@ -11,11 +11,21 @@ interface AlertModalProps {
   description?: string;
   open: boolean;
   loading?: boolean;
+  confirmTitle?: string;
   onConfirm: () => void;
   onClose: () => void;
 }
 
-export const AlertModal = ({headTitle, title, description, open, loading, onConfirm, onClose}: AlertModalProps) => {
+export const AlertModal = ({
+  headTitle,
+  title,
+  description,
+  open,
+  loading,
+  confirmTitle,
+  onConfirm,
+  onClose,
+}: AlertModalProps) => {
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog className='relative z-10' as='div' onClose={onClose}>
@@ -54,8 +64,8 @@ export const AlertModal = ({headTitle, title, description, open, loading, onConf
                   <Button
                     type='button'
                     className='h-11'
-                    variant='secondary'
-                    title='Ok'
+                    variant='dangerous'
+                    title={confirmTitle ?? 'Ok'}
                     loading={loading}
                     onClick={onConfirm}
                   />

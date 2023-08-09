@@ -39,7 +39,8 @@ module.exports = {
           'blue-light': '#5896F2',
           disabled: '#AEAEAE',
           green: '#67A800',
-          red: '#DB3A34',
+          'red-600': '#DB3A34',
+          'red-400': '#EA6C68',
         },
         success: {
           default: '#00875A',

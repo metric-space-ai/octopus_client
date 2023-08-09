@@ -81,6 +81,7 @@ export function SideBar(props: {className?: string}) {
           headTitle='Disable Content Safety'
           title='Disable Content Safety'
           description='With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
+          confirmTitle='Deactivate Content Safety'
           open={showDeactivateConfirmationModal}
           onConfirm={() => {
             setEnabled(false);
