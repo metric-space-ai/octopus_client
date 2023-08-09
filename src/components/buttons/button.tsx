@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import {Spinner} from '../spinner';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'transparent' | 'outline' | 'disabled';
+  variant?: 'primary' | 'secondary' | 'transparent' | 'outline' | 'dangerous' | 'disabled';
   size?: 'default' | 'large' | 'medium' | 'small';
   loading?: boolean;
   iconBefore?: React.ReactNode;
@@ -17,6 +17,7 @@ const ButtonStyle = {
   primary: 'bg-content-accent',
   secondary: 'bg-content-black',
   transparent: 'bg-transparent',
+  dangerous: 'bg-content-red-600',
   outline: 'bg-transparent border border-content-black',
   disabled: 'bg-content-disabled',
 };
@@ -25,6 +26,7 @@ const ButtonHoverStyle = {
   primary: 'hover:bg-content-accent-hover',
   secondary: 'hover:bg-content-grey-600',
   transparent: 'hover:bg-transparent',
+  dangerous: 'hover:bg-content-red-400',
   outline: 'hover:bg-transparent',
   disabled: 'hover:bg-content-disabled',
 };
@@ -33,6 +35,7 @@ const TextStyle = {
   primary: 'text-content-white',
   secondary: 'text-content-white',
   transparent: 'text-content-black',
+  dangerous: 'text-content-white',
   outline: 'text-content-black',
   disabled: 'text-content-white',
 };
