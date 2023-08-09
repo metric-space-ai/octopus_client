@@ -28,15 +28,15 @@ export const useApiClient = () => {
       },
     );
 
-    apiHub.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response.status === 401) {
-          setAuthData(null);
-        }
-        return Promise.reject(error);
-      },
-    );
+    // apiHub.interceptors.response.use(
+    //   (response) => response,
+    //   (error) => {
+    //     if (error.response.status === 401) {
+    //       setAuthData(null);
+    //     }
+    //     return Promise.reject(error);
+    //   },
+    // );
   };
 
   return {setAxiosConfiguration};
