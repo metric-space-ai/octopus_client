@@ -18,7 +18,7 @@ export default function ChatPage() {
   const [userInput, setUserInput] = useState('');
   const {loading, isNewTicket, messages, newMessage} = useChatStore();
   const {scrollRef, setAutoScroll, scrollToBottom} = useScrollToBottom();
-  const showChatPrompt = messages.length === 0 || isNewTicket;
+  const showChatPrompt = messages?.length === 0 || isNewTicket;
   // auto grow input
   const [inputRows, setInputRows] = useState(1);
   const measure = useDebouncedCallback(
@@ -64,7 +64,7 @@ export default function ChatPage() {
         ) : showChatPrompt ? (
           <ChatPrompt />
         ) : (
-          messages.map((item) => <MessageItem key={item.id} item={item} />)
+          messages?.map((item) => <MessageItem key={item.id} item={item} />)
         )}
       </div>
       <div className='relative w-full p-5 border-box flex flex-col'>
