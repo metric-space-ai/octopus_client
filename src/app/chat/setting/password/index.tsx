@@ -22,6 +22,7 @@ const PasswordPage = () => {
     reset,
     register,
     handleSubmit,
+    watch,
     formState: {errors},
   } = useForm<IFormInputs>();
   const [loading, setLoading] = useState(false);
@@ -65,7 +66,14 @@ const PasswordPage = () => {
           label='Confirm Password'
           placeholder='Confirm Password'
           errors={errors.confirmNewPassword && errors.confirmNewPassword.message}
-          rules={register('confirmNewPassword', authValidator.password)}
+          rules={register('confirmNewPassword', {
+            required: true,
+            validate: (val: string) => {
+              if (watch('newPassword') !== val) {
+                return 'Your password does not match.';
+              }
+            },
+          })}
         />
         <div className='flex justify-between gap-4'>
           <Button className='flex-1' title='Save' loading={loading} />
