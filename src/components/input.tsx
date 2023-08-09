@@ -40,7 +40,7 @@ export const Input = ({className, label, type, placeholder, errors, rules}: Inpu
           </div>
         )}
       </div>
-      {errors && <p className='mt-1 text-12 text-content-red'>{errors}</p>}
+      {errors && <p className='mt-1 text-12 text-content-red-600'>{errors}</p>}
     </div>
   );
 };

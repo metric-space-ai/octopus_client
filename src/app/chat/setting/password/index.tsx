@@ -3,10 +3,13 @@
 import {useState} from 'react';
 
 import {useForm} from 'react-hook-form';
+import {toast} from 'react-hot-toast';
 
 import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {authValidator} from '@/helpers/validators';
+import {changePassword} from '@/services/auth.service';
+import {useAuthStore} from '@/store';
 
 interface IFormInputs {
   currentPassword: string;
@@ -16,17 +19,28 @@ interface IFormInputs {
 
 const PasswordPage = () => {
   const {
+    reset,
     register,
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
   const [loading, setLoading] = useState(false);
+  const {authData} = useAuthStore();
 
   const onSubmit = async (data: IFormInputs) => {
-    const {currentPassword, newPassword, confirmNewPassword} = data;
-    // setLoading(true);
-    // const variables = {email, password, username};
-    // await createUser({variables});
+    const {currentPassword, newPassword} = data;
+    if (authData) {
+      setLoading(true);
+      try {
+        await changePassword(authData.user_id, currentPassword, newPassword);
+        toast.success('Password changed successfully!');
+        reset();
+      } catch {
+        toast.error('Something went wrong. Please try again!');
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -36,7 +50,7 @@ const PasswordPage = () => {
           type='password'
           label='Current Password'
           placeholder='Current Password'
-          errors={errors.currentPassword && errors.currentPassword.message}
+          errors={errors.currentPassword && 'Password length must be 5, including letter and number.'}
           rules={register('currentPassword', authValidator.password)}
         />
         <Input
@@ -54,8 +68,8 @@ const PasswordPage = () => {
           rules={register('confirmNewPassword', authValidator.password)}
         />
         <div className='flex justify-between gap-4'>
-          <Button className='flex-1' title='Save' />
-          <Button variant='outline' className='flex-1' title='Cancel' />
+          <Button className='flex-1' title='Save' loading={loading} />
+          <Button type='button' variant='outline' className='flex-1' title='Cancel' />
         </div>
       </form>
     </div>
