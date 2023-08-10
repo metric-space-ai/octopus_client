@@ -27,7 +27,8 @@ export function SideBar(props: {className?: string}) {
   return (
     <div
       className={classNames(
-        'w-[320px] hidden sm:flex flex-col px-4 py-6 bg-content-grey-900 border-box rounded-[20px]',
+        'hidden sm:flex flex-col px-4 py-6 bg-content-grey-900 border-box rounded-[20px]',
+        expanded && 'w-[320px]',
         props.className,
       )}
     >
@@ -47,7 +48,7 @@ export function SideBar(props: {className?: string}) {
         )}
       </div>
       <div className='mt-5 flex-1'>
-        <ChatList />
+        <ChatList expanded={expanded} />
       </div>
       {expanded && (
         <div className='mt-4'>
