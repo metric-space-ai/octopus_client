@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react';
 
+import {StopIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
 import {getChatMessageApi} from '@/services/chat.service';
@@ -65,7 +66,18 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? <AnimateDots /> : <MarkdownContent content={item.response} />}
         </div>
       </div>
-      {loading && <Button title='Stop generating...' onClick={() => deleteMessage(item)} />}
+      {loading && (
+        <div className='mt-4 flex justify-center'>
+          <Button
+            className='bg-white'
+            variant='transparent'
+            size='small'
+            iconBefore={<StopIcon className='w-4 h-4' />}
+            title='Stop generating...'
+            onClick={() => deleteMessage(item)}
+          />
+        </div>
+      )}
     </div>
   );
 };
