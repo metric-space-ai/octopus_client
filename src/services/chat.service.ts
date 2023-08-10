@@ -44,3 +44,7 @@ export const createChatMessageApi = async (ticketId: string, message: string) =>
 export const getChatMessageApi = async (chatId: string, chatMessageId: string) => {
   return apiHub.get<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
+
+export const deleteChatMessageApi = async (chatId: string, chatMessageId: string) => {
+  return apiHub.delete<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
+};

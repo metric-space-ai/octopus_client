@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 
 import {UserIcon} from '@heroicons/react/24/solid';
 
@@ -6,6 +6,7 @@ import {getChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
+import {Button} from './buttons';
 import {MarkdownContent} from './markdown';
 import {AnimateDots, LogoIcon} from './svgs';
 
@@ -14,12 +15,13 @@ interface IMessageItem {
 }
 
 export const MessageItem = ({item}: IMessageItem) => {
-  const {updateMessage} = useChatStore();
+  const {updateMessage, deleteMessage} = useChatStore();
   const loading = item.status === 'Asked';
+  const timeoutRef = useRef(0);
 
   const checkMessageResponse = useCallback(
     (after: number) => {
-      setTimeout(() => {
+      timeoutRef.current = window.setTimeout(() => {
         getChatMessageApi(item.chat_id, item.id).then((res) => {
           if (res.data.status === 'Asked') {
             checkMessageResponse(2000);
@@ -39,6 +41,11 @@ export const MessageItem = ({item}: IMessageItem) => {
       const diffTime = estimationResponseTime.valueOf() - now.valueOf();
       checkMessageResponse(diffTime);
     }
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
@@ -58,6 +65,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? <AnimateDots /> : <MarkdownContent content={item.response} />}
         </div>
       </div>
+      {loading && <Button title='Stop generating...' onClick={() => deleteMessage(item)} />}
     </div>
   );
 };

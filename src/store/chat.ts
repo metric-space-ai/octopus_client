@@ -5,6 +5,7 @@ import {
   createChatMessageApi,
   createTicketApi,
   createWorkspaceApi,
+  deleteChatMessageApi,
   deleteTicketApi,
   deleteWorkspaceApi,
   getChatMessagesApi,
@@ -32,6 +33,7 @@ interface ChatStore {
   deleteTicket: (idx: string) => void;
   newMessage: (message: string) => Promise<void>;
   updateMessage: (chatMessage: IChatMessage) => void;
+  deleteMessage: (chatMessage: IChatMessage) => void;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -169,6 +171,12 @@ export const useChatStore = create<ChatStore>()(
           messages[index] = chatMessage;
           set({messages});
         }
+      },
+      deleteMessage(chatMessage: IChatMessage) {
+        deleteChatMessageApi(chatMessage.chat_id, chatMessage.id).then(() => {
+          const messages = get().messages;
+          set({messages: messages.filter((m) => m.id !== chatMessage.id)});
+        });
       },
     }),
     {
