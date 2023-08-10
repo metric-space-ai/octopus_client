@@ -35,7 +35,7 @@ export const Redirect = ({to, action = RedirectAction.Push}: RedirectProps) => {
   return null;
 };
 
-const protectedPaths = [paths.chat, paths.setting];
+const protectedPaths = [paths.installation, paths.chat, paths.setting];
 
 export const RedirectPathProvider = ({children}: {children: React.ReactNode}): React.ReactNode => {
   const pathname = usePathname();
