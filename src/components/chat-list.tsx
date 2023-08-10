@@ -26,13 +26,26 @@ export function ChatItem(props: {
   }, [props.selected]);
   return (
     <div
-      className={classNames('group relative px-3 py-[10px] rounded-full bg-content-black', !props.expanded && '!px-2')}
+      className={classNames(
+        'group relative px-3 py-[10px] rounded-full bg-content-black cursor-pointer',
+        !props.expanded && '!px-2',
+        props.selected && 'bg-content-grey-100',
+      )}
       onClick={props.onClick}
     >
       <div className='flex items-center gap-2'>
-        {<ChatBubbleLeftRightIcon className='w-5 h-5 text-white' />}
+        {
+          <ChatBubbleLeftRightIcon
+            className={classNames('w-5 h-5 text-white', props.selected && '!text-content-black')}
+          />
+        }
         {props.expanded && (
-          <div className='flex-1 text-14 font-bold text-white whitespace-nowrap text-ellipsis overflow-hidden'>
+          <div
+            className={classNames(
+              'flex-1 text-14 font-medium text-white whitespace-nowrap text-ellipsis overflow-hidden',
+              props.selected && '!text-content-black',
+            )}
+          >
             {props.title}
           </div>
         )}
@@ -42,9 +55,11 @@ export function ChatItem(props: {
           <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
         </div>
       )}
-      <div className='group-hover:opacity-100 opacity-0 absolute top-1 right-1' onClickCapture={props.onDelete}>
-        <XCircleIcon className='w-4 h-4 text-white' />
-      </div>
+      {props.expanded && (
+        <div className='group-hover:opacity-100 opacity-0 absolute top-1 right-1' onClickCapture={props.onDelete}>
+          <XCircleIcon className='w-4 h-4 text-white' />
+        </div>
+      )}
     </div>
   );
 }
