@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 
 type ButtonProps = {
-  variant?: 'default' | 'primary' | 'secondary' | 'disabled';
+  variant?: 'default' | 'primary' | 'secondary' | 'dark' | 'disabled';
   loading?: boolean;
   disabled?: boolean;
   className?: string;
@@ -14,6 +14,7 @@ const ButtonStyle = {
   default: 'bg-transparent',
   primary: 'bg-content-accent',
   secondary: 'bg-content-grey-900',
+  dark: 'bg-content-black',
   disabled: 'bg-content-disabled',
 };
 
