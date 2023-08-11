@@ -16,7 +16,7 @@ interface IMessageItem {
 }
 
 export const MessageItem = ({item}: IMessageItem) => {
-  const {updateMessage, deleteMessage} = useChatStore();
+  const {editMessage, updateMessage, deleteMessage} = useChatStore();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -60,6 +60,8 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   const onSaveChangeMessage = () => {
     // to do
+    editMessage(item, messageText);
+    setIsEditMode(false);
   };
 
   return (

@@ -11,6 +11,7 @@ import {
   getChatMessagesApi,
   getTicketsApi,
   getWorkspacesApi,
+  updateChatMessageApi,
   updateWorkspaceApi,
 } from '@/services/chat.service';
 import {IChatMessage, ITicket, IWorkspace} from '@/types';
@@ -32,6 +33,7 @@ interface ChatStore {
   newTicket: () => void;
   deleteTicket: (idx: string) => void;
   newMessage: (message: string) => Promise<void>;
+  editMessage: (chatMessage: IChatMessage, newMssage: string) => void;
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
 }
@@ -156,6 +158,16 @@ export const useChatStore = create<ChatStore>()(
             set({isNewTicket: false});
           });
         }
+      },
+      editMessage(chatMessage: IChatMessage, newMssage: string) {
+        const messages = get().messages;
+        updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
+          const index = messages.findIndex((message) => message.id === chatMessage.id);
+          if (index !== -1) {
+            messages[index] = res.data;
+            set({messages});
+          }
+        });
       },
       updateMessage(chatMessage: IChatMessage) {
         const messages = get().messages;
