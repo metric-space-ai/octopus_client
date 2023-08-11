@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {PencilSquareIcon, StopIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
@@ -19,6 +19,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const {updateMessage, deleteMessage} = useChatStore();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const checkMessageResponse = useCallback(
     (after: number) => {
@@ -52,15 +53,23 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   return (
     <div className='mt-3 text-15 font-medium'>
-      <div className='flex gap-3 items-center'>
+      <div className='flex gap-3'>
         <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
           <UserIcon className='w-6 h-6 text-content-grey-100' />
         </div>
-        <div className='flex gap-1'>
-          <span>{item.message}</span>
-          <IconButton className='shrink-0 w-6 h-6 p-0'>
-            <PencilSquareIcon className='w-5 h-5' />
-          </IconButton>
+        <div className='mt-1'>
+          <div className='flex gap-1'>
+            <span>{item.message}</span>
+            <IconButton className='shrink-0 w-5 h-5 p-0' onClick={() => setIsEditMode(true)}>
+              <PencilSquareIcon className='w-5 h-5' />
+            </IconButton>
+          </div>
+          {isEditMode && (
+            <div className='mt-3 flex gap-2 justify-center'>
+              <Button variant='outline' title='Cancel' onClick={() => setIsEditMode(false)} />
+              <Button title='Save changes' />
+            </div>
+          )}
         </div>
       </div>
       <div className='mt-3 flex gap-3'>
