@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useRef} from 'react';
 
-import {StopIcon} from '@heroicons/react/24/outline';
+import {PencilSquareIcon, StopIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
 import {getChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
-import {Button} from './buttons';
+import {Button, IconButton} from './buttons';
 import {MarkdownContent} from './markdown';
 import {AnimateDots, LogoIcon} from './svgs';
 
@@ -53,10 +53,15 @@ export const MessageItem = ({item}: IMessageItem) => {
   return (
     <div className='mt-3 text-15 font-medium'>
       <div className='flex gap-3 items-center'>
-        <div className='w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
+        <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
           <UserIcon className='w-6 h-6 text-content-grey-100' />
         </div>
-        {item.message}
+        <div className='flex gap-1'>
+          <span>{item.message}</span>
+          <IconButton className='shrink-0 w-6 h-6 p-0'>
+            <PencilSquareIcon className='w-5 h-5' />
+          </IconButton>
+        </div>
       </div>
       <div className='mt-3 flex gap-3'>
         <div className='w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
