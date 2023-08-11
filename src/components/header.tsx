@@ -9,6 +9,7 @@ import {
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
+import {usePathname, useRouter} from 'next/navigation';
 
 import {Tab, Tabs} from '@/components/tabs';
 import {paths} from '@/config/path';
@@ -73,6 +74,8 @@ const MenuItem = () => {
 };
 
 export const Header = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const {user} = useAuthContext();
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
   const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
@@ -85,6 +88,9 @@ export const Header = () => {
   }, [getWorkspaces]);
 
   const handleTab = (idx: string) => {
+    if (pathname === paths.setting) {
+      router.push(paths.chat);
+    }
     if (idx === currentWorkspaceId) {
       return;
     }

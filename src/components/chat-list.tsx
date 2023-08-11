@@ -14,7 +14,7 @@ export function ChatItem(props: {
   title: string;
   time: string;
   selected: boolean;
-  narrow?: boolean;
+  expanded?: boolean;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -27,53 +27,63 @@ export function ChatItem(props: {
   return (
     <div
       className={classNames(
-        'group relative px-[14px] py-[10px] rounded-[10px] border border-background-secondary',
-        props.selected && 'border-background-white',
+        'group relative px-3 py-[10px] rounded-full bg-content-black cursor-pointer',
+        !props.expanded && '!px-2',
+        props.selected && 'bg-content-grey-100',
       )}
       onClick={props.onClick}
     >
-      {props.narrow ? (
-        <div className='flex flex-col'>
-          <div className='text-24 text-center opacity-60'>{<ChatBubbleLeftRightIcon />}</div>
-        </div>
-      ) : (
-        <>
-          <div className='text-14 font-bold text-white whitespace-nowrap text-ellipsis overflow-hidden'>
+      <div className='flex items-center gap-2'>
+        {
+          <ChatBubbleLeftRightIcon
+            className={classNames('w-5 h-5 text-white', props.selected && '!text-content-black')}
+          />
+        }
+        {props.expanded && (
+          <div
+            className={classNames(
+              'flex-1 text-14 font-medium text-white whitespace-nowrap text-ellipsis overflow-hidden',
+              props.selected && '!text-content-black',
+            )}
+          >
             {props.title}
           </div>
-          <div className='flex justify-between text-12 mt-2 text-content-white'>
-            <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
-          </div>
-        </>
-      )}
-
-      <div className='group-hover:opacity-100 opacity-0 absolute top-1 right-1' onClickCapture={props.onDelete}>
-        <XCircleIcon className='w-4 h-4 text-white' />
+        )}
       </div>
+      {false && (
+        <div className='flex justify-between text-12 mt-2 text-content-white'>
+          <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
+        </div>
+      )}
+      {props.expanded && (
+        <div className='group-hover:opacity-100 opacity-0 absolute top-1 right-1' onClickCapture={props.onDelete}>
+          <XCircleIcon className='w-4 h-4 text-white' />
+        </div>
+      )}
     </div>
   );
 }
 
-export function ChatList(props: {narrow?: boolean}) {
+export function ChatList({expanded}: {expanded?: boolean}) {
   const {tickets, currentTicketId, selectTicketId, deleteTicket} = useChatStore();
 
   return (
-    <div className='min-w-[280px] flex flex-col gap-2'>
+    <div className={classNames('flex flex-col gap-2', expanded && 'min-w-[280px]')}>
       {tickets.map((ticket) => (
         <ChatItem
           key={ticket.id}
           title={ticket.name}
           time={new Date(ticket.updated_at).toLocaleString()}
+          expanded={expanded}
           selected={ticket.id === currentTicketId}
           onClick={() => {
             selectTicketId(ticket.id);
           }}
           onDelete={() => {
-            if (!props.narrow || confirm(Locale.Home.DeleteChat)) {
+            if (confirm(Locale.Home.DeleteChat)) {
               deleteTicket(ticket.id);
             }
           }}
-          narrow={props.narrow}
         />
       ))}
     </div>

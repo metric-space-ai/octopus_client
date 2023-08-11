@@ -77,7 +77,7 @@ const PasswordPage = () => {
         />
         <div className='flex justify-between gap-4'>
           <Button className='flex-1' title='Save' loading={loading} />
-          <Button type='button' variant='outline' className='flex-1' title='Cancel' />
+          <Button type='reset' variant='outline' className='flex-1' title='Cancel' />
         </div>
       </form>
     </div>
