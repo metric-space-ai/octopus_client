@@ -79,9 +79,11 @@ export const MessageItem = ({item}: IMessageItem) => {
             ) : (
               <span>{item.message}</span>
             )}
-            <IconButton className='shrink-0 w-5 h-5 p-0' onClick={onEditMessage}>
-              <PencilSquareIcon className='w-5 h-5' />
-            </IconButton>
+            {!isEditMode && (
+              <IconButton className='shrink-0 w-5 h-5 p-0' onClick={onEditMessage}>
+                <PencilSquareIcon className='w-5 h-5' />
+              </IconButton>
+            )}
           </div>
           {isEditMode && (
             <div className='mt-3 flex gap-2 justify-center'>
