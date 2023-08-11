@@ -41,6 +41,11 @@ export const createChatMessageApi = async (ticketId: string, message: string) =>
   return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${ticketId}`, payload);
 };
 
+export const updateChatMessageApi = async (chatId: string, chatMessageId: string, message: string) => {
+  const payload = {message};
+  return apiHub.put<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
+};
+
 export const getChatMessageApi = async (chatId: string, chatMessageId: string) => {
   return apiHub.get<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
