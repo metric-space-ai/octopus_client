@@ -1,5 +1,4 @@
 import {create} from 'zustand';
-import {persist} from 'zustand/middleware';
 
 import {
   createChatMessageApi,
@@ -38,172 +37,165 @@ interface ChatStore {
   deleteMessage: (chatMessage: IChatMessage) => void;
 }
 
-export const useChatStore = create<ChatStore>()(
-  persist(
-    (set, get) => ({
-      workspaces: [],
-      tickets: [],
-      currentWorkspaceId: '',
-      currentTicketId: '',
-      isNewTicket: false,
-      messages: [],
-      loading: false,
-      getWorkspaces() {
-        getWorkspacesApi().then((res) => {
-          const currentIdx = get().currentWorkspaceId;
-          set({workspaces: res.data});
-          if (res.data.length > 0) {
-            if (res.data.some((workspace) => workspace.id === currentIdx)) {
-              get().setWorkspaceId(currentIdx);
-            } else {
-              get().setWorkspaceId(res.data[0].id);
-            }
+export const useChatStore = create<ChatStore>()((set, get) => ({
+  workspaces: [],
+  tickets: [],
+  currentWorkspaceId: '',
+  currentTicketId: '',
+  isNewTicket: false,
+  messages: [],
+  loading: false,
+  getWorkspaces() {
+    getWorkspacesApi().then((res) => {
+      const currentIdx = get().currentWorkspaceId;
+      set({workspaces: res.data});
+      if (res.data.length > 0) {
+        if (res.data.some((workspace) => workspace.id === currentIdx)) {
+          get().setWorkspaceId(currentIdx);
+        } else {
+          get().setWorkspaceId(res.data[0].id);
+        }
+      }
+    });
+  },
+  createNewWorkspace(name: string, type: string) {
+    createWorkspaceApi(name, type).then((res) => {
+      set({workspaces: [...get().workspaces, res.data]});
+      get().setWorkspaceId(res.data.id);
+    });
+  },
+  updateWorkspace(idx: string, name: string, type: string) {
+    updateWorkspaceApi(idx, name, type).then((res) => {
+      const filteredWorkspaces = get().workspaces.filter((workspace) => workspace.id !== idx) ?? [];
+      set({workspaces: [...filteredWorkspaces, res.data]});
+    });
+  },
+  deleteWorkspace(idx: string) {
+    deleteWorkspaceApi(idx).then(() => {
+      get().getWorkspaces();
+    });
+  },
+  setWorkspaceId(idx: string) {
+    set({currentWorkspaceId: idx});
+    set({loading: true});
+    getTicketsApi(idx)
+      .then((res) => {
+        const currentIdx = get().currentTicketId;
+        set({tickets: res.data});
+        if (res.data.length > 0) {
+          if (res.data.some((ticket) => ticket.id === currentIdx)) {
+            get().selectTicketId(currentIdx);
+          } else {
+            get().selectTicketId(res.data[0].id);
           }
-        });
-      },
-      createNewWorkspace(name: string, type: string) {
-        createWorkspaceApi(name, type).then((res) => {
-          set({workspaces: [...get().workspaces, res.data]});
-          get().setWorkspaceId(res.data.id);
-        });
-      },
-      updateWorkspace(idx: string, name: string, type: string) {
-        updateWorkspaceApi(idx, name, type).then((res) => {
-          const filteredWorkspaces = get().workspaces.filter((workspace) => workspace.id !== idx) ?? [];
-          set({workspaces: [...filteredWorkspaces, res.data]});
-        });
-      },
-      deleteWorkspace(idx: string) {
-        deleteWorkspaceApi(idx).then(() => {
-          get().getWorkspaces();
-        });
-      },
-      setWorkspaceId(idx: string) {
-        set({currentWorkspaceId: idx});
-        set({loading: true});
-        getTicketsApi(idx)
-          .then((res) => {
-            const currentIdx = get().currentTicketId;
-            set({tickets: res.data});
-            if (res.data.length > 0) {
-              if (res.data.some((ticket) => ticket.id === currentIdx)) {
-                get().selectTicketId(currentIdx);
-              } else {
-                get().selectTicketId(res.data[0].id);
-              }
-            } else {
-              set({currentTicketId: ''});
-              set({messages: []});
-              set({loading: false});
-            }
-          })
-          .catch(() => {
-            set({tickets: []});
-            set({loading: false});
-          });
-      },
-      selectTicketId(idx: string) {
-        set({loading: true});
-        set({currentTicketId: idx});
-        set({isNewTicket: false});
-        getChatMessagesApi(idx)
-          .then((res) => {
-            set({messages: res.data});
-          })
-          .catch((e) => {
-            // catch
-            console.log(e);
-          })
-          .finally(() => {
-            set({loading: false});
-          });
-      },
-      newTicket() {
-        set({isNewTicket: true});
-      },
-      deleteTicket(idx: string) {
-        const currentIdx = get().currentWorkspaceId;
-        deleteTicketApi(currentIdx, idx).then(() => {
-          const updatedTickets = get().tickets.filter((ticket) => ticket.id !== idx);
-          set({tickets: updatedTickets});
-          if (get().currentTicketId === idx) {
-            if (updatedTickets.length > 0) {
-              get().selectTicketId(updatedTickets[0].id);
-            } else {
-              set({messages: [], isNewTicket: true});
-            }
-          }
-        });
-      },
-      async newMessage(message: string) {
-        const isNewTicket = get().isNewTicket;
-        const currentWorkspaceId = get().currentWorkspaceId;
-        const currentTicketId = get().currentTicketId;
-        if (isNewTicket || !currentTicketId) {
-          // create new ticket
+        } else {
+          set({currentTicketId: ''});
           set({messages: []});
-          createTicketApi(currentWorkspaceId)
-            .then((res) => {
-              const ticketId = res.data.id;
-              // send new message
-              createChatMessageApi(ticketId, message).then((res) => {
-                const messages = get().messages;
-                set({messages: [...messages, {...res.data}]});
-                set({isNewTicket: false});
-              });
-            })
-            .catch((e) => {
-              console.log(e);
-            });
-        } else if (currentTicketId) {
-          createChatMessageApi(currentTicketId, message).then((res) => {
+          set({loading: false});
+        }
+      })
+      .catch(() => {
+        set({tickets: []});
+        set({loading: false});
+      });
+  },
+  selectTicketId(idx: string) {
+    set({loading: true});
+    set({currentTicketId: idx});
+    set({isNewTicket: false});
+    getChatMessagesApi(idx)
+      .then((res) => {
+        set({messages: res.data});
+      })
+      .catch((e) => {
+        // catch
+        console.log(e);
+      })
+      .finally(() => {
+        set({loading: false});
+      });
+  },
+  newTicket() {
+    set({isNewTicket: true});
+  },
+  deleteTicket(idx: string) {
+    const currentIdx = get().currentWorkspaceId;
+    deleteTicketApi(currentIdx, idx).then(() => {
+      const updatedTickets = get().tickets.filter((ticket) => ticket.id !== idx);
+      set({tickets: updatedTickets});
+      if (get().currentTicketId === idx) {
+        if (updatedTickets.length > 0) {
+          get().selectTicketId(updatedTickets[0].id);
+        } else {
+          set({messages: [], isNewTicket: true});
+        }
+      }
+    });
+  },
+  async newMessage(message: string) {
+    const isNewTicket = get().isNewTicket;
+    const currentWorkspaceId = get().currentWorkspaceId;
+    const currentTicketId = get().currentTicketId;
+    if (isNewTicket || !currentTicketId) {
+      // create new ticket
+      set({messages: []});
+      createTicketApi(currentWorkspaceId)
+        .then((res) => {
+          const ticketId = res.data.id;
+          // send new message
+          createChatMessageApi(ticketId, message).then((res) => {
             const messages = get().messages;
             set({messages: [...messages, {...res.data}]});
             set({isNewTicket: false});
           });
-        }
-      },
-      editMessage(chatMessage: IChatMessage, newMssage: string) {
-        const messages = get().messages;
-        updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
-          const index = messages.findIndex((message) => message.id === chatMessage.id);
-          if (index !== -1) {
-            messages[index] = res.data;
-            set({messages});
-          }
+        })
+        .catch((e) => {
+          console.log(e);
         });
-      },
-      updateMessage(chatMessage: IChatMessage) {
+    } else if (currentTicketId) {
+      createChatMessageApi(currentTicketId, message).then((res) => {
         const messages = get().messages;
-        const tickets = get().tickets;
-        const existingTicket = tickets.some((ticket) => ticket.id === chatMessage.chat_id);
-        if (!existingTicket) {
-          getTicketsApi(get().currentWorkspaceId).then((res) => {
-            set({tickets: res.data, currentTicketId: chatMessage.chat_id});
-          });
-        }
-        const index = messages.findIndex((message) => message.id === chatMessage.id);
-        if (index !== -1) {
-          messages[index] = chatMessage;
-          set({messages});
-        }
-      },
-      deleteMessage(chatMessage: IChatMessage) {
-        deleteChatMessageApi(chatMessage.chat_id, chatMessage.id)
-          .then(() => {
-            // on success
-          })
-          .catch(() => {
-            // on error
-          })
-          .finally(() => {
-            const messages = get().messages;
-            set({messages: messages.filter((m) => m.id !== chatMessage.id)});
-          });
-      },
-    }),
-    {
-      name: 'ChatStore',
-    },
-  ),
-);
+        set({messages: [...messages, {...res.data}]});
+        set({isNewTicket: false});
+      });
+    }
+  },
+  editMessage(chatMessage: IChatMessage, newMssage: string) {
+    const messages = get().messages;
+    updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
+      const index = messages.findIndex((message) => message.id === chatMessage.id);
+      if (index !== -1) {
+        messages[index] = res.data;
+        set({messages});
+      }
+    });
+  },
+  updateMessage(chatMessage: IChatMessage) {
+    const messages = get().messages;
+    const tickets = get().tickets;
+    const existingTicket = tickets.some((ticket) => ticket.id === chatMessage.chat_id);
+    if (!existingTicket) {
+      getTicketsApi(get().currentWorkspaceId).then((res) => {
+        set({tickets: res.data, currentTicketId: chatMessage.chat_id});
+      });
+    }
+    const index = messages.findIndex((message) => message.id === chatMessage.id);
+    if (index !== -1) {
+      messages[index] = chatMessage;
+      set({messages});
+    }
+  },
+  deleteMessage(chatMessage: IChatMessage) {
+    deleteChatMessageApi(chatMessage.chat_id, chatMessage.id)
+      .then(() => {
+        // on success
+      })
+      .catch(() => {
+        // on error
+      })
+      .finally(() => {
+        const messages = get().messages;
+        set({messages: messages.filter((m) => m.id !== chatMessage.id)});
+      });
+  },
+}));
