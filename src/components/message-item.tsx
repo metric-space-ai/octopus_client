@@ -3,6 +3,7 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {PencilSquareIcon, StopIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
+import {useAuthContext} from '@/contexts/authContext';
 import {getChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
@@ -17,10 +18,12 @@ interface IMessageItem {
 
 export const MessageItem = ({item}: IMessageItem) => {
   const {editMessage, updateMessage, deleteMessage} = useChatStore();
+  const {user} = useAuthContext();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
   const [isEditMode, setIsEditMode] = useState(false);
   const [messageText, setMessageText] = useState(item.message);
+  const messageEditable = !isEditMode && item.user_id === user?.user_id;
   const disableSaveButton = messageText === item.message;
 
   const checkMessageResponse = useCallback(
@@ -81,8 +84,8 @@ export const MessageItem = ({item}: IMessageItem) => {
             ) : (
               <span>{item.message}</span>
             )}
-            {!isEditMode && (
-              <IconButton className='shrink-0 w-5 h-5 p-0' onClick={onEditMessage}>
+            {messageEditable && (
+              <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
                 <PencilSquareIcon className='w-5 h-5' />
               </IconButton>
             )}
