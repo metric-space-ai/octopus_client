@@ -189,10 +189,17 @@ export const useChatStore = create<ChatStore>()(
         }
       },
       deleteMessage(chatMessage: IChatMessage) {
-        deleteChatMessageApi(chatMessage.chat_id, chatMessage.id).then(() => {
-          const messages = get().messages;
-          set({messages: messages.filter((m) => m.id !== chatMessage.id)});
-        });
+        deleteChatMessageApi(chatMessage.chat_id, chatMessage.id)
+          .then(() => {
+            // on success
+          })
+          .catch(() => {
+            // on error
+          })
+          .finally(() => {
+            const messages = get().messages;
+            set({messages: messages.filter((m) => m.id !== chatMessage.id)});
+          });
       },
     }),
     {
