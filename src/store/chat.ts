@@ -53,7 +53,7 @@ export const useChatStore = create<ChatStore>()(
           const currentIdx = get().currentWorkspaceId;
           set({workspaces: res.data});
           if (res.data.length > 0) {
-            if (!res.data.some((workspace) => workspace.id === currentIdx)) {
+            if (res.data.some((workspace) => workspace.id === currentIdx)) {
               get().setWorkspaceId(currentIdx);
             } else {
               get().setWorkspaceId(res.data[0].id);
@@ -86,7 +86,7 @@ export const useChatStore = create<ChatStore>()(
             const currentIdx = get().currentTicketId;
             set({tickets: res.data});
             if (res.data.length > 0) {
-              if (!res.data.some((ticket) => ticket.id === currentIdx)) {
+              if (res.data.some((ticket) => ticket.id === currentIdx)) {
                 get().selectTicketId(currentIdx);
               } else {
                 get().selectTicketId(res.data[0].id);
