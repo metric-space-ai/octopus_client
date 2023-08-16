@@ -113,15 +113,15 @@ export const MessageItem = ({item}: IMessageItem) => {
         <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
           {loading ? <AnimateDots /> : <MarkdownContent content={item.response} />}
           <div className='mt-2 flex justify-end items-center gap-4'>
-            <IconButton className='p-0'>
+            <IconButton className='!p-0'>
               <LanguageIcon className='w-5 h-5 text-content-grey-400' />
             </IconButton>
             <div className='w-[1px] h-5 bg-content-grey-600' />
-            <IconButton className='p-0'>
+            <IconButton className='!p-0'>
               <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
             </IconButton>
             <div className='w-[1px] h-5 bg-content-grey-600' />
-            <IconButton className='p-0' onClick={() => setShowProvideFeedbackModal(true)}>
+            <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
               <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
             </IconButton>
           </div>
