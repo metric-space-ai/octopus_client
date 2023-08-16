@@ -1,6 +1,12 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {HandThumbDownIcon, LanguageIcon, PencilSquareIcon, SpeakerWaveIcon, StopIcon} from '@heroicons/react/24/outline';
+import {
+  HandThumbDownIcon,
+  LanguageIcon,
+  PencilSquareIcon,
+  SpeakerWaveIcon,
+  StopIcon,
+} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
 import {useAuthContext} from '@/contexts/authContext';
