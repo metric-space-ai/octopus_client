@@ -16,6 +16,7 @@ import {IChatMessage} from '@/types';
 
 import {Button, IconButton} from './buttons';
 import {MarkdownContent} from './markdown';
+import {ProvideFeedbackModal} from './modals';
 import {AnimateDots, LogoIcon} from './svgs';
 
 interface IMessageItem {
@@ -29,6 +30,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const timeoutRef = useRef(0);
   const [isEditMode, setIsEditMode] = useState(false);
   const [messageText, setMessageText] = useState(item.message);
+  const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
   const messageEditable = !isEditMode && item.user_id === user?.user_id;
   const disableSaveButton = messageText === item.message;
 
@@ -119,7 +121,7 @@ export const MessageItem = ({item}: IMessageItem) => {
               <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
             </IconButton>
             <div className='w-[1px] h-5 bg-content-grey-600' />
-            <IconButton className='p-0'>
+            <IconButton className='p-0' onClick={() => setShowProvideFeedbackModal(true)}>
               <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
             </IconButton>
           </div>
@@ -137,6 +139,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           />
         </div>
       )}
+      <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
     </div>
   );
 };
