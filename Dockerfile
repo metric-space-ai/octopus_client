@@ -1,4 +1,4 @@
-FROM node:18.17.0-bookworm-slim AS builder
+FROM node:18.17.1-bookworm-slim AS builder
 ARG NEXT_PUBLIC_BASE_URL
 WORKDIR /octopus_client
 COPY /octopus_client/package.json ./
@@ -9,16 +9,17 @@ COPY /octopus_client/src src/
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
-FROM node:18.17.0-bookworm-slim AS prod
+FROM node:18.17.1-bookworm-slim AS prod
 ARG NEXT_PUBLIC_BASE_URL
 WORKDIR /octopus_client
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 999 nodejs
+RUN adduser --system --uid 999 nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /octopus_client/.next ./.next
 COPY --from=builder /octopus_client/node_modules ./node_modules
+COPY --from=builder /octopus_client/public ./public
 COPY --from=builder /octopus_client/package.json ./package.json
 
 RUN chown -R root:root /octopus_client
