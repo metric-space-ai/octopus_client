@@ -8,6 +8,7 @@ import {
   deleteTicketApi,
   deleteWorkspaceApi,
   getChatMessagesApi,
+  getLatestChatMessageApi,
   getTicketsApi,
   getWorkspacesApi,
   updateChatMessageApi,
@@ -35,6 +36,7 @@ interface ChatStore {
   editMessage: (chatMessage: IChatMessage, newMssage: string) => void;
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
+  refreshMessage: (idx: string) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
@@ -197,5 +199,17 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         const messages = get().messages;
         set({messages: messages.filter((m) => m.id !== chatMessage.id)});
       });
+  },
+  refreshMessage(chatId: string) {
+    getLatestChatMessageApi(chatId).then((res) => {
+      // on success
+      const messages = get().messages;
+      const existingMessage = messages.some((message) => message.id === res.data.id);
+      if (!existingMessage) {
+        getChatMessagesApi(chatId).then((res) => {
+          set({messages: res.data});
+        });
+      }
+    });
   },
 }));

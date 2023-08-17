@@ -50,6 +50,10 @@ export const getChatMessageApi = async (chatId: string, chatMessageId: string) =
   return apiHub.get<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
 
+export const getLatestChatMessageApi = async (chatId: string) => {
+  return apiHub.get<IChatMessage>(`/api/v1/chat-messages/${chatId}/latest`);
+};
+
 export const deleteChatMessageApi = async (chatId: string, chatMessageId: string) => {
   return apiHub.delete<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };

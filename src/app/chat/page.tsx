@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {PaperAirplaneIcon} from '@heroicons/react/24/outline';
 import {useDebouncedCallback} from 'use-debounce';
@@ -16,8 +16,9 @@ import {useChatStore} from '@/store';
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
-  const {loading, isNewTicket, messages, newMessage} = useChatStore();
-  const {scrollRef, setAutoScroll, scrollToBottom} = useScrollToBottom();
+  const {loading, currentTicketId, isNewTicket, messages, newMessage, refreshMessage} = useChatStore();
+  const {scrollRef, setAutoScroll} = useScrollToBottom();
+  const timeoutRef = useRef(0);
   const showChatPrompt = messages?.length === 0 || isNewTicket;
   // auto grow input
   const [inputRows, setInputRows] = useState(1);
@@ -34,8 +35,23 @@ export default function ChatPage() {
     },
   );
 
+  const checkMessageResponse = useCallback(() => {
+    timeoutRef.current = window.setInterval(() => {
+      refreshMessage(currentTicketId);
+    }, 6000);
+  }, [currentTicketId, refreshMessage]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(measure, [userInput]);
+
+  useEffect(() => {
+    checkMessageResponse();
+    return () => {
+      if (timeoutRef.current) {
+        clearInterval(timeoutRef.current);
+      }
+    };
+  }, [checkMessageResponse]);
 
   const onInput = (text: string) => {
     setUserInput(text);
