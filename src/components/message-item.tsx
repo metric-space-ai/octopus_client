@@ -76,7 +76,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   };
 
   return (
-    <div className='mt-3 text-15 font-medium'>
+    <div className='mt-3 text-15'>
       <div className='flex gap-3'>
         <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
           <UserIcon className='w-6 h-6 text-content-grey-100' />
@@ -90,7 +90,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                 onInput={(e) => setMessageText(e.currentTarget.value)}
               />
             ) : (
-              <span>{item.message}</span>
+              <span className='whitespace-pre-wrap'>{item.message}</span>
             )}
             {messageEditable && (
               <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
