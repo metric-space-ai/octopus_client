@@ -204,11 +204,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     getLatestChatMessageApi(chatId).then((res) => {
       // on success
       const messages = get().messages;
-      const existingMessage = messages.some((message) => message.id === res.data.id);
-      if (!existingMessage) {
-        getChatMessagesApi(chatId).then((res) => {
-          set({messages: res.data});
-        });
+      if (messages.length > 0) {
+        const lastMessage = messages[messages.length - 1];
+        const isLastMessage = lastMessage.id === res.data.id;
+        if (!isLastMessage) {
+          getChatMessagesApi(chatId).then((res) => {
+            set({messages: res.data});
+          });
+        }
       }
     });
   },
