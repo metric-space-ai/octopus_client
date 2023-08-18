@@ -32,7 +32,7 @@ export const Input = ({className, label, type, placeholder, errors, rules}: Inpu
             className='absolute top-1/2 translate-y-[-50%] right-4 cursor-pointer'
             onClick={() => setHidePassword((prev) => !prev)}
           >
-            {hidePassword ? (
+            {!hidePassword ? (
               <EyeSlashIcon className='w-5 h-5 text-content-grey-600' />
             ) : (
               <EyeIcon className='w-5 h-5 text-content-grey-600' />
