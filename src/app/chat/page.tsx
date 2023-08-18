@@ -36,9 +36,11 @@ export default function ChatPage() {
   );
 
   const checkMessageResponse = useCallback(() => {
-    timeoutRef.current = window.setInterval(() => {
-      refreshMessage(currentTicketId);
-    }, 6000);
+    if (currentTicketId) {
+      timeoutRef.current = window.setInterval(() => {
+        refreshMessage(currentTicketId);
+      }, 6000);
+    }
   }, [currentTicketId, refreshMessage]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

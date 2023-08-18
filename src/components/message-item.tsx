@@ -31,7 +31,8 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [messageText, setMessageText] = useState(item.message);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
-  const messageEditable = !isEditMode && item.user_id === user?.user_id;
+  const isCurrentUser = item.user_id === user?.user_id;
+  const messageEditable = !isEditMode && isCurrentUser;
   const disableSaveButton = messageText === item.message;
 
   const checkMessageResponse = useCallback(
@@ -129,7 +130,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           )}
         </div>
       </div>
-      {loading && (
+      {isCurrentUser && loading && (
         <div className='mt-4 flex justify-center'>
           <Button
             className='bg-white'
