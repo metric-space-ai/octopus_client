@@ -35,7 +35,7 @@ const LoginPage = () => {
         <Logo className='absolute left-10 top-10' withText />
         <h1 className='text-32 font-semibold text-content-black text-center'>Welcome back to Octopus AI</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
-          <p className='mt-2 text-16 font-medium text-content-grey-600'>Please enter your details</p>
+          <p className='mt-2 text-16 text-content-grey-600'>Please enter your details</p>
           <form className='w-full mt-10' onSubmit={handleSubmit(onSubmit)}>
             <Input
               type='email'
@@ -63,7 +63,7 @@ const LoginPage = () => {
             <div className='flex-1 h-[1px] bg-content-black opacity-10' />
           </div>
           <GoogleButton className='mt-6 w-full' title='Continue with Google' />
-          <span className='mt-10 text-12 font-medium text-content-grey-600'>
+          <span className='mt-10 text-12 text-content-grey-600'>
             Don’t have an account?{' '}
             <Link href='signup'>
               <span className='text-14 text-content-accent underline'>Sign up</span>

@@ -49,9 +49,7 @@ const ForgotPasswordPage = () => {
         <Logo className='absolute left-10 top-10' withText />
         <h1 className='text-32 font-semibold text-content-black text-center'>Forgot password?</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[400px]'>
-          <p className='mt-2 text-16 font-medium text-content-grey-600'>
-            No worries, we’ll send you reset instructions.
-          </p>
+          <p className='mt-2 text-16 text-content-grey-600'>No worries, we’ll send you reset instructions.</p>
           <form className='w-full mt-10' onSubmit={handleSubmit(onSubmit)}>
             <Input
               type='email'

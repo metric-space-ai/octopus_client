@@ -42,7 +42,7 @@ export function ChatItem(props: {
         {props.expanded && (
           <div
             className={classNames(
-              'flex-1 text-14 font-medium text-white whitespace-nowrap text-ellipsis overflow-hidden',
+              'flex-1 text-14 text-white whitespace-nowrap text-ellipsis overflow-hidden',
               props.selected && '!text-content-black',
             )}
           >

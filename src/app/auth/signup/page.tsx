@@ -76,7 +76,7 @@ const SignupPage = () => {
           <div className='flex-1 h-[1px] bg-content-black opacity-10' />
         </div>
         <GoogleButton className='mt-6 w-full' title='Sign up with Google' />
-        <span className='mt-10 text-12 font-medium text-content-grey-600'>
+        <span className='mt-10 text-12 text-content-grey-600'>
           Already have an account?{' '}
           <Link href='login'>
             <span className='text-14 text-content-accent underline'>Log In</span>

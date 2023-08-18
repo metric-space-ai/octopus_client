@@ -94,7 +94,7 @@ const InstallationPage = () => {
                 },
               })}
             />
-            <span className='text-10 font-medium text-center text-content-grey-600'>
+            <span className='text-10 text-center text-content-grey-600'>
               Important: Please keep this password as you will need it for login.
             </span>
             <Button
@@ -104,7 +104,7 @@ const InstallationPage = () => {
               title='Install Octopus AI'
             />
           </form>
-          <span className='mt-2 text-12 font-medium text-content-grey-600'>
+          <span className='mt-2 text-12 text-content-grey-600'>
             Please double-check your information before proceeding.
           </span>
         </div>

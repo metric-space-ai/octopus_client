@@ -50,7 +50,7 @@ const ResetPasswordPage = () => {
         <Logo className='absolute left-10 top-10' withText />
         <h1 className='text-32 font-semibold text-content-black text-center'>Reset password.</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[400px]'>
-          <p className='mt-2 text-16 font-medium text-content-grey-600 text-center'>
+          <p className='mt-2 text-16 text-content-grey-600 text-center'>
             Please enter a token from your email and create a new password!
           </p>
           <form className='w-full mt-10' onSubmit={handleSubmit(onSubmit)}>
