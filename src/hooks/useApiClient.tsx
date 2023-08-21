@@ -1,7 +1,7 @@
 import axios from 'axios';
+import {toast} from 'react-hot-toast';
 
 import {useAuthStore} from '@/store';
-import { toast } from 'react-hot-toast';
 
 const apiHub = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
