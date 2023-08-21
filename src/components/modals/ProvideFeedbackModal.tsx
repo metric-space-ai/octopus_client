@@ -39,13 +39,15 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-lg transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-[720px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
-                  <XMarkIcon className='w-4 h-4 text-content-primary' />
+                  <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
-                <div className='flex items-center gap-2'>
-                  <HandThumbDownIcon className='w-5 h-5 text-content-red-600' />
-                  <Dialog.Title as='h3' className='text-24 font-semibold text-content-primary'>
+                <div className='flex items-center gap-4'>
+                  <div className='flex items-center justify-center w-10 h-10 rounded-full bg-white'>
+                    <HandThumbDownIcon className='w-5 h-5 text-content-red-600' />
+                  </div>
+                  <Dialog.Title as='h3' className='text-24 font-semibold text-content-black'>
                     Provide additional feedback
                   </Dialog.Title>
                 </div>
@@ -59,7 +61,7 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
                     <Checkbox className='text-14 font-medium text-content-grey-600' title={`This isn't true`} />
                     <Checkbox className='text-14 font-medium text-content-grey-600' title={`This isn't helpful`} />
                   </div>
-                  <Button type='button' className='h-11' variant='primary' title='Submit feedback' loading={loading} />
+                  <Button type='button' className='!h-11' variant='primary' title='Submit feedback' loading={loading} />
                 </form>
               </Dialog.Panel>
             </Transition.Child>
