@@ -78,9 +78,9 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
             >
               <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
-                  <XMarkIcon className='w-4 h-4 text-content-primary' />
+                  <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-24 font-semibold text-content-primary'>
+                <Dialog.Title as='h3' className='text-24 font-semibold text-content-black'>
                   {tab ? 'Rename tab' : 'Create a new tab'}
                 </Dialog.Title>
                 <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
@@ -138,7 +138,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                     </div>
                   </Listbox>
                   <Button
-                    className='mt-2 w-full h-11'
+                    className='mt-2 w-full !h-11'
                     variant='primary'
                     title={tab ? 'Update tab' : 'Create a tab'}
                     loading={loading}
