@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import {useAuthStore} from '@/store';
+import { toast } from 'react-hot-toast';
 
 const apiHub = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -33,6 +34,8 @@ export const useApiClient = () => {
       (error) => {
         if (error.response.status === 401) {
           setAuthData(null);
+        } else if (error.response.status === 403) {
+          toast.error('No enough permission to make a request.');
         }
         return Promise.reject(error);
       },
