@@ -32,9 +32,9 @@ export const useApiClient = () => {
     apiHub.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response.status === 401) {
+        if (error.response?.status === 401) {
           setAuthData(null);
-        } else if (error.response.status === 403) {
+        } else if (error.response?.status === 403) {
           toast.error('No enough permission to make a request.');
         }
         return Promise.reject(error);

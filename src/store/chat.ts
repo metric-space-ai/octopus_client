@@ -144,6 +144,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       createTicketApi(currentWorkspaceId)
         .then((res) => {
           const ticketId = res.data.id;
+          set({currentTicketId: ticketId});
           // send new message
           createChatMessageApi(ticketId, message).then((res) => {
             const messages = get().messages;
@@ -209,7 +210,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         const isLastMessage = lastMessage.id === res.data.id;
         if (!isLastMessage) {
           getChatMessagesApi(chatId).then((res) => {
-            set({messages: res.data});
+            const currentTicketId = get().currentTicketId;
+            const isNewTicket = get().isNewTicket;
+            if (!isNewTicket && currentTicketId === chatId) {
+              set({messages: res.data});
+            }
           });
         }
       }

@@ -35,25 +35,28 @@ export default function ChatPage() {
     },
   );
 
-  const checkMessageResponse = useCallback(() => {
-    if (currentTicketId) {
-      timeoutRef.current = window.setInterval(() => {
-        refreshMessage(currentTicketId);
-      }, 6000);
-    }
-  }, [currentTicketId, refreshMessage]);
+  const checkMessageResponse = useCallback(
+    (chatId: string) => {
+      if (chatId) {
+        timeoutRef.current = window.setInterval(() => {
+          refreshMessage(chatId);
+        }, 6000);
+      }
+    },
+    [refreshMessage],
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(measure, [userInput]);
 
   useEffect(() => {
-    checkMessageResponse();
+    checkMessageResponse(currentTicketId);
     return () => {
       if (timeoutRef.current) {
         clearInterval(timeoutRef.current);
       }
     };
-  }, [checkMessageResponse]);
+  }, [currentTicketId, checkMessageResponse]);
 
   const onInput = (text: string) => {
     setUserInput(text);
