@@ -2,7 +2,7 @@ import {Fragment, useEffect, useState} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
 import {
-  ArrowLeftOnRectangleIcon,
+  ArrowRightOnRectangleIcon,
   Cog8ToothIcon,
   LockClosedIcon,
   PlusIcon,
@@ -61,7 +61,7 @@ const MenuItem = () => {
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   onClick={onLogout}
                 >
-                  <ArrowLeftOnRectangleIcon className='mr-2 h-5 w-5' aria-hidden='true' />
+                  <ArrowRightOnRectangleIcon className='mr-2 h-5 w-5' aria-hidden='true' />
                   Logout
                 </button>
               )}
