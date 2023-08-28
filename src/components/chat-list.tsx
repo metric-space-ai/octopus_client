@@ -68,7 +68,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
   const {tickets, currentTicketId, selectTicketId, deleteTicket} = useChatStore();
 
   return (
-    <div className={classNames('flex flex-col gap-2', expanded && 'min-w-[280px]')}>
+    <div className={classNames('flex flex-col gap-3', expanded && 'min-w-[280px]')}>
       {tickets.map((ticket) => (
         <ChatItem
           key={ticket.id}
