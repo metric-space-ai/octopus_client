@@ -28,7 +28,7 @@ export function ChatItem(props: {
     <div
       className={classNames(
         'group relative px-3 py-[10px] rounded-full bg-content-black cursor-pointer',
-        !props.expanded && '!px-2',
+        !props.expanded && '!px-[10px]',
         props.selected && 'bg-content-grey-100',
       )}
       onClick={props.onClick}
