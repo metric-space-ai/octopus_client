@@ -16,6 +16,7 @@ import {IChatMessage} from '@/types';
 
 import {Button, IconButton} from './buttons';
 import {MarkdownContent} from './markdown';
+import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {ProvideFeedbackModal} from './modals';
 import {AnimateDots, LogoIcon} from './svgs';
 
@@ -34,6 +35,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const isCurrentUser = item.user_id === user?.user_id;
   const messageEditable = !isEditMode && isCurrentUser;
   const disableSaveButton = messageText === item.message;
+  const [isSensitive, setIsSensitive] = useState(false);
 
   const checkMessageResponse = useCallback(
     (after: number) => {
@@ -56,6 +58,9 @@ export const MessageItem = ({item}: IMessageItem) => {
       const now = new Date();
       const diffTime = estimationResponseTime.valueOf() - now.valueOf();
       checkMessageResponse(diffTime);
+    } else { // item.status === 'Answered'
+      // update sensitive flag
+      setIsSensitive(item.is_sensitive)
     }
     return () => {
       if (timeoutRef.current) {
@@ -63,6 +68,7 @@ export const MessageItem = ({item}: IMessageItem) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [item]);
 
   const onEditMessage = () => {
@@ -112,7 +118,11 @@ export const MessageItem = ({item}: IMessageItem) => {
           <LogoIcon width={22} height={20} color='#F5F5F5' />
         </div>
         <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
-          {loading ? <AnimateDots /> : <MarkdownContent content={item.response} />}
+          {loading ? <AnimateDots /> :
+            isSensitive?
+              <MarkdownContent content={item.response}/> :
+              <SensitiveMarkdownContent content={item.response}/>
+          }
           {!loading && (
             <div className='mt-2 flex justify-end items-center gap-4'>
               <IconButton className='!p-0'>

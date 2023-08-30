@@ -146,6 +146,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           const ticketId = res.data.id;
           set({currentTicketId: ticketId});
           // send new message
+          console.log("ticketId: ", ticketId)
           createChatMessageApi(ticketId, message).then((res) => {
             const messages = get().messages;
             set({messages: [...messages, {...res.data}]});
@@ -156,6 +157,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           console.log(e);
         });
     } else if (currentTicketId) {
+      console.log("currentTicketId: ", currentTicketId)
       createChatMessageApi(currentTicketId, message).then((res) => {
         const messages = get().messages;
         set({messages: [...messages, {...res.data}]});
@@ -165,6 +167,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   editMessage(chatMessage: IChatMessage, newMssage: string) {
     const messages = get().messages;
+    console.log("chatMessage.chat_id: ", chatMessage.chat_id)
     updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
       const index = messages.findIndex((message) => message.id === chatMessage.id);
       if (index !== -1) {
@@ -210,6 +213,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         const isLastMessage = lastMessage.id === res.data.id;
         if (!isLastMessage) {
           getChatMessagesApi(chatId).then((res) => {
+            console.log("--msg: ", res)
             const currentTicketId = get().currentTicketId;
             const isNewTicket = get().isNewTicket;
             if (!isNewTicket && currentTicketId === chatId) {
