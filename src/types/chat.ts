@@ -13,6 +13,7 @@ export interface IChatMessage {
   user_id: string;
   estimated_response_at: string;
   chat_id: string;
+  is_sensitive: boolean;
   message: string;
   response: string;
   status: string;
