@@ -57,7 +57,7 @@ export function Mermaid(props: {code: string}) {
       }}
       ref={ref}
       onClick={() => viewSvgInNewWindow()}
-    >
+    >cdcd
       {props.code}
     </div>
   );
@@ -93,7 +93,7 @@ export function PreCode(props: {children: any}) {
               copyToClipboard(code);
             }
           }}
-        ></span>
+        ></span>defe
         {props.children}
       </pre>
     </>
@@ -196,8 +196,14 @@ export function WarningMarkdown(
       onContextMenu={props.onContextMenu}
       onDoubleClickCapture={props.onDoubleClickCapture}
     >
-      {inView.current &&
-        (props.loading ? <EllipsisHorizontalIcon className='w-6 h-6' /> : <WarningMarkdownContent content={props.content} />)}
+      <div className="text-[#ea6c68] text-[14px]">
+                  Sensitive content detected. Chat is temporarily block for safety.
+                 </div>
+                 <div className="text-[#ea6c68] text-[14px]">
+                  Sensitive content detected. Chat is temporarily block for safety.
+                 </div>
+      {/* {inView.current &&
+        (props.loading ? <EllipsisHorizontalIcon className='w-6 h-6' /> : <WarningMarkdownContent content={props.content} />)} */}
     </div>
   );
 }

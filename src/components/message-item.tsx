@@ -125,7 +125,10 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? <AnimateDots /> :
             !isSensitive?
               <MarkdownContent content={item.response}/> :
-              (<div>
+              (<div className='flex-1 py-4 px-5'>
+                <div className="text-[#ea6c68] text-[14px]">
+                  Sensitive content detected. Chat is temporarily block for safety.
+                 </div>
                 <WarningMarkdownContent content={item.response}/>
               </div>)
           }
@@ -144,22 +147,22 @@ export const MessageItem = ({item}: IMessageItem) => {
                   <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
                 </IconButton>
               </div> :
-              <div className='mt-2 flex justify-center items-center gap-4'>
-                <IconButton className='!p-0'>
+              <div className='mt-2 flex justify-start items-start gap-4'>
+                <IconButton variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'>
                   <TrashIcon className='w-5 h-5 text-content-grey-400' />
                   <span className='text-14 text-center text-content-white'>
                     Delete Sensitive Data
                   </span>
                 </IconButton>
 
-                <IconButton className='!p-0'>
+                <IconButton  variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'>
                   <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
                   <span className='text-14 text-center text-content-white'>
                     No Sensitive Data
                   </span>
                 </IconButton>
 
-                <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
+                <IconButton variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]' onClick={() => setShowProvideFeedbackModal(true)}>
                   <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
                   <span className='text-14 text-center text-content-white'>
                     Disabling Inspection (30mins)
