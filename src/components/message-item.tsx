@@ -41,6 +41,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const messageEditable = !isEditMode && isCurrentUser;
   const disableSaveButton = messageText === item.message;
   const [isSensitive, setIsSensitive] = useState(false);
+  const [isFileMessage, setIsFileMessage] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
 
   const checkMessageResponse = useCallback(
@@ -68,6 +69,7 @@ export const MessageItem = ({item}: IMessageItem) => {
       // item.status === 'Answered'
       // update sensitive flag
       setIsSensitive(item.is_sensitive);
+      setIsFileMessage(item.chat_message_files.length >0);
     }
     return () => {
       if (timeoutRef.current) {
@@ -131,7 +133,10 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? (
             <AnimateDots />
           ) : !isSensitive ? (
-            <MarkdownContent content={item.response} />
+            isFileMessage?
+              <MarkdownContent content={item.response} />
+              :
+              <MarkdownContent content={item.response} />
           ) : (
             <div className='flex-1'>
               <div className=' flex justify-between'>
@@ -145,7 +150,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                   />
                 </div>
               </div>
-              <WarningMarkdownContent content={item.response} />
+              <SensitiveMarkdownContent content={item.response} />
             </div>
           )}
           {!loading &&
