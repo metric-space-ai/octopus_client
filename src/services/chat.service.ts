@@ -41,8 +41,8 @@ export const createChatMessageApi = async (ticketId: string, message: string) =>
   return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${ticketId}`, payload);
 };
 
-export const updateChatMessageApi = async (chatId: string, chatMessageId: string, message: string) => {
-  const payload = {message};
+export const updateChatMessageApi = async (chatId: string, chatMessageId: string, message: string, bypass_sensitive_information_filter:boolean) => {
+  const payload = {message, bypass_sensitive_information_filter};
   return apiHub.put<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
 };
 

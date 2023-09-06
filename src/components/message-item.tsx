@@ -8,12 +8,13 @@ import {
   StopIcon,
   TrashIcon,
   NoSymbolIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
 import {useAuthContext} from '@/contexts/authContext';
-import {getChatMessageApi} from '@/services/chat.service';
+import {getChatMessageApi, updateChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
@@ -21,7 +22,7 @@ import {Button, IconButton} from './buttons';
 import {MarkdownContent} from './markdown';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {WarningMarkdownContent} from './warning-markdown';
-import {ProvideFeedbackModal} from './modals';
+import {AlertModal, ProvideFeedbackModal} from './modals';
 import {AnimateDots, LogoIcon} from './svgs';
 
 interface IMessageItem {
@@ -40,6 +41,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const messageEditable = !isEditMode && isCurrentUser;
   const disableSaveButton = messageText === item.message;
   const [isSensitive, setIsSensitive] = useState(false);
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
 
   const checkMessageResponse = useCallback(
     (after: number) => {
@@ -62,9 +64,10 @@ export const MessageItem = ({item}: IMessageItem) => {
       const now = new Date();
       const diffTime = estimationResponseTime.valueOf() - now.valueOf();
       checkMessageResponse(diffTime);
-    } else { // item.status === 'Answered'
+    } else {
+      // item.status === 'Answered'
       // update sensitive flag
-      setIsSensitive(item.is_sensitive)
+      setIsSensitive(item.is_sensitive);
     }
     return () => {
       if (timeoutRef.current) {
@@ -72,7 +75,6 @@ export const MessageItem = ({item}: IMessageItem) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-
   }, [item]);
 
   const onEditMessage = () => {
@@ -85,6 +87,10 @@ export const MessageItem = ({item}: IMessageItem) => {
     editMessage(item, messageText);
     setIsEditMode(false);
   };
+
+  const handleDeleteSensData = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
+  const handleDisableInspection = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
+  const HandleNoSensData = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
 
   return (
     <div className='mt-3 text-15'>
@@ -122,19 +128,29 @@ export const MessageItem = ({item}: IMessageItem) => {
           <LogoIcon width={22} height={20} color='#F5F5F5' />
         </div>
         <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
-          {loading ? <AnimateDots /> :
-            !isSensitive?
-              <MarkdownContent content={item.response}/> :
-              (<div className='flex-1 py-4 px-5'>
-                <div className="text-[#ea6c68] text-[14px]">
-                  Sensitive content detected. Chat is temporarily block for safety.
-                 </div>
-                <WarningMarkdownContent content={item.response}/>
-              </div>)
-          }
-          {!loading && (
-            !isSensitive?
-              <div className='mt-2 flex justify-end items-center gap-4'>
+          {loading ? (
+            <AnimateDots />
+          ) : !isSensitive ? (
+            <MarkdownContent content={item.response} />
+          ) : (
+            <div className='flex-1'>
+              <div className=' flex justify-between'>
+                <div className='text-[#ea6c68] text-[14px] mb-[12px]'>
+                  Sensitive content is detected. Chat temporarily blocked for safety.
+                </div>
+                <div>
+                  <InformationCircleIcon
+                    className='w-5 h-5 text-[#989898] cursor-pointer'
+                    onClick={() => setAlertModalOpen(true)}
+                  />
+                </div>
+              </div>
+              <WarningMarkdownContent content={item.response} />
+            </div>
+          )}
+          {!loading &&
+            (!isSensitive ? (
+              <div className='mt-4 flex justify-end items-center gap-4'>
                 <IconButton className='!p-0'>
                   <LanguageIcon className='w-5 h-5 text-content-grey-400' />
                 </IconButton>
@@ -146,30 +162,37 @@ export const MessageItem = ({item}: IMessageItem) => {
                 <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
                   <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
                 </IconButton>
-              </div> :
-              <div className='mt-2 flex justify-start items-start gap-4'>
-                <IconButton variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'>
+              </div>
+            ) : (
+              <div className='mt-4 flex justify-start items-start gap-4'>
+                <IconButton
+                  variant='secondary'
+                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                  onClick={handleDeleteSensData}
+                >
                   <TrashIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>
-                    Delete Sensitive Data
-                  </span>
+                  <span className='text-14 text-center text-content-white'>Delete Sensitive Data</span>
                 </IconButton>
 
-                <IconButton  variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'>
+                <IconButton
+                  variant='secondary'
+                  onClick={HandleNoSensData}
+                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                >
                   <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>
-                    No Sensitive Data
-                  </span>
+                  <span className='text-14 text-center text-content-white'>No Sensitive Data</span>
                 </IconButton>
 
-                <IconButton variant="secondary" className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]' onClick={() => setShowProvideFeedbackModal(true)}>
+                <IconButton
+                  variant='secondary'
+                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                  onClick={handleDisableInspection}
+                >
                   <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>
-                    Disabling Inspection (30mins)
-                  </span>
+                  <span className='text-14 text-center text-content-white'>Disabling Inspection (30mins)</span>
                 </IconButton>
-            </div>
-          )}
+              </div>
+            ))}
         </div>
       </div>
       {isCurrentUser && loading && (
@@ -184,6 +207,17 @@ export const MessageItem = ({item}: IMessageItem) => {
           />
         </div>
       )}
+      <AlertModal
+        headTitle={'Disable Content Safety'}
+        title={'Are you sure you want to deactivate Content Safety?'}
+        description={
+          'With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
+        }
+        open={alertModalOpen}
+        confirmTitle={'Deactivate Content Safety'}
+        onConfirm={() => {}}
+        onClose={() => setAlertModalOpen(false)}
+      />
       <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
     </div>
   );
