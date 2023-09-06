@@ -24,6 +24,7 @@ import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {WarningMarkdownContent} from './warning-markdown';
 import {AlertModal, ProvideFeedbackModal} from './modals';
 import {AnimateDots, LogoIcon} from './svgs';
+import { FileMarkdownContent } from './file-markdown';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -69,7 +70,7 @@ export const MessageItem = ({item}: IMessageItem) => {
       // item.status === 'Answered'
       // update sensitive flag
       setIsSensitive(item.is_sensitive);
-      setIsFileMessage(item.chat_message_files.length >0);
+      setIsFileMessage(item.chat_message_files.length > 0);
     }
     return () => {
       if (timeoutRef.current) {
@@ -133,8 +134,8 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? (
             <AnimateDots />
           ) : !isSensitive ? (
-            isFileMessage?
-              <MarkdownContent content={item.response} />
+            isFileMessage ?
+              <FileMarkdownContent content={item.chat_message_files} />
               :
               <MarkdownContent content={item.response} />
           ) : (

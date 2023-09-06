@@ -22,7 +22,7 @@ export interface IChatMessage {
   user_id: string;
   estimated_response_at: string;
   chat_id: string;
-  chat_message_files: [IChatMessageFile]
+  chat_message_files: [IChatMessageFile];
   is_sensitive: boolean;
   message: string;
   response: string;
