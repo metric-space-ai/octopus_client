@@ -12,10 +12,10 @@ interface FileMarkdownProps {
   className?: string;
 }
 
-export function FileMarkdownContent({content, width = 1200, height = 200, className}: FileMarkdownProps) {
+export function FileMarkdownContent({content, width = 400, height = 200, className}: FileMarkdownProps) {
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      <Image src={'https://api.octopus-ai.app/' + content[0]?.file_name} width={1200} height={200} alt={''} />
+      <Image src={'https://api.octopus-ai.app/' + content[0]?.file_name} width={width} height={height} alt={''} />
     </div>
   );
 }
