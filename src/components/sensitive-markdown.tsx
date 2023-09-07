@@ -197,7 +197,11 @@ export function SensitiveMarkdown(
       onDoubleClickCapture={props.onDoubleClickCapture}
     >
       {inView.current &&
-        (props.loading ? <EllipsisHorizontalIcon className='w-6 h-6' /> : <SensitiveMarkdownContent content={props.content} />)}
+        (props.loading ? (
+          <EllipsisHorizontalIcon className='w-6 h-6' />
+        ) : (
+          <SensitiveMarkdownContent content={props.content} />
+        ))}
     </div>
   );
 }

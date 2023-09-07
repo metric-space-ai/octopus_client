@@ -1,15 +1,15 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {
+  ExclamationTriangleIcon,
   HandThumbDownIcon,
+  InformationCircleIcon,
   LanguageIcon,
+  NoSymbolIcon,
   PencilSquareIcon,
   SpeakerWaveIcon,
   StopIcon,
   TrashIcon,
-  NoSymbolIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
@@ -19,12 +19,12 @@ import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
 import {Button, IconButton} from './buttons';
+import {FileMarkdownContent} from './file-markdown';
 import {MarkdownContent} from './markdown';
-import {SensitiveMarkdownContent} from './sensitive-markdown';
-import {WarningMarkdownContent} from './warning-markdown';
 import {AlertModal, ProvideFeedbackModal} from './modals';
+import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {AnimateDots, LogoIcon} from './svgs';
-import { FileMarkdownContent } from './file-markdown';
+import {WarningMarkdownContent} from './warning-markdown';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -134,10 +134,11 @@ export const MessageItem = ({item}: IMessageItem) => {
           {loading ? (
             <AnimateDots />
           ) : !isSensitive ? (
-            isFileMessage ?
+            isFileMessage ? (
               <FileMarkdownContent content={item.chat_message_files} />
-              :
+            ) : (
               <MarkdownContent content={item.response} />
+            )
           ) : (
             <div className='flex-1'>
               <div className=' flex justify-between'>

@@ -1,6 +1,5 @@
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 
-import {EllipsisHorizontalIcon} from '@heroicons/react/24/solid';
 import mermaid from 'mermaid';
 import ReactMarkdown from 'react-markdown';
 import 'katex/dist/katex.min.css';
@@ -57,7 +56,8 @@ export function Mermaid(props: {code: string}) {
       }}
       ref={ref}
       onClick={() => viewSvgInNewWindow()}
-    >cdcd
+    >
+      cdcd
       {props.code}
     </div>
   );
@@ -93,7 +93,8 @@ export function PreCode(props: {children: any}) {
               copyToClipboard(code);
             }
           }}
-        ></span>defe
+        ></span>
+        defe
         {props.children}
       </pre>
     </>
@@ -196,12 +197,9 @@ export function WarningMarkdown(
       onContextMenu={props.onContextMenu}
       onDoubleClickCapture={props.onDoubleClickCapture}
     >
-      <div className="text-[#ea6c68] text-[14px]">
-                  Sensitive content detected. Chat is temporarily block for safety.
-                 </div>
-                 <div className="text-[#ea6c68] text-[14px]">
-                  Sensitive content detected. Chat is temporarily block for safety.
-                 </div>
+      <div className='text-[#ea6c68] text-[14px]'>
+        Sensitive content detected. Chat is temporarily block for safety.
+      </div>
       {/* {inView.current &&
         (props.loading ? <EllipsisHorizontalIcon className='w-6 h-6' /> : <WarningMarkdownContent content={props.content} />)} */}
     </div>
