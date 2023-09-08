@@ -1,7 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 // Markdown.tsx
 import classNames from 'classnames';
-import Image from 'next/image';
-import ReactMarkdown from 'react-markdown';
 
 import {IChatMessageFile} from '@/types';
 
@@ -15,7 +14,7 @@ interface FileMarkdownProps {
 export function FileMarkdownContent({content, width = 400, height = 200, className}: FileMarkdownProps) {
   return (
     <div className={classNames('flex items-center gap-2', className)}>
-      <Image src={'https://api.octopus-ai.app/' + content[0]?.file_name} width={width} height={height} alt={''} />
+      <img src={'https://api.octopus-ai.app/' + content[0]?.file_name} width={width} height={height} alt='' />
     </div>
   );
 }
