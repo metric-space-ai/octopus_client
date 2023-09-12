@@ -14,15 +14,19 @@ import {SearchBar} from './search';
 import {IconSideBar} from './svgs';
 import Locale from '../locales';
 
+
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
 });
 
 export function SideBar(props: {className?: string}) {
   const chatStore = useChatStore();
-  const [enabled, setEnabled] = useState(true);
+  // const [enabled, setEnabled] = useState(true);
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
+
+  console.log("when enabled", chatStore.enabled);
+
 
   return (
     <div
@@ -58,17 +62,18 @@ export function SideBar(props: {className?: string}) {
               <p className='text-12 text-content-grey-100 font-semibold'>Content Safety</p>
             </div>
             <Switch
-              checked={enabled}
+              checked={chatStore.enabled}
               onChange={(checked) => {
                 if (!checked) {
                   setShowDeactivateConfirmationModal(true);
                 } else {
-                  setEnabled(true);
+                  // setEnabled(true);
+                  chatStore.changeStatus(true);
                 }
               }}
               className={classNames(
                 `${
-                  enabled ? 'bg-content-accent' : 'bg-content-disabled'
+                  chatStore.enabled ? 'bg-content-accent' : 'bg-content-disabled'
                 } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
               )}
             >
@@ -77,7 +82,7 @@ export function SideBar(props: {className?: string}) {
                 aria-hidden='true'
                 className={classNames(
                   `${
-                    enabled ? 'translate-x-6' : 'translate-x-0'
+                    chatStore.enabled ? 'translate-x-6' : 'translate-x-0'
                   } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`,
                 )}
               />
@@ -108,7 +113,8 @@ export function SideBar(props: {className?: string}) {
           confirmTitle='Deactivate Content Safety'
           open={showDeactivateConfirmationModal}
           onConfirm={() => {
-            setEnabled(false);
+            chatStore.changeStatus(false);
+
             setShowDeactivateConfirmationModal(false);
           }}
           onClose={() => {

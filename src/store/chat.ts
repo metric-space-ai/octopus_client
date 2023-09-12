@@ -24,6 +24,7 @@ interface ChatStore {
   isNewTicket: boolean;
   messages: IChatMessage[];
   loading: boolean;
+  enabled: boolean;
   createNewWorkspace: (name: string, type: string) => void;
   updateWorkspace: (idx: string, name: string, type: string) => void;
   deleteWorkspace: (idx: string) => void;
@@ -37,6 +38,7 @@ interface ChatStore {
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
   refreshMessage: (idx: string) => void;
+  changeStatus: (status: boolean) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
@@ -47,6 +49,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   isNewTicket: false,
   messages: [],
   loading: false,
+  enabled: true,
+
+
   getWorkspaces() {
     getWorkspacesApi().then((res) => {
       const currentIdx = get().currentWorkspaceId;
@@ -201,6 +206,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         set({messages: messages.filter((m) => m.id !== chatMessage.id)});
       });
   },
+  changeStatus(status: boolean) {
+
+    // set((prev)=>{return {...prev, enabled:status}});
+    set({enabled: status})
+  }, 
   refreshMessage(chatId: string) {
     getLatestChatMessageApi(chatId).then((res) => {
       // on success
