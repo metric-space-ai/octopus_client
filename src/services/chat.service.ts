@@ -1,4 +1,4 @@
-import {IChatMessage, ITicket, IWorkspace} from '@/types';
+import {IChatMessage, ITicket, IWorkspace, TranslatorResponse, TranslatorType} from '@/types';
 
 import apiHub from '../hooks/useApiClient';
 
@@ -62,3 +62,7 @@ export const getLatestChatMessageApi = async (chatId: string) => {
 export const deleteChatMessageApi = async (chatId: string, chatMessageId: string) => {
   return apiHub.delete<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
+
+export const directCall=async(data:TranslatorType)=> {
+  return apiHub.post<TranslatorResponse>(`/api/v1/ai-functions/direct-call`, data);
+}

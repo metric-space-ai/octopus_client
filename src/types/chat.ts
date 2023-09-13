@@ -29,3 +29,25 @@ export interface IChatMessage {
   status: string;
   updated_at: string;
 }
+
+export interface TranslatorType {
+  name: string;
+  parameters: {
+    source_language: string;
+    target_language: string;
+    text: string;
+  };
+}
+
+export interface TranslatorResponse {
+  id: string;
+  progress: number;
+  status: string;
+  response: string;
+  file_attachements: File[];
+}
+
+export interface LanguageType {
+  id: number;
+  name: string;
+}

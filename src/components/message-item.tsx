@@ -12,7 +12,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { UserIcon } from "@heroicons/react/24/solid";
-import {ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 
 import { useAuthContext } from "@/contexts/authContext";
 import {
@@ -28,7 +28,8 @@ import { MarkdownContent } from "./markdown";
 import { AlertModal, ProvideFeedbackModal } from "./modals";
 import { SensitiveMarkdownContent } from "./sensitive-markdown";
 import { AnimateDots, LogoIcon } from "./svgs";
-import { WarningMarkdownContent } from "./warning-markdown";
+import { TranslatorModal } from "./modals/TranslatorModal";
+import { LANGUAGES } from "@/constant";
 
 interface IMessageItem {
   item: IChatMessage;
@@ -40,15 +41,20 @@ export const MessageItem = ({ item }: IMessageItem) => {
   const loading = item.status === "Asked";
   const timeoutRef = useRef(0);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [response, setResponse] = useState(item.response);
   const [messageText, setMessageText] = useState(item.message);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] =
     useState(false);
+  const [selected, setSelected] = useState(LANGUAGES[0]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const isCurrentUser = item.user_id === user?.user_id;
   const messageEditable = !isEditMode && isCurrentUser;
   const disableSaveButton = messageText === item.message;
   const [isSensitive, setIsSensitive] = useState(false);
   const [isFileMessage, setIsFileMessage] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const prevMessage = item.response;
 
   const checkMessageResponse = useCallback(
     (after: number) => {
@@ -64,6 +70,12 @@ export const MessageItem = ({ item }: IMessageItem) => {
     },
     [item.chat_id, item.id, updateMessage]
   );
+
+  const handleOriginalOne = async () => {
+    setIsLoading(true);
+    setResponse(prevMessage);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     if (item.status === "Asked") {
@@ -103,8 +115,7 @@ export const MessageItem = ({ item }: IMessageItem) => {
   const HandleNoSensData = () =>
     updateChatMessageApi(item.chat_id, item.id, item.message, true);
 
-
-    console.log("sensitive ", isSensitive);
+  console.log("sensitive ", isSensitive);
 
   return (
     <div className="mt-3 text-15">
@@ -146,31 +157,28 @@ export const MessageItem = ({ item }: IMessageItem) => {
         </div>
       </div>
       <div className="mt-3 flex gap-3">
-
-
         <div>
           <div className="relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full">
             <LogoIcon width={22} height={20} color="#F5F5F5" />
 
             <div className="bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]">
-              {enabled && isSensitive && <div className="p-1">
-                <ShieldCheckIcon width={15} height={15} color="#DB3A34" />
-              </div>}
+              {enabled && isSensitive && (
+                <div className="p-1">
+                  <ShieldCheckIcon width={15} height={15} color="#DB3A34" />
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-
-
-
         <div className="flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none">
-          {loading ? (
+          {loading || isLoading ? (
             <AnimateDots />
           ) : !isSensitive ? (
             isFileMessage ? (
               <FileMarkdownContent content={item.chat_message_files} />
             ) : (
-              <MarkdownContent content={item.response} />
+              <MarkdownContent content={response ?? item.response} />
             )
           ) : (
             <div className="flex-1">
@@ -192,7 +200,25 @@ export const MessageItem = ({ item }: IMessageItem) => {
           {!loading &&
             (!isSensitive ? (
               <div className="mt-4 flex justify-end items-center gap-4">
-                <IconButton className="!p-0">
+                <div
+                  className={`${
+                    item.chat_message_files.length > 0
+                      ? "!cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                  onClick={() => {
+                    item.chat_message_files.length > 0
+                      ? null
+                      : handleOriginalOne();
+                  }}
+                >
+                  <p className="text-content-grey-400">View original</p>
+                </div>
+                <IconButton
+                  className="!p-0"
+                  onClick={() => setShowTranslatorModal(true)}
+                  disabled={item.chat_message_files.length > 0 ? true : false}
+                >
                   <LanguageIcon className="w-5 h-5 text-content-grey-400" />
                 </IconButton>
                 <div className="w-[1px] h-5 bg-content-grey-600" />
@@ -271,6 +297,14 @@ export const MessageItem = ({ item }: IMessageItem) => {
       <ProvideFeedbackModal
         open={showProvideFeedbackModal}
         onClose={() => setShowProvideFeedbackModal(false)}
+      />
+      <TranslatorModal
+        open={showTranslatorModal}
+        onClose={() => setShowTranslatorModal(false)}
+        text={response ?? item.response}
+        setText={setResponse}
+        selected={selected}
+        setSelected={setSelected}
       />
     </div>
   );

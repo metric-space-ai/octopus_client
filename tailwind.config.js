@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -26,10 +26,12 @@ module.exports = {
         },
         content: {
           white: '#FFFFFF',
+          'grey-50': 'var(--Grey-600, #5C5C5C)',
           'grey-100': '#F5F5F5',
           'grey-400': '#989898',
           'grey-600': '#5C5C5C',
           'grey-900': '#2C2C2C',
+
           black: '#1F1F1F',
           accent: '#7B14CB',
           'accent-hover': '#6500B5',
@@ -72,7 +74,8 @@ module.exports = {
         'prompt-background1': "url('/images/prompts/image-01.png')",
         'prompt-background2': "url('/images/prompts/image-02.png')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       height: {
         'chat-screen-height': 'calc(100vh - 72px)',
@@ -80,4 +83,4 @@ module.exports = {
     },
   },
   plugins: [],
-};
+}
