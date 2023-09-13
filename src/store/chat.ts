@@ -51,7 +51,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   loading: false,
   enabled: true,
 
-
   getWorkspaces() {
     getWorkspacesApi().then((res) => {
       const currentIdx = get().currentWorkspaceId;
@@ -207,10 +206,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       });
   },
   changeStatus(status: boolean) {
-
     // set((prev)=>{return {...prev, enabled:status}});
-    set({enabled: status})
-  }, 
+    set({enabled: status});
+  },
   refreshMessage(chatId: string) {
     getLatestChatMessageApi(chatId).then((res) => {
       // on success

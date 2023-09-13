@@ -66,7 +66,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         router.refresh();
       })
       .catch((error) => {
-        console.log(error);
         setLoading(false);
         toast.error(error.response?.data?.error);
       });
@@ -81,7 +80,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         router.push('login');
       })
       .catch((error) => {
-        console.log(error);
         setLoading(false);
         toast.error(error.response?.data?.error);
       });

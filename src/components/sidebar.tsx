@@ -14,7 +14,6 @@ import {SearchBar} from './search';
 import {IconSideBar} from './svgs';
 import Locale from '../locales';
 
-
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
 });
@@ -24,9 +23,6 @@ export function SideBar(props: {className?: string}) {
   // const [enabled, setEnabled] = useState(true);
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
-
-  console.log("when enabled", chatStore.enabled);
-
 
   return (
     <div
