@@ -63,6 +63,6 @@ export const deleteChatMessageApi = async (chatId: string, chatMessageId: string
   return apiHub.delete<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
 
-export const directCall=async(data:TranslatorType)=> {
+export const directCall = async (data: TranslatorType) => {
   return apiHub.post<TranslatorResponse>(`/api/v1/ai-functions/direct-call`, data);
-}
+};
