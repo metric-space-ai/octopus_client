@@ -1,13 +1,12 @@
 import {Dispatch, Fragment, SetStateAction, useState} from 'react';
 
-import {Dialog, Menu, Transition} from '@headlessui/react';
-import {HandThumbDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {Dialog, Transition} from '@headlessui/react';
+import {XMarkIcon} from '@heroicons/react/24/outline';
 
 import {LanguageType} from '@/types';
 
-import {Button, IconButton} from '../buttons';
-import {Checkbox} from '../checkbox';
-import {Dropdown} from '../dropdown';
+import {IconButton} from '@/components/buttons';
+import {Dropdown} from '@/components/dropdown';
 
 interface ModalProps {
   open: boolean;
@@ -16,9 +15,10 @@ interface ModalProps {
   setText: Dispatch<SetStateAction<string>>;
   selected: LanguageType;
   setSelected: Dispatch<SetStateAction<LanguageType>>;
+  setShowOriginal: Dispatch<SetStateAction<boolean>>;
 }
 
-export const TranslatorModal = ({open, onClose, text, setText, selected, setSelected}: ModalProps) => (
+export const TranslatorModal = ({open, onClose, text, setText, selected, setSelected, setShowOriginal}: ModalProps) => (
   <Transition appear show={open} as={Fragment}>
     <Dialog className='relative z-10' as='div' onClose={onClose}>
       <Transition.Child
@@ -54,7 +54,6 @@ export const TranslatorModal = ({open, onClose, text, setText, selected, setSele
               </div>
               <div>
                 <p className='text-base text-content-grey-50'>Specify your preferred language for translations. </p>
-
                 <div className='space-y-2 mt-2'>
                   <p className='text-xs text-grey-900'>language</p>
                   <div>
@@ -64,6 +63,7 @@ export const TranslatorModal = ({open, onClose, text, setText, selected, setSele
                       onClose={onClose}
                       selected={selected}
                       setSelected={setSelected}
+                      setShowOriginal={setShowOriginal}
                     />
                   </div>
                 </div>

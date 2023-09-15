@@ -47,7 +47,7 @@ export function SideBar(props: {className?: string}) {
           </IconButton>
         )}
       </div>
-      <div className='mt-5 flex-1'>
+      <div className='mt-5 flex-1 min-h-[calc(100vh-20rem)] overflow-y-scroll no-scrollbar'>
         <ChatList expanded={expanded} />
       </div>
       {expanded && (

@@ -1,3 +1,5 @@
+import ISO6391 from 'iso-639-1';
+
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
 export const DEFAULT_API_HOST = 'https://chatgpt1.nextweb.fun/api/proxy';
 
@@ -54,8 +56,6 @@ Act as a virtual assistant powered by model: '{{model}}', my input is:
 `;
 
 export const TabModes = [{name: 'Private'}, {name: 'Public'}];
+const languageList = ISO6391.getAllNames();
 
-export const LANGUAGES = [
-  {id: 1, name: 'English'},
-  {id: 2, name: 'German'},
-];
+export const LANGUAGES = languageList.map((value, index) => ({id: index, name: value}));

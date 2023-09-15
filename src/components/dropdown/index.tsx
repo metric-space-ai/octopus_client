@@ -7,7 +7,7 @@ import {LANGUAGES} from '@/constant';
 import {directCall} from '@/services/chat.service';
 import {LanguageType} from '@/types';
 
-import {Button} from '../buttons';
+import {Button} from '@/components/buttons';
 
 export const Dropdown = ({
   text,
@@ -15,12 +15,14 @@ export const Dropdown = ({
   onClose,
   selected,
   setSelected,
+  setShowOriginal,
 }: {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   onClose: () => void;
   selected: LanguageType;
   setSelected: Dispatch<SetStateAction<LanguageType>>;
+  setShowOriginal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,7 @@ export const Dropdown = ({
     const response = await directCall(payload);
     setText(response?.data?.response);
     setLoading(false);
+    setShowOriginal(true);
     onClose();
   };
   return (
@@ -73,7 +76,6 @@ export const Dropdown = ({
               onClick={() => setOpen(false)}
             >
               <div>
-                <p className='py-2 pl-10 pr-4 font-md'>{selected?.name}</p>
                 {filteredPeople.length === 0 && query !== '' ? (
                   <div className='relative cursor-default select-none py-2 px-4 text-gray-700'>Nothing found.</div>
                 ) : (

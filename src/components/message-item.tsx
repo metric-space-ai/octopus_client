@@ -7,6 +7,7 @@ import {
   LanguageIcon,
   NoSymbolIcon,
   PencilSquareIcon,
+  ShieldExclamationIcon,
   SpeakerWaveIcon,
   StopIcon,
   TrashIcon,
@@ -16,7 +17,7 @@ import {UserIcon} from '@heroicons/react/24/solid';
 
 import {LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
-import {getChatMessageApi, updateChatMessageApi} from '@/services/chat.service';
+import {deleteChatMessageApi, getChatMessageApi, updateChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
@@ -41,7 +42,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [response, setResponse] = useState(item.response);
   const [messageText, setMessageText] = useState(item.message);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
-  const [selected, setSelected] = useState(LANGUAGES[0]);
+  const [selected, setSelected] = useState(LANGUAGES[36]);
   const [isLoading, setIsLoading] = useState(false);
   const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const isCurrentUser = item.user_id === user?.user_id;
@@ -50,6 +51,11 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [isSensitive, setIsSensitive] = useState(false);
   const [isFileMessage, setIsFileMessage] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [showOriginal, setShowOriginal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [disableLoading, setDisableLoading] = useState(false);
+  const [sensitiveLoading, setSensitiveLoading] = useState(false);
+
   const prevMessage = item.response;
 
   const checkMessageResponse = useCallback(
@@ -71,6 +77,7 @@ export const MessageItem = ({item}: IMessageItem) => {
     setIsLoading(true);
     setResponse(prevMessage);
     setIsLoading(false);
+    setShowOriginal(false);
   };
 
   useEffect(() => {
@@ -104,9 +111,23 @@ export const MessageItem = ({item}: IMessageItem) => {
     setIsEditMode(false);
   };
 
-  const handleDeleteSensData = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
-  const handleDisableInspection = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
-  const HandleNoSensData = () => updateChatMessageApi(item.chat_id, item.id, item.message, true);
+  const handleDeleteSensData = async () => {
+    setDeleteLoading(true);
+    await deleteChatMessageApi(item.chat_id, item.id);
+    setDeleteLoading(false);
+  };
+
+  const handleNoSensitiveData = async () => {
+    setSensitiveLoading(true);
+    await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+    setSensitiveLoading(false);
+  };
+
+  const handleDisableInspection = async () => {
+    setDisableLoading(true);
+    await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+    setDisableLoading(false);
+  };
 
   return (
     <div className='mt-3 text-15'>
@@ -182,14 +203,16 @@ export const MessageItem = ({item}: IMessageItem) => {
           {!loading &&
             (!isSensitive ? (
               <div className='mt-4 flex justify-end items-center gap-4'>
-                <div
-                  className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
-                  onClick={() => {
-                    item.chat_message_files.length > 0 ? null : handleOriginalOne();
-                  }}
-                >
-                  <p className='text-content-grey-400'>View original</p>
-                </div>
+                {showOriginal && (
+                  <div
+                    className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                    onClick={() => {
+                      item.chat_message_files.length > 0 ? null : handleOriginalOne();
+                    }}
+                  >
+                    <p className='text-content-grey-400'>View original</p>
+                  </div>
+                )}
                 <IconButton
                   className='!p-0'
                   onClick={() => setShowTranslatorModal(true)}
@@ -207,34 +230,54 @@ export const MessageItem = ({item}: IMessageItem) => {
                 </IconButton>
               </div>
             ) : (
-              <div className='mt-4 flex justify-start items-start gap-4'>
-                <IconButton
-                  variant='secondary'
-                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                  onClick={handleDeleteSensData}
-                >
-                  <TrashIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>Delete Sensitive Data</span>
-                </IconButton>
+              <>
+                <div className='mt-4 flex justify-start items-start gap-4'>
+                  <IconButton
+                    variant='secondary'
+                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                    onClick={handleDeleteSensData}
+                    loading={deleteLoading}
+                    disabled={deleteLoading}
+                  >
+                    <TrashIcon className='w-5 h-5 text-content-grey-400' />
+                    <span className='text-14 text-center text-content-white'>Delete Sensitive Data</span>
+                  </IconButton>
 
-                <IconButton
-                  variant='secondary'
-                  onClick={HandleNoSensData}
-                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                >
-                  <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>No Sensitive Data</span>
-                </IconButton>
+                  <IconButton
+                    variant='secondary'
+                    onClick={handleNoSensitiveData}
+                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                    loading={sensitiveLoading}
+                    disabled={sensitiveLoading}
+                  >
+                    <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
+                    <span className='text-14 text-center text-content-white'>No Sensitive Data</span>
+                  </IconButton>
 
-                <IconButton
-                  variant='secondary'
-                  className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                  onClick={handleDisableInspection}
-                >
-                  <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
-                  <span className='text-14 text-center text-content-white'>Disabling Inspection (30mins)</span>
-                </IconButton>
-              </div>
+                  <IconButton
+                    variant='secondary'
+                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                    onClick={handleDisableInspection}
+                    loading={disableLoading}
+                    disabled={disableLoading}
+                  >
+                    <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
+                    <span className='text-14 text-center text-content-white'>Disabling Inspection (30mins)</span>
+                  </IconButton>
+                </div>
+                <div className='mt-4'>
+                  <IconButton
+                    variant='secondary'
+                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                    onClick={() => {}}
+                  >
+                    <ShieldExclamationIcon className='w-5 h-5 text-content-grey-400' />
+                    <span className='text-14 text-center text-content-white'>
+                      Replace with an anonymized version of content
+                    </span>
+                  </IconButton>
+                </div>
+              </>
             ))}
         </div>
       </div>
@@ -269,6 +312,7 @@ export const MessageItem = ({item}: IMessageItem) => {
         setText={setResponse}
         selected={selected}
         setSelected={setSelected}
+        setShowOriginal={setShowOriginal}
       />
     </div>
   );
