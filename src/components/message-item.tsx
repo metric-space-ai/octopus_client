@@ -38,6 +38,7 @@ export const MessageItem = ({item}: IMessageItem) => {
     editMessage,
     updateMessage,
     deleteMessage,
+    refreshMessage,
     enabledContentSafety,
     changeContentSafteyStatus,
     changeSensitiveStatus,
@@ -121,19 +122,22 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   const handleDeleteSensData = async () => {
     setDeleteLoading(true);
-    await deleteChatMessageApi(item.chat_id, item.id);
+    // await deleteChatMessageApi(item.chat_id, item.id);
+    deleteMessage(item);
     setDeleteLoading(false);
   };
 
   const handleNoSensitiveData = async () => {
     setSensitiveLoading(true);
     await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+    refreshMessage(item.chat_id);
     setSensitiveLoading(false);
   };
 
   const handleDisableInspection = async () => {
     setDisableLoading(true);
     await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+    refreshMessage(item.chat_id);
     setDisableLoading(false);
     changeContentSafteyStatus(false);
     changeSensitiveStatus(false);
