@@ -34,7 +34,14 @@ interface IMessageItem {
 }
 
 export const MessageItem = ({item}: IMessageItem) => {
-  const {editMessage, updateMessage, deleteMessage, enabled} = useChatStore();
+  const {
+    editMessage,
+    updateMessage,
+    deleteMessage,
+    enabledContentSafety,
+    changeContentSafteyStatus,
+    changeSensitiveStatus,
+  } = useChatStore();
   const {user} = useAuthContext();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
@@ -90,6 +97,7 @@ export const MessageItem = ({item}: IMessageItem) => {
       // item.status === 'Answered'
       // update sensitive flag
       setIsSensitive(item.is_sensitive);
+      changeSensitiveStatus(item.is_sensitive);
       setIsFileMessage(item.chat_message_files.length > 0);
     }
     return () => {
@@ -127,6 +135,8 @@ export const MessageItem = ({item}: IMessageItem) => {
     setDisableLoading(true);
     await updateChatMessageApi(item.chat_id, item.id, item.message, true);
     setDisableLoading(false);
+    changeContentSafteyStatus(false);
+    changeSensitiveStatus(false);
   };
 
   return (
@@ -166,7 +176,7 @@ export const MessageItem = ({item}: IMessageItem) => {
             <LogoIcon width={22} height={20} color='#F5F5F5' />
 
             <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
-              {enabled && isSensitive && (
+              {enabledContentSafety && isSensitive && (
                 <div className='p-1'>
                   <ShieldCheckIcon width={15} height={15} color='#DB3A34' />
                 </div>

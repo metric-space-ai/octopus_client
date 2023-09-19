@@ -36,8 +36,12 @@ export const getChatMessagesApi = async (ticketId: string) => {
   return apiHub.get<IChatMessage[]>(`/api/v1/chat-messages/${ticketId}`);
 };
 
-export const createChatMessageApi = async (ticketId: string, message: string) => {
-  const payload = {message};
+export const createChatMessageApi = async (
+  ticketId: string,
+  message: string,
+  bypass_sensitive_information_filter: boolean,
+) => {
+  const payload = {message, bypass_sensitive_information_filter};
   return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${ticketId}`, payload);
 };
 
@@ -48,7 +52,8 @@ export const updateChatMessageApi = async (
   bypass_sensitive_information_filter = false,
 ) => {
   const payload = {message, bypass_sensitive_information_filter};
-  return apiHub.put<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
+  // return apiHub.put<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
+  return apiHub.post<IChatMessage>(`/api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
 };
 
 export const getChatMessageApi = async (chatId: string, chatMessageId: string) => {

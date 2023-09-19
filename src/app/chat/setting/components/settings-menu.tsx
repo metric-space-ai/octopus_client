@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 
 import {Button} from '@/components/buttons';
+import {VERSION_NUM} from '@/constant';
 
 export const SettingsMenu = () => {
   const router = useRouter();
@@ -52,6 +53,7 @@ export const SettingsMenu = () => {
           title='General'
           onClick={() => handleTab('general')}
         />
+        <span className='text-22 font-semibold text-content-red-400'>{VERSION_NUM}</span>
       </div>
     </div>
   );

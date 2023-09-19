@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {Switch} from '@headlessui/react';
 import {MagnifyingGlassIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
@@ -23,6 +23,44 @@ export function SideBar(props: {className?: string}) {
   // const [enabled, setEnabled] = useState(true);
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
+  const [timeDifference, setTimeDifference] = useState('(30:00)');
+
+  useEffect(() => {
+    // Function to calculate and update the time difference
+    const calculateTimeDifference = () => {
+      // Get the static date from local storage
+      const storedDate = localStorage.getItem('contentSafetyTimestamp');
+
+      if (storedDate) {
+        const staticDate = new Date(storedDate).getTime();
+        const currentDate = new Date().getTime();
+
+        // Calculate the time difference in milliseconds
+        const differenceInMilliseconds = 0.5 * 60 * 1000 - (currentDate - staticDate);
+
+        // Calculate minutes and seconds
+        const minutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+        const seconds = Math.floor((differenceInMilliseconds % (1000 * 60)) / 1000);
+
+        const newLocal = '(' + minutes + ':' + seconds + ')';
+        // Set the time difference in state
+        if (minutes <= 0 && seconds <= 0) {
+          chatStore.changeContentSafteyStatus(true);
+        } else {
+          setTimeDifference(newLocal);
+        }
+      }
+    };
+
+    // Calculate and update the time difference initially
+    calculateTimeDifference();
+
+    // Set up an interval to update the time difference every second
+    const intervalId = setInterval(calculateTimeDifference, 1000);
+
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <div
@@ -58,18 +96,18 @@ export function SideBar(props: {className?: string}) {
               <p className='text-12 text-content-grey-100 font-semibold'>Content Safety</p>
             </div>
             <Switch
-              checked={chatStore.enabled}
+              checked={chatStore.enabledContentSafety}
               onChange={(checked) => {
                 if (!checked) {
                   setShowDeactivateConfirmationModal(true);
                 } else {
                   // setEnabled(true);
-                  chatStore.changeStatus(true);
+                  chatStore.changeContentSafteyStatus(true);
                 }
               }}
               className={classNames(
                 `${
-                  chatStore.enabled ? 'bg-content-accent' : 'bg-content-disabled'
+                  chatStore.enabledContentSafety ? 'bg-content-accent' : 'bg-content-disabled'
                 } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
               )}
             >
@@ -78,13 +116,18 @@ export function SideBar(props: {className?: string}) {
                 aria-hidden='true'
                 className={classNames(
                   `${
-                    chatStore.enabled ? 'translate-x-6' : 'translate-x-0'
+                    chatStore.enabledContentSafety ? 'translate-x-6' : 'translate-x-0'
                   } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`,
                 )}
               />
             </Switch>
           </div>
-          <p className='text-10 text-content-grey-400'>Your Personal Content is Secure</p>
+          {chatStore.enabledContentSafety && (
+            <p className='text-10 text-content-grey-400'>Your Personal Content is Secure</p>
+          )}
+          {!chatStore.enabledContentSafety && (
+            <p className='text-10 text-content-red-400'>Content Safety is disabled{timeDifference}</p>
+          )}
         </div>
       )}
       <div className='mt-6 flex items-center'>
@@ -109,7 +152,7 @@ export function SideBar(props: {className?: string}) {
           confirmTitle='Deactivate Content Safety'
           open={showDeactivateConfirmationModal}
           onConfirm={() => {
-            chatStore.changeStatus(false);
+            chatStore.changeContentSafteyStatus(false);
 
             setShowDeactivateConfirmationModal(false);
           }}
@@ -121,3 +164,4 @@ export function SideBar(props: {className?: string}) {
     </div>
   );
 }
+export {ChatList};

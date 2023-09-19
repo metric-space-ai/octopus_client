@@ -16,7 +16,16 @@ import {useChatStore} from '@/store';
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
-  const {loading, currentTicketId, isNewTicket, messages, newMessage, refreshMessage} = useChatStore();
+  const {
+    loading,
+    currentTicketId,
+    isNewTicket,
+    messages,
+    newMessage,
+    refreshMessage,
+    enabledContentSafety,
+    isSensitiveChecked,
+  } = useChatStore();
   const {scrollRef, setAutoScroll} = useScrollToBottom();
   const timeoutRef = useRef(0);
   const showChatPrompt = messages?.length === 0 || isNewTicket;
@@ -64,7 +73,7 @@ export default function ChatPage() {
 
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
-    newMessage(userInput);
+    newMessage(userInput, !enabledContentSafety);
     setUserInput('');
   };
 
@@ -92,7 +101,10 @@ export default function ChatPage() {
         <div className='relative flex-1 flex'>
           <textarea
             ref={inputRef}
-            className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
+            // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
+            className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black ${
+              isSensitiveChecked && enabledContentSafety ? 'opacity-40 cursor-not-allowed' : ''
+            }`}
             placeholder='Ask anything'
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
@@ -101,6 +113,7 @@ export default function ChatPage() {
             onBlur={() => setAutoScroll(false)}
             rows={inputRows}
             autoFocus={true}
+            disabled={isSensitiveChecked && enabledContentSafety}
           />
           <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
             <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
