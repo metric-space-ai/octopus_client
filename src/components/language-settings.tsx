@@ -1,22 +1,25 @@
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState, useRef} from 'react';
 import {Combobox, Transition} from '@headlessui/react';
 
-import {CheckIcon, XMarkIcon} from '@heroicons/react/20/solid';
+import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/20/solid';
 
 import {LANGUAGES} from '@/constant';
 
 type Props = {
-  currentLanguage: string | undefined
+  currentLanguage: string | undefined;
 };
 
 const LanguageSettings = ({currentLanguage}: Props) => {
+
+  const comboButtonRef = useRef();
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [filteredLanguages, setFilteredLanguages] = useState(LANGUAGES);
 
-  const clearQuery = () => setQuery('');
+  // const clearQuery = () => setQuery('');
+
+
 
   useEffect(() => {
     setFilteredLanguages(
@@ -28,35 +31,32 @@ const LanguageSettings = ({currentLanguage}: Props) => {
     );
   }, [query]);
 
+
   return (
     <Combobox value={selectedLanguage} onChange={setSelectedLanguage}>
+      {({open})=>(
+        <>
       <p className='text-xs text-grey-900 mb-2'>language</p>
 
       <div className={`relative w-full cursor-default bg-white pl-5 pr-12 ${open ? 'rounded-t-20' : 'rounded-20'}`}>
         <Combobox.Input
-          onBlur={() => setOpen(false)}
-          onClick={() => setOpen(true)}
           className={`w-full border-none h-10 text-sm leading-5 text-left sm:text-sm text-gray-900 focus:outline-none bg-transparent`}
           displayValue={(lang: any) => lang?.name}
           onChange={(event) => setQuery(event.target.value)}
         />
-        {open && (
-          <Combobox.Button className='absolute inset-y-0 right-0 block pr-5 z-10 ' onClick={clearQuery}>
+        <Combobox.Button refName='comboButtonRef' className='absolute inset-y-0 right-0 block pr-5 z-10 '>
+          { open ? (
             <XMarkIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
-          </Combobox.Button>
-        )}
-        {/* <Combobox.Button className='absolute inset-y-0 right-0 flex items-center pr-5' onClick={() => setOpen(!open)}>
-          {open ? 
-          <ChevronUpIcon className='h-5 w-5 text-gray-400' aria-hidden='true' /> 
-          : 
-          <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' /> 
-          }
-        </Combobox.Button> */}
+          ) : (
+            <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+          )}
+        </Combobox.Button>
+        {/* <Combobox.Button className='absolute inset-y-0 right-0 flex items-center pr-5' onClick={() => setActive(!active)}>
+          </Combobox.Button> */}
       </div>
       <Transition as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
         <Combobox.Options
-          className='absolute max-h-60 w-full overflow-auto rounded-b-2xl bg-white py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
-          onClick={() => setOpen(false)}
+          className='max-h-60 w-full overflow-auto rounded-b-2xl bg-white py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
         >
           <div>
             {filteredLanguages.length === 0 && query !== '' ? (
@@ -92,6 +92,8 @@ const LanguageSettings = ({currentLanguage}: Props) => {
           </div>
         </Combobox.Options>
       </Transition>
+        </>
+      )}
     </Combobox>
   );
 };

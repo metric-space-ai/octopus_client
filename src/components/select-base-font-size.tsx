@@ -1,6 +1,6 @@
 import {IUpdateUserPayload, IUser} from '@/types';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/24/solid';
-import React, {useEffect, useState} from 'react';
+import React, {useDeferredValue, useEffect, useState} from 'react';
 
 type Props = {
   currentSize: number | undefined;
@@ -10,15 +10,12 @@ type Props = {
 
 const SelectBaseFontSize = ({currentSize, onUpdateProfile, user}: Props) => {
   const [openSizeSelector, setOpenSizeSelector] = useState(false);
-  const [fontSize, setFontSize] = useState(3);
+  const [fontSize, setFontSize] = useState<number>();
   const [selectedFontSize, setSelectedFontSize] = useState(currentSize);
+  const deferredValue = useDeferredValue(fontSize);
 
   const handleUpdateFontSize = (text_size: number) => {
     setFontSize(text_size);
-    if (user) {
-      const {job_title, language, name} = user;
-      onUpdateProfile({text_size, job_title, language, name});
-    }
   };
 
   useEffect(() => {
@@ -30,6 +27,13 @@ const SelectBaseFontSize = ({currentSize, onUpdateProfile, user}: Props) => {
   useEffect(() => {
     setSelectedFontSize(fontSize === 1 ? 11 : fontSize === 2 ? 14 : fontSize === 3 ? 16 : fontSize === 4 ? 18 : 21);
   }, [fontSize]);
+
+  useEffect(() => {
+    if (!user || !fontSize || selectedFontSize === currentSize) return;
+    const {job_title, language, name} = user;
+    const timeOutId = setTimeout(() => onUpdateProfile({text_size: selectedFontSize, job_title, language, name}), 500);
+    return () => clearTimeout(timeOutId);
+  }, [deferredValue]);
 
   return (
     <label className='flex flex-col w-full'>

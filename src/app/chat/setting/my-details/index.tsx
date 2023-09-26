@@ -18,7 +18,7 @@ interface IFormInputs {
   first_name: string;
   last_name: string;
   job_title: string;
-  // email: string;
+  email: string;
 }
 
 const MyDetailPage = () => {
@@ -106,14 +106,13 @@ const MyDetailPage = () => {
               errors={errors.job_title && errors.job_title.message}
               rules={register('job_title', {...authValidator.job_title, onChange: checkInputsHaveValue})}
             />
-            {/* <Input
+            <Input
               type='email'
               label='Email'
               placeholder='Email'
-              onBlur={checkInputsHaveValue}
               errors={errors.email && errors.email.message}
-              rules={register('email', {...authValidator.email,disabled:true})}
-            /> */}
+              rules={register('email', {...authValidator.email, onChange: checkInputsHaveValue})}
+            />
           </div>
           <div className='flex justify-between gap-4'>
             <Button type='reset' variant='outline' className='flex-1' title='Cancel' />
