@@ -56,11 +56,11 @@ export const DeleteTabModal = ({tab, open, onClose}: ModalProps) => {
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-5 h-5text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-24 font-semibold text-content-black'>
+                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
                   {`Delete "${tab?.name}" tab`}
                 </Dialog.Title>
-                <p className='text-20 font-semibold mt-5 text-content-black'>Are you sure?</p>
-                <p className='text-16 font-regular text-content-grey-900'>
+                <p className='text-xl font-semibold mt-5 text-content-black'>Are you sure?</p>
+                <p className='text-base font-regular text-content-grey-900'>
                   This action is irreversible and will permanently remove the tab and all its associated data.{' '}
                 </p>
                 <form className='flex mt-2 gap-2'>

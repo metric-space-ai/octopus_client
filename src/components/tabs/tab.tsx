@@ -26,7 +26,7 @@ export const Tab = ({tabId, title, icon, editable, onClick, onRename, onDelete, 
     <div className='cursor-pointer' id={tabId} onClick={onClick}>
       <div
         className={classNames(
-          'relative h-10 flex items-center justify-center pl-4 pr-3 rounded-t-[20px] text-14 font-semibold',
+          'relative h-10 flex items-center justify-center pl-4 pr-3 rounded-t-[20px] text-sm font-semibold',
           // beforeClass,
           classSelected,
         )}

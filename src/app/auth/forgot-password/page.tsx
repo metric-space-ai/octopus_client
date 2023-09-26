@@ -49,7 +49,7 @@ const ForgotPasswordPage = () => {
         <Logo className='absolute left-10 top-10' withText />
         <h1 className='text-32 font-semibold text-content-black text-center'>Forgot password?</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[400px]'>
-          <p className='mt-2 text-16 text-content-grey-600'>No worries, we’ll send you reset instructions.</p>
+          <p className='mt-2 text-base text-content-grey-600'>No worries, we’ll send you reset instructions.</p>
           <form className='w-full mt-10' onSubmit={handleSubmit(onSubmit)}>
             <Input
               type='email'
@@ -60,7 +60,7 @@ const ForgotPasswordPage = () => {
             <Button className='mt-6 w-full !h-11 rounded-[40px]' loading={loading} title='Reset password' />
           </form>
           <Link className='mt-10' href='login'>
-            <span className='text-14 text-content-accent underline'>Back to Log in</span>
+            <span className='between_sm_base text-content-accent underline'>Back to Log in</span>
           </Link>
         </div>
       </div>

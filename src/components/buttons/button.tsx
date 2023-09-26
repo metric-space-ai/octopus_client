@@ -41,10 +41,10 @@ const TextStyle = {
 };
 
 const Sizes = {
-  default: 'text-14',
-  large: 'text-24',
-  medium: 'text-18',
-  small: 'text-12',
+  default: 'text-sm',
+  large: 'text-2xl',
+  medium: 'text-lg',
+  small: 'text-xs',
 };
 
 export const Button = ({
@@ -68,7 +68,7 @@ export const Button = ({
     <button
       disabled={disabled}
       className={classNames(
-        'h-9 flex items-center justify-center px-4 gap-[6px] rounded-[20px]',
+        'h-11 flex items-center justify-center px-4 gap-[6px] rounded-[20px]',
         style,
         hoverStyle,
         className,

@@ -47,7 +47,7 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
                   <div className='flex items-center justify-center w-10 h-10 rounded-full bg-white'>
                     <HandThumbDownIcon className='w-5 h-5 text-content-red-600' />
                   </div>
-                  <Dialog.Title as='h3' className='text-24 font-semibold text-content-black'>
+                  <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
                     Provide additional feedback
                   </Dialog.Title>
                 </div>
@@ -57,9 +57,9 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
                     placeholder='What was the issue with the response?'
                   />
                   <div className='flex gap-4'>
-                    <Checkbox className='text-14 font-medium text-content-grey-600' title='This is harmful' />
-                    <Checkbox className='text-14 font-medium text-content-grey-600' title={`This isn't true`} />
-                    <Checkbox className='text-14 font-medium text-content-grey-600' title={`This isn't helpful`} />
+                    <Checkbox className='text-sm font-medium text-content-grey-600' title='This is harmful' />
+                    <Checkbox className='text-sm font-medium text-content-grey-600' title={`This isn't true`} />
+                    <Checkbox className='text-sm font-medium text-content-grey-600' title={`This isn't helpful`} />
                   </div>
                   <Button type='button' className='!h-11' variant='primary' title='Submit feedback' loading={loading} />
                 </form>

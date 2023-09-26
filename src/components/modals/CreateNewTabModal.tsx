@@ -80,7 +80,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-24 font-semibold text-content-black'>
+                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
                   {tab ? 'Rename tab' : 'Create a new tab'}
                 </Dialog.Title>
                 <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
@@ -98,7 +98,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                           ) : (
                             <LockClosedIcon className='w-4 h-4 text-content-grey-900' />
                           )}
-                          <span className='text-16 text-content-grey-900'>{selected.name}</span>
+                          <span className='text-base text-content-grey-900'>{selected.name}</span>
                         </div>
                         <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                           <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />

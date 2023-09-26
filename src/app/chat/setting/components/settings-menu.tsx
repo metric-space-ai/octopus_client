@@ -21,10 +21,12 @@ export const SettingsMenu = () => {
 
   return (
     <div className='flex flex-col'>
-      <h1 className='text-32 font-semibold'>Setting</h1>
+      <h1 className='text-32 font-semibold font-poppins-semibold'>
+        Settings
+      </h1>
       <div className='w-[240px] mt-9 px-6 py-4 gap-3 bg-content-white flex flex-col rounded-[20px]'>
-        <Button
-          variant={menu === 'details' ? 'secondary' : 'transparent'}
+        <Button className='border border-transparent hover:border-black !pl-6 !justify-start'
+          variant={menu === 'details' || menu === null ? 'secondary' : 'transparent'}
           iconBefore={
             <UserIcon
               className={classNames('w-5 h-5', menu === 'details' ? 'text-content-white' : 'text-content-black')}
@@ -33,7 +35,7 @@ export const SettingsMenu = () => {
           title='My details'
           onClick={() => handleTab('details')}
         />
-        <Button
+        <Button className='border border-transparent hover:border-black !pl-6 !justify-start'
           variant={menu === 'password' ? 'secondary' : 'transparent'}
           iconBefore={
             <KeyIcon
@@ -43,7 +45,7 @@ export const SettingsMenu = () => {
           title='Password'
           onClick={() => handleTab('password')}
         />
-        <Button
+        <Button className='border border-transparent hover:border-black !pl-6 !justify-start'
           variant={menu === 'general' ? 'secondary' : 'transparent'}
           iconBefore={
             <Cog6ToothIcon
@@ -53,7 +55,7 @@ export const SettingsMenu = () => {
           title='General'
           onClick={() => handleTab('general')}
         />
-        <span className='text-22 font-semibold text-content-red-400'>{VERSION_NUM}</span>
+        <span className='text-xxl font-semibold text-content-red-400'>{VERSION_NUM}</span>
       </div>
     </div>
   );

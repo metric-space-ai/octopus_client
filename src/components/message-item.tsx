@@ -144,7 +144,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   };
 
   return (
-    <div className='mt-3 text-15'>
+    <div className='mt-3 text-between_sm_base'>
       <div className='flex gap-3'>
         <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
           <UserIcon className='w-6 h-6 text-content-grey-100' />
@@ -254,7 +254,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                     disabled={deleteLoading}
                   >
                     <TrashIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-14 text-center text-content-white'>Delete Sensitive Data</span>
+                    <span className='text-sm text-center text-content-white'>Delete Sensitive Data</span>
                   </IconButton>
 
                   <IconButton
@@ -265,7 +265,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                     disabled={sensitiveLoading}
                   >
                     <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-14 text-center text-content-white'>No Sensitive Data</span>
+                    <span className='text-sm text-center text-content-white'>No Sensitive Data</span>
                   </IconButton>
 
                   <IconButton
@@ -276,7 +276,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                     disabled={disableLoading}
                   >
                     <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-14 text-center text-content-white'>Disabling Inspection (30mins)</span>
+                    <span className='text-sm text-center text-content-white'>Disabling Inspection (30mins)</span>
                   </IconButton>
                 </div>
                 <div className='mt-4'>
@@ -286,7 +286,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                     onClick={() => {}}
                   >
                     <ShieldExclamationIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-14 text-center text-content-white'>
+                    <span className='text-sm text-center text-content-white'>
                       Replace with an anonymized version of content
                     </span>
                   </IconButton>

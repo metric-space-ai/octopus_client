@@ -10,6 +10,7 @@ import {Input} from '@/components/input';
 import {authValidator} from '@/helpers/validators';
 import {changePassword} from '@/services/auth.service';
 import {useAuthStore} from '@/store';
+import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
 
 interface IFormInputs {
   currentPassword: string;
@@ -23,9 +24,12 @@ const PasswordPage = () => {
     register,
     handleSubmit,
     watch,
+    getValues,
     formState: {errors},
   } = useForm<IFormInputs>();
   const [loading, setLoading] = useState(false);
+  const [activeSaveButton, setActiveSaveButton] = useState(false);
+
   const {authData} = useAuthStore();
 
   const onSubmit = async (data: IFormInputs) => {
@@ -44,6 +48,10 @@ const PasswordPage = () => {
     }
   };
 
+  const checkInputsHaveValue = () => {
+    setActiveSaveButton(allPropertiesHaveValue(getValues()));
+  };
+
   return (
     <div className='w-full pt-[84px] flex flex-col items-center'>
       <form className='w-[360px] flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
@@ -52,14 +60,15 @@ const PasswordPage = () => {
           label='Current Password'
           placeholder='Current Password'
           errors={errors.currentPassword && 'Password length must be 5, including letter and number.'}
-          rules={register('currentPassword', authValidator.password)}
+          rules={register('currentPassword', {...authValidator.password, onChange: checkInputsHaveValue})}
         />
         <Input
           type='password'
           label='New Password'
           placeholder='New Password'
           errors={errors.newPassword && errors.newPassword.message}
-          rules={register('newPassword', authValidator.password)}
+          rules={register('newPassword', {...authValidator.password, onChange: checkInputsHaveValue})}
+
         />
         <Input
           type='password'
@@ -73,11 +82,17 @@ const PasswordPage = () => {
                 return 'Your password does not match.';
               }
             },
+            onChange: checkInputsHaveValue,
           })}
         />
-        <div className='flex justify-between gap-4'>
-          <Button className='flex-1' title='Save' loading={loading} />
+        <div className='flex justify-between gap-4 pt-3'>
           <Button type='reset' variant='outline' className='flex-1' title='Cancel' />
+          <Button
+            variant={activeSaveButton ? 'primary' : 'disabled'}
+            className={`${!activeSaveButton ? 'pointer-events-none' : ''} flex-1`}
+            title='Save Changes'
+            loading={loading}
+          />
         </div>
       </form>
     </div>

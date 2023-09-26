@@ -56,7 +56,7 @@ export const Dropdown = ({
       <Combobox value={selected} onChange={setSelected}>
         <div className='relative mt-1'>
           {!open ? (
-            <div className='relative w-full cursor-default overflow-hidden rounded-3xl bg-white text-left shadow-md sm:text-sm'>
+            <div className='relative w-full cursor-default overflow-hidden rounded-20 bg-white text-left shadow-md sm:text-sm'>
               <Combobox.Input
                 className='w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none'
                 displayValue={(lang: any) => lang.name}
@@ -72,7 +72,7 @@ export const Dropdown = ({
           ) : null}
           <Transition as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
             <Combobox.Options
-              className='relative mt-1 max-h-60 w-full overflow-auto rounded-2xl bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
+              className='relative mt-1 max-h-60 w-full overflow-auto rounded-20 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
               onClick={() => setOpen(false)}
             >
               <div>

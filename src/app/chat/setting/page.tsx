@@ -5,6 +5,7 @@ import {useSearchParams} from 'next/navigation';
 import {SettingsMenu} from './components/settings-menu';
 import MyDetailPage from './my-details';
 import PasswordPage from './password';
+import GeneralSettings from './general-settings';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
@@ -16,7 +17,7 @@ export default function SettingPage() {
         <SettingsMenu />
         {menu === 'details' && <MyDetailPage />}
         {menu === 'password' && <PasswordPage />}
-        {menu === 'general' && <MyDetailPage />}
+        {menu === 'general' && <GeneralSettings />}
       </div>
     </div>
   );

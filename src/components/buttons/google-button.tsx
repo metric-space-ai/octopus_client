@@ -17,7 +17,7 @@ export const GoogleButton = ({className, title, onClick, ...props}: ButtonProps)
       onClick={onClick}
     >
       <GoogleIcon />
-      <p className={classNames('text-14 font-semibold text-content-black leading-4')}>{title}</p>
+      <p className={classNames('text-sm font-semibold text-content-black leading-4')}>{title}</p>
     </button>
   );
 };

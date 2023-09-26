@@ -36,7 +36,7 @@ const SignupPage = () => {
     <div className='min-h-full flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
       <Logo className='absolute left-10 top-10' withText />
       <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
-        <h1 className='text-44 font-semibold text-content-black'>Sign Up</h1>
+        <h1 className='text-5.5xl font-semibold text-content-black'>Sign Up</h1>
         <form className='w-full mt-10 flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
           <Input
             placeholder='Username'
@@ -72,14 +72,14 @@ const SignupPage = () => {
         </form>
         <div className='mt-6 w-full flex items-center gap-2'>
           <div className='flex-1 h-[1px] bg-content-black opacity-10' />
-          <p className='text-12 text-content-grey-600'>Or</p>
+          <p className='text-xs text-content-grey-600'>Or</p>
           <div className='flex-1 h-[1px] bg-content-black opacity-10' />
         </div>
         <GoogleButton className='mt-6 w-full' title='Sign up with Google' />
-        <span className='mt-10 text-12 text-content-grey-600'>
+        <span className='mt-10 text-xs text-content-grey-600'>
           Already have an account?{' '}
           <Link href='login'>
-            <span className='text-14 text-content-accent underline'>Log In</span>
+            <span className='text-sm text-content-accent underline'>Log In</span>
           </Link>
         </span>
       </div>

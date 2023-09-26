@@ -1,5 +1,5 @@
 import {IUser} from '@/types';
-import {IAuthData, ICompanyRegisterPayload, IRegisterPayload} from '@/types/auth';
+import {IAuthData, ICompanyRegisterPayload, IRegisterPayload, IUpdateUserPayload} from '@/types/auth';
 
 import apiHub from '../hooks/useApiClient';
 
@@ -37,4 +37,19 @@ export const setupApi = async (payload: ICompanyRegisterPayload) => {
 
 export const getProfile = async (id: string) => {
   return apiHub.get<IUser>(`/api/v1/profiles/${id}`);
+};
+
+export const updateUserProfile = async (id: string, payload: IUpdateUserPayload) => {
+  return apiHub.put<IUser>(`/api/v1/profiles/${id}`, payload);
+};
+
+export const updateUserProfilePic = async (id: string, payload: FormData) => {
+  apiHub.defaults.headers;
+  // const headers = {...apiHub.defaults.headers, 'Content-Type': 'multipart/form-data'};
+  // apiHub.defaults.headers = headers;
+  return apiHub.put<IUser>(`/api/v1/profile-pictures/${id}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

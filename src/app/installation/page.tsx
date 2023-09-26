@@ -59,7 +59,7 @@ const InstallationPage = () => {
             <h1 className='text-32 font-semibold text-content-black'>Welcome to Octopus AI</h1>
             <Logo />
           </div>
-          <p className='mt-4 text-14 text-content-grey-600 text-center'>
+          <p className='mt-4 text-sm text-content-grey-600 text-center'>
             Welcome to Octopus AI Installation! Simply enter the information below to start using reliable personalized
             AI language model.
           </p>
@@ -94,7 +94,7 @@ const InstallationPage = () => {
                 },
               })}
             />
-            <span className='text-10 text-center text-content-grey-600'>
+            <span className='text-xxs text-center text-content-grey-600'>
               Important: Please keep this password as you will need it for login.
             </span>
             <Button
@@ -104,7 +104,7 @@ const InstallationPage = () => {
               title='Install Octopus AI'
             />
           </form>
-          <span className='mt-2 text-12 text-content-grey-600'>
+          <span className='mt-2 text-xs text-content-grey-600'>
             Please double-check your information before proceeding.
           </span>
         </div>

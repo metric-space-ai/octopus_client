@@ -71,7 +71,7 @@ export function SideBar(props: {className?: string}) {
       )}
     >
       <div className='flex items-center justify-between'>
-        {expanded && <h2 className='text-18 font-semibold text-content-white'>Chats</h2>}
+        {expanded && <h2 className='text-lg font-semibold text-content-white'>Chats</h2>}
         <IconButton variant='dark' onClick={() => setExpanded((prev) => !prev)}>
           <IconSideBar />
         </IconButton>
@@ -93,7 +93,7 @@ export function SideBar(props: {className?: string}) {
           <div className='flex justify-between'>
             <div className='flex items-center gap-1'>
               <ShieldCheckIcon className='w-5 h-5 text-content-accent-400' />
-              <p className='text-12 text-content-grey-100 font-semibold'>Content Safety</p>
+              <p className='text-xs text-content-grey-100 font-semibold'>Content Safety</p>
             </div>
             <Switch
               checked={chatStore.enabledContentSafety}
@@ -123,10 +123,10 @@ export function SideBar(props: {className?: string}) {
             </Switch>
           </div>
           {chatStore.enabledContentSafety && (
-            <p className='text-10 text-content-grey-400'>Your Personal Content is Secure</p>
+            <p className='text-xxs text-content-grey-400'>Your Personal Content is Secure</p>
           )}
           {!chatStore.enabledContentSafety && (
-            <p className='text-10 text-content-red-400'>Content Safety is disabled{timeDifference}</p>
+            <p className='text-xxs text-content-red-400'>Content Safety is disabled{timeDifference}</p>
           )}
         </div>
       )}

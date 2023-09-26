@@ -7,10 +7,10 @@ import {toast} from 'react-hot-toast';
 
 import {useApiClient} from '@/hooks';
 import {useAuthStore} from '@/store';
-import {IRegisterPayload} from '@/types/auth';
+import {IRegisterPayload, IUpdateUserPayload} from '@/types/auth';
 import {IUser} from '@/types/user';
 
-import {getProfile, login, register} from '../services/auth.service';
+import {getProfile, login, register, updateUserProfile, updateUserProfilePic} from '../services/auth.service';
 
 interface IAuthContext {
   isAuthenticated: boolean;
@@ -20,6 +20,8 @@ interface IAuthContext {
   authLoading: boolean;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
+  onUpdateProfile: (payload: IUpdateUserPayload) => void;
+  onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
 
@@ -85,6 +87,38 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       });
   };
 
+  const handleUpdateUserProfilePicture = (payload: FormData) => {
+    setLoading(true);
+    if (authData) {
+      updateUserProfilePic(authData.user_id, payload)
+        .then(() => {
+          toast.success('successfully updated');
+          // setUser({...res.data, roles: authData.data.roles});
+  
+        })
+        .catch((error) => {
+          toast.error(error.response?.data?.error);
+        })
+        .finally(() => setLoading(false));
+    }
+
+  }
+  const handleUpdateUserProfile = (payload: IUpdateUserPayload) => {
+    setLoading(true);
+    if (authData) {
+      updateUserProfile(authData.user_id, payload)
+        .then((res) => {
+          toast.success('successfully updated');
+          setUser({...res.data, roles: authData.data.roles});
+
+        })
+        .catch((error) => {
+          toast.error(error.response?.data?.error);
+        })
+        .finally(() => setLoading(false));
+    }
+  };
+
   const handleLogout = () => {
     setAuthData(null);
     localStorage.removeItem('token');
@@ -99,6 +133,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     authLoading,
     onLogin: handleLogin,
     onRegister: handleRegister,
+    onUpdateProfilePicture: handleUpdateUserProfilePicture,
+    onUpdateProfile: handleUpdateUserProfile,
     onLogout: handleLogout,
   };
 

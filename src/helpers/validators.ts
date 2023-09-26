@@ -1,4 +1,13 @@
 export const authValidator = {
+  first_name: {
+    required: 'This field is required.',
+  },
+  last_name: {
+    required: 'This field is required.',
+  },
+  job_title: {
+    required: 'This field is required.',
+  },
   username: {
     required: 'This field is required.',
   },

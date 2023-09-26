@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, FocusEventHandler} from 'react';
 
 import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
@@ -13,17 +13,19 @@ interface InputProps {
   placeholder?: string;
   errors?: string;
   rules?: UseFormRegisterReturn;
+  onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
 }
 
-export const Input = ({className, label, type, placeholder, errors, rules}: InputProps) => {
+export const Input = ({className, label, type, placeholder, errors, rules, onBlur}: InputProps) => {
   const [hidePassword, setHidePassword] = useState(false);
   return (
     <div className={classNames(className)}>
-      {label && <p className='mb-2 text-14 font-semibold text-content-secondary'>{label}</p>}
+      {label && <p className='mb-2 font-normal text-xs text-content-secondary'>{label}</p>}
       <div className='relative px-5 py-2 bg-content-white rounded-[48px]'>
         <input
           {...rules}
-          className='w-full text-16 text-content-black outline-none'
+          onBlur={onBlur}
+          className='w-full text-base text-content-black outline-none'
           type={type === 'password' ? (hidePassword ? 'text' : 'password') : type}
           placeholder={placeholder}
         />
@@ -40,7 +42,7 @@ export const Input = ({className, label, type, placeholder, errors, rules}: Inpu
           </div>
         )}
       </div>
-      {errors && <p className='mt-1 text-12 text-content-red-600'>{errors}</p>}
+      {errors && <p className='mt-1 text-xs text-content-red-600'>{errors}</p>}
     </div>
   );
 };

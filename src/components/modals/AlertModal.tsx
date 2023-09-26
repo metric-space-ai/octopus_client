@@ -55,11 +55,11 @@ export const AlertModal = ({
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-4 h-4 text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-24 font-semibold text-content-primary'>
+                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-primary'>
                   {headTitle}
                 </Dialog.Title>
-                <p className='text-20 font-semibold'>{title}</p>
-                <p className='text-16 font-medium text-content-grey-600'>{description}</p>
+                <p className='text-xl font-semibold'>{title}</p>
+                <p className='text-base font-medium text-content-grey-600'>{description}</p>
                 <form className='flex mt-2 gap-5'>
                   <Button
                     type='button'

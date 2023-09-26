@@ -32,13 +32,14 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
+
   return (
-    <html lang='en' className={`${poppins.variable}`}>
-      <body className='font-poppins bg-content-black'>
+    <html lang='en' className={`${poppins.variable}`} style={{fontSize: 16}}>
+      <body className='poppins-regular bg-content-black'>
         <AuthProvider>
           <RedirectPathProvider>{children}</RedirectPathProvider>
+          <Toaster position='top-right' />
         </AuthProvider>
-        <Toaster position='top-right' />
       </body>
     </html>
   );

@@ -42,7 +42,7 @@ export function ChatItem(props: {
         {props.expanded && (
           <div
             className={classNames(
-              'flex-1 text-14 text-white whitespace-nowrap text-ellipsis overflow-hidden',
+              'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
               props.selected && '!text-content-black',
             )}
           >
@@ -51,7 +51,7 @@ export function ChatItem(props: {
         )}
       </div>
       {false && (
-        <div className='flex justify-between text-12 mt-2 text-content-white'>
+        <div className='flex justify-between text-xs mt-2 text-content-white'>
           <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
         </div>
       )}
