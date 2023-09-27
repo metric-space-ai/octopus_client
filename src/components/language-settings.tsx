@@ -11,7 +11,6 @@ type Props = {
 
 const LanguageSettings = ({currentLanguage}: Props) => {
 
-  const comboButtonRef = useRef();
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +43,7 @@ const LanguageSettings = ({currentLanguage}: Props) => {
           displayValue={(lang: any) => lang?.name}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <Combobox.Button refName='comboButtonRef' className='absolute inset-y-0 right-0 block pr-5 z-10 '>
+        <Combobox.Button className='absolute inset-y-0 right-0 block pr-5 z-10 '>
           { open ? (
             <XMarkIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
           ) : (

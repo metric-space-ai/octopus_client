@@ -36,6 +36,12 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const {setAxiosConfiguration} = useApiClient();
 
+  // useEffect(() => {
+  //   if (!user) return;
+  //   let html = document.getElementsByTagName('html')[0];
+  //   html.style.fontSize = `${user.text_size}px`;
+  // }, [user]);
+
   useEffect(() => {
     setAuthLoading(true);
     setIsAuthenticated(!!authData?.id);
@@ -94,15 +100,13 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .then(() => {
           toast.success('successfully updated');
           // setUser({...res.data, roles: authData.data.roles});
-  
         })
         .catch((error) => {
           toast.error(error.response?.data?.error);
         })
         .finally(() => setLoading(false));
     }
-
-  }
+  };
   const handleUpdateUserProfile = (payload: IUpdateUserPayload) => {
     setLoading(true);
     if (authData) {
@@ -110,7 +114,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .then((res) => {
           toast.success('successfully updated');
           setUser({...res.data, roles: authData.data.roles});
-
         })
         .catch((error) => {
           toast.error(error.response?.data?.error);

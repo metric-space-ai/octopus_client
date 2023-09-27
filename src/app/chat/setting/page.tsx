@@ -6,6 +6,7 @@ import {SettingsMenu} from './components/settings-menu';
 import MyDetailPage from './my-details';
 import PasswordPage from './password';
 import GeneralSettings from './general-settings';
+import TeamMembers from './team-members';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ export default function SettingPage() {
         {menu === 'details' && <MyDetailPage />}
         {menu === 'password' && <PasswordPage />}
         {menu === 'general' && <GeneralSettings />}
+        {menu === 'team-members' && <TeamMembers />}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import {XMarkIcon} from '@heroicons/react/24/outline';
 import {LanguageType} from '@/types';
 
 import {IconButton} from '@/components/buttons';
-import {Dropdown} from '@/components/dropdown';
+import {DropdownTranslateChat} from '@/components/dropdown/translateChat';
 
 interface ModalProps {
   open: boolean;
@@ -57,7 +57,7 @@ export const TranslatorModal = ({open, onClose, text, setText, selected, setSele
                 <div className='space-y-2 mt-2'>
                   <p className='text-xs text-grey-900'>language</p>
                   <div>
-                    <Dropdown
+                    <DropdownTranslateChat
                       text={text}
                       setText={setText}
                       onClose={onClose}
