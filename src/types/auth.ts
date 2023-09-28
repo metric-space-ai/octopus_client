@@ -15,11 +15,17 @@ export interface IRegisterPayload {
   repeat_password: string;
 }
 
-export interface IUpdateUserPayload {
+export interface IUpdateUserProfilePayload {
   job_title?: string;
   language?: string;
   name?: string;
   text_size?: number;
+}
+
+export interface IUpdateUserPayload {
+  email: string;
+  is_enabled: true;
+  roles: string[];
 }
 
 export interface ICompanyRegisterPayload {

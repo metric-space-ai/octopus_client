@@ -1,11 +1,11 @@
-import {IUpdateUserPayload, IUser} from '@/types';
+import {IUpdateUserProfilePayload, IUserProfile} from '@/types';
 import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/24/solid';
 import React, {useDeferredValue, useEffect, useState} from 'react';
 
 type Props = {
   currentSize: number | undefined;
-  onUpdateProfile: (payload: IUpdateUserPayload) => void;
-  user: IUser | null;
+  onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
+  user: IUserProfile | null;
 };
 
 const SelectBaseFontSize = ({currentSize, onUpdateProfile, user}: Props) => {

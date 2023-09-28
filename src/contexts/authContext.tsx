@@ -7,20 +7,32 @@ import {toast} from 'react-hot-toast';
 
 import {useApiClient} from '@/hooks';
 import {useAuthStore} from '@/store';
-import {IRegisterPayload, IUpdateUserPayload} from '@/types/auth';
-import {IUser} from '@/types/user';
+import {IRegisterPayload, IUpdateUserPayload, IUpdateUserProfilePayload} from '@/types/auth';
+import {IUser, IUserProfile} from '@/types/user';
 
-import {getProfile, login, register, updateUserProfile, updateUserProfilePic} from '../services/auth.service';
+import {
+  getProfile,
+  getSingleUserById,
+  login,
+  register,
+  updateSingleUserById,
+  updateUserProfile,
+  updateUserProfilePic,
+} from '../services/auth.service';
+import {AxiosError} from 'axios';
 
 interface IAuthContext {
   isAuthenticated: boolean;
-  user: IUser | null;
-  setUser: (key: IUser | null) => void;
+  user: IUserProfile | null;
+  setUser: (key: IUserProfile | null) => void;
+  singleUser: IUser | null;
   loading: boolean;
   authLoading: boolean;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
-  onUpdateProfile: (payload: IUpdateUserPayload) => void;
+  onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
+  onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
+  getSingleUser: () => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
@@ -31,7 +43,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const router = useRouter();
   const {authData, setAuthData} = useAuthStore();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUserProfile | null>(null);
+  const [singleUser, setSingleUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const {setAxiosConfiguration} = useApiClient();
@@ -48,6 +61,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
 
     if (!authData) {
       setUser(null);
+      setSingleUser(null);
       setAuthLoading(false);
     } else {
       setAxiosConfiguration();
@@ -97,8 +111,10 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     setLoading(true);
     if (authData) {
       updateUserProfilePic(authData.user_id, payload)
-        .then(() => {
+        .then((res) => {
           toast.success('successfully updated');
+          setUser({...res.data, roles: authData.data.roles});
+
           // setUser({...res.data, roles: authData.data.roles});
         })
         .catch((error) => {
@@ -107,7 +123,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .finally(() => setLoading(false));
     }
   };
-  const handleUpdateUserProfile = (payload: IUpdateUserPayload) => {
+  const handleUpdateUserProfile = (payload: IUpdateUserProfilePayload) => {
     setLoading(true);
     if (authData) {
       updateUserProfile(authData.user_id, payload)
@@ -121,6 +137,44 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .finally(() => setLoading(false));
     }
   };
+  const handleGetSingleUserById = async () => {
+    setLoading(true);
+    if (authData) {
+      try {
+        const singleUserData = await getSingleUserById(authData.user_id);
+        const {status, data} = singleUserData;
+        if (status === 200) {
+          setSingleUser(data);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+          // toast.error(err);
+        }
+      }
+    }
+    setLoading(false);
+  };
+
+  const handleUpdateSingleUserById = async (payload: IUpdateUserPayload) => {
+    setLoading(true);
+    if (authData) {
+      try {
+        const singleUserData = await updateSingleUserById(authData.user_id, payload);
+        const {status, data} = singleUserData;
+        if (status === 200) {
+          toast.success('email successfully updated');
+          setSingleUser(data);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+          // toast.error(err);
+        }
+      }
+    }
+    setLoading(false);
+  };
 
   const handleLogout = () => {
     setAuthData(null);
@@ -132,12 +186,15 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     isAuthenticated,
     user,
     setUser,
+    singleUser,
     loading,
     authLoading,
     onLogin: handleLogin,
     onRegister: handleRegister,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
     onUpdateProfile: handleUpdateUserProfile,
+    getSingleUser: handleGetSingleUserById,
+    onUpdateSingleUser: handleUpdateSingleUserById,
     onLogout: handleLogout,
   };
 

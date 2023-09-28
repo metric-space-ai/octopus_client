@@ -6,8 +6,8 @@ import {
   Cog8ToothIcon,
   LockClosedIcon,
   PlusIcon,
-  UserCircleIcon,
   UserGroupIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 import {usePathname, useRouter} from 'next/navigation';
 
@@ -19,20 +19,21 @@ import {IWorkspace} from '@/types';
 
 import {IconButton} from './buttons';
 import {CreateNewTabModal, DeleteTabModal} from './modals';
-
-import userImageSample from './../../public/images/user-sample.png';
+import {ImagesBaseUrl} from '@/constant';
 
 const MenuItem = () => {
-  const {onLogout} = useAuthContext();
+  const {onLogout, user} = useAuthContext();
 
   return (
     <Menu as='div' className='z-10 relative inline-block text-left'>
       <div>
         <Menu.Button className='inline-flex w-full justify-center rounded-md border-none'>
-          {/* <UserCircleIcon className='w-8 h-8 text-white' /> */}
           <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-lime-200 mb-1.5'>
-            {/* <h1 className='text-sky-600 w-full h-full text-lg text-center'>CN</h1> */}
-            <img src={userImageSample.src} alt="user avatar" />
+            {user?.photo_file_name ? (
+              <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt='user avatar' />
+            ) : (
+              <UserIcon className='m-auto' width={32} height={32} />
+            )}
           </div>
         </Menu.Button>
       </div>
@@ -48,19 +49,20 @@ const MenuItem = () => {
         <Menu.Items className='absolute right-0 w-profile-drawer origin-top-right divide-y divide-gray-100 rounded-20 bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='px-2 py-2 gap-2 flex flex-col'>
             <Menu.Item as='div'>
-              {({active}) => (
-                <div className={`rounded-2xl bg-background-dark flex py-3 px-4`}>
-                  <div className='w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-lime-200 '>
-                    {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
-                    <img src={userImageSample.src} alt="user avatar" />
-
-                  </div>
-                  <div className='flex flex-col text-white'>
-                    <h6 className='text-xs leading-5 font-poppins-semibold'>Cyrus Nejati</h6>
-                    <span className='text-xxs leading-4 font-normal'>Service Manager</span>
-                  </div>
+              <div className={`rounded-2xl bg-background-dark flex py-3 px-4`}>
+                <div className='w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-lime-200 '>
+                  {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
+                  {user?.photo_file_name ? (
+                    <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} />
+                  ) : (
+                    <UserIcon className='m-auto' width={32} height={32} />
+                  )}
                 </div>
-              )}
+                <div className='flex flex-col text-white'>
+                  <h6 className='text-xs leading-5 font-poppins-semibold'>{user?.name}</h6>
+                  <span className='text-xxs leading-4 font-normal'>{user?.job_title}</span>
+                </div>
+              </div>
             </Menu.Item>
             <Menu.Item as='a' href={paths.setting}>
               {({active}) => (

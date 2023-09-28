@@ -11,11 +11,10 @@ const videoConstraints = {
 
 type Props = {
   setTakeImageModal: Dispatch<SetStateAction<boolean>>;
-  setURLAvatar: Dispatch<SetStateAction<string>>;
   handleUpload: (payload: FormData) => void;
 };
 
-export default function WebCamImageTaker({setTakeImageModal, setURLAvatar, handleUpload}: Props) {
+export default function WebCamImageTaker({setTakeImageModal, handleUpload}: Props) {
   const [isCaptureEnable, setCaptureEnable] = useState<boolean>(true);
   const webcamRef = useRef<Webcam>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -30,14 +29,12 @@ export default function WebCamImageTaker({setTakeImageModal, setURLAvatar, handl
 
   const handleSaveUserImage = async () => {
     if (url) {
-      setTakeImageModal(false);
-      setURLAvatar(url);
       const formData = new FormData();
-
-      // Usage example:
       const file = await urltoFile(url, 'user.jpg', 'image/jpeg');
       formData.append('file', file);
       handleUpload(formData);
+
+      setTakeImageModal(false);
     }
   };
 

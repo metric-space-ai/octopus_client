@@ -13,6 +13,8 @@ import WebCamImageTaker from './webcam';
 import userImageSample from './../../../../../public/images/user-sample.png';
 import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
 import {useAuthContext} from '@/contexts/authContext';
+import {ImagesBaseUrl} from '@/constant';
+import {UserIcon} from '@heroicons/react/24/outline';
 
 interface IFormInputs {
   first_name: string;
@@ -29,15 +31,15 @@ const MyDetailPage = () => {
     formState: {errors},
   } = form;
 
-  const {user, onUpdateProfile, loading, onUpdateProfilePicture} = useAuthContext();
+  const {user, singleUser, onUpdateProfile, loading, onUpdateProfilePicture, getSingleUser, onUpdateSingleUser} =
+    useAuthContext();
 
   const [takeImageModal, setTakeImageModal] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [emailIsLoading, setEmailIsLoading] = useState(false);
   const [activeSaveButton, setActiveSaveButton] = useState(false);
-  const [profilePhotoURL, setProfilePhotoURL] = useState('');
 
   const onSubmit = async (data: IFormInputs) => {
-    const {first_name, last_name, job_title} = data;
+    const {first_name, last_name, job_title, email} = data;
     // setLoading(true);
     // const variables = {email, password, username};
     // await createUser({variables});
@@ -49,6 +51,15 @@ const MyDetailPage = () => {
         job_title,
       });
     }
+    if (singleUser) {
+      if (singleUser.email == email) return;
+      onUpdateSingleUser({
+        email,
+        roles: singleUser.roles,
+        is_enabled: singleUser.is_enabled,
+      });
+    }
+    setActiveSaveButton(false);
   };
 
   const checkInputsHaveValue = () => {
@@ -69,14 +80,27 @@ const MyDetailPage = () => {
       //end
       form.setValue('job_title', user.job_title);
     }
-  }, [user]);
+    if (singleUser) {
+      console.log('singleUser email');
+      form.setValue('email', singleUser.email);
+    }
+  }, [user, singleUser]);
+  useEffect(() => {
+    setEmailIsLoading(true);
+    getSingleUser();
+    setEmailIsLoading(false);
+  }, []);
 
   return (
     <>
       <div className='w-full pt-[84px] flex flex-col items-center'>
         <div className='mx-auto mb-8 flex flex-col justify-center'>
           <div className='w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto'>
-            <img src={profilePhotoURL ? profilePhotoURL : userImageSample.src} alt='user avatar' className='m-auto' />
+            {user?.photo_file_name ? (
+              <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} className='m-auto' />
+            ) : (
+              <UserIcon className='m-auto' width={45} height={45} />
+            )}
           </div>
           <span className=' text-red-600 hover:cursor-pointer hover:underline' onClick={() => setTakeImageModal(true)}>
             Retake photo
@@ -111,7 +135,11 @@ const MyDetailPage = () => {
               label='Email'
               placeholder='Email'
               errors={errors.email && errors.email.message}
-              rules={register('email', {...authValidator.email, onChange: checkInputsHaveValue})}
+              rules={register('email', {
+                ...authValidator.email,
+                onChange: checkInputsHaveValue,
+                disabled: emailIsLoading,
+              })}
             />
           </div>
           <div className='flex justify-between gap-4'>
@@ -162,7 +190,6 @@ const MyDetailPage = () => {
               <WebCamImageTaker
                 handleUpload={onUpdateProfilePicture}
                 setTakeImageModal={setTakeImageModal}
-                setURLAvatar={setProfilePhotoURL}
               />
             </div>
           </div>

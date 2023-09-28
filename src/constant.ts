@@ -57,6 +57,23 @@ Act as a virtual assistant powered by model: '{{model}}', my input is:
 `;
 
 export const TabModes = [{name: 'Private'}, {name: 'Public'}];
+
+export const ROLE_ADMIN = 'ROLE_ADMIN';
+export const ROLE_COMPANY_ADMIN_USER = 'ROLE_COMPANY_ADMIN_USER';
+export const ROLE_PRIVATE_USER = 'ROLE_PRIVATE_USER';
+export const ROLE_PUBLIC_USER = 'ROLE_PUBLIC_USER';
+
+export const Roles = [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, ROLE_PRIVATE_USER, ROLE_PUBLIC_USER];
+
+export const RoleOptions = [
+  {value: ROLE_ADMIN, label: 'Admin'},
+  {value: ROLE_COMPANY_ADMIN_USER, label: 'Admin user'},
+  {value: ROLE_PRIVATE_USER, label: 'Private user'},
+  {value: ROLE_PUBLIC_USER, label: 'Public user'},
+];
+
 const languageList = ISO6391.getAllNames();
+
+export const ImagesBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const LANGUAGES = languageList.map((value, index) => ({id: index, name: value}));
