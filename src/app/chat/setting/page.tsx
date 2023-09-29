@@ -11,6 +11,7 @@ import Sectors from './sectors';
 import {useAuthContext} from '@/contexts/authContext';
 import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
 import {ShieldExclamationIcon} from '@heroicons/react/24/outline';
+import Plugins from './pluggins';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
@@ -29,6 +30,7 @@ export default function SettingPage() {
           <>
             {menu === 'team-members' && <TeamMembers />}
             {menu === 'sectors' && <Sectors />}
+            {menu === 'plugins' && <Plugins />}
           </>
         ) : (
           (menu === 'team-members' || menu === 'sectors') && (
