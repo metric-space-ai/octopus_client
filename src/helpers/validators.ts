@@ -5,6 +5,9 @@ export const authValidator = {
   name:{
     required: 'This field is required.',
   },
+  desc:{
+    required: 'This field is required.',
+  },
   first_name: {
     required: 'This field is required.',
   },

@@ -12,10 +12,15 @@ import {MessageItem} from '@/components/message-item';
 import {autoGrowTextArea} from '@/helpers';
 import {useScrollToBottom} from '@/hooks';
 import {useChatStore} from '@/store';
+import {Agents} from '@/components/agents';
+
+const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
 
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
+  const [expandedAgents, setExpandedAgents] = useState(true);
+
   const {
     loading,
     currentTicketId,
@@ -87,39 +92,46 @@ export default function ChatPage() {
   };
 
   return (
-    <div className='relative flex flex-col h-chat-screen-height bg-content-grey-100 rounded-b-[20px]'>
-      <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
-        {loading ? (
-          <Loading />
-        ) : showChatPrompt ? (
-          <ChatPrompt />
-        ) : (
-          messages?.map((item) => <MessageItem key={item.id} item={item} />)
-        )}
-      </div>
-      <div className='relative w-full p-5 border-box flex flex-col'>
-        <div className='relative flex-1 flex'>
-          <textarea
-            ref={inputRef}
-            // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
-            className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black ${
-              isSensitiveChecked && enabledContentSafety ? 'opacity-40 cursor-not-allowed' : ''
-            }`}
-            placeholder='Ask anything'
-            onInput={(e) => onInput(e.currentTarget.value)}
-            value={userInput}
-            onKeyDown={onInputKeyDown}
-            onFocus={() => setAutoScroll(true)}
-            onBlur={() => setAutoScroll(false)}
-            rows={inputRows}
-            autoFocus={true}
-            disabled={isSensitiveChecked && enabledContentSafety}
-          />
-          <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
-            <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
-          </IconButton>
+    <div className='relative flex h-chat-screen-height rounded-bl-20 overflow-hidden w-full'>
+      <div
+        className={`flex flex-col bg-content-grey-100 w-full ${
+          expandedAgents ? 'w-[calc(100%-282px)]' : 'w-[calc(100%-68px)]'
+        }`}
+      >
+        <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
+          {loading ? (
+            <Loading />
+          ) : showChatPrompt ? (
+            <ChatPrompt />
+          ) : (
+            messages?.map((item) => <MessageItem key={item.id} item={item} />)
+          )}
+        </div>
+        <div className='relative w-full p-5 border-box flex flex-col'>
+          <div className='relative flex-1 flex'>
+            <textarea
+              ref={inputRef}
+              // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
+              className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black ${
+                isSensitiveChecked && enabledContentSafety ? 'opacity-40 cursor-not-allowed' : ''
+              }`}
+              placeholder='Ask anything'
+              onInput={(e) => onInput(e.currentTarget.value)}
+              value={userInput}
+              onKeyDown={onInputKeyDown}
+              onFocus={() => setAutoScroll(true)}
+              onBlur={() => setAutoScroll(false)}
+              rows={inputRows}
+              autoFocus={true}
+              disabled={isSensitiveChecked && enabledContentSafety}
+            />
+            <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
+              <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
+            </IconButton>
+          </div>
         </div>
       </div>
+      <Agents expanded={expandedAgents} setExpanded={setExpandedAgents} />
     </div>
   );
 }

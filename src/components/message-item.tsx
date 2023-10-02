@@ -29,6 +29,9 @@ import {TranslatorModal} from './modals/TranslatorModal';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {AnimateDots, LogoIcon} from './svgs';
 
+import userImageSample from './../../public/images/user-sample.png';
+import {UserImageModal} from './modals/showUserImageModal';
+
 interface IMessageItem {
   item: IChatMessage;
 }
@@ -63,6 +66,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [disableLoading, setDisableLoading] = useState(false);
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
+  const [showUserImageModal, setShowUserImageModal] = useState(false);
 
   const prevMessage = item.response;
 
@@ -144,190 +148,202 @@ export const MessageItem = ({item}: IMessageItem) => {
   };
 
   return (
-    <div className='mt-3 text-between_sm_base'>
-      <div className='flex gap-3'>
-        <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
-          <UserIcon className='w-6 h-6 text-content-grey-100' />
-        </div>
-        <div className='flex-1 mt-1'>
-          <div className='flex gap-1'>
-            {isEditMode ? (
-              <textarea
-                className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
-                value={messageText}
-                onInput={(e) => setMessageText(e.currentTarget.value)}
-              />
-            ) : (
-              <span className='whitespace-pre-wrap'>{item.message}</span>
-            )}
-            {messageEditable && (
-              <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
-                <PencilSquareIcon className='w-5 h-5' />
-              </IconButton>
-            )}
+    <>
+      <div className='mt-3 text-between_sm_base'>
+        <div className='flex gap-3'>
+          <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
+            {/* <UserIcon className='w-6 h-6 text-content-grey-100' /> */}
+            <img
+              src={userImageSample.src}
+              className='rounded-full w-9 h-9 bg-content-grey-100 cursor-pointer'
+              onClick={() => setShowUserImageModal(true)}
+            />
           </div>
-          {isEditMode && (
-            <div className='mt-3 flex gap-2 justify-center'>
-              <Button variant='outline' title='Cancel' onClick={() => setIsEditMode(false)} />
-              <Button title='Save changes' disabled={disableSaveButton} onClick={onSaveChangeMessage} />
-            </div>
-          )}
-        </div>
-      </div>
-      <div className='mt-3 flex gap-3'>
-        <div>
-          <div className='relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
-            <LogoIcon width={22} height={20} color='#F5F5F5' />
-
-            <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
-              {enabledContentSafety && isSensitive && (
-                <div className='p-1'>
-                  <ShieldCheckIcon width={15} height={15} color='#DB3A34' />
-                </div>
+          <div className='flex-1 mt-1'>
+            <div className='flex gap-1'>
+              {isEditMode ? (
+                <textarea
+                  className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
+                  value={messageText}
+                  onInput={(e) => setMessageText(e.currentTarget.value)}
+                />
+              ) : (
+                <span className='whitespace-pre-wrap'>{item.message}</span>
+              )}
+              {messageEditable && (
+                <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
+                  <PencilSquareIcon className='w-5 h-5' />
+                </IconButton>
               )}
             </div>
+            {isEditMode && (
+              <div className='mt-3 flex gap-2 justify-center'>
+                <Button variant='outline' title='Cancel' onClick={() => setIsEditMode(false)} />
+                <Button title='Save changes' disabled={disableSaveButton} onClick={onSaveChangeMessage} />
+              </div>
+            )}
           </div>
         </div>
+        <div className='mt-3 flex gap-3'>
+          <div>
+            <div className='relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
+              <LogoIcon width={22} height={20} color='#F5F5F5' />
 
-        <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
-          {loading || isLoading ? (
-            <AnimateDots />
-          ) : !isSensitive ? (
-            isFileMessage ? (
-              <FileMarkdownContent content={item.chat_message_files} />
-            ) : (
-              <MarkdownContent content={response ?? item.response} />
-            )
-          ) : (
-            <div className='flex-1'>
-              <div className=' flex justify-between'>
-                <div className='text-[#ea6c68] text-[14px] mb-[12px]'>
-                  Sensitive content is detected. Chat temporarily blocked for safety.
-                </div>
-                <div>
-                  <InformationCircleIcon
-                    className='w-5 h-5 text-[#989898] cursor-pointer'
-                    onClick={() => setAlertModalOpen(true)}
-                  />
-                </div>
-              </div>
-              <SensitiveMarkdownContent content={item.response} />
-            </div>
-          )}
-          {!loading &&
-            (!isSensitive ? (
-              <div className='mt-4 flex justify-end items-center gap-4'>
-                {showOriginal && (
-                  <div
-                    className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
-                    onClick={() => {
-                      item.chat_message_files.length > 0 ? null : handleOriginalOne();
-                    }}
-                  >
-                    <p className='text-content-grey-400'>View original</p>
+              <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
+                {enabledContentSafety && isSensitive && (
+                  <div className='p-1'>
+                    <ShieldCheckIcon width={15} height={15} color='#DB3A34' />
                   </div>
                 )}
-                <IconButton
-                  className='!p-0'
-                  onClick={() => setShowTranslatorModal(true)}
-                  disabled={item.chat_message_files.length > 0 ? true : false}
-                >
-                  <LanguageIcon className='w-5 h-5 text-content-grey-400' />
-                </IconButton>
-                <div className='w-[1px] h-5 bg-content-grey-600' />
-                <IconButton className='!p-0'>
-                  <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
-                </IconButton>
-                <div className='w-[1px] h-5 bg-content-grey-600' />
-                <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
-                  <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
-                </IconButton>
               </div>
+            </div>
+          </div>
+
+          <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
+            {loading || isLoading ? (
+              <AnimateDots />
+            ) : !isSensitive ? (
+              isFileMessage ? (
+                <FileMarkdownContent content={item.chat_message_files} />
+              ) : (
+                <MarkdownContent content={response ?? item.response} />
+              )
             ) : (
-              <>
-                <div className='mt-4 flex justify-start items-start gap-4'>
+              <div className='flex-1'>
+                <div className=' flex justify-between'>
+                  <div className='text-[#ea6c68] text-[14px] mb-[12px]'>
+                    Sensitive content is detected. Chat temporarily blocked for safety.
+                  </div>
+                  <div>
+                    <InformationCircleIcon
+                      className='w-5 h-5 text-[#989898] cursor-pointer'
+                      onClick={() => setAlertModalOpen(true)}
+                    />
+                  </div>
+                </div>
+                <SensitiveMarkdownContent content={item.response} />
+              </div>
+            )}
+            {!loading &&
+              (!isSensitive ? (
+                <div className='mt-4 flex justify-end items-center gap-4'>
+                  {showOriginal && (
+                    <div
+                      className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
+                      onClick={() => {
+                        item.chat_message_files.length > 0 ? null : handleOriginalOne();
+                      }}
+                    >
+                      <p className='text-content-grey-400'>View original</p>
+                    </div>
+                  )}
                   <IconButton
-                    variant='secondary'
-                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                    onClick={handleDeleteSensData}
-                    loading={deleteLoading}
-                    disabled={deleteLoading}
+                    className='!p-0'
+                    onClick={() => setShowTranslatorModal(true)}
+                    disabled={item.chat_message_files.length > 0 ? true : false}
                   >
-                    <TrashIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-sm text-center text-content-white'>Delete Sensitive Data</span>
+                    <LanguageIcon className='w-5 h-5 text-content-grey-400' />
                   </IconButton>
-
-                  <IconButton
-                    variant='secondary'
-                    onClick={handleNoSensitiveData}
-                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                    loading={sensitiveLoading}
-                    disabled={sensitiveLoading}
-                  >
-                    <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-sm text-center text-content-white'>No Sensitive Data</span>
+                  <div className='w-[1px] h-5 bg-content-grey-600' />
+                  <IconButton className='!p-0'>
+                    <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
                   </IconButton>
-
-                  <IconButton
-                    variant='secondary'
-                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                    onClick={handleDisableInspection}
-                    loading={disableLoading}
-                    disabled={disableLoading}
-                  >
-                    <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-sm text-center text-content-white'>Disabling Inspection (30mins)</span>
+                  <div className='w-[1px] h-5 bg-content-grey-600' />
+                  <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
+                    <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
                   </IconButton>
                 </div>
-                <div className='mt-4'>
-                  <IconButton
-                    variant='secondary'
-                    className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                    onClick={() => {}}
-                  >
-                    <ShieldExclamationIcon className='w-5 h-5 text-content-grey-400' />
-                    <span className='text-sm text-center text-content-white'>
-                      Replace with an anonymized version of content
-                    </span>
-                  </IconButton>
-                </div>
-              </>
-            ))}
+              ) : (
+                <>
+                  <div className='mt-4 flex justify-start items-start gap-4'>
+                    <IconButton
+                      variant='secondary'
+                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      onClick={handleDeleteSensData}
+                      loading={deleteLoading}
+                      disabled={deleteLoading}
+                    >
+                      <TrashIcon className='w-5 h-5 text-content-grey-400' />
+                      <span className='text-sm text-center text-content-white'>Delete Sensitive Data</span>
+                    </IconButton>
+
+                    <IconButton
+                      variant='secondary'
+                      onClick={handleNoSensitiveData}
+                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      loading={sensitiveLoading}
+                      disabled={sensitiveLoading}
+                    >
+                      <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
+                      <span className='text-sm text-center text-content-white'>No Sensitive Data</span>
+                    </IconButton>
+
+                    <IconButton
+                      variant='secondary'
+                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      onClick={handleDisableInspection}
+                      loading={disableLoading}
+                      disabled={disableLoading}
+                    >
+                      <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
+                      <span className='text-sm text-center text-content-white'>Disabling Inspection (30mins)</span>
+                    </IconButton>
+                  </div>
+                  <div className='mt-4'>
+                    <IconButton
+                      variant='secondary'
+                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      onClick={() => {}}
+                    >
+                      <ShieldExclamationIcon className='w-5 h-5 text-content-grey-400' />
+                      <span className='text-sm text-center text-content-white'>
+                        Replace with an anonymized version of content
+                      </span>
+                    </IconButton>
+                  </div>
+                </>
+              ))}
+          </div>
         </div>
+        {isCurrentUser && loading && (
+          <div className='mt-4 flex justify-center'>
+            <Button
+              className='bg-white'
+              variant='transparent'
+              size='small'
+              iconBefore={<StopIcon className='w-4 h-4' />}
+              title='Stop generating...'
+              onClick={() => deleteMessage(item)}
+            />
+          </div>
+        )}
+        <AlertModal
+          headTitle={'Disable Content Safety'}
+          title={'Are you sure you want to deactivate Content Safety?'}
+          description={
+            'With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
+          }
+          open={alertModalOpen}
+          confirmTitle={'Deactivate Content Safety'}
+          onConfirm={() => {}}
+          onClose={() => setAlertModalOpen(false)}
+        />
+        <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
+        <TranslatorModal
+          open={showTranslatorModal}
+          onClose={() => setShowTranslatorModal(false)}
+          text={response ?? item.response}
+          setText={setResponse}
+          selected={selected}
+          setSelected={setSelected}
+          setShowOriginal={setShowOriginal}
+        />
       </div>
-      {isCurrentUser && loading && (
-        <div className='mt-4 flex justify-center'>
-          <Button
-            className='bg-white'
-            variant='transparent'
-            size='small'
-            iconBefore={<StopIcon className='w-4 h-4' />}
-            title='Stop generating...'
-            onClick={() => deleteMessage(item)}
-          />
-        </div>
-      )}
-      <AlertModal
-        headTitle={'Disable Content Safety'}
-        title={'Are you sure you want to deactivate Content Safety?'}
-        description={
-          'With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
-        }
-        open={alertModalOpen}
-        confirmTitle={'Deactivate Content Safety'}
-        onConfirm={() => {}}
-        onClose={() => setAlertModalOpen(false)}
+      <UserImageModal
+        imageURL={userImageSample.src}
+        onClose={() => setShowUserImageModal(false)}
+        open={showUserImageModal}
       />
-      <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
-      <TranslatorModal
-        open={showTranslatorModal}
-        onClose={() => setShowTranslatorModal(false)}
-        text={response ?? item.response}
-        setText={setResponse}
-        selected={selected}
-        setSelected={setSelected}
-        setShowOriginal={setShowOriginal}
-      />
-    </div>
+    </>
   );
 };

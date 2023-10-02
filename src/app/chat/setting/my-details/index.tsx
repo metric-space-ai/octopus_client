@@ -10,7 +10,6 @@ import {authValidator} from '@/helpers/validators';
 
 import WebCamImageTaker from './webcam';
 
-import userImageSample from './../../../../../public/images/user-sample.png';
 import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
 import {useAuthContext} from '@/contexts/authContext';
 import {ImagesBaseUrl} from '@/constant';
@@ -81,7 +80,6 @@ const MyDetailPage = () => {
       form.setValue('job_title', user.job_title);
     }
     if (singleUser) {
-      console.log('singleUser email');
       form.setValue('email', singleUser.email);
     }
   }, [user, singleUser]);

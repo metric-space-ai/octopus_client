@@ -94,6 +94,7 @@ module.exports = {
         20: '20px',
       },
       boxShadow: {
+        'agent-sidebar': 'box-shadow: 0px 3px 12px 0px #1F1F1F0F',
         'switch-active': 'box-shadow: 0px 0.833px 6.66px 0px rgba(101, 0, 181, 0.5) inset',
         'switch-deactive': '0px 1px 8px 0px rgba(0, 0, 0, 0.15) inset',
         'switch-circle-active': '0px 0px 1.17px 0px rgba(31, 31, 31, 0.2)',
