@@ -115,7 +115,7 @@ export function Agents({className, expanded, setExpanded}: Props) {
           'hidden sm:flex flex-col px-4 py-6 bg-white border-box rounded-r-[20px] shadow-agent-sidebar ',
           className,
         )}
-        style={{width: expanded ? '282px' : '68px',minWidth: expanded ? '282px' : '68px'}}
+        style={{width: expanded ? '282px' : '68px', minWidth: expanded ? '282px' : '68px'}}
       >
         <div className='flex items-center justify-start mb-8'>
           <IconButton variant='grey' onClick={() => setExpanded(!expanded)}>
@@ -133,7 +133,7 @@ export function Agents({className, expanded, setExpanded}: Props) {
         <div className='flex flex-col'>
           {AGENTSDATA.map((agent, index) => (
             <div
-              className={`flex py-3 items-center relative`}
+              className={`flex items-center relative cursor-pointer ${index === 0 ? 'pb-3' : 'py-3'}`}
               onClick={() => {
                 setExistAgentModal(true);
                 setSelectedAgentPrompt(agent);

@@ -3,6 +3,7 @@ import {AnimateDots, LogoIcon} from './svgs';
 import {FileMarkdownContent} from './file-markdown';
 import {MarkdownContent} from './markdown';
 import {
+  CommandLineIcon,
   ExclamationTriangleIcon,
   HandThumbDownIcon,
   InformationCircleIcon,
@@ -12,17 +13,19 @@ import {
   ShieldExclamationIcon,
   SpeakerWaveIcon,
   TrashIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {IconButton} from './buttons';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 import {ProvideFeedbackModal} from './modals';
+import {Input} from './input';
 
 // type Props = {
 //   item: IChatMessage;
 // };
-const PromptLine = ({desc, when}: {desc: string; when: string}) => {
+const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
   const {
     editMessage,
     updateMessage,
@@ -40,6 +43,7 @@ const PromptLine = ({desc, when}: {desc: string; when: string}) => {
   //   const [response, setResponse] = useState(item.response);
   const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
+  const [showTextField, setShowTextField] = useState(false);
 
   //   const prevMessage = item.response;
 
@@ -51,7 +55,7 @@ const PromptLine = ({desc, when}: {desc: string; when: string}) => {
   };
   return (
     <>
-      <div className='flex gap-3 w-full text-left'>
+      <div className='flex gap-3 w-full text-left relative'>
         <div>
           <div className='relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
             <LogoIcon width={22} height={20} color='#F5F5F5' />
@@ -93,8 +97,28 @@ const PromptLine = ({desc, when}: {desc: string; when: string}) => {
             </div>
           )} 
           */}
-
+          {showTextField && (
+            <div className='flex items-center '>
+              <span className='text-content-grey-400'>{'> '}</span>
+              <Input
+                className='!text-white [&_>*]:!bg-transparent [&_>*]:!pl-1 [&_input]:!bg-transparent [&_input]:!placeholder-content-grey-400 [&_input]:!text-content-white px-0 w-full !py-0 mr-9'
+                placeholder='Entering new AgentExecutor chain.'
+              />
+            </div>
+          )}
           <MarkdownContent content={desc} />
+          {showTextField ? (
+            <IconButton
+              className=' !bg-content-white absolute top-5 right-5'
+              onClick={() => setShowTextField(!showTextField)}
+            >
+              <XMarkIcon className='w-5 h-5 text-content-black' width={20} height={20} />
+            </IconButton>
+          ) : (
+            <IconButton className=' ml-auto !bg-content-grey-900 ' onClick={() => setShowTextField(!showTextField)}>
+              <CommandLineIcon className='w-5 h-5 text-content-white' />
+            </IconButton>
+          )}
 
           <div className='mt-4 flex justify-end items-center gap-4'>
             {showOriginal && (
@@ -130,4 +154,4 @@ const PromptLine = ({desc, when}: {desc: string; when: string}) => {
   );
 };
 
-export default PromptLine;
+export default AgentPromptLine;

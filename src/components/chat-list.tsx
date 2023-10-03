@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 
 import {ChatBubbleLeftRightIcon} from '@heroicons/react/24/outline';
 import {XCircleIcon} from '@heroicons/react/24/solid';
@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import {useChatStore} from '@/store';
 
 import Locale from '../locales';
+import {whenDidItHappened} from '@/helpers/whenDidItHappened';
+import {ITicket} from '@/types';
 
 export function ChatItem(props: {
   onClick?: () => void;
@@ -67,25 +69,124 @@ export function ChatItem(props: {
 export function ChatList({expanded}: {expanded?: boolean}) {
   const {tickets, currentTicketId, selectTicketId, deleteTicket} = useChatStore();
 
-  return (
-    <div className={classNames('flex flex-col gap-3', expanded && 'min-w-[280px]')}>
-      {tickets.map((ticket) => (
-        <ChatItem
-          key={ticket.id}
-          title={ticket.name}
-          time={new Date(ticket.updated_at).toLocaleString()}
-          expanded={expanded}
-          selected={ticket.id === currentTicketId}
-          onClick={() => {
-            selectTicketId(ticket.id);
-          }}
-          onDelete={() => {
-            if (confirm(Locale.Home.DeleteChat)) {
-              deleteTicket(ticket.id);
-            }
-          }}
-        />
-      ))}
-    </div>
-  );
+  // const checkWhenDidItHappened = useCallback(
+  //   (array: ITicket[], key: string) => {
+  //     return whenDidItHappened<ITicket>(array, key);
+  //   },
+  //   [tickets],
+  // );
+  const {defaultValue, today, yesterday, older, prev7Days} = whenDidItHappened(tickets, 'updated_at');
+
+  if (tickets)
+    return (
+      <div className={classNames('flex flex-col gap-3', expanded && 'min-w-[280px]')}>
+        {today && today.length > 0 && (
+          <>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Today</h6>
+            {today?.map((ticket) => (
+              <ChatItem
+                key={ticket.id}
+                title={ticket.name}
+                time={new Date(ticket.updated_at).toLocaleString()}
+                expanded={expanded}
+                selected={ticket.id === currentTicketId}
+                onClick={() => {
+                  selectTicketId(ticket.id);
+                }}
+                onDelete={() => {
+                  if (confirm(Locale.Home.DeleteChat)) {
+                    deleteTicket(ticket.id);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+        {yesterday && yesterday.length > 0 && (
+          <>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Yesterday</h6>
+            {yesterday?.map((ticket) => (
+              <ChatItem
+                key={ticket.id}
+                title={ticket.name}
+                time={new Date(ticket.updated_at).toLocaleString()}
+                expanded={expanded}
+                selected={ticket.id === currentTicketId}
+                onClick={() => {
+                  selectTicketId(ticket.id);
+                }}
+                onDelete={() => {
+                  if (confirm(Locale.Home.DeleteChat)) {
+                    deleteTicket(ticket.id);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+        {prev7Days && prev7Days.length > 0 && (
+          <>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Previous 7 Days</h6>
+            {prev7Days?.map((ticket) => (
+              <ChatItem
+                key={ticket.id}
+                title={ticket.name}
+                time={new Date(ticket.updated_at).toLocaleString()}
+                expanded={expanded}
+                selected={ticket.id === currentTicketId}
+                onClick={() => {
+                  selectTicketId(ticket.id);
+                }}
+                onDelete={() => {
+                  if (confirm(Locale.Home.DeleteChat)) {
+                    deleteTicket(ticket.id);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+        {older && older.length > 0 && (
+          <>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Older</h6>
+            {older?.map((ticket) => (
+              <ChatItem
+                key={ticket.id}
+                title={ticket.name}
+                time={new Date(ticket.updated_at).toLocaleString()}
+                expanded={expanded}
+                selected={ticket.id === currentTicketId}
+                onClick={() => {
+                  selectTicketId(ticket.id);
+                }}
+                onDelete={() => {
+                  if (confirm(Locale.Home.DeleteChat)) {
+                    deleteTicket(ticket.id);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      // <div className={classNames('flex flex-col gap-3', expanded && 'min-w-[280px]')}>
+      //   {tickets.map((ticket) => (
+      //     <ChatItem
+      //       key={ticket.id}
+      //       title={ticket.name}
+      //       time={new Date(ticket.updated_at).toLocaleString()}
+      //       expanded={expanded}
+      //       selected={ticket.id === currentTicketId}
+      //       onClick={() => {
+      //         selectTicketId(ticket.id);
+      //       }}
+      //       onDelete={() => {
+      //         if (confirm(Locale.Home.DeleteChat)) {
+      //           deleteTicket(ticket.id);
+      //         }
+      //       }}
+      //     />
+      //   ))}
+      // </div>
+    );
 }
