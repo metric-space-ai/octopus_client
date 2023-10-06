@@ -86,7 +86,7 @@ export const RemovePluginModal = ({open, onClose, onDelete}: ModalProps) => {
                   <div className='flex flex-col'>
                     <div className='flex justify-between mb-5'>
                       <p className='text-content-grey-900 text-sm '>The plugin is being removed, please wait</p>
-                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px]'>
+                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
                         {`${percent} %`}
                       </span>
                     </div>
@@ -103,7 +103,7 @@ export const RemovePluginModal = ({open, onClose, onDelete}: ModalProps) => {
                         </span>
                         Plugin successfully removed
                       </p>
-                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px]'>
+                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
                         {`${percent} %`}
                       </span>
                     </div>

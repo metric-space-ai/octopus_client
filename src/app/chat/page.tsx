@@ -112,7 +112,7 @@ export default function ChatPage() {
             <textarea
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
-              className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black ${
+              className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
                 isSensitiveChecked && enabledContentSafety ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
@@ -125,7 +125,7 @@ export default function ChatPage() {
               autoFocus={true}
               disabled={isSensitiveChecked && enabledContentSafety}
             />
-            <IconButton className='absolute right-2 top-[2px]' onClick={() => doSubmit(userInput)}>
+            <IconButton className='absolute right-2 top-[calc(50%-20px)] ' onClick={() => doSubmit(userInput)}>
               <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
             </IconButton>
           </div>

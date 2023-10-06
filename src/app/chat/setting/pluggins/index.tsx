@@ -1,7 +1,7 @@
 import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import {AddSectorModal} from '@/components/modals/AddSectorsModal';
 import PluginsData from './pluginsDetails';
+import { UploadPluginModal } from '@/components/modals/UploadPluginModal';
 
 type Props = {};
 
@@ -25,7 +25,7 @@ const Plugins = (props: Props) => {
           </div>
         </div>
       </div>
-      <AddSectorModal open={addPluginsModal} onClose={() => setAddPluginsModal(false)} />
+      <UploadPluginModal open={addPluginsModal} onClose={() => setAddPluginsModal(false)} />
     </>
   );
 };

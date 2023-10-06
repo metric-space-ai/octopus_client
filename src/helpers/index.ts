@@ -158,3 +158,19 @@ export function autoGrowTextArea(dom: HTMLTextAreaElement) {
 export function getCSSVar(varName: string) {
   return getComputedStyle(document.body).getPropertyValue(varName).trim();
 }
+
+const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+export function bytesCalculator(size: number) {
+  let l = 0,
+    n = parseInt(size.toString(), 10) || 0;
+
+  while (n >= 1024 && ++l) {
+    n = n / 1024;
+  }
+  if (n >= 100) {
+    return (n / 1024).toFixed(1) + ' ' + units[l + 1];
+  } else {
+    return n.toFixed(1) + ' ' + units[l];
+  }
+}

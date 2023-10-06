@@ -36,6 +36,7 @@ module.exports = {
           accent: '#7B14CB',
           'accent-hover': '#6500B5',
           'accent-light-11': 'rgba(101, 0, 181, 0.11)',
+          'accent-light-15': 'rgba(177, 99, 239, 0.15)',
           'accent-100': '#E0C5F5',
           'accent-400': '#B466F1',
           'blue-dark': '#0048B5',
@@ -84,6 +85,7 @@ module.exports = {
         '34-px': '34px',
         'profile-drawer': '168px',
         '68-px': '68px',
+        '45-px': '45px',
       },
       width: {
         'capture-button': '104px',
@@ -92,6 +94,7 @@ module.exports = {
       },
       borderRadius: {
         20: '20px',
+        4: '4px',
       },
       boxShadow: {
         'agent-sidebar': 'box-shadow: 0px 3px 12px 0px #1F1F1F0F',
@@ -99,7 +102,16 @@ module.exports = {
         'switch-deactive': '0px 1px 8px 0px rgba(0, 0, 0, 0.15) inset',
         'switch-circle-active': '0px 0px 1.17px 0px rgba(31, 31, 31, 0.2)',
         'switch-circle-deactive': '0px 0px 2px 0px rgba(31, 31, 31, 0.1)',
-
+      },
+      maxWidth: {
+        'modal-xxl': '1050px',
+      },
+      spacing: {
+        '1px': '1px',
+        '84px': '84px',
+      },
+      strokeWidth: {
+        4: '4px',
       }
     },
   },
