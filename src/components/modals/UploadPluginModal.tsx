@@ -15,8 +15,7 @@ import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
-import {MarkdownContent} from '../markdown';
-import Highlight from 'react-highlight';
+import _Highlight from 'react-highlight';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, Installation: 3};
@@ -30,6 +29,8 @@ interface IFormInputs {
   name: string;
   id: number;
 }
+
+const Highlight = React.memo(_Highlight);
 
 export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -151,7 +152,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       const countdown = () => {
         if (installPercentage >= 100) {
           setPluginInstalled(true);
-          console.log(`uploaded`);
           setInstallStarted(false);
         } else {
           setInstallPercentage((percent) => ++percent);
@@ -175,10 +175,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       setTimeout(countdown, 10);
     }
   }, [uploadStarted, uploadPercentage]);
-
-  useEffect(() => {
-    console.log({fileText});
-  }, [fileText]);
 
   return (
     <>
@@ -428,25 +424,42 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       </div>
                     )}
 
-                    {currentStep === ADDPLUGINSTEPS.Installation && fileText && (
+                    {currentStep === ADDPLUGINSTEPS.Installation && (
                       <div className='flex flex-col flex-auto'>
                         <div className='flex flex-col mb-6'>
-                          <div className='flex justify-between mb-3'>
+                          <div className='flex justify-between mb-3 items-center'>
                             <p className='text-content-grey-900 text-sm'>The plugin is installing, please wait</p>
-                            <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
-                              {`${installPercentage} %`}
-                            </span>
+                            {pluginInstalled ? (
+                              <div className='flex gap-3 items-center'>
+                                <span className='w-7 h-7 rounded-full bg-content-green/[0.11] flex items-center justify-center'>
+                                  <CheckIcon width={16} height={16} className='text-content-green' />
+                                </span>
+                                <p className='text-content-black font-poppins-semibold text-xs leading-5'>
+                                  The plugin is successfully installed
+                                </p>
+                              </div>
+                            ) : (
+                              <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                {`${installPercentage} %`}
+                              </span>
+                            )}
                           </div>
                           <div className='h-1.5 bg-content-white dark:bg-neutral-600 w-full '>
                             <div
-                              className='h-1.5 bg-content-accent transition-all'
+                              className={`h-1.5 ${
+                                pluginInstalled ? 'bg-content-green' : 'bg-content-accent transition-all'
+                              }`}
                               style={{width: `${installPercentage}%`}}
                             ></div>
                           </div>
                         </div>
                         <div className='w-full flex-auto py-4 px-5 overflow-auto bg-content-black text-left rounded-20 max-h-[342px] custom-scrollbar-thumb'>
-                          <Highlight innerHTML={false} className='text-content-white [&_.hljs-keyword]:text-content-blue-light [&_.hljs-string]:text-content-green [&_.hljs-selector-class]:text-content-red-400
-                           [&_.hljs-attribute]:text-yellow-300'>
+                          <Highlight
+                            innerHTML={false}
+                            className='text-content-white [&_.hljs-keyword]:text-content-blue-light [&_.hljs-string]:text-content-green [&_.hljs-selector-class]:text-content-red-400
+                           [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-content-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
+                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
+                          >
                             {fileText}
                           </Highlight>
                         </div>
