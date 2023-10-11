@@ -32,6 +32,30 @@ interface IFormInputs {
 
 const Highlight = React.memo(_Highlight);
 
+const SetupEnvironment = [
+  {
+    id: 'setup_1',
+    title: 'CPU',
+    desc: 'Intel Core i7-13700K',
+    space: '8GB of 16GB',
+    active: false,
+  },
+  {
+    id: 'setup_2',
+    title: 'GPU (Discrete)',
+    desc: 'NVIDIA GeForce MX250',
+    space: '9GB of 11GB',
+    active: false,
+  },
+  {
+    id: 'setup_3',
+    title: 'GPU (Integrated)',
+    desc: 'Intel UHD Graphics',
+    space: '0.7GB of 2GB',
+    active: false,
+  },
+];
+
 export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
   const [uploadStarted, setUploadStarted] = useState(false);
@@ -44,6 +68,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
   const [active, setActive] = useState(false);
   const [setupFormIsValid, setSetupFormIsValid] = useState(false);
+  const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
 
   const [installStarted, setInstallStarted] = useState(false);
   const [installPercentage, setInstallPercentage] = useState(0);
@@ -133,6 +158,14 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setInstallPercentage(0);
     setPluginInstalled(false);
     onClose();
+  };
+
+  const handleChangeSetup = (check:boolean,inx:number) => {
+    const result = [...setupEnv];
+    result[inx].active = check;
+
+    // const setup = {...setupEnv[inx],active:check};
+    setSetupEnv(result);
   };
 
   useEffect(() => {
@@ -387,39 +420,20 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           <h5 className='text-sm font-poppins-semibold text-content-black mb-8 text-left'>
                             Assign a plugin to computer resources
                           </h5>
-                          <div className='flex flex-col gap-3 mb-3'>
-                            <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                              <CustomCheckbox
-                                active={active}
-                                onChange={(check: boolean) => setActive(check)}
-                                title='CPU'
-                                description='Intel Core i7-13700K'
-                              />
-                              <span className='text-content-grey-600 text-xs ml-auto'>8GB of 16GB</span>
+
+                          {setupEnv.map((setup,inx) => (
+                            <div key={setup.id} className='flex flex-col gap-3 mb-3'>
+                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
+                                <CustomCheckbox
+                                  active={setup.active}
+                                  onChange={(check: boolean) => handleChangeSetup(check,inx)}
+                                  title={setup.title}
+                                  description={setup.desc}
+                                />
+                                <span className='text-content-grey-600 text-xs ml-auto'>{setup.space}</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className='flex flex-col gap-3 mb-3'>
-                            <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                              <CustomCheckbox
-                                active={active}
-                                onChange={(check: boolean) => setActive(check)}
-                                title='GPU (Discrete)'
-                                description='NVIDIA GeForce MX250'
-                              />
-                              <span className='text-content-grey-600 text-xs ml-auto'>9GB of 11GB</span>
-                            </div>
-                          </div>
-                          <div className='flex flex-col gap-3 mb-3'>
-                            <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                              <CustomCheckbox
-                                active={active}
-                                onChange={(check: boolean) => setActive(check)}
-                                title='GPU (Integrated)'
-                                description='Intel UHD Graphics'
-                              />
-                              <span className='text-content-grey-600 text-xs ml-auto'>0.7GB of 2GB</span>
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                     )}

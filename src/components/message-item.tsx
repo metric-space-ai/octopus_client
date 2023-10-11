@@ -15,7 +15,7 @@ import {
 import {ShieldCheckIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
-import {LANGUAGES} from '@/constant';
+import {ImagesBaseUrl, LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {deleteChatMessageApi, getChatMessageApi, updateChatMessageApi} from '@/services/chat.service';
 import {useChatStore} from '@/store';
@@ -29,7 +29,6 @@ import {TranslatorModal} from './modals/TranslatorModal';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {AnimateDots, LogoIcon} from './svgs';
 
-import userImageSample from './../../public/images/user-sample.png';
 import {UserImageModal} from './modals/showUserImageModal';
 
 interface IMessageItem {
@@ -151,16 +150,24 @@ export const MessageItem = ({item}: IMessageItem) => {
     <>
       <div className='mt-3 text-between_sm_base'>
         <div className='flex gap-3'>
-          <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
-            {/* <UserIcon className='w-6 h-6 text-content-grey-100' /> */}
-            <img
-              src={userImageSample.src}
-              className='rounded-full w-9 h-9 bg-content-grey-100 cursor-pointer'
-              onClick={() => setShowUserImageModal(true)}
-            />
+          <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full relative'>
+            {item.profile.photo_file_name ? (
+              <img
+                src={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
+                alt={item.profile.name}
+                className='rounded-full w-9 h-9 bg-content-grey-100 cursor-pointer'
+                onClick={() => setShowUserImageModal(true)}
+                title={item.profile.name}
+              />
+            ) : (
+              <UserIcon className='w-6 h-6 text-content-grey-100' />
+            )}
           </div>
           <div className='flex-1 mt-1'>
-            <div className='flex gap-1'>
+            <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative'>
+              <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
+                {item.profile.name}
+              </p>
               {isEditMode ? (
                 <textarea
                   className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
@@ -340,7 +347,7 @@ export const MessageItem = ({item}: IMessageItem) => {
         />
       </div>
       <UserImageModal
-        imageURL={userImageSample.src}
+        imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
         onClose={() => setShowUserImageModal(false)}
         open={showUserImageModal}
       />

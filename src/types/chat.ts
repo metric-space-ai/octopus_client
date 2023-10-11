@@ -28,6 +28,12 @@ export interface IChatMessage {
   response: string;
   status: string;
   updated_at: string;
+  profile: {
+    id: string;
+    user_id: string;
+    name: string;
+    photo_file_name: string;
+  };
 }
 
 export interface TranslatorType {
