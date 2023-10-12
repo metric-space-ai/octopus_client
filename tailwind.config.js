@@ -112,7 +112,39 @@ module.exports = {
       },
       strokeWidth: {
         4: '4px',
-      }
+      },
+      animation: {
+        floatA: 'floatA 5s linear infinite',
+        floatB: 'floatB 5s linear infinite',
+        'ring-3s': 'ring 3s linear infinite',
+        'ring-5s': 'ring 5s linear infinite',
+      },
+      keyframes: {
+        floatA: {
+          '0%, 100%': {transform: 'translateX(0) translateY(8px) opacity(100)'},
+          '12.5%': {transform: 'translateX(-4px) translateY(4px)'},
+          '25%': {transform: 'translateX(-8px) translateY(0)'},
+          '37.5%': {transform: 'translateX(-4px) translateY(-4px)'},
+          '50%': {transform: 'translateX(0) translateY(-8px) opacity(50%)'},
+          '62.5%': {transform: 'translateX(4px) translateY(-4px)'},
+          '75%': {transform: 'translateX(8px) translateY(0)'},
+          '87.5%': {transform: 'translateX(4px) translateY(4px)'},
+        },
+        floatB: {
+          '0%, 100%': {transform: 'translateX(-4px) translateY(4px)'},
+          '12.5%': {transform: 'translateX(-8px) translateY(0)'},
+          '25%': {transform: 'translateX(-4px) translateY(-4px)'},
+          '37.5%': {transform: 'translateX(0) translateY(-8px)'},
+          '50%': {transform: 'translateX(4px) translateY(-4px)'},
+          '62.5%': {transform: 'translateX(8px) translateY(0)'},
+          '75%': {transform: 'translateX(4px) translateY(4px)'},
+          '87.5%': {transform: 'translateX(0) translateY(8px)'},
+        },
+        ring: {
+          '0%, 100%': {boxShadow: 'var(--tw-ring-color) 0 0 0 7px'},
+          '50%': {boxShadow: 'var(--tw-ring-color) 0 0 0 1px'},
+        },
+      },
     },
   },
   plugins: [],

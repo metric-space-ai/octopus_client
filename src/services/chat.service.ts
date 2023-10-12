@@ -1,4 +1,4 @@
-import {IChatMessage, ITicket, IWorkspace, TranslatorResponse, TranslatorType} from '@/types';
+import {IChatMessage, ISimpleAppDetails, ITicket, IWorkspace, TranslatorResponse, TranslatorType} from '@/types';
 
 import apiHub from '../hooks/useApiClient';
 
@@ -34,6 +34,14 @@ export const deleteTicketApi = async (workspaceId: string, ticketId: string) => 
 
 export const getChatMessagesApi = async (ticketId: string) => {
   return apiHub.get<IChatMessage[]>(`api/v1/chat-messages/${ticketId}`);
+};
+
+export const getChatMessageApplicationApi = async (appId: string) => {
+  return apiHub.get<ISimpleAppDetails>(`api/v1/simple-apps/${appId}`);
+};
+
+export const getChatMessageApplicationCodeApi = async (appId: string) => {
+  return apiHub.get<string>(`api/v1/simple-apps/${appId}/code`);
 };
 
 export const createChatMessageApi = async (

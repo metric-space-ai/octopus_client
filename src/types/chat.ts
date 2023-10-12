@@ -16,6 +16,16 @@ export interface IChatMessageFile {
   deleted_at: string;
 }
 
+export interface ISimpleAppDetails {
+  code: string;
+  created_at: string;
+  description: string;
+  formatted_name: string;
+  id: string;
+  is_enabled: boolean;
+  name: string;
+  updated_at: string;
+}
 export interface IChatMessage {
   id: string;
   created_at: string;
@@ -34,6 +44,7 @@ export interface IChatMessage {
     name: string;
     photo_file_name: string;
   };
+  simple_app_id: string;
 }
 
 export interface TranslatorType {

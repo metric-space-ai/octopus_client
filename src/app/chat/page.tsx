@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {PaperAirplaneIcon} from '@heroicons/react/24/outline';
+import {MicrophoneIcon, PaperAirplaneIcon} from '@heroicons/react/24/outline';
 import {useDebouncedCallback} from 'use-debounce';
 
 import {IconButton} from '@/components/buttons';
@@ -13,6 +13,7 @@ import {autoGrowTextArea} from '@/helpers';
 import {useScrollToBottom} from '@/hooks';
 import {useChatStore} from '@/store';
 import {Agents} from '@/components/agents';
+import {VoiceChatModal} from '@/components/modals/voiceChatModal';
 
 const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
 
@@ -20,6 +21,7 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
   const [expandedAgents, setExpandedAgents] = useState(true);
+  const [openVoiceChatModal, setOpenVoiceChatModal] = useState(false);
 
   const {
     loading,
@@ -109,10 +111,13 @@ export default function ChatPage() {
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>
           <div className='relative flex-1 flex'>
+            <IconButton className='absolute left-3 top-[calc(50%-20px)] ' onClick={() => setOpenVoiceChatModal(true)}>
+              <MicrophoneIcon className='w-5 h-5 text-content-black' width={20} height={20} />
+            </IconButton>
             <textarea
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
-              className={`w-full border py-[10px] pr-[90px] pl-[14px] rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
+              className={`w-full border py-[10px] pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
                 isSensitiveChecked && enabledContentSafety ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
@@ -132,6 +137,7 @@ export default function ChatPage() {
         </div>
       </div>
       <Agents expanded={expandedAgents} setExpanded={setExpandedAgents} />
+      {openVoiceChatModal && <VoiceChatModal open={openVoiceChatModal} onClose={() => setOpenVoiceChatModal(false)} />}
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
+import {toast} from 'react-hot-toast';
+
 import {
   ExclamationTriangleIcon,
   HandThumbDownIcon,
@@ -17,7 +19,13 @@ import {UserIcon} from '@heroicons/react/24/solid';
 
 import {ImagesBaseUrl, LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
-import {deleteChatMessageApi, getChatMessageApi, updateChatMessageApi} from '@/services/chat.service';
+import {
+  deleteChatMessageApi,
+  getChatMessageApplicationCodeApi,
+  getChatMessageApplicationApi,
+  getChatMessageApi,
+  updateChatMessageApi,
+} from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
 
@@ -28,6 +36,7 @@ import {AlertModal, ProvideFeedbackModal} from './modals';
 import {TranslatorModal} from './modals/TranslatorModal';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {AnimateDots, LogoIcon} from './svgs';
+import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
 
@@ -48,6 +57,8 @@ export const MessageItem = ({item}: IMessageItem) => {
   const {user} = useAuthContext();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [iframeheight, setIframeheight] = useState('0px');
   const [isEditMode, setIsEditMode] = useState(false);
   const [response, setResponse] = useState(item.response);
   const [messageText, setMessageText] = useState(item.message);
@@ -66,6 +77,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [disableLoading, setDisableLoading] = useState(false);
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
+  const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
 
   const prevMessage = item.response;
 
@@ -91,6 +103,27 @@ export const MessageItem = ({item}: IMessageItem) => {
     setShowOriginal(false);
   };
 
+  const onLoadPrepareIframe = () => {
+    if (iframeRef?.current?.contentWindow) {
+      setIframeheight(iframeRef.current.contentWindow.document.body.scrollHeight + 24 + 'px');
+    }
+  };
+
+  const handleGetAppCode = async () => {
+    try {
+      const {status, data} = await getChatMessageApplicationCodeApi(item.simple_app_id);
+      // const pageResponse = await getChatMessageApplicationApi(item.simple_app_id);
+      // console.log({pageResponse});
+
+      if (status === 200) {
+        setApplicationInnerHTML(data);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
+  };
   useEffect(() => {
     if (item.status === 'Asked') {
       const estimationResponseTime = new Date(item.estimated_response_at);
@@ -103,6 +136,9 @@ export const MessageItem = ({item}: IMessageItem) => {
       setIsSensitive(item.is_sensitive);
       changeSensitiveStatus(item.is_sensitive);
       setIsFileMessage(item.chat_message_files.length > 0);
+    }
+    if (item.status === 'Answered' && item.simple_app_id) {
+      handleGetAppCode();
     }
     return () => {
       if (timeoutRef.current) {
@@ -206,14 +242,27 @@ export const MessageItem = ({item}: IMessageItem) => {
             </div>
           </div>
 
-          <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
+          <div className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col`}>
             {loading || isLoading ? (
               <AnimateDots />
             ) : !isSensitive ? (
               isFileMessage ? (
                 <FileMarkdownContent content={item.chat_message_files} />
               ) : (
-                <MarkdownContent content={response ?? item.response} />
+                <>
+                  {applicationInnerHTML ? (
+                    <iframe
+                      ref={iframeRef}
+                      className='123456789 w-full bg-red text-content-white [&_body]:m-0'
+                      srcDoc={applicationInnerHTML}
+                      height={iframeheight}
+                      onLoad={onLoadPrepareIframe}
+                    ></iframe>
+                  ) : (
+                    // <div className='123456789 bg-red p-5 text-content-white' dangerouslySetInnerHTML={{__html: applicationInnerHTML}}></div>
+                    <MarkdownContent content={response ?? item.response} />
+                  )}
+                </>
               )
             ) : (
               <div className='flex-1'>
