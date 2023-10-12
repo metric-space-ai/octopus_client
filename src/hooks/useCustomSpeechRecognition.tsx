@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
 let recognition: any = null;
-if ('webkitSpeechRecognition' in window) {
-  recognition = new webkitSpeechRecognition();
-  recognition.contiuous = true;
-  recognition.lang = 'en-us';
+if (typeof window !== 'undefined') {
+  if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.contiuous = true;
+    recognition.lang = 'en-us';
+  }
 }
 
 const useCustomSpeechRecognition = () => {
