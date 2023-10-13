@@ -184,10 +184,10 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   return (
     <>
-      <div className='mt-3 text-between_sm_base'>
+      <div className='mt-5 text-between_sm_base'>
         <div className='flex gap-3'>
           <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full relative'>
-            {item.profile.photo_file_name ? (
+            {item.profile?.photo_file_name ? (
               <img
                 src={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
                 alt={item.profile.name}
@@ -201,9 +201,11 @@ export const MessageItem = ({item}: IMessageItem) => {
           </div>
           <div className='flex-1 mt-1'>
             <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative'>
+              {item.profile?.name && 
               <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
                 {item.profile.name}
               </p>
+              }
               {isEditMode ? (
                 <textarea
                   className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
@@ -253,9 +255,9 @@ export const MessageItem = ({item}: IMessageItem) => {
                   {applicationInnerHTML ? (
                     <iframe
                       ref={iframeRef}
-                      className='123456789 w-full bg-red text-content-white [&_body]:m-0'
+                      className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}]`}
                       srcDoc={applicationInnerHTML}
-                      height={iframeheight}
+                      // height={iframeheight}
                       onLoad={onLoadPrepareIframe}
                     ></iframe>
                   ) : (
@@ -395,11 +397,13 @@ export const MessageItem = ({item}: IMessageItem) => {
           setShowOriginal={setShowOriginal}
         />
       </div>
+      {item.profile?.photo_file_name &&
       <UserImageModal
         imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
         onClose={() => setShowUserImageModal(false)}
         open={showUserImageModal}
       />
+      }
     </>
   );
 };
