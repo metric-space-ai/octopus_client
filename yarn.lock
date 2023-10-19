@@ -1475,11 +1475,6 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/dom-speech-recognition@^0.0.2":
-  "integrity" "sha512-GZbxBsBYBMAbpPDYg64KhAr/V8MbrlsNqrjnZJGikLdNqlQbTu+u548jg7c31ZI30/vXAX+v31t/aDr4soiBEg=="
-  "resolved" "https://registry.npmjs.org/@types/dom-speech-recognition/-/dom-speech-recognition-0.0.2.tgz"
-  "version" "0.0.2"
-
 "@types/hast@^2.0.0":
   "integrity" "sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g=="
   "resolved" "https://registry.npmjs.org/@types/hast/-/hast-2.3.4.tgz"

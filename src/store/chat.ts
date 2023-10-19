@@ -12,9 +12,14 @@ import {
   getTicketsApi,
   getWorkspacesApi,
   updateChatMessageApi,
+  updateContentSafetyApi,
+  deleteContentSafetyApi,
+  getContentSafetyApi,
   updateWorkspaceApi,
 } from '@/services/chat.service';
-import {IChatMessage, ITicket, IWorkspace} from '@/types';
+import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
 interface ChatStore {
   workspaces: IWorkspace[];
@@ -24,6 +29,7 @@ interface ChatStore {
   isNewTicket: boolean;
   messages: IChatMessage[];
   loading: boolean;
+  contentSafetyDetails: IContentSafety;
   enabledContentSafety: boolean;
   isSensitiveChecked: boolean;
   createNewWorkspace: (name: string, type: string) => void;
@@ -39,13 +45,21 @@ interface ChatStore {
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
   refreshMessage: (idx: string) => void;
-  changeContentSafteyStatus: (status: boolean) => void;
+  // changeContentSafteyStatus: (status: boolean) => void;
+  checkContentSafetyDetails: (contentSafety: IContentSafety) => void;
+  getContentSafety: (user_id: string) => void;
+  deleteContentSafety: (user_id: string) => void;
+  updateContentSafety: (minutes: number, user_id: string) => void;
   changeSensitiveStatus: (status: boolean) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
   workspaces: [],
   tickets: [],
+  contentSafetyDetails: {
+    id: '',
+    content_safety_disabled_until: '',
+  },
   currentWorkspaceId: '',
   currentTicketId: '',
   isNewTicket: false,
@@ -82,6 +96,67 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     deleteWorkspaceApi(idx).then(() => {
       get().getWorkspaces();
     });
+  },
+  checkContentSafetyDetails(contentSafety: IContentSafety) {
+    if (contentSafety && new Date(contentSafety.content_safety_disabled_until).getTime() > new Date().getTime()) {
+      set({enabledContentSafety: false, contentSafetyDetails: contentSafety});
+    } else {
+      set({enabledContentSafety: true, contentSafetyDetails: contentSafety});
+    }
+  },
+  async getContentSafety(user_id: string) {
+    set({loading: true});
+    try {
+      const {status, data} = await getContentSafetyApi(user_id);
+
+      if (status === 200) {
+        get().checkContentSafetyDetails(data);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      set({loading: false});
+    }
+  },
+  async deleteContentSafety(user_id: string) {
+    set({loading: true});
+
+    try {
+      const {status, data} = await deleteContentSafetyApi(user_id);
+
+      if (status === 204) {
+        get().checkContentSafetyDetails(data);
+      } else {
+        set({contentSafetyDetails: {id: '', content_safety_disabled_until: ''}});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      set({loading: false});
+    }
+  },
+  async updateContentSafety(minutes: number, user_id: string) {
+    set({loading: true});
+
+    try {
+      const {status, data} = await updateContentSafetyApi(minutes, user_id);
+
+      if (status === 201) {
+        get().checkContentSafetyDetails(data);
+      } else {
+        set({contentSafetyDetails: {id: '', content_safety_disabled_until: ''}});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      set({loading: false});
+    }
   },
   setWorkspaceId(idx: string) {
     set({currentWorkspaceId: idx});
@@ -195,26 +270,29 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       set({messages});
     }
   },
-  deleteMessage(chatMessage: IChatMessage) {
-    deleteChatMessageApi(chatMessage.chat_id, chatMessage.id)
-      .then(() => {
-        // on success
-      })
-      .catch(() => {
-        // on error
-      })
-      .finally(() => {
-        const messages = get().messages;
-        set({messages: messages.filter((m) => m.id !== chatMessage.id)});
-      });
-  },
-  changeContentSafteyStatus(status: boolean) {
-    // set((prev)=>{return {...prev, enabled:status}});
-    if (!status) {
-      localStorage.setItem('contentSafetyTimestamp', new Date().toUTCString());
+  async deleteMessage(chatMessage: IChatMessage) {
+    set({loading: true});
+
+    try {
+      const {status} = await deleteChatMessageApi(chatMessage.chat_id, chatMessage.id);
+      if (status) {
+        get().refreshMessage(chatMessage.chat_id);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      set({loading: false});
     }
-    set({enabledContentSafety: status});
   },
+  // changeContentSafteyStatus(status: boolean) {
+  //   // set((prev)=>{return {...prev, enabled:status}});
+  //   if (!status) {
+  //     localStorage.setItem('contentSafetyTimestamp', new Date().toUTCString());
+  //   }
+  //   set({enabledContentSafety: status});
+  // },
   changeSensitiveStatus(status: boolean) {
     set({isSensitiveChecked: status});
   },

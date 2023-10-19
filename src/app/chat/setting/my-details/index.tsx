@@ -69,7 +69,7 @@ const MyDetailPage = () => {
     if (user) {
       //This part is temporary, until the first_name and last_name are separate in the API
       //start
-      let fullName = user.name.split(' ', 2);
+      let fullName = user.name ? user.name.split(' ', 2) : '';
       if (fullName.length > 1) {
         form.setValue('first_name', fullName[0]);
         form.setValue('last_name', fullName[1]);
@@ -185,10 +185,7 @@ const MyDetailPage = () => {
             </div>
 
             <div className='relative flex-auto w-full'>
-              <WebCamImageTaker
-                handleUpload={onUpdateProfilePicture}
-                setTakeImageModal={setTakeImageModal}
-              />
+              <WebCamImageTaker handleUpload={onUpdateProfilePicture} setTakeImageModal={setTakeImageModal} />
             </div>
           </div>
         </div>

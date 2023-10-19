@@ -65,48 +65,10 @@ type Props = {
 export function Agents({className, expanded, setExpanded}: Props) {
   const chatStore = useChatStore();
   // const [enabled, setEnabled] = useState(true);
-  const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
-  const [timeDifference, setTimeDifference] = useState('(30:00)');
   const [addAgentModal, setAddAgentModal] = useState(false);
   const [existAgentModal, setExistAgentModal] = useState(false);
   const [selectedAgentPrompt, setSelectedAgentPrompt] = useState<TAgent>();
 
-  useEffect(() => {
-    // Function to calculate and update the time difference
-    const calculateTimeDifference = () => {
-      // Get the static date from local storage
-      const storedDate = localStorage.getItem('contentSafetyTimestamp');
-
-      if (storedDate) {
-        const staticDate = new Date(storedDate).getTime();
-        const currentDate = new Date().getTime();
-
-        // Calculate the time difference in milliseconds
-        const differenceInMilliseconds = 0.5 * 60 * 1000 - (currentDate - staticDate);
-
-        // Calculate minutes and seconds
-        const minutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-        const seconds = Math.floor((differenceInMilliseconds % (1000 * 60)) / 1000);
-
-        const newLocal = '(' + minutes + ':' + seconds + ')';
-        // Set the time difference in state
-        if (minutes <= 0 && seconds <= 0) {
-          chatStore.changeContentSafteyStatus(true);
-        } else {
-          setTimeDifference(newLocal);
-        }
-      }
-    };
-
-    // Calculate and update the time difference initially
-    calculateTimeDifference();
-
-    // Set up an interval to update the time difference every second
-    const intervalId = setInterval(calculateTimeDifference, 1000);
-
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
 
   return (
     <>

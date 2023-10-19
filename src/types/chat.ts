@@ -16,6 +16,11 @@ export interface IChatMessageFile {
   deleted_at: string;
 }
 
+export interface IContentSafety {
+  id: string;
+  content_safety_disabled_until: string;
+}
+
 export interface ISimpleAppDetails {
   code: string;
   created_at: string;

@@ -18,21 +18,28 @@ import {
   updateSingleUserById,
   updateUserProfile,
   updateUserProfilePic,
+  uploadNewPluginApi,
+  getAllPluginsApi,
 } from '../services/auth.service';
 import {AxiosError} from 'axios';
+import {IPlugin} from '@/types/plugin';
 
 interface IAuthContext {
   isAuthenticated: boolean;
   user: IUserProfile | null;
   setUser: (key: IUserProfile | null) => void;
   singleUser: IUser | null;
+  selectedPlugin: IPlugin | null;
   loading: boolean;
   authLoading: boolean;
+  plugins: IPlugin[] | undefined;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
+  onUploadPlugin: (payload: FormData) => void;
   onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
   onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
   getSingleUser: () => void;
+  getAllPlugins: () => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
@@ -47,6 +54,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [singleUser, setSingleUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
+  const [plugins, setPlugins] = useState<IPlugin[]>();
   const {setAxiosConfiguration} = useApiClient();
 
   // useEffect(() => {
@@ -105,6 +114,40 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         setLoading(false);
         toast.error(error.response?.data?.error);
       });
+  };
+
+  const handlegetAllPlugins = async () => {
+    setLoading(true);
+    try {
+      const {status, data} = await getAllPluginsApi();
+      if (status === 200) {
+        setPlugins(data);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadNewPlugin = async (payload: FormData) => {
+    setLoading(true);
+    try {
+      // // const {status, data} = await uploadNewPlugin(payload);
+      // if (status === 201) {
+      //   setSelectedPlugin(data);
+      //   toast.success('successfully updated');
+      // }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+        // toast.error(err);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdateUserProfilePicture = (payload: FormData) => {
@@ -187,10 +230,14 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     user,
     setUser,
     singleUser,
+    plugins,
+    selectedPlugin,
     loading,
     authLoading,
     onLogin: handleLogin,
     onRegister: handleRegister,
+    getAllPlugins: handlegetAllPlugins,
+    onUploadPlugin: handleUploadNewPlugin,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
     onUpdateProfile: handleUpdateUserProfile,
     getSingleUser: handleGetSingleUserById,

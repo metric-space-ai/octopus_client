@@ -13,6 +13,7 @@ import {AlertModal} from './modals';
 import {SearchBar} from './search';
 import {IconSideBar} from './svgs';
 import Locale from '../locales';
+import {useAuthContext} from '@/contexts/authContext';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
@@ -20,47 +21,50 @@ const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
 
 export function SideBar(props: {className?: string}) {
   const chatStore = useChatStore();
+  const {user} = useAuthContext();
+
   // const [enabled, setEnabled] = useState(true);
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
   const [timeDifference, setTimeDifference] = useState('(30:00)');
 
   useEffect(() => {
-    // Function to calculate and update the time difference
-    const calculateTimeDifference = () => {
-      // Get the static date from local storage
-      const storedDate = localStorage.getItem('contentSafetyTimestamp');
+    if (!chatStore.enabledContentSafety && chatStore.contentSafetyDetails.content_safety_disabled_until) {
+      // Function to calculate and update the time difference
+      const calculateTimeDifference = () => {
+        // Get the static date from local storage
 
-      if (storedDate) {
-        const staticDate = new Date(storedDate).getTime();
+        const staticDate = new Date(chatStore.contentSafetyDetails.content_safety_disabled_until).getTime();
         const currentDate = new Date().getTime();
-
         // Calculate the time difference in milliseconds
         const differenceInMilliseconds = 0.5 * 60 * 1000 - (currentDate - staticDate);
-
+        
         // Calculate minutes and seconds
         const minutes = Math.floor(differenceInMilliseconds / (1000 * 60));
         const seconds = Math.floor((differenceInMilliseconds % (1000 * 60)) / 1000);
 
         const newLocal = '(' + minutes + ':' + seconds + ')';
-        // Set the time difference in state
         if (minutes <= 0 && seconds <= 0) {
-          chatStore.changeContentSafteyStatus(true);
+          if (user) chatStore.getContentSafety(user.user_id);
         } else {
           setTimeDifference(newLocal);
         }
-      }
-    };
+      };
 
-    // Calculate and update the time difference initially
-    calculateTimeDifference();
+      // Calculate and update the time difference initially
+      calculateTimeDifference();
 
-    // Set up an interval to update the time difference every second
-    const intervalId = setInterval(calculateTimeDifference, 1000);
+      // Set up an interval to update the time difference every second
+      const intervalId = setInterval(calculateTimeDifference, 1000);
 
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [chatStore.contentSafetyDetails]);
+
+  useEffect(() => {
+    if (user) chatStore.getContentSafety(user.user_id);
+  }, [user]);
 
   return (
     <div
@@ -95,32 +99,33 @@ export function SideBar(props: {className?: string}) {
               <ShieldCheckIcon className='w-5 h-5 text-content-accent-400' />
               <p className='text-xs text-content-grey-100 font-semibold'>Content Safety</p>
             </div>
-            <Switch
-              checked={chatStore.enabledContentSafety}
-              onChange={(checked) => {
-                if (!checked) {
-                  setShowDeactivateConfirmationModal(true);
-                } else {
-                  // setEnabled(true);
-                  chatStore.changeContentSafteyStatus(true);
-                }
-              }}
-              className={classNames(
-                `${
-                  chatStore.enabledContentSafety ? 'bg-content-accent' : 'bg-content-disabled'
-                } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
-              )}
-            >
-              <span className='sr-only'>Use setting</span>
-              <span
-                aria-hidden='true'
+            {user && (
+              <Switch
+                checked={chatStore.enabledContentSafety}
+                onChange={(checked) => {
+                  if (!checked) {
+                    setShowDeactivateConfirmationModal(true);
+                  } else {
+                    chatStore.deleteContentSafety(user.user_id);
+                  }
+                }}
                 className={classNames(
                   `${
-                    chatStore.enabledContentSafety ? 'translate-x-6' : 'translate-x-0'
-                  } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`,
+                    chatStore.enabledContentSafety ? 'bg-content-accent' : 'bg-content-disabled'
+                  } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
                 )}
-              />
-            </Switch>
+              >
+                <span className='sr-only'>Use setting</span>
+                <span
+                  aria-hidden='true'
+                  className={classNames(
+                    `${
+                      chatStore.enabledContentSafety ? 'translate-x-6' : 'translate-x-0'
+                    } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`,
+                  )}
+                />
+              </Switch>
+            )}
           </div>
           {chatStore.enabledContentSafety && (
             <p className='text-xxs text-content-grey-400'>Your Personal Content is Secure</p>
@@ -144,7 +149,7 @@ export function SideBar(props: {className?: string}) {
           />
         )}
       </div>
-      {showDeactivateConfirmationModal && (
+      {showDeactivateConfirmationModal && user && (
         <AlertModal
           headTitle='Disable Content Safety'
           title='Disable Content Safety'
@@ -152,7 +157,7 @@ export function SideBar(props: {className?: string}) {
           confirmTitle='Deactivate Content Safety'
           open={showDeactivateConfirmationModal}
           onConfirm={() => {
-            chatStore.changeContentSafteyStatus(false);
+            chatStore.updateContentSafety(30, user.user_id);
 
             setShowDeactivateConfirmationModal(false);
           }}

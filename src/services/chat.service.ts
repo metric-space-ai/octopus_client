@@ -1,4 +1,12 @@
-import {IChatMessage, ISimpleAppDetails, ITicket, IWorkspace, TranslatorResponse, TranslatorType} from '@/types';
+import {
+  IChatMessage,
+  IContentSafety,
+  ISimpleAppDetails,
+  ITicket,
+  IWorkspace,
+  TranslatorResponse,
+  TranslatorType,
+} from '@/types';
 
 import apiHub from '../hooks/useApiClient';
 
@@ -78,4 +86,19 @@ export const deleteChatMessageApi = async (chatId: string, chatMessageId: string
 
 export const directCall = async (data: TranslatorType) => {
   return apiHub.post<TranslatorResponse>(`api/v1/ai-functions/direct-call`, data);
+};
+
+export const updateContentSafetyApi = async (minutes: number, user_id: string) => {
+  return await apiHub.post<IContentSafety>(`api/v1/inspection-disablings/${user_id}`, {minutes});
+};
+
+export const getContentSafetyApi = async (user_id: string) => {
+  return await apiHub.get<IContentSafety>(`api/v1/inspection-disablings/${user_id}`);
+};
+export const deleteContentSafetyApi = async (user_id: string) => {
+  return await apiHub.delete<IContentSafety>(`api/v1/inspection-disablings/${user_id}`);
+};
+
+export const replaceMessageWithAnonymizedApi = async (chat_id: string, chat_message_id: string) => {
+  return await apiHub.put<IChatMessage>(`api/v1/chat-messages/${chat_id}/${chat_message_id}/anonymize`);
 };

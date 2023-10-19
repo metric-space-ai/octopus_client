@@ -16,6 +16,10 @@ import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
 import _Highlight from 'react-highlight';
+import {getServerResourcesApi, uploadNewPluginApi} from '@/services/auth.service';
+import {AxiosError} from 'axios';
+import {IPlugin, IResources} from '@/types/plugin';
+import {urltoFile} from '@/helpers/urlToFile';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, Installation: 3};
@@ -66,9 +70,12 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [currentStep, setCurrentStep] = useState(ADDPLUGINSTEPS.Upload);
   const [fileText, setFileText] = useState('');
 
+  const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
+
   const [active, setActive] = useState(false);
   const [setupFormIsValid, setSetupFormIsValid] = useState(false);
   const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
+  const [resources, setResources] = useState<IResources>();
 
   const [installStarted, setInstallStarted] = useState(false);
   const [installPercentage, setInstallPercentage] = useState(0);
@@ -104,15 +111,29 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   };
 
   const handleSubmitFirstStep = async () => {
-    if (fileUploaded && currentStep === ADDPLUGINSTEPS.Upload) {
+    if (fileUploaded && file && currentStep === ADDPLUGINSTEPS.Upload) {
       setLoading(true);
-      setCurrentStep(ADDPLUGINSTEPS.Setup);
-      setLoading(false);
+      const newFile = new File([file], file.name, {type: 'application/octet-stream'});
+
+      const formData = new FormData();
+      formData.append('file', newFile);
+      console.log({file, newFile, formData});
+      try {
+        const {status, data} = await uploadNewPluginApi(formData);
+        if (status === 201) {
+          setSelectedPlugin(data);
+          setCurrentStep(ADDPLUGINSTEPS.Setup);
+          toast.success('upload successfull');
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+          // toast.error(err);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
-  };
-  const onSubmit = async (data: IFormInputs) => {
-    const {name, id} = data;
-    console.log({name, id});
   };
 
   const handleDragFiles = (e: React.DragEvent<HTMLDivElement>) => {
@@ -120,7 +141,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   };
   const handleDropFiles = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log({files: e.dataTransfer.files[0]});
     handleCheckFileIsValid(e.dataTransfer.files[0]);
   };
   const handleCustomSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -157,10 +177,11 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setInstallStarted(false);
     setInstallPercentage(0);
     setPluginInstalled(false);
+    setLoading(false);
     onClose();
   };
 
-  const handleChangeSetup = (check:boolean,inx:number) => {
+  const handleChangeSetup = (check: boolean, inx: number) => {
     const result = [...setupEnv];
     result[inx].active = check;
 
@@ -180,6 +201,22 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
   }, [file]);
 
+  const getResources = async () => {
+    if (currentStep === ADDPLUGINSTEPS.Setup) {
+      try {
+        const {status, data} = await getServerResourcesApi();
+        if (status === 200) {
+          setResources(data);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   useEffect(() => {
     if (installStarted) {
       const countdown = () => {
@@ -193,6 +230,9 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       setTimeout(countdown, 10);
     }
   }, [installStarted, installPercentage]);
+  useEffect(() => {
+    getResources();
+  }, [currentStep]);
 
   useEffect(() => {
     if (uploadStarted) {
@@ -421,19 +461,33 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                             Assign a plugin to computer resources
                           </h5>
 
-                          {setupEnv.map((setup,inx) => (
+                          {resources && resources.device_map.cpu && (
+                            <div className='flex flex-col gap-3 mb-3'>
+                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
+                                <CustomCheckbox
+                                  active={false}
+                                  onChange={(check: boolean) => {}}
+                                  title={`cpu`}
+                                  description={resources.device_map.cpu}
+                                />
+                                <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* {setupEnv.map((setup, inx) => (
                             <div key={setup.id} className='flex flex-col gap-3 mb-3'>
                               <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
                                 <CustomCheckbox
                                   active={setup.active}
-                                  onChange={(check: boolean) => handleChangeSetup(check,inx)}
+                                  onChange={(check: boolean) => handleChangeSetup(check, inx)}
                                   title={setup.title}
                                   description={setup.desc}
                                 />
                                 <span className='text-content-grey-600 text-xs ml-auto'>{setup.space}</span>
                               </div>
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                       </div>
                     )}

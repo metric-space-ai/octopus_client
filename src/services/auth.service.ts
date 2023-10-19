@@ -1,7 +1,14 @@
 import {IUser, IUserProfile} from '@/types';
-import {IAuthData, ICompanyRegisterPayload, IRegisterPayload, IUpdateUserPayload, IUpdateUserProfilePayload} from '@/types/auth';
+import {
+  IAuthData,
+  ICompanyRegisterPayload,
+  IRegisterPayload,
+  IUpdateUserPayload,
+  IUpdateUserProfilePayload,
+} from '@/types/auth';
 
 import apiHub from '../hooks/useApiClient';
+import {IPlugin, IResources} from '@/types/plugin';
 
 export const login = async (email: string, password: string) => {
   const payload = {email, password};
@@ -56,6 +63,26 @@ export const updateUserProfilePic = async (id: string, payload: FormData) => {
   // const headers = {...apiHub.defaults.headers, 'Content-Type': 'multipart/form-data'};
   // apiHub.defaults.headers = headers;
   return apiHub.put<IUserProfile>(`api/v1/profile-pictures/${id}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const deletePluginByIdApi = async (plugin_id: string) => {
+  return apiHub.delete<null>(`api/v1/ai-services/${plugin_id}`);
+};
+
+export const getAllPluginsApi = async () => {
+  return apiHub.get<IPlugin[]>(`api/v1/ai-services`);
+};
+
+export const getServerResourcesApi = async () => {
+  return apiHub.get<IResources>(`api/v1/server-resources`);
+};
+
+export const uploadNewPluginApi = async (payload: FormData) => {
+  return apiHub.post<IPlugin>(`api/v1/ai-services`, payload, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

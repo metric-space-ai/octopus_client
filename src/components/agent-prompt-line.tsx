@@ -32,7 +32,6 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
     deleteMessage,
     refreshMessage,
     enabledContentSafety,
-    changeContentSafteyStatus,
     changeSensitiveStatus,
   } = useChatStore();
   const [isSensitive, setIsSensitive] = useState(false);

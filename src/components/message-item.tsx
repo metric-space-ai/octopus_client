@@ -10,6 +10,7 @@ import {
   NoSymbolIcon,
   PencilSquareIcon,
   ShieldExclamationIcon,
+  SparklesIcon,
   SpeakerWaveIcon,
   StopIcon,
   TrashIcon,
@@ -25,6 +26,8 @@ import {
   getChatMessageApplicationApi,
   getChatMessageApi,
   updateChatMessageApi,
+  updateContentSafetyApi,
+  replaceMessageWithAnonymizedApi,
 } from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
@@ -45,15 +48,8 @@ interface IMessageItem {
 }
 
 export const MessageItem = ({item}: IMessageItem) => {
-  const {
-    editMessage,
-    updateMessage,
-    deleteMessage,
-    refreshMessage,
-    enabledContentSafety,
-    changeContentSafteyStatus,
-    changeSensitiveStatus,
-  } = useChatStore();
+  const {editMessage, updateMessage, deleteMessage, refreshMessage, enabledContentSafety, changeSensitiveStatus} =
+    useChatStore();
   const {user} = useAuthContext();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
@@ -74,6 +70,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [anonymizedLoading, setAnonymizedLoading] = useState(false);
   const [disableLoading, setDisableLoading] = useState(false);
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
@@ -112,8 +109,6 @@ export const MessageItem = ({item}: IMessageItem) => {
   const handleGetAppCode = async () => {
     try {
       const {status, data} = await getChatMessageApplicationCodeApi(item.simple_app_id);
-      // const pageResponse = await getChatMessageApplicationApi(item.simple_app_id);
-      // console.log({pageResponse});
 
       if (status === 200) {
         setApplicationInnerHTML(data);
@@ -159,11 +154,26 @@ export const MessageItem = ({item}: IMessageItem) => {
     setIsEditMode(false);
   };
 
-  const handleDeleteSensData = async () => {
+  const handleDeleteSensData = () => {
     setDeleteLoading(true);
-    // await deleteChatMessageApi(item.chat_id, item.id);
     deleteMessage(item);
     setDeleteLoading(false);
+  };
+
+  const handleAnonymizedData = async () => {
+    setAnonymizedLoading(true);
+    try {
+      const {status, data} = await replaceMessageWithAnonymizedApi(item.chat_id, item.id);
+      if (status === 200) {
+        refreshMessage(item.chat_id);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setAnonymizedLoading(false);
+    }
   };
 
   const handleNoSensitiveData = async () => {
@@ -174,11 +184,12 @@ export const MessageItem = ({item}: IMessageItem) => {
   };
 
   const handleDisableInspection = async () => {
+    if (!user) return;
     setDisableLoading(true);
     await updateChatMessageApi(item.chat_id, item.id, item.message, true);
     refreshMessage(item.chat_id);
     setDisableLoading(false);
-    changeContentSafteyStatus(false);
+    updateContentSafetyApi(30, user.user_id);
     changeSensitiveStatus(false);
   };
 
@@ -198,14 +209,19 @@ export const MessageItem = ({item}: IMessageItem) => {
             ) : (
               <UserIcon className='w-6 h-6 text-content-grey-100' />
             )}
+            {enabledContentSafety && isSensitive && (
+              <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
+              </div>
+            )}
           </div>
           <div className='flex-1 mt-1'>
             <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative'>
-              {item.profile?.name && 
-              <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
-                {item.profile.name}
-              </p>
-              }
+              {item.profile?.name && (
+                <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
+                  {item.profile.name}
+                </p>
+              )}
               {isEditMode ? (
                 <textarea
                   className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
@@ -231,16 +247,16 @@ export const MessageItem = ({item}: IMessageItem) => {
         </div>
         <div className='mt-3 flex gap-3'>
           <div>
-            <div className='relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
-              <LogoIcon width={22} height={20} color='#F5F5F5' />
-
-              <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
-                {enabledContentSafety && isSensitive && (
-                  <div className='p-1'>
-                    <ShieldCheckIcon width={15} height={15} color='#DB3A34' />
-                  </div>
-                )}
-              </div>
+            <div
+              className={`relative w-9 h-9 flex items-center justify-center rounded-full ${
+                enabledContentSafety && isSensitive ? 'bg-content-red-600/10' : 'bg-content-black'
+              }`}
+            >
+              {enabledContentSafety && isSensitive ? (
+                <ShieldCheckIcon width={20} height={20} className='text-content-red-600' />
+                ) : (
+                <LogoIcon width={22} height={20} color='#F5F5F5' />
+              )}
             </div>
           </div>
 
@@ -313,49 +329,51 @@ export const MessageItem = ({item}: IMessageItem) => {
                 </div>
               ) : (
                 <>
-                  <div className='mt-4 flex justify-start items-start gap-4'>
+                  <div className='mt-4 flex justify-start flex-wrap items-start gap-3'>
                     <IconButton
                       variant='secondary'
-                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      onClick={handleNoSensitiveData}
+                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
+                      loading={sensitiveLoading}
+                      disabled={sensitiveLoading}
+                    >
+                      <NoSymbolIcon className='w-4 h-4 text-content-white' />
+                      <span className='text-[13px] leading-4 text-center text-content-white'>No Sensitive Data</span>
+                    </IconButton>
+
+                    <IconButton
+                      variant='secondary'
+                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
                       onClick={handleDeleteSensData}
                       loading={deleteLoading}
                       disabled={deleteLoading}
                     >
-                      <TrashIcon className='w-5 h-5 text-content-grey-400' />
-                      <span className='text-sm text-center text-content-white'>Delete Sensitive Data</span>
+                      <TrashIcon className='w-4 h-4 text-content-white' />
+                      <span className='text-[13px] leading-4 text-center text-content-white'>Remove Data</span>
                     </IconButton>
-
                     <IconButton
                       variant='secondary'
-                      onClick={handleNoSensitiveData}
-                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                      loading={sensitiveLoading}
-                      disabled={sensitiveLoading}
+                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
+                      onClick={handleAnonymizedData}
+                      loading={anonymizedLoading}
+                      disabled={anonymizedLoading}
                     >
-                      <NoSymbolIcon className='w-5 h-5 text-content-grey-400' />
-                      <span className='text-sm text-center text-content-white'>No Sensitive Data</span>
+                      <SparklesIcon className='w-4 h-4 text-content-white' />
+                      <span className='text-[13px] leading-4 text-center text-content-white'>
+                        Replace with anonymized data
+                      </span>
                     </IconButton>
 
                     <IconButton
                       variant='secondary'
-                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
+                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
                       onClick={handleDisableInspection}
                       loading={disableLoading}
                       disabled={disableLoading}
                     >
-                      <ExclamationTriangleIcon className='w-5 h-5 text-content-grey-400' />
-                      <span className='text-sm text-center text-content-white'>Disabling Inspection (30mins)</span>
-                    </IconButton>
-                  </div>
-                  <div className='mt-4'>
-                    <IconButton
-                      variant='secondary'
-                      className='bg-[#2c2c2c] rounded-full py-[8px] px-[16px]'
-                      onClick={() => {}}
-                    >
-                      <ShieldExclamationIcon className='w-5 h-5 text-content-grey-400' />
-                      <span className='text-sm text-center text-content-white'>
-                        Replace with an anonymized version of content
+                      <ExclamationTriangleIcon className='w-4 h-4 text-content-white' />
+                      <span className='text-[13px] leading-4 text-center text-content-white'>
+                        Stop inspection (30 min)
                       </span>
                     </IconButton>
                   </div>
@@ -397,13 +415,13 @@ export const MessageItem = ({item}: IMessageItem) => {
           setShowOriginal={setShowOriginal}
         />
       </div>
-      {item.profile?.photo_file_name &&
-      <UserImageModal
-        imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
-        onClose={() => setShowUserImageModal(false)}
-        open={showUserImageModal}
-      />
-      }
+      {item.profile?.photo_file_name && (
+        <UserImageModal
+          imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
+          onClose={() => setShowUserImageModal(false)}
+          open={showUserImageModal}
+        />
+      )}
     </>
   );
 };

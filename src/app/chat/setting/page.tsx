@@ -26,14 +26,14 @@ export default function SettingPage() {
         {menu === 'details' && <MyDetailPage />}
         {menu === 'password' && <PasswordPage />}
         {menu === 'general' && <GeneralSettings />}
-        {user?.roles.includes(ROLE_ADMIN || ROLE_COMPANY_ADMIN_USER) ? (
+        {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role)) ? (
           <>
             {menu === 'team-members' && <TeamMembers />}
             {menu === 'sectors' && <Sectors />}
             {menu === 'plugins' && <Plugins />}
           </>
         ) : (
-          (menu === 'team-members' || menu === 'sectors') && (
+          (menu === 'team-members' || menu === 'sectors' || menu === 'plugins') && (
             <div className='w-full pt-24 px-7'>
               <div className='flex flex-col items-center justify-center w-full max-h-96 bg-white rounded-20 p-5'>
                 <ShieldExclamationIcon className='text-red-500 mb-8' width={36} height={36} />

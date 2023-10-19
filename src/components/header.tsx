@@ -7,8 +7,9 @@ import {
   LockClosedIcon,
   PlusIcon,
   UserGroupIcon,
-  UserIcon,
 } from '@heroicons/react/24/outline';
+import {UserIcon} from '@heroicons/react/24/solid';
+
 import {usePathname, useRouter} from 'next/navigation';
 
 import {Tab, Tabs} from '@/components/tabs';
@@ -28,11 +29,11 @@ const MenuItem = () => {
     <Menu as='div' className='z-10 relative inline-block text-left'>
       <div>
         <Menu.Button className='inline-flex w-full justify-center rounded-md border-none'>
-          <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-lime-200 mb-1.5'>
+          <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-content-white'>
             {user?.photo_file_name ? (
               <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt='user avatar' />
             ) : (
-              <UserIcon className='m-auto' width={32} height={32} />
+              <UserIcon className='w-6 h-6 text-content-black' />
             )}
           </div>
         </Menu.Button>
