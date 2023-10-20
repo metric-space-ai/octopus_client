@@ -8,7 +8,7 @@ import {
 } from '@/types/auth';
 
 import apiHub from '../hooks/useApiClient';
-import {IPlugin, IResources} from '@/types/plugin';
+import {IDeviceMap, IPlugin, IResources} from '@/types/plugin';
 
 export const login = async (email: string, password: string) => {
   const payload = {email, password};
@@ -77,8 +77,21 @@ export const getAllPluginsApi = async () => {
   return apiHub.get<IPlugin[]>(`api/v1/ai-services`);
 };
 
+export const getPluginByIdApi = async (plugin_id: string) => {
+  return apiHub.get<IPlugin>(`api/v1/ai-services/${plugin_id}`);
+};
+
 export const getServerResourcesApi = async () => {
   return apiHub.get<IResources>(`api/v1/server-resources`);
+};
+
+export const startPluginInstallationApi = async (plugin_id: string) => {
+  return await apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
+};
+
+export const addPluginConfigurationApi = async (plugin_id: string, payload: IDeviceMap) => {
+  console.log(payload)
+  return await apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map: payload});
 };
 
 export const uploadNewPluginApi = async (payload: FormData) => {

@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect, useRef, LegacyRef, RefObject, ChangeEvent, DragEvent} from 'react';
+import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
 
 import {Dialog, Listbox, Transition} from '@headlessui/react';
 
@@ -16,10 +16,14 @@ import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
 import _Highlight from 'react-highlight';
-import {getServerResourcesApi, uploadNewPluginApi} from '@/services/auth.service';
+import {
+  addPluginConfigurationApi,
+  getServerResourcesApi,
+  startPluginInstallationApi,
+  uploadNewPluginApi,
+} from '@/services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin, IResources} from '@/types/plugin';
-import {urltoFile} from '@/helpers/urlToFile';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, Installation: 3};
@@ -77,6 +81,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
   const [resources, setResources] = useState<IResources>();
 
+  const [deviceMapConfig, setDeviceMapConfig] = useState({cpu: false});
+
   const [installStarted, setInstallStarted] = useState(false);
   const [installPercentage, setInstallPercentage] = useState(0);
   const [pluginInstalled, setPluginInstalled] = useState(false);
@@ -93,20 +99,31 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const handleSubmitSecondStep = async () => {
     if (fileUploaded && currentStep === ADDPLUGINSTEPS.Setup) {
       setLoading(true);
-      if (!file) return;
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = function (e) {
-        const rawLog = reader.result;
-        console.log({rawLog});
-        if (typeof rawLog === 'string') {
-          setFileText(rawLog);
+      if (!selectedPlugin || !resources) return;
+      // const reader = new FileReader();
+      // reader.readAsText(file);
+      // reader.onload = function (e) {
+      //   const rawLog = reader.result;
+      //   console.log({rawLog});
+      //   if (typeof rawLog === 'string') {
+      //     setFileText(rawLog);
+      //   }
+      //   setCurrentStep(ADDPLUGINSTEPS.Installation);
+      // };
+      try {
+        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, resources.device_map);
+        if (status === 200) {
+          setSelectedPlugin(data);
+          toast.success('upload successfull');
         }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally {
         setCurrentStep(ADDPLUGINSTEPS.Installation);
-        setInstallStarted(true);
-      };
-
-      setLoading(false);
+        setLoading(false);
+      }
     }
   };
 
@@ -128,7 +145,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       } catch (err) {
         if (err instanceof AxiosError) {
           toast.error(err?.response?.data.error);
-          // toast.error(err);
         }
       } finally {
         setLoading(false);
@@ -150,6 +166,22 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
   };
 
+  const getResources = async () => {
+    if (currentStep === ADDPLUGINSTEPS.Setup) {
+      try {
+        const {status, data} = await getServerResourcesApi();
+        if (status === 200) {
+          setResources(data);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   const handleDeleteFile = () => {
     setFile(undefined);
   };
@@ -201,22 +233,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
   }, [file]);
 
-  const getResources = async () => {
-    if (currentStep === ADDPLUGINSTEPS.Setup) {
-      try {
-        const {status, data} = await getServerResourcesApi();
-        if (status === 200) {
-          setResources(data);
-        }
-      } catch (err) {
-        if (err instanceof AxiosError) {
-          toast.error(err?.response?.data.error);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
   useEffect(() => {
     if (installStarted) {
       const countdown = () => {
@@ -224,12 +240,52 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
           setPluginInstalled(true);
           setInstallStarted(false);
         } else {
-          setInstallPercentage((percent) => ++percent);
+          handleGetInstallationProgress();
         }
       };
-      setTimeout(countdown, 10);
+      setTimeout(countdown, 1000);
     }
   }, [installStarted, installPercentage]);
+
+  const handleGetInstallationProgress = async () => {
+    if (!selectedPlugin) return;
+    try {
+      const {status, data} = await startPluginInstallationApi(selectedPlugin.id);
+      if (status === 200) {
+        setSelectedPlugin(data);
+        toast.success('installation started');
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
+  };
+
+  const handleStartInstallationApi = async () => {
+    if (!selectedPlugin) return;
+    setLoading(true);
+    try {
+      const {status, data} = await startPluginInstallationApi(selectedPlugin.id);
+      if (status === 200) {
+        setSelectedPlugin(data);
+        toast.success('installation started');
+        setInstallStarted(true);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (currentStep === ADDPLUGINSTEPS.Installation) {
+      handleStartInstallationApi();
+    }
+  }, [currentStep]);
+
   useEffect(() => {
     getResources();
   }, [currentStep]);
@@ -465,8 +521,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                             <div className='flex flex-col gap-3 mb-3'>
                               <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
                                 <CustomCheckbox
-                                  active={false}
-                                  onChange={(check: boolean) => {}}
+                                  active={deviceMapConfig.cpu}
+                                  onChange={(check: boolean) => setDeviceMapConfig((prev) => ({...prev, cpu: check}))}
                                   title={`cpu`}
                                   description={resources.device_map.cpu}
                                 />
@@ -492,12 +548,12 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       </div>
                     )}
 
-                    {currentStep === ADDPLUGINSTEPS.Installation && (
+                    {currentStep === ADDPLUGINSTEPS.Installation && selectedPlugin && (
                       <div className='flex flex-col flex-auto'>
                         <div className='flex flex-col mb-6'>
                           <div className='flex justify-between mb-3 items-center'>
                             <p className='text-content-grey-900 text-sm'>The plugin is installing, please wait</p>
-                            {pluginInstalled ? (
+                            {selectedPlugin.progress >= 100 ? (
                               <div className='flex gap-3 items-center'>
                                 <span className='w-7 h-7 rounded-full bg-content-green/[0.11] flex items-center justify-center'>
                                   <CheckIcon width={16} height={16} className='text-content-green' />
@@ -508,16 +564,16 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                               </div>
                             ) : (
                               <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
-                                {`${installPercentage} %`}
+                                {`${selectedPlugin?.progress} %`}
                               </span>
                             )}
                           </div>
                           <div className='h-1.5 bg-content-white dark:bg-neutral-600 w-full '>
                             <div
-                              className={`h-1.5 ${
-                                pluginInstalled ? 'bg-content-green' : 'bg-content-accent transition-all'
+                              className={`h-1.5 transition-all duration-100 ${
+                                selectedPlugin.progress >= 100 ? 'bg-content-green' : 'bg-content-accent w-0'
                               }`}
-                              style={{width: `${installPercentage}%`}}
+                              style={{width: `${selectedPlugin?.progress}%`}}
                             ></div>
                           </div>
                         </div>
@@ -557,10 +613,10 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                         <Button
                           type='button'
                           className='flex-1 !h-11'
-                          variant={active ? 'primary' : 'disabled'}
+                          variant={'primary'}
                           title='Continue'
                           loading={loading}
-                          disabled={!active}
+                          disabled={false}
                           onClick={handleSubmitSecondStep}
                         />
                       )}

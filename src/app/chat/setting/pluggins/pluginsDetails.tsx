@@ -11,9 +11,11 @@ import {AxiosError} from 'axios';
 import {deletePluginByIdApi} from '@/services/auth.service';
 import toast from 'react-hot-toast';
 import {IPlugin} from '@/types/plugin';
+import CustomCheckbox from '@/components/custom-checkbox';
 
 export default function PluginsDetails() {
   const [active, setActive] = useState<boolean>();
+  const [activeFunction, setActiveFunction] = useState({f1: true, f2: false, f3: false});
   const [removePluginsModal, setRemovePluginsModal] = useState(false);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin>();
 
@@ -83,23 +85,27 @@ export default function PluginsDetails() {
           <div className='max-h-[420px] overflow-auto custom-scrollbar-thumb relative -mr-2'>
             {!loading &&
               plugins &&
-              plugins.map((plugin) => (
+              plugins.map((plugin, index) => (
                 <Disclosure key={plugin.id}>
                   {({open}) => (
                     <Fragment>
                       <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
                         <div className='flex gap-3 w-52 items-center truncate overflow-hidden'>
-                          {/* <Disclosure.Button className='flex items-center'>
-                          <ChevronUpIcon className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`} />
-                        </Disclosure.Button> */}
-                          <div className='flex items-center '>
+                          {(index === 1 || index === 3) && (
+                            <Disclosure.Button className='flex items-center'>
+                              <ChevronUpIcon
+                                className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
+                              />
+                            </Disclosure.Button>
+                          )}
+                          <div className={`flex items-center ${index === 1 || index === 3 ? '' : 'pl-8'}`}>
                             <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>
                               {plugin.original_file_name}
                             </p>
                           </div>
                         </div>
                         <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
-                          {plugin.device_map}
+                          {/* {plugin.device_map} */}
                         </p>
                         <div className='w-24 text-xs flex justify-center'>
                           <PluginsBadge variant={'normal'} label='Running' />
@@ -115,11 +121,27 @@ export default function PluginsDetails() {
                           <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
                         </span>
                       </div>
-                      {/* <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 py-3'>
-                      <p className='w-full text-xs leading-5 text-content-grey-900 font-poppins-medium ml-3'>
-                        
-                      </p>
-                    </Disclosure.Panel> */}
+                      {(index === 1 || index === 3) && (
+                        <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
+                          <div className='flex flex-col gap-3 pl-9'>
+                            <CustomCheckbox
+                              active={activeFunction.f1}
+                              onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f1: check}))}
+                              title={`function one activation`}
+                            />
+                            <CustomCheckbox
+                              active={activeFunction.f2}
+                              onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f2: check}))}
+                              title={`function two activation`}
+                            />
+                            <CustomCheckbox
+                              active={activeFunction.f3}
+                              onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f3: check}))}
+                              title={`function three activation`}
+                            />
+                          </div>
+                        </Disclosure.Panel>
+                      )}
                     </Fragment>
                   )}
                 </Disclosure>

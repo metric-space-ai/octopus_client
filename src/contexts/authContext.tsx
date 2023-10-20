@@ -20,6 +20,7 @@ import {
   updateUserProfilePic,
   uploadNewPluginApi,
   getAllPluginsApi,
+  getPluginByIdApi,
 } from '../services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin} from '@/types/plugin';
@@ -40,6 +41,7 @@ interface IAuthContext {
   onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
   getSingleUser: () => void;
   getAllPlugins: () => void;
+  getPluginById: (payload: string) => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
@@ -122,6 +124,22 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       const {status, data} = await getAllPluginsApi();
       if (status === 200) {
         setPlugins(data);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetPluginsById = async (payload: string) => {
+    setLoading(true);
+    try {
+      const {status, data} = await getPluginByIdApi(payload);
+      if (status === 200) {
+        setSelectedPlugin(data);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -237,6 +255,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     onLogin: handleLogin,
     onRegister: handleRegister,
     getAllPlugins: handlegetAllPlugins,
+    getPluginById: handleGetPluginsById,
     onUploadPlugin: handleUploadNewPlugin,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
     onUpdateProfile: handleUpdateUserProfile,

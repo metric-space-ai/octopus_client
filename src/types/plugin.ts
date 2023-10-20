@@ -20,6 +20,9 @@ export interface IPlugin {
   updated_at: string;
 }
 
+export interface IDeviceMap {
+  cpu?: string;
+}
 interface IGpus {
   id: string;
   memory_free: string;
@@ -30,9 +33,7 @@ interface IGpus {
 
 export interface IResources {
   cpus: number;
-  device_map: {
-    cpu: string;
-  };
+  device_map: IDeviceMap;
   gpus: IGpus[] | [];
   memory_free: string;
   memory_total: string;
