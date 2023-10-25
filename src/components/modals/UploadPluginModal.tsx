@@ -1,6 +1,6 @@
 import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
 
-import {Dialog, Listbox, Transition} from '@headlessui/react';
+import {Dialog, Transition} from '@headlessui/react';
 
 import {
   ArrowUpTrayIcon,
@@ -18,12 +18,14 @@ import CustomCheckbox from '../custom-checkbox';
 import _Highlight from 'react-highlight';
 import {
   addPluginConfigurationApi,
+  getPluginByIdApi,
   getServerResourcesApi,
   startPluginInstallationApi,
   uploadNewPluginApi,
 } from '@/services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin, IResources} from '@/types/plugin';
+import {useAuthContext} from '@/contexts/authContext';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, Installation: 3};
@@ -89,27 +91,12 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: {errors},
-  } = useForm<IFormInputs>();
+  const {getAllPlugins} = useAuthContext();
 
   const handleSubmitSecondStep = async () => {
     if (fileUploaded && currentStep === ADDPLUGINSTEPS.Setup) {
       setLoading(true);
       if (!selectedPlugin || !resources) return;
-      // const reader = new FileReader();
-      // reader.readAsText(file);
-      // reader.onload = function (e) {
-      //   const rawLog = reader.result;
-      //   console.log({rawLog});
-      //   if (typeof rawLog === 'string') {
-      //     setFileText(rawLog);
-      //   }
-      //   setCurrentStep(ADDPLUGINSTEPS.Installation);
-      // };
       try {
         const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, resources.device_map);
         if (status === 200) {
@@ -210,6 +197,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setInstallPercentage(0);
     setPluginInstalled(false);
     setLoading(false);
+
     onClose();
   };
 
@@ -236,24 +224,32 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   useEffect(() => {
     if (installStarted) {
       const countdown = () => {
-        if (installPercentage >= 100) {
+        if (installPercentage > 99) {
           setPluginInstalled(true);
           setInstallStarted(false);
         } else {
-          handleGetInstallationProgress();
+          // handleGetInstallationProgress();
+          setInstallPercentage((prev) => prev + 1);
         }
       };
       setTimeout(countdown, 1000);
+    }
+    if (installStarted && installPercentage === 1) {
+      handleGetInstallationProgress();
     }
   }, [installStarted, installPercentage]);
 
   const handleGetInstallationProgress = async () => {
     if (!selectedPlugin) return;
     try {
-      const {status, data} = await startPluginInstallationApi(selectedPlugin.id);
+      const {status, data} = await getPluginByIdApi(selectedPlugin.id);
       if (status === 200) {
         setSelectedPlugin(data);
-        toast.success('installation started');
+        setInstallPercentage(data.progress);
+        if (data.progress === 100) {
+          setPluginInstalled(true);
+          setInstallStarted(false);
+        }
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -552,9 +548,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       <div className='flex flex-col flex-auto'>
                         <div className='flex flex-col mb-6'>
                           <div className='flex justify-between mb-3 items-center'>
-                            <p className='text-content-grey-900 text-sm'>The plugin is installing, please wait</p>
-                            {selectedPlugin.progress >= 100 ? (
-                              <div className='flex gap-3 items-center'>
+                            {installPercentage > 99 ? (
+                              <div className='flex gap-3 items-center ml-auto'>
                                 <span className='w-7 h-7 rounded-full bg-content-green/[0.11] flex items-center justify-center'>
                                   <CheckIcon width={16} height={16} className='text-content-green' />
                                 </span>
@@ -563,17 +558,20 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                 </p>
                               </div>
                             ) : (
-                              <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
-                                {`${selectedPlugin?.progress} %`}
-                              </span>
+                              <>
+                                <p className='text-content-grey-900 text-sm'>The plugin is installing, please wait</p>
+                                <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                  {`${installPercentage < 100 ? installPercentage : 100} %`}
+                                </span>
+                              </>
                             )}
                           </div>
                           <div className='h-1.5 bg-content-white dark:bg-neutral-600 w-full '>
                             <div
-                              className={`h-1.5 transition-all duration-100 ${
-                                selectedPlugin.progress >= 100 ? 'bg-content-green' : 'bg-content-accent w-0'
+                              className={`h-1.5 transition-all duration-200 ${
+                                installPercentage > 99 ? 'bg-content-green' : 'bg-content-accent w-0'
                               }`}
-                              style={{width: `${selectedPlugin?.progress}%`}}
+                              style={{width: `${installPercentage < 100 ? installPercentage : 100}%`}}
                             ></div>
                           </div>
                         </div>
@@ -584,7 +582,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                            [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-content-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
                            [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                           >
-                            {fileText}
+                            {selectedPlugin.original_function_body}
                           </Highlight>
                         </div>
                       </div>
@@ -603,9 +601,9 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           type='button'
                           className='flex-1 !h-11'
                           variant={fileUploaded ? 'primary' : 'disabled'}
-                          title='Continue'
+                          title={!loading ? 'Continue' : ''}
                           loading={loading}
-                          disabled={!fileUploaded}
+                          disabled={loading || !fileUploaded}
                           onClick={handleSubmitFirstStep}
                         />
                       )}
@@ -616,7 +614,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           variant={'primary'}
                           title='Continue'
                           loading={loading}
-                          disabled={false}
+                          disabled={loading}
                           onClick={handleSubmitSecondStep}
                         />
                       )}
@@ -627,8 +625,11 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           variant={pluginInstalled ? 'primary' : 'disabled'}
                           title='Continue'
                           loading={loading}
-                          disabled={!pluginInstalled}
-                          onClick={handleCloseModal}
+                          disabled={loading || !pluginInstalled}
+                          onClick={() => {
+                            getAllPlugins();
+                            handleCloseModal();
+                          }}
                         />
                       )}
                     </div>

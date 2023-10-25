@@ -51,7 +51,7 @@ const MenuItem = () => {
           <div className='px-2 py-2 gap-2 flex flex-col'>
             <Menu.Item as='div'>
               <div className={`rounded-2xl bg-background-dark flex py-3 px-4`}>
-                <div className='w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-lime-200 '>
+                <div className='min-w-[36px] w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-lime-200 '>
                   {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
                   {user?.photo_file_name ? (
                     <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} />
@@ -59,7 +59,7 @@ const MenuItem = () => {
                     <UserIcon className='m-auto' width={32} height={32} />
                   )}
                 </div>
-                <div className='flex flex-col text-white'>
+                <div className='flex flex-col text-white truncate overflow-hidden'>
                   <h6 className='text-xs leading-5 font-poppins-semibold'>{user?.name}</h6>
                   <span className='text-xxs leading-4 font-normal'>{user?.job_title}</span>
                 </div>

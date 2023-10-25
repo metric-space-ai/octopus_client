@@ -197,17 +197,17 @@ export const MessageItem = ({item}: IMessageItem) => {
     <>
       <div className='mt-5 text-between_sm_base'>
         <div className='flex gap-3'>
-          <div className='shrink-0 w-9 h-9 flex items-center justify-center bg-content-black rounded-full relative'>
+          <div className='shrink-0 w-12 h-12 flex items-center justify-center bg-content-black rounded-full relative'>
             {item.profile?.photo_file_name ? (
               <img
                 src={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
                 alt={item.profile.name}
-                className='rounded-full w-9 h-9 bg-content-grey-100 cursor-pointer'
+                className='rounded-full w-12 h-12 bg-content-grey-100 cursor-pointer'
                 onClick={() => setShowUserImageModal(true)}
                 title={item.profile.name}
               />
             ) : (
-              <UserIcon className='w-6 h-6 text-content-grey-100' />
+              <UserIcon className='w-9 h-9 text-content-grey-100' />
             )}
             {enabledContentSafety && isSensitive && (
               <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
@@ -247,15 +247,12 @@ export const MessageItem = ({item}: IMessageItem) => {
         </div>
         <div className='mt-3 flex gap-3'>
           <div>
-            <div
-              className={`relative w-9 h-9 flex items-center justify-center rounded-full ${
-                enabledContentSafety && isSensitive ? 'bg-content-red-600/10' : 'bg-content-black'
-              }`}
-            >
-              {enabledContentSafety && isSensitive ? (
-                <ShieldCheckIcon width={20} height={20} className='text-content-red-600' />
-                ) : (
-                <LogoIcon width={22} height={20} color='#F5F5F5' />
+            <div className={`relative w-12 h-12 flex items-center justify-center rounded-full bg-content-black`}>
+              <LogoIcon width={28} height={18} color='#F5F5F5' />
+              {enabledContentSafety && isSensitive && (
+                <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                  <ShieldCheckIcon width={14} height={14} className='text-red-600' />
+                </div>
               )}
             </div>
           </div>

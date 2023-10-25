@@ -230,9 +230,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           // send new message
           createChatMessageApi(ticketId, message, bypass_sensitive_information_filter).then((res) => {
             const messages = get().messages;
+            get().updateMessage(res.data);
             set({messages: [...messages, {...res.data}]});
             set({isNewTicket: false});
           });
+
         })
         .catch((e) => {
           console.log(e);

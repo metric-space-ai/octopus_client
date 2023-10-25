@@ -90,7 +90,6 @@ export const startPluginInstallationApi = async (plugin_id: string) => {
 };
 
 export const addPluginConfigurationApi = async (plugin_id: string, payload: IDeviceMap) => {
-  console.log(payload)
   return await apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map: payload});
 };
 
