@@ -8,7 +8,7 @@ import {
 } from '@/types/auth';
 
 import apiHub from '../hooks/useApiClient';
-import {IDeviceMap, IPlugin, IResources} from '@/types/plugin';
+import {IAIFunctions, IDeviceMap, IPlugin, IPluginActivation, IResources} from '@/types/plugin';
 
 export const login = async (email: string, password: string) => {
   const payload = {email, password};
@@ -69,6 +69,26 @@ export const updateUserProfilePic = async (id: string, payload: FormData) => {
   });
 };
 
+export const getAiFunctionsByServiceIdApi = async (ai_service_id: string) => {
+  return apiHub.get<IAIFunctions[]>(`api/v1/ai-functions/${ai_service_id}`);
+};
+
+export const deletetAiFunctionsByIdApi = async (ai_service_id: string, ai_function_id: string) => {
+  return apiHub.delete<IAIFunctions[]>(`api/v1/ai-functions/${ai_service_id}/${ai_function_id}`);
+};
+
+export const updatetAiFunctionsByIdApi = async (
+  ai_service_id: string,
+  ai_function_id: string,
+  payload: {is_enabled: boolean},
+) => {
+  return apiHub.put<IAIFunctions[]>(`api/v1/ai-functions/${ai_service_id}/${ai_function_id}`, payload);
+};
+
+export const getServerResourcesApi = async () => {
+  return apiHub.get<IResources>(`api/v1/server-resources`);
+};
+
 export const deletePluginByIdApi = async (plugin_id: string) => {
   return apiHub.delete<null>(`api/v1/ai-services/${plugin_id}`);
 };
@@ -79,10 +99,6 @@ export const getAllPluginsApi = async () => {
 
 export const getPluginByIdApi = async (plugin_id: string) => {
   return apiHub.get<IPlugin>(`api/v1/ai-services/${plugin_id}`);
-};
-
-export const getServerResourcesApi = async () => {
-  return apiHub.get<IResources>(`api/v1/server-resources`);
 };
 
 export const startPluginInstallationApi = async (plugin_id: string) => {
@@ -99,4 +115,8 @@ export const uploadNewPluginApi = async (payload: FormData) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+export const updatePluginByIdApi = async (plugin_id: string, payload: IPluginActivation) => {
+  return apiHub.post<string>(`api/v1/ai-services/${plugin_id}`, payload);
 };

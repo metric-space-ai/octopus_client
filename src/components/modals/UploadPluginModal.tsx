@@ -224,15 +224,15 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   useEffect(() => {
     if (installStarted) {
       const countdown = () => {
-        if (installPercentage > 99) {
-          setPluginInstalled(true);
-          setInstallStarted(false);
-        } else {
+        if (installPercentage <99) {
           // handleGetInstallationProgress();
           setInstallPercentage((prev) => prev + 1);
+        } else {
+          // setPluginInstalled(true);
+          // setInstallStarted(false);
         }
       };
-      setTimeout(countdown, 1000);
+      setTimeout(countdown, Math.floor(Math.random() * 1000) + 500);
     }
     if (installStarted && installPercentage === 1) {
       handleGetInstallationProgress();

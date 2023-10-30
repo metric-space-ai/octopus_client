@@ -18,12 +18,13 @@ import {
   updateSingleUserById,
   updateUserProfile,
   updateUserProfilePic,
-  uploadNewPluginApi,
   getAllPluginsApi,
   getPluginByIdApi,
+  getAiFunctionsByServiceIdApi,
 } from '../services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin} from '@/types/plugin';
+import {AI_SERVICES_SETUP_STATUS} from '@/constant';
 
 interface IAuthContext {
   isAuthenticated: boolean;
@@ -34,6 +35,7 @@ interface IAuthContext {
   loading: boolean;
   authLoading: boolean;
   plugins: IPlugin[] | undefined;
+  setPlugins: React.Dispatch<React.SetStateAction<IPlugin[] | undefined>>;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
   onUploadPlugin: (payload: FormData) => void;
@@ -55,6 +57,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [user, setUser] = useState<IUserProfile | null>(null);
   const [singleUser, setSingleUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [servicesFunctionIsChecked, setServicesFunctionIsChecked] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
   const [plugins, setPlugins] = useState<IPlugin[]>();
@@ -86,6 +89,43 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         });
     }
   }, [authData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (plugins && plugins.length > 0 && !servicesFunctionIsChecked) {
+      setServicesFunctionIsChecked(true);
+      handleGetPluginFunctions(plugins);
+    }
+  }, [plugins]);
+
+  const handleGetPluginFunctions = async (plugins: IPlugin[]) => {
+    setLoading(true);
+
+    if (plugins) {
+      const result: IPlugin[] | [] = [];
+      for (const plugin of plugins) {
+        const {id, is_enabled, setup_status} = plugin;
+        if (plugin.ai_functions === undefined && is_enabled && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
+          try {
+            const {status, data} = await getAiFunctionsByServiceIdApi(id);
+            if (status === 200) {
+              const resultPlugin: IPlugin = {...plugin, ai_functions: data.length > 0 ? data : null};
+
+              result.push(resultPlugin as never);
+            }
+          } catch (err) {
+            if (err instanceof AxiosError) {
+              toast.error(err?.response?.data.error);
+            }
+          } finally {
+          }
+        } else {
+          result.push({...plugin, ai_functions: null} as never);
+        }
+        setPlugins(result);
+      }
+    }
+    setLoading(false);
+  };
 
   const handleLogin = (email: string, password: string) => {
     setLoading(true);
@@ -123,7 +163,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     try {
       const {status, data} = await getAllPluginsApi();
       if (status === 200) {
-        setPlugins(data);
+        // setPlugins(data);
+        handleGetPluginFunctions(data);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -249,6 +290,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     setUser,
     singleUser,
     plugins,
+    setPlugins,
     selectedPlugin,
     loading,
     authLoading,

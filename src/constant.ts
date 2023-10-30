@@ -63,6 +63,29 @@ export const ROLE_COMPANY_ADMIN_USER = 'ROLE_COMPANY_ADMIN_USER';
 export const ROLE_PRIVATE_USER = 'ROLE_PRIVATE_USER';
 export const ROLE_PUBLIC_USER = 'ROLE_PUBLIC_USER';
 
+export const AI_SERVICES_HEALTH_CHECK_STATUS = {
+  NotWorking: 'NotWorking',
+  Ok: 'Ok',
+};
+
+export const AI_SERVICES_SETUP_STATUS = {
+  NotPerformed: 'NotPerformed',
+  Performed: 'Performed',
+};
+export const AI_SERVICES_STATUS = {
+  Configuration: 'Configuration',
+  Error: 'Error',
+  Initial: 'Initial',
+  InstallationFinished: 'InstallationFinished',
+  InstallationStarted: 'InstallationStarted',
+  MaliciousCodeDetected: 'MaliciousCodeDetected',
+  ParsingFinished: 'ParsingFinished',
+  ParsingStarted: 'ParsingStarted',
+  Running: 'Running',
+  Setup: 'Setup',
+  Stopped: 'Stopped',
+};
+
 export const Roles = [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, ROLE_PRIVATE_USER, ROLE_PUBLIC_USER];
 
 export const RoleOptions = [

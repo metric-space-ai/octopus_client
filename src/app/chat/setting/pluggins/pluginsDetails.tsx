@@ -7,18 +7,26 @@ import CustomSwitch from '@/components/switch/custom-switch';
 import {RemovePluginModal} from '@/components/modals/RemovePluginModal';
 import {useAuthContext} from '@/contexts/authContext';
 import {AxiosError} from 'axios';
-import {deletePluginByIdApi} from '@/services/auth.service';
+import {
+  deletePluginByIdApi,
+  deletetAiFunctionsByIdApi,
+  updatePluginByIdApi,
+  updatetAiFunctionsByIdApi,
+} from '@/services/auth.service';
 import toast from 'react-hot-toast';
-import {IPlugin} from '@/types/plugin';
+import {IAIFunctions, IPlugin, IPluginActivation} from '@/types/plugin';
 import CustomCheckbox from '@/components/custom-checkbox';
+import {IconButton} from '@/components/buttons';
+import {Spinner} from '@/components/spinner';
 
 export default function PluginsDetails() {
-  const [active, setActive] = useState<boolean>();
   const [activeFunction, setActiveFunction] = useState({f1: true, f2: false, f3: false});
   const [removePluginsModal, setRemovePluginsModal] = useState(false);
+  const [aiFunctionsLoading, setAiFunctionsLoading] = useState(false);
+  const [deleteFunctionsIsLoading, setDeleteFunctionsIsLoading] = useState(false);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin>();
 
-  const {loading, getAllPlugins, plugins} = useAuthContext();
+  const {loading, getAllPlugins, plugins, setPlugins} = useAuthContext();
 
   const handleOpenDeletePluginModal = (plugin: IPlugin) => {
     setSelectedPlugin(plugin);
@@ -40,11 +48,79 @@ export default function PluginsDetails() {
     }
   };
 
+  const handleChangePluginActivation = async (plugin_id: string, check: boolean) => {
+    if (!plugins) return;
+
+    const payload: IPluginActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
+    const beforeChange = [...plugins];
+    setPlugins([...plugins.flatMap((p) => (p.id === plugin_id ? {...p, is_enabled: check} : p))]);
+    try {
+      const {status} = await updatePluginByIdApi(plugin_id, payload);
+      if (status === 201) {
+        toast.success('updated successfully');
+      } else {
+        setPlugins(beforeChange);
+      }
+    } catch (err) {
+      setPlugins(beforeChange);
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+    }
+  };
+
+  const handleChangeAiFunctionActivation = async (
+    index: number,
+    funcIndex: number,
+    func: IAIFunctions,
+    check: boolean,
+  ) => {
+    if (!plugins) return;
+    setAiFunctionsLoading(true);
+    const payload = {is_enabled: check};
+    const beforeChange = [...plugins];
+    const result = [...plugins];
+    result[index].ai_functions![funcIndex].is_enabled = check;
+    setPlugins(result);
+    try {
+      const {status} = await updatetAiFunctionsByIdApi(func.ai_service_id, func.id, payload);
+      if (status === 200) {
+        toast.success('updated successfully');
+      } else {
+        setPlugins(beforeChange);
+      }
+    } catch (err) {
+      setPlugins(beforeChange);
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setAiFunctionsLoading(false);
+    }
+  };
+
+  const handleDeleteServiceAiFunction = async (index: number, func: IAIFunctions) => {
+    if (!plugins) return;
+    setDeleteFunctionsIsLoading(true);
+    try {
+      const {status} = await deletetAiFunctionsByIdApi(func.ai_service_id, func.id);
+      if (status === 204) {
+        toast.success('deleted successfully');
+        getAllPlugins();
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setDeleteFunctionsIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     getAllPlugins();
   }, []);
-
-  useEffect(() => {}, [plugins]);
 
   return (
     <>
@@ -52,7 +128,12 @@ export default function PluginsDetails() {
         <div className='mx-auto w-full max-w-[560px] rounded-2xl bg-white'>
           <div className='flex mb-2'>
             <div className='w-52'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
+              <span
+                className='font-poppins-medium text-xs leading-5 text-content-grey-600'
+                onClick={() => console.log({plugins})}
+              >
+                Name
+              </span>
             </div>
             <div className='w-28'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
@@ -63,6 +144,88 @@ export default function PluginsDetails() {
             <div className='w-20 flex justify-center'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>On/Off</span>
             </div>
+          </div>
+
+          <div className='max-h-[420px] overflow-auto custom-scrollbar-thumb relative -mr-2'>
+            {!plugins || plugins.length === 0
+              ? !loading && (
+                  <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
+                    <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                  </div>
+                )
+              : plugins.map((plugin, index) => (
+                  <Disclosure key={plugin.id}>
+                    {({open}) => (
+                      <Fragment>
+                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                          <div className='flex gap-3 w-52 items-center truncate overflow-hidden'>
+                            {plugin.ai_functions && plugin.ai_functions.length > 0 && (
+                              <Disclosure.Button className='flex items-center'>
+                                <ChevronUpIcon
+                                  className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
+                                />
+                              </Disclosure.Button>
+                            )}
+                            <div className={`flex items-center ${plugin.ai_functions ? '' : 'pl-8'}`}>
+                              <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>
+                                {plugin.original_file_name}
+                              </p>
+                            </div>
+                          </div>
+                          <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
+                            {/* {plugin.device_map} */}
+                          </p>
+                          <div className='w-24 text-xs flex justify-center'>
+                            <PluginsBadge variant={plugin.status} label={plugin.status} />
+                          </div>
+                          <div className='flex justify-center items-center w-20'>
+                            <CustomSwitch
+                              active={plugin.is_enabled}
+                              onChange={(check: boolean) => handleChangePluginActivation(plugin.id, check)}
+                            />
+                          </div>
+
+                          <span
+                            className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                            onClick={() => handleOpenDeletePluginModal(plugin)}
+                          >
+                            <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                          </span>
+                        </div>
+                        {plugin.ai_functions && (
+                          <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
+                            <div className='flex flex-col gap-3 pl-9 w-full'>
+                              {plugin.ai_functions.map((func, funcIndex) => (
+                                <div key={func.id} className='flex w-full items-center justify-between'>
+                                  <CustomCheckbox
+                                    active={func.is_enabled}
+                                    onChange={(check: boolean) =>
+                                      !aiFunctionsLoading
+                                        ? handleChangeAiFunctionActivation(index, funcIndex, func, check)
+                                        : {}
+                                    }
+                                    disabled={aiFunctionsLoading}
+                                    title={func.description}
+                                  />
+                                  <IconButton
+                                    className='top-4 right-4 mr-5 bg-content-red-600/20 hover:bg-content-red-600/40'
+                                    onClick={() => handleDeleteServiceAiFunction(index, func)}
+                                  >
+                                    {deleteFunctionsIsLoading ? (
+                                      <Spinner />
+                                    ) : (
+                                      <TrashIcon className='w-4 h-4 text-content-primary' />
+                                    )}
+                                  </IconButton>
+                                </div>
+                              ))}
+                            </div>
+                          </Disclosure.Panel>
+                        )}
+                      </Fragment>
+                    )}
+                  </Disclosure>
+                ))}
           </div>
           {loading && (
             <Disclosure>
@@ -81,76 +244,6 @@ export default function PluginsDetails() {
               )}
             </Disclosure>
           )}
-          <div className='max-h-[420px] overflow-auto custom-scrollbar-thumb relative -mr-2'>
-            {!loading &&
-              (plugins && plugins.length > 0 ? (
-                plugins.map((plugin, index) => (
-                  <Disclosure key={plugin.id}>
-                    {({open}) => (
-                      <Fragment>
-                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
-                          <div className='flex gap-3 w-52 items-center truncate overflow-hidden'>
-                            {(index === 1 || index === 3) && (
-                              <Disclosure.Button className='flex items-center'>
-                                <ChevronUpIcon
-                                  className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
-                                />
-                              </Disclosure.Button>
-                            )}
-                            <div className={`flex items-center ${index === 1 || index === 3 ? '' : 'pl-8'}`}>
-                              <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>
-                                {plugin.original_file_name}
-                              </p>
-                            </div>
-                          </div>
-                          <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
-                            {/* {plugin.device_map} */}
-                          </p>
-                          <div className='w-24 text-xs flex justify-center'>
-                            <PluginsBadge variant={'normal'} label='Running' />
-                          </div>
-                          <div className='flex justify-center items-center w-20'>
-                            <CustomSwitch active={active} onChange={(check: boolean) => setActive(check)} />
-                          </div>
-
-                          <span
-                            className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
-                            onClick={() => handleOpenDeletePluginModal(plugin)}
-                          >
-                            <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
-                          </span>
-                        </div>
-                        {(index === 1 || index === 3) && (
-                          <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
-                            <div className='flex flex-col gap-3 pl-9'>
-                              <CustomCheckbox
-                                active={activeFunction.f1}
-                                onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f1: check}))}
-                                title={`function one activation`}
-                              />
-                              <CustomCheckbox
-                                active={activeFunction.f2}
-                                onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f2: check}))}
-                                title={`function two activation`}
-                              />
-                              <CustomCheckbox
-                                active={activeFunction.f3}
-                                onChange={(check: boolean) => setActiveFunction((prev) => ({...prev, f3: check}))}
-                                title={`function three activation`}
-                              />
-                            </div>
-                          </Disclosure.Panel>
-                        )}
-                      </Fragment>
-                    )}
-                  </Disclosure>
-                ))
-              ) : (
-                <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                  <h2 className='text-lg text-content-accent uppercase'>not found</h2>
-                </div>
-              ))}
-          </div>
           {/* <Disclosure>
             {({open}) => (
               <>
