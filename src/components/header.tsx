@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useEffect, useState, useRef} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
 import {
@@ -12,7 +12,7 @@ import {UserIcon} from '@heroicons/react/24/solid';
 
 import {usePathname, useRouter} from 'next/navigation';
 
-import {Tab, Tabs} from '@/components/tabs';
+import {Tab, Tabs, MoreTabs, MoreTab} from '@/components/tabs';
 import {paths} from '@/config/path';
 import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
@@ -98,18 +98,16 @@ const MenuItem = () => {
 };
 
 export const Header = () => {
+  const tabItemRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
   const {user} = useAuthContext();
   const {workspaces, currentWorkspaceId, getWorkspaces, setWorkspaceId} = useChatStore();
   const [showCreateNewTabModal, setShowCreateNewTabModal] = useState(false);
   const [showDeleteabModal, setShowDeleteTabModal] = useState(false);
+  const [fitNumberOfItems, setFitNumberOfItems] = useState(0);
   const [modalTab, setModalTab] = useState<IWorkspace | null>(null);
   const isAdmin = user?.roles.includes('ROLE_COMPANY_ADMIN_USER');
-
-  useEffect(() => {
-    getWorkspaces();
-  }, [getWorkspaces]);
 
   const handleTab = (idx: string) => {
     if (pathname === paths.setting) {
@@ -126,38 +124,103 @@ export const Header = () => {
     setShowCreateNewTabModal(true);
   };
 
+  useEffect(() => {
+    getWorkspaces();
+  }, [getWorkspaces]);
+  useEffect(() => {
+    // const fitNumber = Math.floor((tabItemRef.current.offsetWidth - 44) / 220 - 1);
+    if (tabItemRef.current && workspaces.length > 8) {
+      let size = Math.floor((tabItemRef.current.offsetWidth - 44) / 220 - 1);
+      if (size < workspaces.length) size = Math.floor((tabItemRef.current.offsetWidth - 44) / 160 - 1);
+      console.log({size})
+      setFitNumberOfItems(size);
+    }
+  }, [workspaces]);
+
   return (
     <div className='flex justify-between items-center'>
-      <div className='flex'>
+      <div className='flex flex-1' ref={tabItemRef}>
         <Tabs selectedId={currentWorkspaceId} onChange={handleTab}>
-          {workspaces?.map((tab) => (
-            <Tab
-              key={tab.id}
-              tabId={tab.id}
-              title={tab.name}
-              icon={
-                tab.type === 'Public' ? (
-                  <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-400/10'>
-                    <UserGroupIcon className='w-4 h-4 text-content-accent-400' />
-                  </div>
-                ) : (
-                  <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-light/10'>
-                    <LockClosedIcon className='w-4 h-4 text-content-blue-light' />
-                  </div>
-                )
-              }
-              editable={isAdmin}
-              onRename={() => {
-                setModalTab(tab);
-                setShowCreateNewTabModal(true);
-              }}
-              onDelete={() => {
-                setModalTab(tab);
-                setShowDeleteTabModal(true);
-              }}
-            />
-          ))}
+          {workspaces?.map((tab, index) => {
+            if (index < fitNumberOfItems || fitNumberOfItems === 0)
+              return (
+                <Tab
+                  key={tab.id}
+                  tabId={tab.id}
+                  title={tab.name}
+                  icon={
+                    tab.type === 'Public' ? (
+                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-400/10'>
+                        <UserGroupIcon className='w-4 h-4 text-content-accent-400' />
+                      </div>
+                    ) : (
+                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-light/10'>
+                        <LockClosedIcon className='w-4 h-4 text-content-blue-light' />
+                      </div>
+                    )
+                  }
+                  editMode={modalTab?.id === tab.id ? true : false}
+                  editable={isAdmin}
+                  tab={tab}
+                  onClearTab={() => {
+                    setModalTab(null);
+                  }}
+                  onRename={() => {
+                    setModalTab(tab);
+                    // setShowCreateNewTabModal(true);
+                  }}
+                  onDelete={() => {
+                    setModalTab(tab);
+                    setShowDeleteTabModal(true);
+                  }}
+                />
+              );
+          })}
         </Tabs>
+        {fitNumberOfItems < workspaces.length && fitNumberOfItems > 0 && (
+          <MoreTabs
+            selectedId={currentWorkspaceId}
+            onChange={handleTab}
+            tabs={workspaces}
+            itemsFrom={fitNumberOfItems}
+          >
+            {workspaces?.map((tab, index) => {
+              if (index >= fitNumberOfItems)
+                return (
+                  <MoreTab
+                    key={tab.id}
+                    tabId={tab.id}
+                    title={tab.name}
+                    icon={
+                      tab.type === 'Public' ? (
+                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-light-11'>
+                          <UserGroupIcon className='w-4 h-4 text-content-accent-hover' />
+                        </div>
+                      ) : (
+                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-dark-11'>
+                          <LockClosedIcon className='w-4 h-4 text-content-blue-dark' />
+                        </div>
+                      )
+                    }
+                    editMode={modalTab?.id === tab.id ? true : false}
+                    editable={isAdmin}
+                    tab={tab}
+                    onClearTab={() => {
+                      setModalTab(null);
+                    }}
+                    onRename={() => {
+                      setModalTab(tab);
+                      // setShowCreateNewTabModal(true);
+                    }}
+                    onDelete={() => {
+                      setModalTab(tab);
+                      setShowDeleteTabModal(true);
+                    }}
+                  />
+                );
+            })}
+          </MoreTabs>
+        )}
         {isAdmin && (
           <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
             <PlusIcon className='w-4 h-4 text-content-white' />

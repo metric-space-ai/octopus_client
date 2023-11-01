@@ -10,7 +10,7 @@ interface TabMenuProps {
 
 export const TabMenu = ({onRename, onDelete}: TabMenuProps) => {
   return (
-    <Menu as='div' className='z-10 relative ml-1'>
+    <Menu as='div' className='z-10 relative ml-auto'>
       <Menu.Button className='flex w-full justify-center rounded-md border-none' onClick={(e) => e.stopPropagation()}>
         <EllipsisVerticalIcon className='w-5 h-5 text-content-primary' />
       </Menu.Button>

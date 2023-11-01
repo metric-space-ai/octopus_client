@@ -9,18 +9,18 @@ import {authValidator} from '@/helpers/validators';
 import {IWorkspace} from '@/types';
 import {TabModes} from '@/constant';
 import {useChatStore} from '@/store';
-import {Button} from '../buttons';
+import {IconButton} from '../buttons';
+import {CheckIcon} from '@heroicons/react/24/outline';
 
 interface IFormInputs {
   name: string;
 }
 
-export type TabProps = {
+export type MoreTabProps = {
   tabId: string;
   title?: string;
   icon?: React.ReactNode;
   isFocused?: boolean;
-  // isDisabled?: boolean;
   editable?: boolean;
   onClick?: () => void;
   onRename?: () => void;
@@ -30,7 +30,7 @@ export type TabProps = {
   editMode?: boolean;
 };
 
-export const Tab = ({
+export const MoreTab = ({
   tab,
   tabId,
   title,
@@ -42,7 +42,7 @@ export const Tab = ({
   onDelete,
   onClearTab = () => {},
   isFocused,
-}: TabProps) => {
+}: MoreTabProps) => {
   const [selected, setSelected] = useState(TabModes[0]);
   const [loading, setLoading] = useState(false);
   const {updateWorkspace} = useChatStore();
@@ -69,37 +69,35 @@ export const Tab = ({
     setValue('name', title ? title : '');
   }, [setValue]);
 
-  const classSelected = isFocused
-    ? 'bg-content-grey-100 text-black before:bg-content-grey-100'
-    : 'bg-content-grey-900 text-content-white';
-  // const beforeClass = 'before:absolute before:bottom-0 before:w-[10px] before:h-[10px] before:-left-[10px]';
+  const classSelected = isFocused ? 'bg-content-white before:bg-content-white' : 'bg-content-grey-';
 
   return (
-    <div className='cursor-pointer max-w-[220px]' id={tabId} onClick={onClick}>
+    <div className='cursor-pointer mb-2' id={tabId} onClick={onClick}>
       <div
         className={classNames(
-          'relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-[20px] text-sm font-semibold',
-          // beforeClass,
+          'relative h-9 flex items-center justify-start py-1 px-4 text-sm font-semibold text-content-black ',
           classSelected,
         )}
       >
         {icon && <div className='mr-2'>{icon}</div>}
         <div className=' max-w-[156px]'>
           {editMode ? (
-            <form className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>
+            <form className='flex flex-col relative' onSubmit={handleSubmit(onSubmit)}>
               <Input
-                inputCoverClassName='!p-0 min-w-[80px]'
+                inputCoverClassName='!p-0'
                 placeholder='Tab name'
                 errors={errors.name && errors.name.message}
                 rules={register('name', authValidator.username)}
               />
-              <Button
-                className='w-10 h-6 hidden'
+
+              <IconButton
+                className='absolute rounded-full top-0 right-1 bg-content-accent z-10 w-5 h-5 !p-0'
                 variant='primary'
-                type='submit'
-                title={tab ? 'Update tab' : 'Create a tab'}
                 loading={loading}
-              />
+                onClick={handleSubmit(onSubmit)}
+              >
+                <CheckIcon className='w-3 h-3 text-content-white' width={16} height={16} />
+              </IconButton>
             </form>
           ) : (
             <span className='flex truncate overflow-hidden break-words h-5'>{title ? title : '--'}</span>

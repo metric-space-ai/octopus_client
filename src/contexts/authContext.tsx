@@ -32,6 +32,7 @@ interface IAuthContext {
   setUser: (key: IUserProfile | null) => void;
   singleUser: IUser | null;
   selectedPlugin: IPlugin | null;
+  reloadPluginAvailable: boolean;
   loading: boolean;
   authLoading: boolean;
   plugins: IPlugin[] | undefined;
@@ -59,6 +60,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [servicesFunctionIsChecked, setServicesFunctionIsChecked] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  const [reloadPluginAvailable, setReloadPluginAvailable] = useState<boolean>(false);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
   const [plugins, setPlugins] = useState<IPlugin[]>();
   const {setAxiosConfiguration} = useApiClient();
@@ -97,14 +99,16 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     }
   }, [plugins]);
 
-  const handleGetPluginFunctions = async (plugins: IPlugin[]) => {
+  const handleGetPluginFunctions = async (inputPlugins: IPlugin[]) => {
+    console.log({inputPlugins});
     setLoading(true);
 
-    if (plugins) {
+    if (inputPlugins) {
       const result: IPlugin[] | [] = [];
-      for (const plugin of plugins) {
+      for (const plugin of inputPlugins) {
+        console.log({plugin});
         const {id, is_enabled, setup_status} = plugin;
-        if (plugin.ai_functions === undefined && is_enabled && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
+        if (plugin.ai_functions === undefined && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
           try {
             const {status, data} = await getAiFunctionsByServiceIdApi(id);
             if (status === 200) {
@@ -116,13 +120,16 @@ const AuthProvider = ({children}: PropsWithChildren) => {
             if (err instanceof AxiosError) {
               toast.error(err?.response?.data.error);
             }
+            result.push({...plugin, ai_functions: null} as never);
           } finally {
           }
         } else {
           result.push({...plugin, ai_functions: null} as never);
         }
-        setPlugins(result);
       }
+      setPlugins(result);
+    } else {
+      setPlugins(inputPlugins);
     }
     setLoading(false);
   };
@@ -165,10 +172,16 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       if (status === 200) {
         // setPlugins(data);
         handleGetPluginFunctions(data);
+        setReloadPluginAvailable(false);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
+        toast.error(
+          err?.response?.data.error
+            ? err.response.data.error
+            : 'It appears that something went wrong, so please try refreshing the page',
+        );
+        setReloadPluginAvailable(true);
       }
     } finally {
       setLoading(false);
@@ -292,6 +305,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     plugins,
     setPlugins,
     selectedPlugin,
+    reloadPluginAvailable,
     loading,
     authLoading,
     onLogin: handleLogin,

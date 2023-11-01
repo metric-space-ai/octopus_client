@@ -88,8 +88,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   updateWorkspace(idx: string, name: string, type: string) {
     updateWorkspaceApi(idx, name, type).then((res) => {
-      const filteredWorkspaces = get().workspaces.filter((workspace) => workspace.id !== idx) ?? [];
-      set({workspaces: [...filteredWorkspaces, res.data]});
+      const filteredWorkspaces =
+        get().workspaces.flatMap((workspace) => (workspace.id === idx ? {...workspace, ...res.data} : workspace)) ?? [];
+      set({workspaces: [...filteredWorkspaces]});
     });
   },
   deleteWorkspace(idx: string) {
@@ -234,7 +235,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
             set({messages: [...messages, {...res.data}]});
             set({isNewTicket: false});
           });
-
         })
         .catch((e) => {
           console.log(e);

@@ -8,6 +8,7 @@ import {UseFormRegisterReturn} from 'react-hook-form';
 
 interface InputProps {
   className?: string;
+  inputCoverClassName?: string;
   label?: string;
   type?: string;
   placeholder?: string;
@@ -16,12 +17,21 @@ interface InputProps {
   onBlur?: FocusEventHandler<HTMLInputElement> | undefined;
 }
 
-export const Input = ({className, label, type, placeholder, errors, rules, onBlur}: InputProps) => {
+export const Input = ({
+  className,
+  inputCoverClassName = '',
+  label,
+  type,
+  placeholder,
+  errors,
+  rules,
+  onBlur,
+}: InputProps) => {
   const [hidePassword, setHidePassword] = useState(false);
   return (
     <div className={classNames(className)}>
       {label && <p className='mb-2 font-normal text-xs text-content-secondary'>{label}</p>}
-      <div className='relative px-5 py-2 bg-content-white rounded-[48px]'>
+      <div className={`relative px-5 py-2 bg-content-white rounded-[48px] ${inputCoverClassName}`}>
         <input
           {...rules}
           onBlur={onBlur}

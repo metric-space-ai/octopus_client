@@ -26,7 +26,7 @@ export default function PluginsDetails() {
   const [deleteFunctionsIsLoading, setDeleteFunctionsIsLoading] = useState(false);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin>();
 
-  const {loading, getAllPlugins, plugins, setPlugins} = useAuthContext();
+  const {loading, getAllPlugins, plugins, setPlugins, reloadPluginAvailable} = useAuthContext();
 
   const handleOpenDeletePluginModal = (plugin: IPlugin) => {
     setSelectedPlugin(plugin);
@@ -147,6 +147,16 @@ export default function PluginsDetails() {
           </div>
 
           <div className='max-h-[420px] overflow-auto custom-scrollbar-thumb relative -mr-2'>
+            {reloadPluginAvailable && (
+              <div className='w-full'>
+                <h2
+                  className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                  onClick={() => getAllPlugins()}
+                >
+                  try again
+                </h2>
+              </div>
+            )}
             {!plugins || plugins.length === 0
               ? !loading && (
                   <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
