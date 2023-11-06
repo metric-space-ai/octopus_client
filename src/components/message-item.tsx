@@ -3,13 +3,13 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {toast} from 'react-hot-toast';
 
 import {
+  ArrowsPointingOutIcon,
   ExclamationTriangleIcon,
   HandThumbDownIcon,
   InformationCircleIcon,
   LanguageIcon,
   NoSymbolIcon,
   PencilSquareIcon,
-  ShieldExclamationIcon,
   SparklesIcon,
   SpeakerWaveIcon,
   StopIcon,
@@ -21,9 +21,7 @@ import {UserIcon} from '@heroicons/react/24/solid';
 import {ImagesBaseUrl, LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {
-  deleteChatMessageApi,
   getChatMessageApplicationCodeApi,
-  getChatMessageApplicationApi,
   getChatMessageApi,
   updateChatMessageApi,
   updateContentSafetyApi,
@@ -42,14 +40,22 @@ import {AnimateDots, LogoIcon} from './svgs';
 import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
+import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
 
 interface IMessageItem {
   item: IChatMessage;
 }
 
 export const MessageItem = ({item}: IMessageItem) => {
-  const {editMessage, updateMessage, deleteMessage, refreshMessage, enabledContentSafety, changeSensitiveStatus} =
-    useChatStore();
+  const {
+    editMessage,
+    updateMessage,
+    deleteMessage,
+    refreshMessage,
+    enabledContentSafety,
+    changeSensitiveStatus,
+    replaceMessageWithAnonymized,
+  } = useChatStore();
   const {user} = useAuthContext();
   const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
@@ -74,6 +80,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [disableLoading, setDisableLoading] = useState(false);
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
+  const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
 
   const prevMessage = item.response;
@@ -162,18 +169,8 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   const handleAnonymizedData = async () => {
     setAnonymizedLoading(true);
-    try {
-      const {status, data} = await replaceMessageWithAnonymizedApi(item.chat_id, item.id);
-      if (status === 200) {
-        refreshMessage(item.chat_id);
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-    } finally {
-      setAnonymizedLoading(false);
-    }
+    replaceMessageWithAnonymized(item.chat_id, item.id);
+    setAnonymizedLoading(false);
   };
 
   const handleNoSensitiveData = async () => {
@@ -192,6 +189,22 @@ export const MessageItem = ({item}: IMessageItem) => {
     updateContentSafetyApi(30, user.user_id);
     changeSensitiveStatus(false);
   };
+  const prepareIfResponseIncludesMessage = () => {
+    if (isSensitive && item.message.includes(response)) {
+      const responseSlices = item.message.split(response);
+      return (
+        <>
+          {responseSlices[0]}
+          <span className='text-content-red-600'>{response}</span>
+          {responseSlices[1]}
+        </>
+      );
+    }
+    return item.message;
+  };
+  // useEffect(() => {
+
+  // }, [response]);
 
   return (
     <>
@@ -209,10 +222,20 @@ export const MessageItem = ({item}: IMessageItem) => {
             ) : (
               <UserIcon className='w-9 h-9 text-content-grey-100' />
             )}
-            {enabledContentSafety && isSensitive && (
+            {item.is_anonymized ? (
               <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
+                <SparklesIcon width={14} height={14} className='text-content-accent' />
               </div>
+            ) : item.is_marked_as_not_sensitive ? (
+              <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                <ExclamationTriangleIcon width={14} height={14} className='text-red-600' />
+              </div>
+            ) : (
+              isSensitive && (
+                <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                  <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
+                </div>
+              )
             )}
           </div>
           <div className='flex-1 mt-1'>
@@ -229,7 +252,14 @@ export const MessageItem = ({item}: IMessageItem) => {
                   onInput={(e) => setMessageText(e.currentTarget.value)}
                 />
               ) : (
-                <span className='whitespace-pre-wrap'>{item.message}</span>
+                <div className='flex flex-col gap-1'>
+                  <span className='whitespace-pre-wrap text-base leading-6 text-content-black'>
+                    {prepareIfResponseIncludesMessage()}
+                  </span>
+                  {item.is_anonymized && (
+                    <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* Sensitive data  has been replaced by anonymized data`}</span>
+                  )}
+                </div>
               )}
               {messageEditable && (
                 <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
@@ -247,17 +277,28 @@ export const MessageItem = ({item}: IMessageItem) => {
         </div>
         <div className='mt-3 flex gap-3'>
           <div>
-            <div className={`relative w-12 h-12 flex items-center justify-center rounded-full bg-content-black`}>
-              <LogoIcon width={28} height={18} color='#F5F5F5' />
-              {enabledContentSafety && isSensitive && (
-                <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                  <ShieldCheckIcon width={14} height={14} className='text-red-600' />
-                </div>
+            <div
+              className={`relative w-12 h-12 flex items-center justify-center rounded-full ${
+                isSensitive ? 'bg-content-red-600/10' : 'bg-content-black'
+              }`}
+            >
+              {isSensitive ? (
+                <ShieldCheckIcon width={20} height={20} className='text-red-600' />
+              ) : (
+                <LogoIcon width={28} height={18} color='#F5F5F5' />
+                // <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                //   <ShieldCheckIcon width={14} height={14} className='text-red-600' />
+                // </div>
               )}
             </div>
           </div>
 
-          <div className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col`}>
+          <div
+            className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
+              // applicationInnerHTML ? `min-h-[${iframeheight}]` :
+              ''
+            }`}
+          >
             {loading || isLoading ? (
               <AnimateDots />
             ) : !isSensitive ? (
@@ -266,15 +307,27 @@ export const MessageItem = ({item}: IMessageItem) => {
               ) : (
                 <>
                   {applicationInnerHTML ? (
-                    <iframe
-                      ref={iframeRef}
-                      className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}]`}
-                      srcDoc={applicationInnerHTML}
-                      // height={iframeheight}
-                      onLoad={onLoadPrepareIframe}
-                    ></iframe>
+                    <div className='relative'>
+                      {!iframeWithSrcModal && (
+                        <>
+                          <iframe
+                            ref={iframeRef}
+                            style={{minHeight: iframeheight}}
+                            className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}] flex-1`}
+                            srcDoc={applicationInnerHTML}
+                            // height={iframeheight}
+                            onLoad={onLoadPrepareIframe}
+                          ></iframe>
+                          <IconButton
+                            className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
+                            onClick={() => setIframeWithSrcModal(true)}
+                          >
+                            <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
+                          </IconButton>
+                        </>
+                      )}
+                    </div>
                   ) : (
-                    // <div className='123456789 bg-red p-5 text-content-white' dangerouslySetInnerHTML={{__html: applicationInnerHTML}}></div>
                     <MarkdownContent content={response ?? item.response} />
                   )}
                 </>
@@ -348,15 +401,22 @@ export const MessageItem = ({item}: IMessageItem) => {
                       <TrashIcon className='w-4 h-4 text-content-white' />
                       <span className='text-[13px] leading-4 text-center text-content-white'>Remove Data</span>
                     </IconButton>
+
                     <IconButton
                       variant='secondary'
-                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
+                      className={`bg-content-grey-900 rounded-full py-2 px-4 flex items-center ${
+                        item.is_anonymized ? '!cursor-default' : ''
+                      }`}
                       onClick={handleAnonymizedData}
                       loading={anonymizedLoading}
-                      disabled={anonymizedLoading}
+                      disabled={anonymizedLoading || item.is_anonymized}
                     >
                       <SparklesIcon className='w-4 h-4 text-content-white' />
-                      <span className='text-[13px] leading-4 text-center text-content-white'>
+                      <span
+                        className={`text-[13px] leading-4 text-center ${
+                          item.is_anonymized ? 'text-content-grey-400 ' : 'text-content-white'
+                        }`}
+                      >
                         Replace with anonymized data
                       </span>
                     </IconButton>
@@ -412,6 +472,13 @@ export const MessageItem = ({item}: IMessageItem) => {
           setShowOriginal={setShowOriginal}
         />
       </div>
+      {applicationInnerHTML && (
+        <IframeWithSrcDialog
+          open={iframeWithSrcModal}
+          onClose={() => setIframeWithSrcModal(false)}
+          src={applicationInnerHTML}
+        />
+      )}
       {item.profile?.photo_file_name && (
         <UserImageModal
           imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}

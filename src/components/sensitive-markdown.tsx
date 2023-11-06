@@ -85,7 +85,7 @@ export function PreCode(props: {children: any}) {
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
       <pre
-        className='relative text-xs p-2.5 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words'
+        className='relative text-xs p-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words'
         ref={ref}
       >
         <span

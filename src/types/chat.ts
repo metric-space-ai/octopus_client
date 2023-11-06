@@ -39,6 +39,9 @@ export interface IChatMessage {
   chat_id: string;
   chat_message_files: [IChatMessageFile];
   is_sensitive: boolean;
+  is_anonymized: boolean;
+  is_marked_as_not_sensitive: boolean;
+  is_not_checked_by_system: boolean;
   message: string;
   response: string;
   status: string;
@@ -65,7 +68,9 @@ export interface TranslatorResponse {
   id: string;
   progress: number;
   status: string;
-  response: string;
+  Text: {
+    response: string;
+  };
   file_attachements: File[];
 }
 

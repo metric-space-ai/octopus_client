@@ -45,8 +45,9 @@ export const DropdownTranslateChat = ({
         text: text,
       },
     };
-    const response = await directCall(payload);
-    setText(response?.data?.response);
+    const {data} = await directCall(payload);
+    console.log(data);
+    setText(data?.Text.response);
     setLoading(false);
     setShowOriginal(true);
     onClose();

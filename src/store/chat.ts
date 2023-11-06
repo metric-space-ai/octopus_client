@@ -16,6 +16,7 @@ import {
   deleteContentSafetyApi,
   getContentSafetyApi,
   updateWorkspaceApi,
+  replaceMessageWithAnonymizedApi,
 } from '@/services/chat.service';
 import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
 import {AxiosError} from 'axios';
@@ -45,6 +46,7 @@ interface ChatStore {
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
   refreshMessage: (idx: string) => void;
+  replaceMessageWithAnonymized:(chat_id: string,id:string) => void;
   // changeContentSafteyStatus: (status: boolean) => void;
   checkContentSafetyDetails: (contentSafety: IContentSafety) => void;
   getContentSafety: (user_id: string) => void;
@@ -270,6 +272,21 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     if (index !== -1) {
       messages[index] = chatMessage;
       set({messages});
+    }
+  },
+  async replaceMessageWithAnonymized(chat_id: string, id: string) {
+    try {
+      const {status, data} = await replaceMessageWithAnonymizedApi(chat_id, id);
+      if (status === 200) {
+        const messages = get().messages;
+        const result = messages.flatMap((message) => (message.id === id ? {...data} : message));
+        console.log({messages, result});
+        set({messages: result});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
     }
   },
   async deleteMessage(chatMessage: IChatMessage) {
