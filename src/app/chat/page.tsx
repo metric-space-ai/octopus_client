@@ -100,11 +100,11 @@ export default function ChatPage() {
           expandedAgents ? 'w-[calc(100%-282px)]' : 'w-[calc(100%-68px)]'
         }`}
       >
-        <div className='flex-1 p-5 pb-10 relative overflow-auto' ref={scrollRef}>
+        <div className='flex-1 p-5 pb-2 relative overflow-auto' ref={scrollRef}>
           {loading ? (
             <Loading />
           ) : showChatPrompt ? (
-            <ChatPrompt />
+            <ChatPrompt handleInputChange={onInput} />
           ) : (
             messages?.map((item) => <MessageItem key={item.id} item={item} />)
           )}
@@ -117,7 +117,7 @@ export default function ChatPage() {
             <textarea
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
-              className={`w-full border py-[10px] pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
+              className={`w-full border py-4 pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
                 isSensitiveChecked && enabledContentSafety && !showChatPrompt ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'

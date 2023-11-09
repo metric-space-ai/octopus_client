@@ -118,6 +118,8 @@ module.exports = {
         floatB: 'floatB 5s linear infinite',
         'ring-3s': 'ring 3s linear infinite',
         'ring-5s': 'ring 5s linear infinite',
+        'fade-in': 'fade-in 1s linear',
+        'fade-out': 'fade-out 1s linear',
       },
       keyframes: {
         floatA: {
@@ -144,7 +146,20 @@ module.exports = {
           '0%, 100%': {boxShadow: 'var(--tw-ring-color) 0 0 0 7px'},
           '50%': {boxShadow: 'var(--tw-ring-color) 0 0 0 1px'},
         },
+        'fade-in': {
+          '0%': {transform: 'translateY(100px)', opacity: 0},
+          '100%': {transform: 'translateY(0)', opacity: 1},
+        },
+        'fade-out': {
+          '0%': {transform: 'translateY(0)', opacity: 1},
+          '100%': {transform: 'translateY(100px)', opacity: 0},
+        },
       },
+    },
+    animation: {
+      'delay-75': `animation-delay: 75ms`,
+      'delay-500': `animation-delay: 500ms`,
+      'delay-1000': `animation-delay: 1s`,
     },
   },
   plugins: [],
