@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {ChatBubbleLeftRightIcon} from '@heroicons/react/24/outline';
+import {ChatBubbleLeftRightIcon, CheckIcon, PencilSquareIcon, TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {XCircleIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 
@@ -9,57 +9,107 @@ import {useChatStore} from '@/store';
 import Locale from '../locales';
 import {whenDidItHappened} from '@/helpers/whenDidItHappened';
 import {ITicket} from '@/types';
+import {Button, IconButton} from './buttons';
 
-export function ChatItem(props: {
+export function ChatItem({
+  onClick,
+  onDelete,
+  title,
+  time,
+  selected,
+  expanded,
+  onRename = () => {},
+}: {
   onClick?: () => void;
   onDelete?: () => void;
+  onRename?: (name: string) => void;
   title: string;
   time: string;
   selected: boolean;
   expanded?: boolean;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
+
+  const [editName, setEditName] = useState(title);
+  const [editable, setEditable] = useState(false);
+
+  const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onRename(editName);
+    setEditable(false);
+  };
+
   useEffect(() => {
-    if (props.selected && draggableRef.current) {
+    if (selected && draggableRef.current) {
       draggableRef.current?.scrollIntoView({
         block: 'center',
       });
     }
-  }, [props.selected]);
+  }, [selected]);
   return (
     <div
       className={classNames(
-        'group relative px-3 py-[10px] rounded-full bg-content-black cursor-pointer',
-        !props.expanded && '!px-[10px]',
-        props.selected && 'bg-content-grey-100',
+        'flex justify-between relative px-3 py-[10px] rounded-full bg-content-black ',
+        !expanded && '!px-[10px]',
+        selected && 'bg-content-grey-100',
+        !selected && 'cursor-pointer',
       )}
-      onClick={props.onClick}
+      onClick={!selected ? onClick : undefined}
     >
-      <div className='flex items-center gap-2'>
-        {
-          <ChatBubbleLeftRightIcon
-            className={classNames('w-5 h-5 text-white', props.selected && '!text-content-black')}
-          />
-        }
-        {props.expanded && (
-          <div
-            className={classNames(
-              'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
-              props.selected && '!text-content-black',
-            )}
-          >
-            {props.title}
-          </div>
-        )}
+      <div className='flex items-center gap-2 w-full max-w-[210px]'>
+        {<ChatBubbleLeftRightIcon className={classNames('w-5 h-5 text-white', selected && '!text-content-black')} />}
+        {expanded &&
+          (editable ? (
+            <form onSubmit={handleSubmitForm} className='relative flex items-center flex-1 -my-1'>
+              <input
+                className={`rounded-20 bg-transparent border border-content-accent px-2 text-xs w-full py-1 ${
+                  selected ? 'text-content-grey-900' : 'text-content-white'
+                }`}
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+              />
+              <button
+                title='submit rename ticket'
+                className='bg-content-accent absolute right-1 !p-0 w-5 h-5 flex rounded-full items-center justify-center'
+                type='submit'
+              >
+                <CheckIcon className='w-4 h-4 text-content-white' />
+              </button>
+            </form>
+          ) : (
+            <div
+              className={classNames(
+                'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
+                selected ? '!text-content-black' : '',
+              )}
+            >
+              {title}
+            </div>
+          ))}
       </div>
       {false && (
         <div className='flex justify-between text-xs mt-2 text-content-white'>
-          <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{props.time}</div>
+          <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{time}</div>
         </div>
       )}
-      {props.expanded && (
-        <div className='group-hover:opacity-100 opacity-0 absolute top-1 right-1' onClickCapture={props.onDelete}>
-          <XCircleIcon className='w-4 h-4 text-white' />
+      {expanded && (
+        <div className='flex gap-2 items-center'>
+          {editable ? (
+            <div
+              className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer'
+              onClickCapture={() => setEditable(false)}
+            >
+              <XMarkIcon className='w-4 h-4' />
+            </div>
+          ) : (
+            <div className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer' onClickCapture={() => setEditable(true)}>
+              <PencilSquareIcon className='w-4 h-4' />
+            </div>
+          )}
+          <div className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer' onClickCapture={onDelete}>
+            <TrashIcon className='w-4 h-4' />
+          </div>
         </div>
       )}
     </div>
@@ -67,7 +117,7 @@ export function ChatItem(props: {
 }
 
 export function ChatList({expanded}: {expanded?: boolean}) {
-  const {tickets, currentTicketId, selectTicketId, deleteTicket} = useChatStore();
+  const {tickets, currentTicketId, selectTicketId, deleteTicket, renameTicket} = useChatStore();
 
   // const checkWhenDidItHappened = useCallback(
   //   (array: ITicket[], key: string) => {
@@ -93,6 +143,9 @@ export function ChatList({expanded}: {expanded?: boolean}) {
                 onClick={() => {
                   selectTicketId(ticket.id);
                 }}
+                onRename={(name) => {
+                  renameTicket(ticket.id, {name});
+                }}
                 onDelete={() => {
                   if (confirm(Locale.Home.DeleteChat)) {
                     deleteTicket(ticket.id);
@@ -104,7 +157,9 @@ export function ChatList({expanded}: {expanded?: boolean}) {
         )}
         {yesterday && yesterday.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Yesterday</h6>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>
+              {expanded ? 'Yesterday' : 'Yest...'}
+            </h6>
             {yesterday?.map((ticket) => (
               <ChatItem
                 key={ticket.id}
@@ -115,6 +170,8 @@ export function ChatList({expanded}: {expanded?: boolean}) {
                 onClick={() => {
                   selectTicketId(ticket.id);
                 }}
+                // onRenamed={() =>
+                //   deleteTicket(ticket.id)}
                 onDelete={() => {
                   if (confirm(Locale.Home.DeleteChat)) {
                     deleteTicket(ticket.id);
@@ -126,7 +183,9 @@ export function ChatList({expanded}: {expanded?: boolean}) {
         )}
         {prev7Days && prev7Days.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Previous 7 Days</h6>
+            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>
+              {expanded ? 'Previous 7 Days' : 'Pre 7...'}
+            </h6>
             {prev7Days?.map((ticket) => (
               <ChatItem
                 key={ticket.id}

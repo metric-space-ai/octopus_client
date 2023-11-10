@@ -41,6 +41,8 @@ import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
+import {Popover} from '@headlessui/react';
+import CustomSwitch from './switch/custom-switch';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -75,6 +77,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [isFileMessage, setIsFileMessage] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [anonymizedLoading, setAnonymizedLoading] = useState(false);
   const [disableLoading, setDisableLoading] = useState(false);
@@ -335,14 +338,24 @@ export const MessageItem = ({item}: IMessageItem) => {
             ) : (
               <div className='flex-1'>
                 <div className=' flex justify-between'>
-                  <div className='text-[#ea6c68] text-[14px] mb-[12px]'>
+                  <div className='text-red-400 text-sm mb-3'>
                     Sensitive content is detected. Chat temporarily blocked for safety.
                   </div>
                   <div>
-                    <InformationCircleIcon
-                      className='w-5 h-5 text-[#989898] cursor-pointer'
-                      onClick={() => setAlertModalOpen(true)}
-                    />
+                    <Popover className={'relative'}>
+                      <Popover.Button>
+                        <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-white cursor-pointer' />
+                      </Popover.Button>
+                      <Popover.Panel
+                        className={
+                          'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[280px] -right-8 top-3'
+                        }
+                      >
+                        <p className='text-content-white text-xxs font-poppins-light'>
+                          Content Safety found sensitive information in the message, which included a password.
+                        </p>
+                      </Popover.Panel>
+                    </Popover>
                   </div>
                 </div>
                 <SensitiveMarkdownContent content={item.response} />
@@ -353,12 +366,35 @@ export const MessageItem = ({item}: IMessageItem) => {
                 <div className='mt-4 flex justify-end items-center gap-4'>
                   {showOriginal && (
                     <div
-                      className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
-                      onClick={() => {
-                        item.chat_message_files.length > 0 ? null : handleOriginalOne();
-                      }}
+                    // className={`${item.chat_message_files.length > 0 ? '!cursor-not-allowed' : 'cursor-pointer'}`}
                     >
-                      <p className='text-content-grey-400'>View original</p>
+                      <Popover className={'relative'}>
+                        <Popover.Button>
+                          <p className='text-content-blue-light'>View original</p>
+                        </Popover.Button>
+                        <Popover.Panel
+                          className={
+                            'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[260px] -right-8 top-3 flex flex-col gap-3 z-20'
+                          }
+                        >
+                          <div className='flex justify-between items-center'>
+                            <div className='flex gap-1 items-center'>
+                              <LanguageIcon width={18} height={18} className='text-content-white' />
+                              <p className='font-semibold text-content-grey-100 text-xs'>Translation on</p>
+                            </div>
+                            <CustomSwitch active={showOriginal} onChange={(check: boolean) => handleOriginalOne()} />
+                          </div>
+                          <div className='flex justify-between items-center'>
+                            <span className='text-content-grey-400 text-xs'>Translation language</span>
+                            <p
+                              className='text-content-grey-100 hover:text-content-white underline text-xs cursor-pointer'
+                              onClick={() => setShowTranslatorModal(true)}
+                            >
+                              {selectedLanguage}
+                            </p>
+                          </div>
+                        </Popover.Panel>
+                      </Popover>
                     </div>
                   )}
                   <IconButton
@@ -470,6 +506,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           selected={selected}
           setSelected={setSelected}
           setShowOriginal={setShowOriginal}
+          setSelectedLanguage={setSelectedLanguage}
         />
       </div>
       {applicationInnerHTML && (

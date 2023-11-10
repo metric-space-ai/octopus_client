@@ -16,6 +16,7 @@ export const DropdownTranslateChat = ({
   selected,
   setSelected,
   setShowOriginal,
+  setSelectedLanguage,
 }: {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
@@ -23,6 +24,7 @@ export const DropdownTranslateChat = ({
   selected: LanguageType;
   setSelected: Dispatch<SetStateAction<LanguageType>>;
   setShowOriginal: Dispatch<SetStateAction<boolean>>;
+  setSelectedLanguage: Dispatch<SetStateAction<string>>;
 }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,6 +52,7 @@ export const DropdownTranslateChat = ({
     setText(data?.Text.response);
     setLoading(false);
     setShowOriginal(true);
+    setSelectedLanguage(selected?.name);
     onClose();
   };
   return (

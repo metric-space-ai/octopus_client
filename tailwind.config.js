@@ -118,8 +118,8 @@ module.exports = {
         floatB: 'floatB 5s linear infinite',
         'ring-3s': 'ring 3s linear infinite',
         'ring-5s': 'ring 5s linear infinite',
-        'fade-in': 'fade-in 1s linear',
-        'fade-out': 'fade-out 1s linear',
+        'fade-in': 'fade-in 350ms linear',
+        'fade-out': 'fade-out 350ms linear',
       },
       keyframes: {
         floatA: {

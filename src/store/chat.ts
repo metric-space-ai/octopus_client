@@ -17,6 +17,7 @@ import {
   getContentSafetyApi,
   updateWorkspaceApi,
   replaceMessageWithAnonymizedApi,
+  RenameTicketApi,
 } from '@/services/chat.service';
 import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
 import {AxiosError} from 'axios';
@@ -41,12 +42,13 @@ interface ChatStore {
   selectTicketId: (idx: string) => void;
   newTicket: () => void;
   deleteTicket: (idx: string) => void;
+  renameTicket: (idx: string, payload: {name: string}) => void;
   newMessage: (message: string, sensitivty_check: boolean) => Promise<void>;
   editMessage: (chatMessage: IChatMessage, newMssage: string) => void;
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage) => void;
   refreshMessage: (idx: string) => void;
-  replaceMessageWithAnonymized:(chat_id: string,id:string) => void;
+  replaceMessageWithAnonymized: (chat_id: string, id: string) => void;
   // changeContentSafteyStatus: (status: boolean) => void;
   checkContentSafetyDetails: (contentSafety: IContentSafety) => void;
   getContentSafety: (user_id: string) => void;
@@ -217,6 +219,20 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         }
       }
     });
+  },
+  async renameTicket(idx: string, payload: {name: string}) {
+    const currentIdx = get().currentWorkspaceId;
+    try {
+      const {status, data} = await RenameTicketApi(currentIdx, idx, payload);
+      if (status === 200) {
+        const result = [...get().tickets].flatMap((t) => (t.id === idx ? data : t));
+        set({tickets: [...result]});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
   },
   async newMessage(message: string, sensitivty_check: boolean) {
     const isNewTicket = get().isNewTicket;

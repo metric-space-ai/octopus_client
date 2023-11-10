@@ -36,6 +36,10 @@ export const createTicketApi = async (workspaceId: string) => {
   return apiHub.post<ITicket>(`api/v1/chats/${workspaceId}`);
 };
 
+export const RenameTicketApi = async (workspaceId: string, ticketId: string, payload: {name: string}) => {
+  return apiHub.put<ITicket>(`api/v1/chats/${workspaceId}/${ticketId}`, payload);
+};
+
 export const deleteTicketApi = async (workspaceId: string, ticketId: string) => {
   return apiHub.delete(`api/v1/chats/${workspaceId}/${ticketId}`);
 };
