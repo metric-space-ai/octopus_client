@@ -76,6 +76,14 @@ export const updateChatMessageApi = async (
   return apiHub.post<IChatMessage>(`api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
 };
 
+export const replaceMessageWithNotSensitiveApi = async (chat_id: string, chat_message_id: string) => {
+  return await apiHub.put<IChatMessage>(`/api/v1/chat-messages/${chat_id}/${chat_message_id}/not-sensitive`);
+};
+
+export const replaceMessageWithAnonymizedApi = async (chat_id: string, chat_message_id: string) => {
+  return await apiHub.put<IChatMessage>(`api/v1/chat-messages/${chat_id}/${chat_message_id}/anonymize`);
+};
+
 export const getChatMessageApi = async (chatId: string, chatMessageId: string) => {
   return apiHub.get<IChatMessage>(`api/v1/chat-messages/${chatId}/${chatMessageId}`);
 };
@@ -101,8 +109,4 @@ export const getContentSafetyApi = async (user_id: string) => {
 };
 export const deleteContentSafetyApi = async (user_id: string) => {
   return await apiHub.delete<IContentSafety>(`api/v1/inspection-disablings/${user_id}`);
-};
-
-export const replaceMessageWithAnonymizedApi = async (chat_id: string, chat_message_id: string) => {
-  return await apiHub.put<IChatMessage>(`api/v1/chat-messages/${chat_id}/${chat_message_id}/anonymize`);
 };

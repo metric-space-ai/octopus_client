@@ -44,7 +44,7 @@ export interface IChatMessage {
   is_not_checked_by_system: boolean;
   message: string;
   response: string;
-  status: string;
+  status: 'Asked' | 'Answered';
   updated_at: string;
   profile: {
     id: string;

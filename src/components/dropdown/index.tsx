@@ -15,8 +15,6 @@ const Permissions = [
 
 export default function Dropdown() {
   const handleChangeValue = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    debugger;
-    console.log(e.target);
   };
 
   return (

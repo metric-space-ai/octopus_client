@@ -18,6 +18,7 @@ import {
   updateWorkspaceApi,
   replaceMessageWithAnonymizedApi,
   RenameTicketApi,
+  replaceMessageWithNotSensitiveApi,
 } from '@/services/chat.service';
 import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
 import {AxiosError} from 'axios';
@@ -49,6 +50,7 @@ interface ChatStore {
   deleteMessage: (chatMessage: IChatMessage) => void;
   refreshMessage: (idx: string) => void;
   replaceMessageWithAnonymized: (chat_id: string, id: string) => void;
+  replaceMessageWithNotSensitive: (chat_id: string, id: string) => void;
   // changeContentSafteyStatus: (status: boolean) => void;
   checkContentSafetyDetails: (contentSafety: IContentSafety) => void;
   getContentSafety: (user_id: string) => void;
@@ -110,7 +112,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     }
   },
   async getContentSafety(user_id: string) {
-    set({loading: true});
     try {
       const {status, data} = await getContentSafetyApi(user_id);
 
@@ -121,12 +122,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } finally {
-      set({loading: false});
-    }
+    } 
   },
   async deleteContentSafety(user_id: string) {
-    set({loading: true});
 
     try {
       const {status, data} = await deleteContentSafetyApi(user_id);
@@ -140,13 +138,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } finally {
-      set({loading: false});
     }
   },
   async updateContentSafety(minutes: number, user_id: string) {
-    set({loading: true});
-
     try {
       const {status, data} = await updateContentSafetyApi(minutes, user_id);
 
@@ -159,8 +153,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } finally {
-      set({loading: false});
     }
   },
   setWorkspaceId(idx: string) {
@@ -290,13 +282,26 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       set({messages});
     }
   },
+  async replaceMessageWithNotSensitive(chat_id: string, id: string) {
+    try {
+      const {status, data} = await replaceMessageWithNotSensitiveApi(chat_id, id);
+      if (status === 200) {
+        const messages = get().messages;
+        const result = messages.flatMap((message) => (message.id === id ? {...data} : message));
+        set({messages: result});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
+  },
   async replaceMessageWithAnonymized(chat_id: string, id: string) {
     try {
       const {status, data} = await replaceMessageWithAnonymizedApi(chat_id, id);
       if (status === 200) {
         const messages = get().messages;
         const result = messages.flatMap((message) => (message.id === id ? {...data} : message));
-        console.log({messages, result});
         set({messages: result});
       }
     } catch (err) {
@@ -306,19 +311,18 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     }
   },
   async deleteMessage(chatMessage: IChatMessage) {
-    set({loading: true});
+    // set({loading: true});
 
     try {
       const {status} = await deleteChatMessageApi(chatMessage.chat_id, chatMessage.id);
-      if (status) {
-        get().refreshMessage(chatMessage.chat_id);
+      if (status === 204) {
+        const result = [...get().messages].filter((message) => message.id !== chatMessage.id);
+        set({messages: [...result]});
       }
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } finally {
-      set({loading: false});
     }
   },
   // changeContentSafteyStatus(status: boolean) {

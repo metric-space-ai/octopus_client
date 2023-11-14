@@ -132,7 +132,6 @@ export const Header = () => {
     if (tabItemRef.current && workspaces.length > 8) {
       let size = Math.floor((tabItemRef.current.offsetWidth - 44) / 220 - 1);
       if (size < workspaces.length) size = Math.floor((tabItemRef.current.offsetWidth - 44) / 160 - 1);
-      console.log({size})
       setFitNumberOfItems(size);
     }
   }, [workspaces]);

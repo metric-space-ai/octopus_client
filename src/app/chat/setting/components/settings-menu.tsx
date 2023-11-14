@@ -7,6 +7,7 @@ import {
   UsersIcon,
   BuildingOfficeIcon,
   ClipboardDocumentListIcon,
+  DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
@@ -35,6 +36,13 @@ const SIDEBAR = [
     tab_name: 'general',
     title: 'General',
     icon: Cog6ToothIcon,
+    permission: '',
+  },
+  {
+    id: 'tab_documents',
+    tab_name: 'documents',
+    title: 'Documents',
+    icon: DocumentDuplicateIcon,
     permission: '',
   },
   {

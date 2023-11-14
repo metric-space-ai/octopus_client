@@ -34,7 +34,6 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
 
   const onSubmit = async (data: IFormInputs) => {
     const {email} = data;
-    console.log(email);
     setLoading(true);
     setLoading(false);
     setInvitationSentModal(true);

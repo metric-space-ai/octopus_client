@@ -35,7 +35,6 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
 
   const onSubmit = async (data: IFormInputs) => {
     const {name, id} = data;
-    console.log({name, id});
     setLoading(true);
     setLoading(false);
   };

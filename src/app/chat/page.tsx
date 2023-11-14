@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {MicrophoneIcon, PaperAirplaneIcon} from '@heroicons/react/24/outline';
+import {MicrophoneIcon, PaperAirplaneIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
 import {useDebouncedCallback} from 'use-debounce';
 
 import {IconButton} from '@/components/buttons';
@@ -22,6 +22,7 @@ export default function ChatPage() {
   const [userInput, setUserInput] = useState('');
   const [expandedAgents, setExpandedAgents] = useState(true);
   const [openVoiceChatModal, setOpenVoiceChatModal] = useState(false);
+  const [showWarningSnackBarWhenSafetyDisabled, setShowWarningSnackBarWhenSafetyDisabled] = useState(false);
 
   const {
     loading,
@@ -55,6 +56,7 @@ export default function ChatPage() {
     (chatId: string) => {
       if (chatId) {
         timeoutRef.current = window.setInterval(() => {
+          // if (messages.find((message) => message.chat_id === chatId && message.status === 'Asked'))
           refreshMessage(chatId);
         }, 6000);
       }
@@ -93,13 +95,39 @@ export default function ChatPage() {
     }
   };
 
+  useEffect(() => {
+    if (!enabledContentSafety) {
+      const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 5000);
+      return () => clearTimeout(timeOutId);
+    }
+  }, [showWarningSnackBarWhenSafetyDisabled]);
+
+  useEffect(() => {
+    if (!enabledContentSafety) setShowWarningSnackBarWhenSafetyDisabled(true);
+  }, [enabledContentSafety]);
+
   return (
-    <div className='relative flex h-chat-screen-height rounded-bl-20 overflow-hidden w-full'>
+    <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
       <div
         className={`flex flex-col bg-content-grey-100 w-full ${
           expandedAgents ? 'w-[calc(100%-282px)]' : 'w-[calc(100%-68px)]'
         }`}
       >
+        {showWarningSnackBarWhenSafetyDisabled && (
+          <div
+            style={{width: `calc(100% - ${expandedAgents ? '298px' : '84px'})`}}
+            className='flex top-2 left-2 bg-content-white text-content-black px-8 py-4 absolute gap-3 rounded-20 shadow-lg z-10'
+            role='alert'
+            onClick={() => setShowWarningSnackBarWhenSafetyDisabled(false)}
+          >
+            <ShieldCheckIcon width={20} height={20} className='text-content-red-600' />
+            <span className='block sm:inline'>
+              Content security is currently disabled. Activate Content Safety to resume protection and ensure
+              data privacy.
+            </span>
+          </div>
+        )}
+
         <div className='flex-1 p-5 pb-2 relative overflow-auto' ref={scrollRef}>
           {loading ? (
             <Loading />
@@ -118,7 +146,7 @@ export default function ChatPage() {
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
               className={`w-full border py-4 pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
-                isSensitiveChecked && enabledContentSafety && !showChatPrompt ? 'opacity-40 cursor-not-allowed' : ''
+                isSensitiveChecked && !showChatPrompt ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
               onInput={(e) => onInput(e.currentTarget.value)}

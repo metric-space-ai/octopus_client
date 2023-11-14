@@ -41,6 +41,7 @@ export const ChatPrompt = ({handleInputChange}: IChatPrompt) => {
           <p className='text-xs font-medium text-content-black'>PROMPT OPTIONS</p>
           {EXAMPLES.map((elem, index) => (
             <div
+              key={elem.id}
               onClick={() => handleInputChange(elem.content)}
               className={`flex justify-between px-4 py-2.5 bg-content-grey-100 rounded-20 transition-all duration-300 cursor-pointer ${
                 expanded ? `opacity-1 !translate-y-0` : `opacity-0 -translate-y-28 `

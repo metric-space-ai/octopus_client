@@ -12,6 +12,7 @@ import {useAuthContext} from '@/contexts/authContext';
 import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
 import {ShieldExclamationIcon} from '@heroicons/react/24/outline';
 import Plugins from './pluggins';
+import Documents from './documents';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
@@ -26,6 +27,7 @@ export default function SettingPage() {
         {menu === 'details' && <MyDetailPage />}
         {menu === 'password' && <PasswordPage />}
         {menu === 'general' && <GeneralSettings />}
+        {menu === 'documents' && <Documents />}
         {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role)) ? (
           <>
             {menu === 'team-members' && <TeamMembers />}

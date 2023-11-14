@@ -51,25 +51,25 @@ export const AlertModal = ({
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-md transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-xl transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-4 h-4 text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-primary'>
+                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-primary mb-5'>
                   {headTitle}
                 </Dialog.Title>
                 <p className='text-xl font-semibold'>{title}</p>
                 <p className='text-base font-medium text-content-grey-600'>{description}</p>
-                <form className='flex mt-2 gap-5'>
+                <form className='flex mt-2 gap-2'>
                   <Button
                     type='button'
-                    className='h-11'
+                    className='h-11 flex-1'
                     variant='dangerous'
                     title={confirmTitle ?? 'Ok'}
                     loading={loading}
                     onClick={onConfirm}
                   />
-                  <Button type='button' className='h-11' variant='outline' title='Cancel' onClick={onClose} />
+                  <Button type='button' className='h-11 flex-1' variant='outline' title='Cancel' onClick={onClose} />
                 </form>
               </Dialog.Panel>
             </Transition.Child>

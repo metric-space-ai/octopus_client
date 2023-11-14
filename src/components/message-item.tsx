@@ -25,7 +25,6 @@ import {
   getChatMessageApi,
   updateChatMessageApi,
   updateContentSafetyApi,
-  replaceMessageWithAnonymizedApi,
 } from '@/services/chat.service';
 import {useChatStore} from '@/store';
 import {IChatMessage} from '@/types';
@@ -57,6 +56,9 @@ export const MessageItem = ({item}: IMessageItem) => {
     enabledContentSafety,
     changeSensitiveStatus,
     replaceMessageWithAnonymized,
+    replaceMessageWithNotSensitive,
+    updateContentSafety,
+    newMessage,
   } = useChatStore();
   const {user} = useAuthContext();
   const loading = item.status === 'Asked';
@@ -84,6 +86,8 @@ export const MessageItem = ({item}: IMessageItem) => {
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
+  const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
+
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
 
   const prevMessage = item.response;
@@ -129,29 +133,6 @@ export const MessageItem = ({item}: IMessageItem) => {
       }
     }
   };
-  useEffect(() => {
-    if (item.status === 'Asked') {
-      const estimationResponseTime = new Date(item.estimated_response_at);
-      const now = new Date();
-      const diffTime = estimationResponseTime.valueOf() - now.valueOf();
-      checkMessageResponse(diffTime);
-    } else {
-      // item.status === 'Answered'
-      // update sensitive flag
-      setIsSensitive(item.is_sensitive);
-      changeSensitiveStatus(item.is_sensitive);
-      setIsFileMessage(item.chat_message_files.length > 0);
-    }
-    if (item.status === 'Answered' && item.simple_app_id) {
-      handleGetAppCode();
-    }
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item]);
 
   const onEditMessage = () => {
     setIsEditMode(true);
@@ -164,7 +145,7 @@ export const MessageItem = ({item}: IMessageItem) => {
     setIsEditMode(false);
   };
 
-  const handleDeleteSensData = () => {
+  const handleDeleteSensData = async () => {
     setDeleteLoading(true);
     deleteMessage(item);
     setDeleteLoading(false);
@@ -178,8 +159,10 @@ export const MessageItem = ({item}: IMessageItem) => {
 
   const handleNoSensitiveData = async () => {
     setSensitiveLoading(true);
-    await updateChatMessageApi(item.chat_id, item.id, item.message, true);
-    refreshMessage(item.chat_id);
+    replaceMessageWithNotSensitive(item.chat_id, item.id);
+    // await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+    // await newMessage(item.message, true);
+    // deleteMessage(item);
     setSensitiveLoading(false);
   };
 
@@ -205,9 +188,34 @@ export const MessageItem = ({item}: IMessageItem) => {
     }
     return item.message;
   };
-  // useEffect(() => {
 
-  // }, [response]);
+  useEffect(() => {
+    if (item.status === 'Asked') {
+      const estimationResponseTime = new Date(item.estimated_response_at);
+      const now = new Date();
+      const diffTime = estimationResponseTime.valueOf() - now.valueOf();
+      checkMessageResponse(diffTime);
+    } else {
+      // item.status === 'Answered'
+      // update sensitive flag
+      setIsSensitive(item.is_sensitive);
+      if (item.is_marked_as_not_sensitive || item.is_anonymized) {
+        changeSensitiveStatus(false);
+      } else {
+        changeSensitiveStatus(item.is_sensitive);
+      }
+      setIsFileMessage(item.chat_message_files.length > 0);
+    }
+    if (item.status === 'Answered' && item.simple_app_id) {
+      handleGetAppCode();
+    }
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
   return (
     <>
@@ -262,6 +270,9 @@ export const MessageItem = ({item}: IMessageItem) => {
                   {item.is_anonymized && (
                     <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* Sensitive data  has been replaced by anonymized data`}</span>
                   )}
+                  {item.is_marked_as_not_sensitive && (
+                    <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* marked  as Not Sensitive`}</span>
+                  )}
                 </div>
               )}
               {messageEditable && (
@@ -282,10 +293,10 @@ export const MessageItem = ({item}: IMessageItem) => {
           <div>
             <div
               className={`relative w-12 h-12 flex items-center justify-center rounded-full ${
-                isSensitive ? 'bg-content-red-600/10' : 'bg-content-black'
+                isSensitive && !item.is_marked_as_not_sensitive ? 'bg-content-red-600/10' : 'bg-content-black'
               }`}
             >
-              {isSensitive ? (
+              {isSensitive && !item.is_marked_as_not_sensitive ? (
                 <ShieldCheckIcon width={20} height={20} className='text-red-600' />
               ) : (
                 <LogoIcon width={28} height={18} color='#F5F5F5' />
@@ -304,7 +315,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           >
             {loading || isLoading ? (
               <AnimateDots />
-            ) : !isSensitive ? (
+            ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
               isFileMessage ? (
                 <FileMarkdownContent content={item.chat_message_files} />
               ) : (
@@ -362,7 +373,7 @@ export const MessageItem = ({item}: IMessageItem) => {
               </div>
             )}
             {!loading &&
-              (!isSensitive ? (
+              (!isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
                 <div className='mt-4 flex justify-end items-center gap-4'>
                   {showOriginal && (
                     <div
@@ -459,13 +470,19 @@ export const MessageItem = ({item}: IMessageItem) => {
 
                     <IconButton
                       variant='secondary'
-                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
-                      onClick={handleDisableInspection}
+                      className={`bg-content-grey-900 rounded-full py-2 px-4 flex items-center ${
+                        !enabledContentSafety ? '!cursor-default' : ''
+                      }`}
+                      onClick={() => setShowDeactivateConfirmationModal(true)}
                       loading={disableLoading}
-                      disabled={disableLoading}
+                      disabled={disableLoading || !enabledContentSafety}
                     >
                       <ExclamationTriangleIcon className='w-4 h-4 text-content-white' />
-                      <span className='text-[13px] leading-4 text-center text-content-white'>
+                      <span
+                        className={`text-[13px] leading-4 text-center ${
+                          !enabledContentSafety ? 'text-content-grey-400 ' : 'text-content-white'
+                        }`}
+                      >
                         Stop inspection (30 min)
                       </span>
                     </IconButton>
@@ -509,6 +526,7 @@ export const MessageItem = ({item}: IMessageItem) => {
           setSelectedLanguage={setSelectedLanguage}
         />
       </div>
+
       {applicationInnerHTML && (
         <IframeWithSrcDialog
           open={iframeWithSrcModal}
@@ -521,6 +539,22 @@ export const MessageItem = ({item}: IMessageItem) => {
           imageURL={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
           onClose={() => setShowUserImageModal(false)}
           open={showUserImageModal}
+        />
+      )}
+      {showDeactivateConfirmationModal && user && (
+        <AlertModal
+          headTitle='Disable Content Safety'
+          title='Are you sure you want to deactivate Content Safety?'
+          description='With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
+          confirmTitle='Deactivate Content Safety'
+          open={showDeactivateConfirmationModal}
+          onConfirm={() => {
+            updateContentSafety(30, user.user_id);
+            setShowDeactivateConfirmationModal(false);
+          }}
+          onClose={() => {
+            setShowDeactivateConfirmationModal(false);
+          }}
         />
       )}
     </>

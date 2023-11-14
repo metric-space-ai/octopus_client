@@ -14,11 +14,8 @@ const useCustomSpeechRecognition = () => {
   const [isListening, setIsListening] = useState(false);
 
   useEffect(() => {
-    console.log({recognition});
     if (!recognition) return;
-    console.log({recognition});
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      console.log({event});
       setText(event.results[0][0].transcript);
       recognition.stop();
       setIsListening(false);
