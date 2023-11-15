@@ -122,10 +122,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } 
+    }
   },
   async deleteContentSafety(user_id: string) {
-
     try {
       const {status, data} = await deleteContentSafetyApi(user_id);
 
@@ -311,18 +310,20 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     }
   },
   async deleteMessage(chatMessage: IChatMessage) {
-    // set({loading: true});
+    set({loading: true});
 
     try {
       const {status} = await deleteChatMessageApi(chatMessage.chat_id, chatMessage.id);
       if (status === 204) {
         const result = [...get().messages].filter((message) => message.id !== chatMessage.id);
-        set({messages: [...result]});
+        set({messages: result});
       }
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
+    } finally {
+      set({loading: false});
     }
   },
   // changeContentSafteyStatus(status: boolean) {

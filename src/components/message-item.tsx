@@ -149,7 +149,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const handleDeleteSensData = async () => {
     setDeleteLoading(true);
     deleteMessage(item);
-    refreshMessage(item.chat_id);
     setDeleteLoading(false);
   };
 

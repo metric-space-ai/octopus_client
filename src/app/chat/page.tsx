@@ -96,8 +96,8 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-      const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 4000);
-      return () => clearTimeout(timeOutId);
+    const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 4000);
+    return () => clearTimeout(timeOutId);
   }, [showWarningSnackBarWhenSafetyDisabled]);
 
   return (
