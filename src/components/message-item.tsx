@@ -45,9 +45,10 @@ import CustomSwitch from './switch/custom-switch';
 
 interface IMessageItem {
   item: IChatMessage;
+  changeSafety?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const MessageItem = ({item}: IMessageItem) => {
+export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const {
     editMessage,
     updateMessage,
@@ -148,6 +149,7 @@ export const MessageItem = ({item}: IMessageItem) => {
   const handleDeleteSensData = async () => {
     setDeleteLoading(true);
     deleteMessage(item);
+    refreshMessage(item.chat_id);
     setDeleteLoading(false);
   };
 
@@ -188,6 +190,16 @@ export const MessageItem = ({item}: IMessageItem) => {
     }
     return item.message;
   };
+  const checkItemIsSensitive = () => {
+    if (item.is_marked_as_not_sensitive || item.is_anonymized) {
+      changeSensitiveStatus(false);
+      setIsSensitive(false);
+    } else {
+      setIsSensitive(item.is_sensitive);
+      changeSensitiveStatus(item.is_sensitive);
+    }
+    setIsFileMessage(item.chat_message_files.length > 0);
+  };
 
   useEffect(() => {
     if (item.status === 'Asked') {
@@ -198,13 +210,8 @@ export const MessageItem = ({item}: IMessageItem) => {
     } else {
       // item.status === 'Answered'
       // update sensitive flag
-      setIsSensitive(item.is_sensitive);
-      if (item.is_marked_as_not_sensitive || item.is_anonymized) {
-        changeSensitiveStatus(false);
-      } else {
-        changeSensitiveStatus(item.is_sensitive);
-      }
-      setIsFileMessage(item.chat_message_files.length > 0);
+
+      checkItemIsSensitive();
     }
     if (item.status === 'Answered' && item.simple_app_id) {
       handleGetAppCode();
@@ -296,7 +303,7 @@ export const MessageItem = ({item}: IMessageItem) => {
                 isSensitive && !item.is_marked_as_not_sensitive ? 'bg-content-red-600/10' : 'bg-content-black'
               }`}
             >
-              {isSensitive && !item.is_marked_as_not_sensitive ? (
+              {isSensitive && !item.is_marked_as_not_sensitive && !item.is_anonymized ? (
                 <ShieldCheckIcon width={20} height={20} className='text-red-600' />
               ) : (
                 <LogoIcon width={28} height={18} color='#F5F5F5' />
@@ -550,6 +557,9 @@ export const MessageItem = ({item}: IMessageItem) => {
           open={showDeactivateConfirmationModal}
           onConfirm={() => {
             updateContentSafety(30, user.user_id);
+            if (changeSafety) {
+              changeSafety(true);
+            }
             setShowDeactivateConfirmationModal(false);
           }}
           onClose={() => {

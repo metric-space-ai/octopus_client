@@ -121,7 +121,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
       const formData = new FormData();
       formData.append('file', newFile);
-      console.log({file, newFile, formData});
       try {
         const {status, data} = await uploadNewPluginApi(formData);
         if (status === 201) {
@@ -173,7 +172,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setFile(undefined);
   };
   const handleCheckFileIsValid = (file: File) => {
-    console.log({file});
     if (file.name.includes(VALIDPLUGINFILE.Format) && file.type.includes(VALIDPLUGINFILE.Type)) {
       setFile(file);
     } else {
@@ -291,7 +289,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       const countdown = () => {
         if (uploadPercentage >= 100) {
           setFileUploaded(true);
-          console.log(`uploaded`);
           setUploadStarted(false);
         } else {
           setUploadPercentage((percent) => ++percent);

@@ -128,7 +128,6 @@ export default function PluginsDetails() {
             <div className='w-52'>
               <span
                 className='font-poppins-medium text-xs leading-5 text-content-grey-600'
-                onClick={() => console.log({plugins})}
               >
                 Name
               </span>

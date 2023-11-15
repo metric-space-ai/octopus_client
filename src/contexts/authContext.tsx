@@ -100,13 +100,11 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   }, [plugins]);
 
   const handleGetPluginFunctions = async (inputPlugins: IPlugin[]) => {
-    console.log({inputPlugins});
     setLoading(true);
 
     if (inputPlugins) {
       const result: IPlugin[] | [] = [];
       for (const plugin of inputPlugins) {
-        console.log({plugin});
         const {id, is_enabled, setup_status} = plugin;
         if (plugin.ai_functions === undefined && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
           try {

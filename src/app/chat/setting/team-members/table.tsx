@@ -57,7 +57,6 @@ const USERS: User[] = [
 const TeamMebersTable = (props: Props) => {
   const [users, setUsers] = useState(USERS);
   const handleChageUserPermissions = (data: Role, user: User) => {
-    console.log({data, user});
     const result = [...users];
     const index = result.findIndex((elem) => elem.id === user.id);
     result[index].role = data.value;

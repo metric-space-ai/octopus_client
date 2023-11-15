@@ -96,15 +96,9 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
-    if (!enabledContentSafety) {
-      const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 5000);
+      const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 4000);
       return () => clearTimeout(timeOutId);
-    }
   }, [showWarningSnackBarWhenSafetyDisabled]);
-
-  useEffect(() => {
-    if (!enabledContentSafety) setShowWarningSnackBarWhenSafetyDisabled(true);
-  }, [enabledContentSafety]);
 
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
@@ -134,7 +128,9 @@ export default function ChatPage() {
           ) : showChatPrompt ? (
             <ChatPrompt handleInputChange={onInput} />
           ) : (
-            messages?.map((item) => <MessageItem key={item.id} item={item} />)
+            messages?.map((item) => (
+              <MessageItem key={item.id} item={item} changeSafety={setShowWarningSnackBarWhenSafetyDisabled} />
+            ))
           )}
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>

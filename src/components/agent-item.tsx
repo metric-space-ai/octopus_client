@@ -18,7 +18,6 @@ const AgentItem = ({expanded, agent, index}: Props) => (
       <img src={userImageSample.src} className='rounded-full w-9 h-9' />
       <IconButton
         variant='dark'
-        onClick={() => console.log('agent item image...')}
         className='w-4 h-4 flex items-center justify-center absolute bottom-0 right-0'
       >
         <CodeBracketSquareIcon width={10} height={10} className='text-content-white absolute' />
