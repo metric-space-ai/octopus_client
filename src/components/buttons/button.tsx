@@ -68,7 +68,7 @@ export const Button = ({
     <button
       disabled={disabled}
       className={classNames(
-        'h-11 flex items-center justify-center px-4 gap-[6px] rounded-[20px]',
+        'h-11 flex items-center justify-center px-4 gap-1.5 rounded-[20px]',
         style,
         hoverStyle,
         className,

@@ -14,6 +14,7 @@ import {useScrollToBottom} from '@/hooks';
 import {useChatStore} from '@/store';
 import {Agents} from '@/components/agents';
 import {VoiceChatModal} from '@/components/modals/voiceChatModal';
+import {useAuthContext} from '@/contexts/authContext';
 
 const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
 
@@ -33,7 +34,10 @@ export default function ChatPage() {
     refreshMessage,
     enabledContentSafety,
     isSensitiveChecked,
+    isSensitiveUserId,
   } = useChatStore();
+  const {user} = useAuthContext();
+
   const {scrollRef, setAutoScroll} = useScrollToBottom();
   const timeoutRef = useRef(0);
   const showChatPrompt = messages?.length === 0 || isNewTicket;
@@ -80,10 +84,14 @@ export default function ChatPage() {
     setUserInput(text);
   };
 
+  const checkChatInputIsDisabled = () => {
+    return isSensitiveChecked && enabledContentSafety && !showChatPrompt && isSensitiveUserId === user?.user_id;
+  };
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
     newMessage(userInput, !enabledContentSafety);
     setUserInput('');
+    setAutoScroll(true);
   };
 
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -99,6 +107,10 @@ export default function ChatPage() {
     const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 4000);
     return () => clearTimeout(timeOutId);
   }, [showWarningSnackBarWhenSafetyDisabled]);
+
+  useEffect(() => {
+    if (scrollRef) setAutoScroll(false);
+  }, [scrollRef]);
 
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
@@ -122,7 +134,7 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className='flex-1 p-5 pb-2 relative overflow-auto' ref={scrollRef}>
+        <div className='flex-1 p-5 pb-2 relative overflow-auto scroll-smooth' ref={scrollRef}>
           {loading ? (
             <Loading />
           ) : showChatPrompt ? (
@@ -142,7 +154,7 @@ export default function ChatPage() {
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
               className={`w-full border py-4 pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
-                isSensitiveChecked && !showChatPrompt ? 'opacity-40 cursor-not-allowed' : ''
+                checkChatInputIsDisabled() ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
               onInput={(e) => onInput(e.currentTarget.value)}
@@ -152,9 +164,13 @@ export default function ChatPage() {
               onBlur={() => setAutoScroll(false)}
               rows={inputRows}
               autoFocus={true}
-              disabled={isSensitiveChecked && enabledContentSafety && !showChatPrompt}
+              disabled={checkChatInputIsDisabled()}
             />
-            <IconButton className='absolute right-2 top-[calc(50%-20px)] ' onClick={() => doSubmit(userInput)}>
+            <IconButton
+              className='absolute right-2 top-[calc(50%-20px)] '
+              disabled={checkChatInputIsDisabled()}
+              onClick={() => (checkChatInputIsDisabled() ? undefined : doSubmit(userInput))}
+            >
               <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
             </IconButton>
           </div>

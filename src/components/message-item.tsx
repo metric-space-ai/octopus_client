@@ -56,6 +56,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     refreshMessage,
     enabledContentSafety,
     changeSensitiveStatus,
+    changeSensitiveStatusUserId,
     replaceMessageWithAnonymized,
     replaceMessageWithNotSensitive,
     updateContentSafety,
@@ -196,6 +197,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     } else {
       setIsSensitive(item.is_sensitive);
       changeSensitiveStatus(item.is_sensitive);
+      changeSensitiveStatusUserId(item.profile.user_id);
     }
     setIsFileMessage(item.chat_message_files.length > 0);
   };
@@ -505,7 +507,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               size='small'
               iconBefore={<StopIcon className='w-4 h-4' />}
               title='Stop generating...'
-              onClick={() => deleteMessage(item)}
+              onClick={() => deleteMessage(item, false)}
             />
           </div>
         )}

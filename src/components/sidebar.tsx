@@ -38,7 +38,7 @@ export function SideBar(props: {className?: string}) {
         const currentDate = new Date().getTime();
         // Calculate the time difference in milliseconds
         const differenceInMilliseconds = 0.5 * 60 * 1000 - (currentDate - staticDate);
-        
+
         // Calculate minutes and seconds
         const minutes = Math.floor(differenceInMilliseconds / (1000 * 60));
         const seconds = Math.floor((differenceInMilliseconds % (1000 * 60)) / 1000);
@@ -93,11 +93,11 @@ export function SideBar(props: {className?: string}) {
         <ChatList expanded={expanded} />
       </div>
       {expanded && (
-        <div className='flex flex-col mt-4 gap-1'>
-          <div className='flex justify-between'>
+        <div className='flex flex-col mt-4 gap-2'>
+          <div className='flex justify-between items-center'>
             <div className='flex items-center gap-1'>
               <ShieldCheckIcon className='w-5 h-5 text-content-accent-400' />
-              <p className='text-xs text-content-grey-100 font-semibold'>Content Safety</p>
+              <p className='text-xs text-content-grey-100 font-semibold'>Data Protection</p>
             </div>
             {user && (
               <Switch
@@ -128,15 +128,22 @@ export function SideBar(props: {className?: string}) {
             )}
           </div>
           {chatStore.enabledContentSafety && (
-            <p className='text-xxs text-content-grey-400'>Your Personal Content is Secure</p>
+            <p className='text-xxs text-content-grey-400'>
+              Your input is checked for compliance before further processing
+            </p>
           )}
           {!chatStore.enabledContentSafety && (
-            <p className='text-xxs text-content-red-400'>Content Safety is disabled{timeDifference}</p>
+            <p className='text-xxs text-content-red-400'>{`Compliance Filter is disabled ${timeDifference}`}</p>
           )}
         </div>
       )}
       <div className='mt-6 flex items-center'>
-        <IconButton variant='primary'>
+        <IconButton
+          variant='primary'
+          onClick={() => {
+            chatStore.newTicket();
+          }}
+        >
           <PlusIcon className='w-5 h-5 text-white' />
         </IconButton>
         {expanded && (

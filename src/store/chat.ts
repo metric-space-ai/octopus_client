@@ -35,6 +35,7 @@ interface ChatStore {
   contentSafetyDetails: IContentSafety;
   enabledContentSafety: boolean;
   isSensitiveChecked: boolean;
+  isSensitiveUserId: string;
   createNewWorkspace: (name: string, type: string) => void;
   updateWorkspace: (idx: string, name: string, type: string) => void;
   deleteWorkspace: (idx: string) => void;
@@ -47,7 +48,7 @@ interface ChatStore {
   newMessage: (message: string, sensitivty_check: boolean) => Promise<void>;
   editMessage: (chatMessage: IChatMessage, newMssage: string) => void;
   updateMessage: (chatMessage: IChatMessage) => void;
-  deleteMessage: (chatMessage: IChatMessage) => void;
+  deleteMessage: (chatMessage: IChatMessage, hasLoading?: boolean) => void;
   refreshMessage: (idx: string) => void;
   replaceMessageWithAnonymized: (chat_id: string, id: string) => void;
   replaceMessageWithNotSensitive: (chat_id: string, id: string) => void;
@@ -57,6 +58,7 @@ interface ChatStore {
   deleteContentSafety: (user_id: string) => void;
   updateContentSafety: (minutes: number, user_id: string) => void;
   changeSensitiveStatus: (status: boolean) => void;
+  changeSensitiveStatusUserId: (id: string) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
@@ -73,6 +75,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   loading: false,
   enabledContentSafety: true,
   isSensitiveChecked: false,
+  isSensitiveUserId: '',
   getWorkspaces() {
     getWorkspacesApi().then((res) => {
       const currentIdx = get().currentWorkspaceId;
@@ -258,12 +261,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   editMessage(chatMessage: IChatMessage, newMssage: string) {
     const messages = get().messages;
+
     updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
-      const index = messages.findIndex((message) => message.id === chatMessage.id);
-      if (index !== -1) {
-        messages[index] = res.data;
-        set({messages});
-      }
+      messages.flatMap((message) => (message.id === chatMessage.id ? res.data : message));
+
+      set({messages});
     });
   },
   updateMessage(chatMessage: IChatMessage) {
@@ -309,8 +311,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       }
     }
   },
-  async deleteMessage(chatMessage: IChatMessage) {
-    set({loading: true});
+  async deleteMessage(chatMessage: IChatMessage, hasLoading = true) {
+    if (hasLoading) set({loading: true});
 
     try {
       const {status} = await deleteChatMessageApi(chatMessage.chat_id, chatMessage.id);
@@ -323,7 +325,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         toast.error(err?.response?.data.error);
       }
     } finally {
-      set({loading: false});
+      if (hasLoading) set({loading: false});
     }
   },
   // changeContentSafteyStatus(status: boolean) {
@@ -335,6 +337,9 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   // },
   changeSensitiveStatus(status: boolean) {
     set({isSensitiveChecked: status});
+  },
+  changeSensitiveStatusUserId(id: string) {
+    set({isSensitiveUserId: id});
   },
   refreshMessage(chatId: string) {
     getLatestChatMessageApi(chatId).then((res) => {
