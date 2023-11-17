@@ -261,7 +261,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   editMessage(chatMessage: IChatMessage, newMssage: string) {
     const messages = get().messages;
-
     updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
       messages.flatMap((message) => (message.id === chatMessage.id ? res.data : message));
 

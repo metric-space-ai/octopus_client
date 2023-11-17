@@ -75,7 +75,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const isCurrentUser = item.user_id === user?.user_id;
-  const messageEditable = !isEditMode && isCurrentUser;
+  const [messageEditable, setMessageEditable] = useState(!isEditMode && isCurrentUser);
   const disableSaveButton = messageText === item.message;
   const [isSensitive, setIsSensitive] = useState(false);
   const [isFileMessage, setIsFileMessage] = useState(false);
@@ -201,6 +201,22 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
     setIsFileMessage(item.chat_message_files.length > 0);
   };
+
+  useEffect(() => {
+    const checkIsUpdated = () => {
+      const created = new Date(item.created_at);
+      const updated = new Date(item.updated_at);
+      created.setSeconds(0, 0);
+      updated.setSeconds(0, 0);
+      if (created.getTime() >= updated.getTime()) {
+        setMessageEditable(true);
+      } else {
+        setMessageEditable(false);
+      }
+    };
+    checkIsUpdated();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]);
 
   useEffect(() => {
     if (item.status === 'Asked') {

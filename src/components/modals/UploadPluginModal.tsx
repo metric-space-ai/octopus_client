@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
+import React, {Fragment, useCallback, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 
@@ -6,10 +6,9 @@ import {
   ArrowUpTrayIcon,
   CheckIcon,
   ClipboardDocumentIcon,
-  ClipboardDocumentListIcon,
+  ExclamationTriangleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {useForm} from 'react-hook-form';
 
 import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
@@ -26,9 +25,11 @@ import {
 import {AxiosError} from 'axios';
 import {IPlugin, IResources} from '@/types/plugin';
 import {useAuthContext} from '@/contexts/authContext';
+import {PLUGINSTATUS} from '@/constant';
+import {Spinner} from '../spinner';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
-const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, Installation: 3};
+const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
 
 interface ModalProps {
   open: boolean;
@@ -90,6 +91,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [pluginInstalled, setPluginInstalled] = useState(false);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef(0);
 
   const {getAllPlugins} = useAuthContext();
 
@@ -102,13 +104,13 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
         if (status === 200) {
           setSelectedPlugin(data);
           toast.success('upload successfull');
+          setCurrentStep(ADDPLUGINSTEPS.PreparingForInstall);
         }
       } catch (err) {
         if (err instanceof AxiosError) {
           toast.error(err?.response?.data.error);
         }
       } finally {
-        setCurrentStep(ADDPLUGINSTEPS.Installation);
         setLoading(false);
       }
     }
@@ -195,7 +197,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setInstallPercentage(0);
     setPluginInstalled(false);
     setLoading(false);
-
+    setSelectedPlugin(null);
     onClose();
   };
 
@@ -222,7 +224,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   useEffect(() => {
     if (installStarted) {
       const countdown = () => {
-        if (installPercentage <99) {
+        if (installPercentage < 99) {
           // handleGetInstallationProgress();
           setInstallPercentage((prev) => prev + 1);
         } else {
@@ -237,13 +239,35 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
   }, [installStarted, installPercentage]);
 
+  useEffect(() => {
+    if (selectedPlugin && currentStep === ADDPLUGINSTEPS.PreparingForInstall) {
+      console.log({
+        selectedPluginStatus: selectedPlugin.status,
+        expected: PLUGINSTATUS.ParsingFinished,
+        selectedPlugin,
+      });
+      if (selectedPlugin.status === PLUGINSTATUS.ParsingStarted) {
+        console.log('Plugin ParsingStarted...' + selectedPlugin.status);
+        const countdown = () => {
+          if (selectedPlugin.status === PLUGINSTATUS.ParsingStarted) handleGetInstallationProgress();
+        };
+        setTimeout(countdown, 7000);
+      } else if (selectedPlugin.status === PLUGINSTATUS.ParsingFinished) {
+        console.log('Plugin ParsingFinished...' + selectedPlugin.status);
+        setCurrentStep(ADDPLUGINSTEPS.Installation);
+      }
+    }
+  }, [currentStep, selectedPlugin]);
+
   const handleGetInstallationProgress = async () => {
     if (!selectedPlugin) return;
     try {
       const {status, data} = await getPluginByIdApi(selectedPlugin.id);
       if (status === 200) {
         setSelectedPlugin(data);
-        setInstallPercentage(data.progress);
+        if (data.progress) {
+          setInstallPercentage(data.progress);
+        }
         if (data.progress === 100) {
           setPluginInstalled(true);
           setInstallStarted(false);
@@ -540,7 +564,33 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                         </div>
                       </div>
                     )}
-
+                    {selectedPlugin && selectedPlugin.status === PLUGINSTATUS.ParsingStarted && (
+                      <div className='flex flex-col flex-auto h-full w-full px-7'>
+                        <div className='flex gap-4 items-center justify-center w-full bg-white rounded-20 p-5 h-full'>
+                          <div className='scale-150'>
+                            <Spinner />
+                          </div>
+                          <h1 className='flex text-content-accent text-xxl uppercase font-poppins-bold '>
+                            Preparing to install the plugin
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                    {selectedPlugin && selectedPlugin.status === PLUGINSTATUS.Error && (
+                      <div className='flex flex-col flex-auto'>
+                        <div className='w-full pt-24 px-7'>
+                          <div className='flex flex-col items-center justify-center w-full max-h-96 bg-white rounded-20 p-5'>
+                            <ExclamationTriangleIcon className='text-red-500 mb-8' width={36} height={36} />
+                            <h1 className='font-poppins-semibold text-center text-xxl mb-6 text-content-red-600'>
+                              The system has detected an error
+                            </h1>
+                            <h2 className='font-poppins-semibold text-center text-xl mb-6 text-content-red-400'>
+                              {`Error: ${selectedPlugin.parser_feedback}`}
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {currentStep === ADDPLUGINSTEPS.Installation && selectedPlugin && (
                       <div className='flex flex-col flex-auto'>
                         <div className='flex flex-col mb-6'>

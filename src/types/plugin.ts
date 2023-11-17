@@ -60,6 +60,7 @@ export interface IPlugin {
   setup_at: string | null;
   updated_at: string;
   ai_functions: null | undefined | IAIFunctions[];
+  parser_feedback: string | null;
 }
 
 export interface IDeviceMap {
