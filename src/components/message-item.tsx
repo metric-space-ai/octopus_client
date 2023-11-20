@@ -63,7 +63,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     newMessage,
   } = useChatStore();
   const {user} = useAuthContext();
-  const loading = item.status === 'Asked';
   const timeoutRef = useRef(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeheight, setIframeheight] = useState('0px');
@@ -72,7 +71,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [messageText, setMessageText] = useState(item.message);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
   const [selected, setSelected] = useState(LANGUAGES[36]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(item.status === 'Asked');
   const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const isCurrentUser = item.user_id === user?.user_id;
   const [messageEditable, setMessageEditable] = useState(!isEditMode && isCurrentUser);
@@ -110,9 +109,9 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   );
 
   const handleOriginalOne = async () => {
-    setIsLoading(true);
+    setLoading(true);
     setResponse(prevMessage);
-    setIsLoading(false);
+    setLoading(false);
     setShowOriginal(false);
   };
 
@@ -143,8 +142,14 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
 
   const onSaveChangeMessage = () => {
     // to do
-    editMessage(item, messageText);
+    setLoading(true);
     setIsEditMode(false);
+    try {
+      editMessage(item, messageText);
+    } finally {
+      setLoading(false);
+      setMessageText(item.message);
+    }
   };
 
   const handleDeleteSensData = async () => {
@@ -178,8 +183,8 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     changeSensitiveStatus(false);
   };
   const prepareIfResponseIncludesMessage = () => {
-    if (isSensitive && item.message.includes(response)) {
-      const responseSlices = item.message.split(response);
+    if (isSensitive && messageText.includes(response)) {
+      const responseSlices = messageText.split(response);
       return (
         <>
           {responseSlices[0]}
@@ -188,7 +193,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
         </>
       );
     }
-    return item.message;
+    return messageText;
   };
   const checkItemIsSensitive = () => {
     if (item.is_marked_as_not_sensitive || item.is_anonymized) {
@@ -201,6 +206,22 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
     setIsFileMessage(item.chat_message_files.length > 0);
   };
+
+  // useEffect(() => {
+  //   const checkIsUpdated = () => {
+  //     const created = new Date(item.created_at);
+  //     const updated = new Date(item.updated_at);
+  //     created.setSeconds(0, 0);
+  //     updated.setSeconds(0, 0);
+  //     if (created.getTime() >= updated.getTime()) {
+  //       setMessageEditable(true);
+  //     } else {
+  //       setMessageEditable(false);
+  //     }
+  //   };
+  //   checkIsUpdated();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [item]);
 
   useEffect(() => {
     const checkIsUpdated = () => {
@@ -220,11 +241,13 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
 
   useEffect(() => {
     if (item.status === 'Asked') {
+      setLoading(true);
       const estimationResponseTime = new Date(item.estimated_response_at);
       const now = new Date();
       const diffTime = estimationResponseTime.valueOf() - now.valueOf();
       checkMessageResponse(diffTime);
     } else {
+      setLoading(false);
       // item.status === 'Answered'
       // update sensitive flag
 
@@ -337,11 +360,11 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               ''
             }`}
           >
-            {loading || isLoading ? (
+            {loading ? (
               <AnimateDots />
             ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
               isFileMessage ? (
-                <FileMarkdownContent content={item.chat_message_files} />
+                <FileMarkdownContent content={item.chat_message_files} title={item.message} />
               ) : (
                 <>
                   {applicationInnerHTML ? (

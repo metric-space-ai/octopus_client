@@ -145,12 +145,14 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   };
   const handleDropFiles = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    handleCheckFileIsValid(e.dataTransfer.files[0]);
+    // handleCheckFileIsValid(e.dataTransfer.files[0]);
+    setFile(e.dataTransfer.files[0]);
   };
   const handleCustomSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files) {
-      handleCheckFileIsValid(e.target.files[0]);
+      setFile(e.target.files[0]);
+      // handleCheckFileIsValid(e.target.files[0]);
     }
   };
 

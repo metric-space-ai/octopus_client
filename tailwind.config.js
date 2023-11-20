@@ -156,11 +156,6 @@ module.exports = {
         },
       },
     },
-    animation: {
-      'delay-75': `animation-delay: 75ms`,
-      'delay-500': `animation-delay: 500ms`,
-      'delay-1000': `animation-delay: 1s`,
-    },
   },
   plugins: [],
 };
