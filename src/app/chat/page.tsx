@@ -62,7 +62,7 @@ export default function ChatPage() {
         timeoutRef.current = window.setInterval(() => {
           // if (messages.find((message) => message.chat_id === chatId && message.status === 'Asked'))
           refreshMessage(chatId);
-        }, 6000);
+        }, 10000);
       }
     },
     [refreshMessage],

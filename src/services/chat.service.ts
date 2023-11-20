@@ -72,8 +72,7 @@ export const updateChatMessageApi = async (
   bypass_sensitive_information_filter = false,
 ) => {
   const payload = {message, bypass_sensitive_information_filter};
-  // return apiHub.put<IChatMessage>(`api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
-  return apiHub.post<IChatMessage>(`api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
+  return apiHub.put<IChatMessage>(`api/v1/chat-messages/${chatId}/${chatMessageId}`, payload);
 };
 
 export const replaceMessageWithNotSensitiveApi = async (chat_id: string, chat_message_id: string) => {

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback, useRef} from 'react';
 
 import {Switch} from '@headlessui/react';
 import {MagnifyingGlassIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
@@ -14,6 +14,7 @@ import {SearchBar} from './search';
 import {IconSideBar} from './svgs';
 import Locale from '../locales';
 import {useAuthContext} from '@/contexts/authContext';
+import {IUserProfile} from '@/types';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
@@ -27,6 +28,30 @@ export function SideBar(props: {className?: string}) {
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
   const [timeDifference, setTimeDifference] = useState('(30:00)');
+  const timeoutRef = useRef(0);
+
+  const checkDataProtection = useCallback(
+    (user_id: string) => {
+      if (user_id) {
+        timeoutRef.current = window.setInterval(() => {
+          chatStore.getContentSafety(user_id);
+        }, 10000);
+      }
+    },
+    [chatStore.getContentSafety],
+  );
+
+  useEffect(() => {
+    if (user) {
+      checkDataProtection(user.user_id);
+      console.log({user})
+    }
+    return () => {
+      if (timeoutRef.current) {
+        clearInterval(timeoutRef.current);
+      }
+    };
+  }, [checkDataProtection]);
 
   useEffect(() => {
     if (!chatStore.enabledContentSafety && chatStore.contentSafetyDetails.content_safety_disabled_until) {

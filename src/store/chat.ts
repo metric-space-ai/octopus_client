@@ -259,14 +259,19 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       });
     }
   },
-  editMessage(chatMessage: IChatMessage, newMssage: string) {
+  async editMessage(chatMessage: IChatMessage, newMssage: string) {
     const messages = get().messages;
-
-    updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
-      messages.flatMap((message) => (message.id === chatMessage.id ? res.data : message));
-
-      set({messages});
-    });
+    try {
+      const {status, data} = await updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage);
+      if (status === 200) {
+        const result = messages.flatMap((message) => (message.id === chatMessage.id ? {...data} : message));
+        set({messages: result});
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
   },
   updateMessage(chatMessage: IChatMessage) {
     const messages = get().messages;

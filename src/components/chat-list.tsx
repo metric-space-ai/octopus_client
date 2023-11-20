@@ -82,7 +82,7 @@ export function ChatItem({
               className={classNames(
                 'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
                 selected ? '!text-content-black' : '',
-              )}
+              )} title={title}
             >
               {title}
             </div>

@@ -95,6 +95,19 @@ export const RoleOptions = [
   {value: ROLE_PUBLIC_USER, label: 'Public user'},
 ];
 
+export const PLUGINSTATUS = {
+  Configuration: 'Configuration',
+  Error: 'Error',
+  Initial: 'Initial',
+  InstallationFinished: 'InstallationFinished',
+  InstallationStarted: 'InstallationStarted',
+  MaliciousCodeDetected: 'MaliciousCodeDetected',
+  ParsingFinished: 'ParsingFinished',
+  ParsingStarted: 'ParsingStarted',
+  Running: 'Running',
+  Setup: 'Setup',
+  Stopped: 'Stopped',
+};
 const languageList = ISO6391.getAllNames();
 
 export const ImagesBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
