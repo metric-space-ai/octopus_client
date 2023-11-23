@@ -1,4 +1,5 @@
 import ISO6391 from 'iso-639-1';
+import {TRole} from './types';
 
 export const VERSION_NUM = 'v0.2.5';
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
@@ -58,10 +59,31 @@ Act as a virtual assistant powered by model: '{{model}}', my input is:
 
 export const TabModes = [{name: 'Private'}, {name: 'Public'}];
 
-export const ROLE_ADMIN = 'ROLE_ADMIN';
-export const ROLE_COMPANY_ADMIN_USER = 'ROLE_COMPANY_ADMIN_USER';
-export const ROLE_PRIVATE_USER = 'ROLE_PRIVATE_USER';
-export const ROLE_PUBLIC_USER = 'ROLE_PUBLIC_USER';
+export const ROLE_ADMIN: TRole = 'ROLE_ADMIN';
+export const ROLE_COMPANY_ADMIN_USER: TRole = 'ROLE_COMPANY_ADMIN_USER';
+export const ROLE_PRIVATE_USER: TRole = 'ROLE_PRIVATE_USER';
+export const ROLE_PUBLIC_USER: TRole = 'ROLE_PUBLIC_USER';
+
+export const ROLESARRAYVALUE: TRole[] = [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, ROLE_PRIVATE_USER, ROLE_PUBLIC_USER];
+export const ROLESLABEL = {
+  ROLE_ADMIN: 'Admin',
+  ROLE_COMPANY_ADMIN_USER: 'Admin user',
+  ROLE_PRIVATE_USER: 'Private user',
+  ROLE_PUBLIC_USER: 'Public user',
+};
+
+export const ROLEOPTIONS = [
+  {value: ROLE_COMPANY_ADMIN_USER, label: 'Admin user'},
+  {value: ROLE_PRIVATE_USER, label: 'Private user'},
+  {value: ROLE_PUBLIC_USER, label: 'Public user'},
+];
+
+export const ALLROLES = [
+  {value: ROLE_ADMIN, label: 'Admin'},
+  {value: ROLE_COMPANY_ADMIN_USER, label: 'Admin user'},
+  {value: ROLE_PRIVATE_USER, label: 'Private user'},
+  {value: ROLE_PUBLIC_USER, label: 'Public user'},
+];
 
 export const AI_SERVICES_HEALTH_CHECK_STATUS = {
   NotWorking: 'NotWorking',
@@ -86,15 +108,10 @@ export const AI_SERVICES_STATUS = {
   Stopped: 'Stopped',
 };
 
-export const Roles = [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, ROLE_PRIVATE_USER, ROLE_PUBLIC_USER];
-
-export const RoleOptions = [
-  {value: ROLE_ADMIN, label: 'Admin'},
-  {value: ROLE_COMPANY_ADMIN_USER, label: 'Admin user'},
-  {value: ROLE_PRIVATE_USER, label: 'Private user'},
-  {value: ROLE_PUBLIC_USER, label: 'Public user'},
-];
-
+export const WORKSPACETYPE = {
+  PUBLIC: 'Public',
+  PRIVATE: 'Private',
+};
 export const PLUGINSTATUS = {
   Configuration: 'Configuration',
   Error: 'Error',

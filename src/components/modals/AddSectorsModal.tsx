@@ -1,15 +1,15 @@
 import {Fragment, useState, useEffect} from 'react';
 
-import {Dialog, Listbox, Transition} from '@headlessui/react';
-import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {Dialog, Transition} from '@headlessui/react';
+import {XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
 
-import {RoleOptions} from '@/constant';
+// import {ROLEOPTIONS} from '@/constant';
 import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import {InvitationSent} from './SendInvitation';
+// import {InvitationSent} from './SendInvitation';
 
 interface ModalProps {
   open: boolean;
@@ -25,7 +25,6 @@ interface IFormInputs {
 
 export const AddSectorModal = ({open, onClose, existed = false, sectorData}: ModalProps) => {
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState(RoleOptions[0]);
 
   const {
     register,

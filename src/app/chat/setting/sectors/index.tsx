@@ -1,12 +1,43 @@
 import {Button} from '@/components/buttons';
-import React, {useState} from 'react';
-import { AddSectorModal } from '@/components/modals/AddSectorsModal';
+import React, {useEffect, useState} from 'react';
+import {AddSectorModal} from '@/components/modals/AddSectorsModal';
 import SectorsData from './sectorsDetails';
+import {useSettingsContext} from '@/contexts/settingsContext';
+import {CreateNewTabModal, DeleteTabModal} from '@/components/modals';
+import {IWorkspace} from '@/types';
+import {useChatStore} from '@/store';
 
 type Props = {};
 
 const Sectors = (props: Props) => {
   const [addSectorsModal, setAddSectorsModal] = useState(false);
+  const [deleteSectorsModal, setDeleteSectorsModal] = useState(false);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<IWorkspace | null>(null);
+  const {settingIsLoading} = useSettingsContext();
+  const {workspaces, getWorkspaces,deleteWorkspace} = useChatStore();
+
+  const handleCloseWorkspaceDialog = () => {
+    setSelectedWorkspace(null);
+    setAddSectorsModal(false);
+  };
+  const handleOpenEditWorkspaceDialog = (workspace: IWorkspace) => {
+    setSelectedWorkspace(workspace);
+    setAddSectorsModal(true);
+  };
+  
+  const handleOpenDeleteWorkspaceDialog = (workspace: IWorkspace) => {
+    setSelectedWorkspace(workspace);
+    setDeleteSectorsModal(true);
+  };
+  const handleCloseDeleteWorkspaceDialog = () => {
+    setSelectedWorkspace(null);
+    setDeleteSectorsModal(false);
+  };
+
+
+  useEffect(() => {
+    getWorkspaces();
+  }, []);
   return (
     <>
       <div className='w-full pt-[84px] flex flex-col items-center '>
@@ -21,11 +52,18 @@ const Sectors = (props: Props) => {
             />
           </div>
           <div className='max-w-full'>
-            <SectorsData/>
+            <SectorsData
+              isLoading={settingIsLoading}
+              workspaces={workspaces}
+              onEditWorkspace={handleOpenEditWorkspaceDialog}
+              onDeleteWorkspace={handleOpenDeleteWorkspaceDialog}
+            />
           </div>
         </div>
       </div>
-      <AddSectorModal  open={addSectorsModal} onClose={() => setAddSectorsModal(false)} />
+      {/* <AddSectorModal open={addSectorsModal} onClose={() => setAddSectorsModal(false)} /> */}
+      <CreateNewTabModal tab={selectedWorkspace} open={addSectorsModal} onClose={handleCloseWorkspaceDialog} />
+      <DeleteTabModal tab={selectedWorkspace} open={deleteSectorsModal} onClose={handleCloseDeleteWorkspaceDialog} />
     </>
   );
 };
