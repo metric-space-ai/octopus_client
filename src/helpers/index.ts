@@ -174,3 +174,7 @@ export function bytesCalculator(size: number) {
     return n.toFixed(1) + ' ' + units[l];
   }
 }
+
+export const spaceBeforeCapitalLetters = (letters: String) => {
+  return letters.replace(/([A-Z])/g, ' $1').trim();
+};

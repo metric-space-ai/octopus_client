@@ -34,16 +34,22 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
     formState: {errors},
   } = useForm<IFormInputs>();
 
-  const onSubmit = async (data: IFormInputs) => {
+  const onSubmit = (data: IFormInputs) => {
     const {name} = data;
     setLoading(true);
-    if (tab) {
-      await updateWorkspace(tab.id, name, selected.name);
-    } else {
-      await createNewWorkspace(name, selected.name);
+    try {
+      if (tab) {
+        updateWorkspace(tab.id, name, selected.name);
+      } else {
+        createNewWorkspace(name, selected.name);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+      setValue('name', '');
+      onClose();
     }
-    setLoading(false);
-    onClose();
   };
 
   useEffect(() => {

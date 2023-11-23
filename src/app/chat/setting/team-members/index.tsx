@@ -1,12 +1,13 @@
 import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import TeamMebersTable from './table';
+import TeamMebersTable from './teamMemberTable';
 import {AddNewMemberModal} from '@/components/modals/AddNewMemberModal';
 
 type Props = {};
 
 const TeamMembers = (props: Props) => {
   const [addNewUserModal, setAddNewUserModal] = useState(false);
+
   return (
     <>
       <div className='w-full pt-[84px] flex flex-col items-center '>

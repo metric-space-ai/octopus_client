@@ -1,10 +1,9 @@
 import {Fragment, useState, useEffect} from 'react';
 
-import {Dialog, Listbox, Transition} from '@headlessui/react';
-import {CheckIcon, ChevronDownIcon, TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {Dialog, Transition} from '@headlessui/react';
+import { TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
 
-import {RoleOptions} from '@/constant';
 import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';

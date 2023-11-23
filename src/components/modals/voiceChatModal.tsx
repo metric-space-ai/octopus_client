@@ -5,7 +5,7 @@ import {MicrophoneIcon, XMarkIcon,UserIcon} from '@heroicons/react/24/outline';
 
 import {useForm} from 'react-hook-form';
 
-import {ImagesBaseUrl, RoleOptions} from '@/constant';
+import {ImagesBaseUrl} from '@/constant';
 
 import {IconButton} from '../buttons';
 import useCustomSpeechRecognition from '@/hooks/useCustomSpeechRecognition';

@@ -18,13 +18,17 @@ export const DeleteTabModal = ({tab, open, onClose}: ModalProps) => {
   const {deleteWorkspace} = useChatStore();
   const [loading, setLoading] = useState(false);
 
-  const onDelete = async () => {
+  const onDelete = () => {
     setLoading(true);
-    if (tab) {
-      await deleteWorkspace(tab.id);
+    try {
+      if (tab) {
+        deleteWorkspace(tab.id);
+      }
+    } catch (e) {
+    } finally {
+      setLoading(false);
+      onClose();
     }
-    setLoading(false);
-    onClose();
   };
 
   return (

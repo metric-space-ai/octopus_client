@@ -4,12 +4,17 @@ import {Dialog, Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
 
-import {RoleOptions} from '@/constant';
+import {ROLEOPTIONS} from '@/constant';
 import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
 import {InvitationSent} from './SendInvitation';
+import {TRole, ICreateUser} from '@/types';
+import {useSettingsContext} from '@/contexts/settingsContext';
+import toast from 'react-hot-toast';
+import {createTeamMemberApi} from '@/services/settings.service';
+import {AxiosError} from 'axios';
 
 interface ModalProps {
   open: boolean;
@@ -18,12 +23,18 @@ interface ModalProps {
 
 interface IFormInputs {
   email: string;
+  job_title: string;
+  name: string;
+  password: string;
+  repeat_password: string;
 }
 
 export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState(RoleOptions[0]);
+  const [selected, setSelected] = useState([ROLEOPTIONS[2]]);
   const [invitationSentModal, setInvitationSentModal] = useState(false);
+
+  const {teamMembers, setTeamMembers} = useSettingsContext();
 
   const {
     register,
@@ -32,18 +43,52 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
     formState: {errors},
   } = useForm<IFormInputs>();
 
+  const closeDialog = () => {
+    setValue('email', '');
+    setValue('job_title', '');
+    setValue('name', '');
+    setValue('password', '');
+    setValue('repeat_password', '');
+    onClose();
+  };
+
   const onSubmit = async (data: IFormInputs) => {
-    const {email} = data;
+    const {email, job_title, name, password, repeat_password} = data;
+    const roles = [...selected].reduce<TRole[]>((acc, {value}) => [...acc, value], []);
+    const payload: ICreateUser = {
+      email,
+      is_enabled: true,
+      job_title,
+      name,
+      password,
+      repeat_password,
+      roles,
+    };
     setLoading(true);
-    setLoading(false);
-    setInvitationSentModal(true);
+    try {
+      const {status, data} = await createTeamMemberApi(payload);
+      if (status === 201) {
+        if (teamMembers) {
+          setTeamMembers((prev) => (prev ? [...prev, data] : [data]));
+        }
+        toast.success(`(${payload.name}) has successfully been added as a new user.`);
+        closeDialog();
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+    // setInvitationSentModal(true);
   };
 
   return (
     <>
       {!invitationSentModal ? (
         <Transition appear show={open} as={Fragment}>
-          <Dialog className='relative z-10' as='div' onClose={onClose}>
+          <Dialog className='relative z-10' as='div' onClose={closeDialog}>
             <Transition.Child
               as={Fragment}
               enter='ease-out duration-300'
@@ -67,7 +112,7 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                   leaveTo='opacity-0 scale-95'
                 >
                   <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
-                    <IconButton className='absolute top-4 right-4' onClick={onClose}>
+                    <IconButton className='absolute top-4 right-4' onClick={closeDialog}>
                       <XMarkIcon className='w-5 h-5 text-content-primary' />
                     </IconButton>
                     <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
@@ -79,12 +124,37 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                         errors={errors.email && errors.email.message}
                         rules={register('email', authValidator.email)}
                       />
-                      <Listbox value={selected} onChange={setSelected}>
+                      <Input
+                        placeholder='job_title'
+                        errors={errors.job_title && errors.job_title.message}
+                        rules={register('job_title', authValidator.job_title)}
+                      />
+                      <Input
+                        placeholder='name'
+                        errors={errors.name && errors.name.message}
+                        rules={register('name', authValidator.name)}
+                      />
+                      <Input
+                        type='password'
+                        placeholder='password'
+                        errors={errors.password && errors.password.message}
+                        rules={register('password', authValidator.password)}
+                      />
+                      <Input
+                        type='password'
+                        placeholder='repeat password'
+                        errors={errors.repeat_password && errors.repeat_password.message}
+                        rules={register('repeat_password', authValidator.password)}
+                      />
+                      <Listbox value={selected} onChange={setSelected} multiple>
                         <div className='relative mt-1'>
                           <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
                             <div className='flex gap-1 items-center'>
-                              <span className='text-base text-content-grey-900'>{selected.label}</span>
+                              <span className='text-base text-content-grey-900'>
+                                {selected.map((role) => role.label).join(', ')}
+                              </span>
                             </div>
+
                             <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                               <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
                             </span>
@@ -96,7 +166,7 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                             leaveTo='opacity-0'
                           >
                             <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-content-primary'>
-                              {RoleOptions.map((permission, idx) => (
+                              {ROLEOPTIONS.map((permission, idx) => (
                                 <Listbox.Option
                                   key={`${permission.value}_${idx}`}
                                   className={({active}) =>
@@ -126,14 +196,15 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                         <Button
                           className='mt-2 w-1/2 !h-10 border'
                           variant='transparent'
-                          title={`Cancel`}
-                          loading={loading}
-                          onClick={onClose}
+                          title={!loading ? `Cancel` : ''}
+                          onClick={closeDialog}
+                          disabled={loading}
                         />
                         <Button
                           className='mt-2 w-1/2 !h-10'
                           variant='primary'
-                          title={`Send an invitation`}
+                          disabled={loading}
+                          title={!loading ? `submit` : ''}
                           loading={loading}
                           type='submit'
                         />
@@ -150,7 +221,7 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
           open={invitationSentModal}
           onClose={() => {
             setInvitationSentModal(false);
-            onClose();
+            closeDialog();
           }}
         />
       )}

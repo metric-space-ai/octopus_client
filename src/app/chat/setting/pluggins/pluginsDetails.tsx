@@ -181,10 +181,10 @@ export default function PluginsDetails() {
                               </p>
                             </div>
                           </div>
-                          <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
+                          <p className='text-xxs leading-4 w-24 text-content-grey-900 font-poppins-medium'>
                             {/* {plugin.device_map} */}
                           </p>
-                          <div className='w-24 text-xs flex justify-center'>
+                          <div className='w-28 text-xs flex justify-center'>
                             <PluginsBadge variant={plugin.status} label={plugin.status} />
                           </div>
                           <div className='flex justify-center items-center w-20'>

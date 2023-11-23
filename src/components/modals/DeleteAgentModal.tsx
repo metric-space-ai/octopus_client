@@ -16,7 +16,6 @@ interface ModalProps {
 }
 
 export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => {
-  const {deleteWorkspace} = useChatStore();
   const [loading, setLoading] = useState(false);
   console.log({tab});
 
