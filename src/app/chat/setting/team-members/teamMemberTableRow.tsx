@@ -4,16 +4,16 @@ import {Listbox, Transition} from '@headlessui/react';
 import {ROLESARRAYVALUE, ROLESLABEL, ROLE_ADMIN} from '@/constant';
 import {useSettingsContext} from '@/contexts/settingsContext';
 
-import userImageSample from './../../../../../public/images/user-sample.png';
-import {CheckIcon, ChevronDownIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {CheckIcon, ChevronDownIcon, TrashIcon, UserIcon} from '@heroicons/react/24/outline';
 
 type Props = {
   user: IUser;
+  deleteUser: (member: IUser) => void;
 };
 
-export const TeamMemberTableRow = ({user}: Props) => {
+export const TeamMemberTableRow = ({user, deleteUser}: Props) => {
   const [roleIsLoading, setRoleIsLoading] = useState(false);
-  const {updateTeamMember, deleteTeamMember} = useSettingsContext();
+  const {updateTeamMember} = useSettingsContext();
 
   const handleChangeUserRole = async (roles: TRole[]) => {
     if (roles.includes(ROLE_ADMIN)) return;
@@ -40,7 +40,10 @@ export const TeamMemberTableRow = ({user}: Props) => {
     <tr key={user.id} className='px-[2.5px] py-3 h-68-px border-b-content-grey-100 border-b'>
       <td>
         <div className='flex gap-4'>
-          <img src={userImageSample.src} className='rounded-full w-11 h-11' />
+          {/* <img src={userImageSample.src} className='rounded-full w-11 h-11' /> */}
+          <div className='flex items-center justify-center w-11 h-11 rounded-full bg-content-accent-light-11'>
+            <UserIcon className='w-6 h-6 text-content-accent-hover' />
+          </div>
           <div className={`flex flex-col gap-0.5 ${user.is_enabled ? 'justify-start' : 'justify-center'}`}>
             {/* {user.is_enabled && (
             <h6 className='font-semibold text-xs leading-5'>{user.}</h6>
@@ -73,13 +76,13 @@ export const TeamMemberTableRow = ({user}: Props) => {
           ) : (
             <Listbox value={user.roles} onChange={handleChangeUserRole} multiple>
               <div className='mt-1'>
-                <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary border'>
-                  <div className='flex gap-1 items-center'>
-                    <span className='text-base text-content-grey-900'>
-                      {/* {selected.map((role) => role.label).join(', ')} */}
-                      User Roles
-                    </span>
-                  </div>
+                <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
+                  <span
+                    className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
+                    title={user.roles.map((role) => ROLESLABEL[role]).join(', ')}
+                  >
+                    {user.roles.map((role) => ROLESLABEL[role]).join(', ')}
+                  </span>
 
                   <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                     <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -128,7 +131,7 @@ export const TeamMemberTableRow = ({user}: Props) => {
               width={16}
               height={16}
               className='text-content-grey-600 hover:text-content-grey-900'
-              onClick={() => deleteTeamMember(user.id)}
+              onClick={() => deleteUser(user)}
             />
           </span>
         </div>

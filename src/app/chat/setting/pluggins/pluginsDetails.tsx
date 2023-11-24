@@ -18,6 +18,7 @@ import {IAIFunctions, IPlugin, IPluginActivation} from '@/types/plugin';
 import CustomCheckbox from '@/components/custom-checkbox';
 import {IconButton} from '@/components/buttons';
 import {Spinner} from '@/components/spinner';
+import {PLUGINSTATUS} from '@/constant';
 
 export default function PluginsDetails() {
   const [activeFunction, setActiveFunction] = useState({f1: true, f2: false, f3: false});
@@ -128,11 +129,7 @@ export default function PluginsDetails() {
         <div className='mx-auto w-full max-w-[560px] rounded-2xl bg-white'>
           <div className='flex mb-2'>
             <div className='w-52'>
-              <span
-                className='font-poppins-medium text-xs leading-5 text-content-grey-600'
-              >
-                Name
-              </span>
+              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
             </div>
             <div className='w-28'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
@@ -184,11 +181,16 @@ export default function PluginsDetails() {
                           <p className='text-xxs leading-4 w-24 text-content-grey-900 font-poppins-medium'>
                             {/* {plugin.device_map} */}
                           </p>
-                          <div className='w-28 text-xs flex justify-center'>
-                            <PluginsBadge variant={plugin.status} label={plugin.status} />
+                          <div className='w-28 text-xs flex justify-center items-center gap-1'>
+                            <PluginsBadge
+                              setupStatus={plugin.setup_status}
+                              variant={plugin.status}
+                              label={plugin.status}
+                            />
                           </div>
                           <div className='flex justify-center items-center w-20'>
                             <CustomSwitch
+                              disabled={![PLUGINSTATUS.Stopped, PLUGINSTATUS.Running].includes(plugin.status)}
                               active={plugin.is_enabled}
                               onChange={(check: boolean) => handleChangePluginActivation(plugin.id, check)}
                             />

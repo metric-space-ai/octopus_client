@@ -22,12 +22,14 @@ interface ISecttingsContext {
   addNewTeamMember: (payload: ICreateUser) => void;
   deleteTeamMember: (payload: string) => void;
   settingIsLoading: boolean;
+  deleteMemberLoading: boolean;
 }
 
 const SettingsContext = React.createContext<ISecttingsContext>(null!);
 
 const SettingsProvider = ({children}: PropsWithChildren) => {
   const [settingIsLoading, setSettingIsLoading] = useState<boolean>(false);
+  const [deleteMemberLoading, setDeleteMemberLoading] = useState<boolean>(false);
   const [teamMembers, setTeamMembers] = useState<IUser[] | null>(null);
 
   const handleGetAllTeamMembers = async () => {
@@ -84,22 +86,24 @@ const SettingsProvider = ({children}: PropsWithChildren) => {
   };
 
   const deleteTeamMember = async (payload: string) => {
-    setSettingIsLoading(true);
-    try {
-      const {status} = await deleteTeamMemberApi(payload);
-      if (status === 204) {
-        if (teamMembers) {
-          const result = [...teamMembers].filter((member) => member.id !== payload);
-          setTeamMembers(result);
+    setDeleteMemberLoading(true);
+    if (teamMembers) {
+      const backup = [...teamMembers];
+      const result = [...teamMembers].filter((member) => member.id !== payload);
+      setTeamMembers(result);
+      try {
+        const {status} = await deleteTeamMemberApi(payload);
+        if (status === 204) {
+          toast.success(`user has successfully been removed.`);
         }
-        toast.success(`user has successfully been removed.`);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+          setTeamMembers(backup);
+        }
+      } finally {
+        setDeleteMemberLoading(false);
       }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-    } finally {
-      setSettingIsLoading(false);
     }
   };
 
@@ -110,6 +114,7 @@ const SettingsProvider = ({children}: PropsWithChildren) => {
     updateTeamMember,
     addNewTeamMember,
     settingIsLoading,
+    deleteMemberLoading,
     deleteTeamMember,
   };
 
