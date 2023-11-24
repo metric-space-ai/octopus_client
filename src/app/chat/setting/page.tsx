@@ -14,13 +14,14 @@ import {ShieldExclamationIcon} from '@heroicons/react/24/outline';
 import Plugins from './pluggins';
 import Documents from './documents';
 import SettingsProvider from '@/contexts/settingsContext';
-import { TRole } from '@/types';
+import {TRole} from '@/types';
+import {Spinner} from '@/components/spinner';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
   const menu = searchParams.get('menu') ?? 'details';
 
-  const {user} = useAuthContext();
+  const {user, authLoading} = useAuthContext();
 
   return (
     <SettingsProvider>
@@ -31,7 +32,7 @@ export default function SettingPage() {
           {menu === 'password' && <PasswordPage />}
           {menu === 'general' && <GeneralSettings />}
           {menu === 'documents' && <Documents />}
-          {user?.roles.some((role ) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role as TRole)) ? (
+          {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role as TRole)) ? (
             <>
               {menu === 'team-members' && <TeamMembers />}
               {menu === 'sectors' && <Sectors />}
@@ -41,13 +42,24 @@ export default function SettingPage() {
             (menu === 'team-members' || menu === 'sectors' || menu === 'plugins') && (
               <div className='w-full pt-24 px-7'>
                 <div className='flex flex-col items-center justify-center w-full max-h-96 bg-white rounded-20 p-5'>
-                  <ShieldExclamationIcon className='text-red-500 mb-8' width={36} height={36} />
-                  <h1 className='font-poppins-semibold text-center text-xxl mb-6 text-content-accent-hover'>
-                    Access Dinied
-                  </h1>
-                  <h2 className='font-poppins-semibold text-center text-xl mb-6 text-content-accent-400'>
-                    Sorry, You Don't have Prmission
-                  </h2>
+                  {authLoading ? (
+                    <div className='flex gap-4 items-center'>
+                      <Spinner size='medium' />
+                      <h1 className='font-poppins-bold text-center text-xxl text-content-accent-hover'>
+                        Please Wait
+                      </h1>
+                    </div>
+                  ) : (
+                    <>
+                      <ShieldExclamationIcon className='text-red-500 mb-8' width={36} height={36} />
+                      <h1 className='font-poppins-semibold text-center text-xxl mb-6 text-content-accent-hover'>
+                        Access Dinied
+                      </h1>
+                      <h2 className='font-poppins-semibold text-center text-xl mb-6 text-content-accent-400'>
+                        Sorry, You Don't have Prmission
+                      </h2>
+                    </>
+                  )}
                 </div>
               </div>
             )
