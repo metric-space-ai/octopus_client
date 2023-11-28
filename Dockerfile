@@ -1,5 +1,6 @@
 FROM node:18.17.1-bookworm-slim AS builder
 ARG NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_BASE_URL $NEXT_PUBLIC_BASE_URL
 WORKDIR /octopus_client
 COPY /octopus_client/package.json ./
 RUN npm install
@@ -11,6 +12,7 @@ RUN npm run build
 
 FROM node:18.17.1-bookworm-slim AS prod
 ARG NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_BASE_URL $NEXT_PUBLIC_BASE_URL
 WORKDIR /octopus_client
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
