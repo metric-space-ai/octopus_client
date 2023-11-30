@@ -261,13 +261,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   async editMessage(chatMessage: IChatMessage, newMssage: string) {
     const messages = get().messages;
-<<<<<<< HEAD
-    updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage).then((res) => {
-      messages.flatMap((message) => (message.id === chatMessage.id ? res.data : message));
-
-      set({messages});
-    });
-=======
     try {
       const {status, data} = await updateChatMessageApi(chatMessage.chat_id, chatMessage.id, newMssage);
       if (status === 200) {
@@ -279,7 +272,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         toast.error(err?.response?.data.error);
       }
     }
->>>>>>> main
   },
   updateMessage(chatMessage: IChatMessage) {
     const messages = get().messages;
