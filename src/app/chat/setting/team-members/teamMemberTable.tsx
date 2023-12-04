@@ -12,7 +12,7 @@ const TeamMebersTable = (props: Props) => {
   const [openDeleteUserDialog, setDeleteUserDialog] = useState(false);
   const [selectedUserForRemove, setSelectedUserForRemove] = useState<IUser | null>(null);
 
-  const {getTeamMembers, teamMembers, settingIsLoading, deleteTeamMember, deleteMemberLoading} = useSettingsContext();
+  const {getTeamMembers, teamMembers, settingIsLoading, deleteTeamMember} = useSettingsContext();
 
   const handleOpenDeleteDialog = (member: IUser) => {
     setSelectedUserForRemove(member);

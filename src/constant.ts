@@ -125,6 +125,19 @@ export const PLUGINSTATUS = {
   Setup: 'Setup',
   Stopped: 'Stopped',
 };
+export const APPSTATUS = {
+  Configuration: 'Configuration',
+  Error: 'Error',
+  Initial: 'Initial',
+  InstallationFinished: 'InstallationFinished',
+  InstallationStarted: 'InstallationStarted',
+  MaliciousCodeDetected: 'MaliciousCodeDetected',
+  ParsingFinished: 'ParsingFinished',
+  ParsingStarted: 'ParsingStarted',
+  Running: 'Running',
+  Setup: 'Setup',
+  Stopped: 'Stopped',
+};
 const languageList = ISO6391.getAllNames();
 
 export const ImagesBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;

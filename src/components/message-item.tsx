@@ -224,22 +224,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   // }, [item]);
 
   useEffect(() => {
-    const checkIsUpdated = () => {
-      const created = new Date(item.created_at);
-      const updated = new Date(item.updated_at);
-      created.setSeconds(0, 0);
-      updated.setSeconds(0, 0);
-      if (created.getTime() >= updated.getTime()) {
-        setMessageEditable(true);
-      } else {
-        setMessageEditable(false);
-      }
-    };
-    checkIsUpdated();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item]);
-
-  useEffect(() => {
     if (item.status === 'Asked') {
       setLoading(true);
       const estimationResponseTime = new Date(item.estimated_response_at);

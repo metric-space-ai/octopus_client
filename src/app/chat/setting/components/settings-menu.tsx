@@ -8,6 +8,7 @@ import {
   BuildingOfficeIcon,
   ClipboardDocumentListIcon,
   DocumentDuplicateIcon,
+  CodeBracketIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
@@ -65,6 +66,13 @@ const SIDEBAR = [
     title: 'Plugins',
     icon: ClipboardDocumentListIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
+  },
+  {
+    id: 'tab_apps',
+    tab_name: 'apps',
+    title: 'Apps',
+    icon: CodeBracketIcon,
+    permission: '',
   },
 ];
 

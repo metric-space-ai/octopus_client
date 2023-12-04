@@ -43,7 +43,9 @@ body {
   background: #7B14CB;
   cursor: pointer;
 }
-
+.custom-scrollbar-thumb {
+  overflow:auto;
+}
 .custom-scrollbar-thumb::-webkit-scrollbar {
   width: 12px;
 }
