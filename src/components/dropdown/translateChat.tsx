@@ -8,6 +8,8 @@ import {directCall} from '@/services/chat.service';
 import {LanguageType} from '@/types';
 
 import {Button} from '@/components/buttons';
+import toast from 'react-hot-toast';
+import {AxiosError} from 'axios';
 
 export const DropdownTranslateChat = ({
   text,
@@ -47,12 +49,19 @@ export const DropdownTranslateChat = ({
         text: text,
       },
     };
-    const {data} = await directCall(payload);
-    setText(data?.Text.response);
-    setLoading(false);
-    setShowOriginal(true);
-    setSelectedLanguage(selected?.name);
-    onClose();
+    try {
+      const {data} = await directCall(payload);
+      setText(data?.Text.response);
+      setSelectedLanguage(selected?.name);
+      onClose();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setLoading(false);
+      setShowOriginal(true);
+    }
   };
   return (
     <div className='w-full'>
