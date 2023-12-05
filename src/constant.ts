@@ -1,7 +1,7 @@
 import ISO6391 from 'iso-639-1';
 import {TRole} from './types';
 
-export const VERSION_NUM = 'v0.4.3';
+export const VERSION_NUM = 'v0.3.0';
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
 export const DEFAULT_API_HOST = 'https://chatgpt1.nextweb.fun/api/proxy';
 
