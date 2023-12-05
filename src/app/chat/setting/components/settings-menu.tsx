@@ -67,13 +67,13 @@ const SIDEBAR = [
     icon: ClipboardDocumentListIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
   },
-  {
-    id: 'tab_apps',
-    tab_name: 'apps',
-    title: 'Apps',
-    icon: CodeBracketIcon,
-    permission: '',
-  },
+  // {
+  //   id: 'tab_apps',
+  //   tab_name: 'apps',
+  //   title: 'Apps',
+  //   icon: CodeBracketIcon,
+  //   permission: '',
+  // },
 ];
 
 export const SettingsMenu = () => {
