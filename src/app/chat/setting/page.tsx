@@ -33,7 +33,7 @@ export default function SettingPage() {
   return (
     <SettingsProvider>
       <div className='h-screen py-[64px] bg-content-grey-100 rounded-b-[20px]'>
-        
+
         <div
           onClick={handleExitSettings}
           className={

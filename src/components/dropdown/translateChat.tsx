@@ -53,6 +53,7 @@ export const DropdownTranslateChat = ({
       const {data} = await directCall(payload);
       setText(data?.Text.response);
       setSelectedLanguage(selected?.name);
+      setShowOriginal(true);
       onClose();
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -60,7 +61,6 @@ export const DropdownTranslateChat = ({
       }
     } finally {
       setLoading(false);
-      setShowOriginal(true);
     }
   };
   return (

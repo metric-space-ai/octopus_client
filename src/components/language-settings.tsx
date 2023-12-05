@@ -11,7 +11,7 @@ type Props = {
   user: IUserProfile | null;
 };
 
-const LanguageSettings = ({currentLanguage, user}: Props) => {
+const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ const LanguageSettings = ({currentLanguage, user}: Props) => {
         <>
           <p
             className='text-xs text-grey-900 mb-2'
-            onClick={() => console.log({0: LANGUAGES[0], selectedLanguage, currentLanguage})}
+            // onClick={() => console.log({0: LANGUAGES[0], selectedLanguage, currentLanguage})}
           >
             language
           </p>
