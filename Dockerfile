@@ -3,7 +3,7 @@ ARG NEXT_PUBLIC_BASE_URL
 WORKDIR /octopus_client
 COPY /octopus_client/package.json ./
 RUN npm install
-COPY /octopus_client/LICENSE /octopus_client/README.md /octopus_client/next-env.d.ts /octopus_client/next.config.js /octopus_client/package.json /octopus_client/postcss.config.js /octopus_client/tailwind.config.js /octopus_client/tsconfig.json /octopus_client/yarn.lock ./
+COPY /octopus_client/LICENSE /octopus_client/README.md /octopus_client/next-env.d.ts /octopus_client/next.config.js /octopus_client/package.json /octopus_client/package-lock.json /octopus_client/postcss.config.js /octopus_client/tailwind.config.js /octopus_client/tsconfig.json /octopus_client/yarn.lock ./
 COPY /octopus_client/public public/
 COPY /octopus_client/src src/
 ENV NEXT_TELEMETRY_DISABLED 1
