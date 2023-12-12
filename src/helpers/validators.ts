@@ -2,10 +2,10 @@ export const authValidator = {
   id: {
     required: 'This field is required.',
   },
-  name:{
+  name: {
     required: 'This field is required.',
   },
-  desc:{
+  desc: {
     required: 'This field is required.',
   },
   first_name: {
@@ -26,7 +26,8 @@ export const authValidator = {
   },
   password: {
     required: 'This field is required.',
-    pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
+    // pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
+    pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*[^a-zA-Z0-9@!#$%&]).{8,}$/i,
     minLength: 5,
   },
 };

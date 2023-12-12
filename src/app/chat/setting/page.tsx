@@ -10,14 +10,14 @@ import TeamMembers from './team-members';
 import Sectors from './sectors';
 import {useAuthContext} from '@/contexts/authContext';
 import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
-import {ArrowUturnRightIcon, ShieldExclamationIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {ShieldExclamationIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import Plugins from './pluggins';
 import Documents from './documents';
 import SettingsProvider from '@/contexts/settingsContext';
 import {TRole} from '@/types';
 import {Spinner} from '@/components/spinner';
-import Applications from './apps';
-import {Button, IconButton} from '@/components/buttons';
+// import Applications from './apps';
+import {IconButton} from '@/components/buttons';
 import {paths} from '@/config/path';
 
 export default function SettingPage() {
@@ -33,7 +33,6 @@ export default function SettingPage() {
   return (
     <SettingsProvider>
       <div className='h-screen py-[64px] bg-content-grey-100 rounded-b-[20px]'>
-
         <div
           onClick={handleExitSettings}
           className={
@@ -51,7 +50,7 @@ export default function SettingPage() {
           {menu === 'password' && <PasswordPage />}
           {menu === 'general' && <GeneralSettings />}
           {menu === 'documents' && <Documents />}
-          {menu === 'apps' && <Applications />}
+          {/* {menu === 'apps' && <Applications />} */}
           {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role as TRole)) ? (
             <>
               {menu === 'team-members' && <TeamMembers />}
