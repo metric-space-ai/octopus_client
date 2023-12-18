@@ -204,7 +204,9 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       changeSensitiveStatus(item.is_sensitive);
       changeSensitiveStatusUserId(item.profile.user_id);
     }
-    setIsFileMessage(item.chat_message_files.length > 0);
+    if(item.chat_message_files){
+      setIsFileMessage(item.chat_message_files.length > 0);
+    }
   };
 
   // useEffect(() => {
@@ -442,7 +444,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                   <IconButton
                     className='!p-0'
                     onClick={() => setShowTranslatorModal(true)}
-                    disabled={item.chat_message_files.length > 0 ? true : false}
+                    disabled={item.response ? false : true}
                   >
                     <LanguageIcon className='w-5 h-5 text-content-grey-400' />
                   </IconButton>
