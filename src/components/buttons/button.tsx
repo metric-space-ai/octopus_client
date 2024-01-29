@@ -10,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconAfter?: React.ReactNode;
   className?: string;
   title: string;
+  fontWeight?: 'default' | 'light' | 'normal';
   onClick?: () => void;
 }
 
@@ -40,6 +41,12 @@ const TextStyle = {
   disabled: 'text-content-white',
 };
 
+const FontWeight = {
+  default: 'font-semibold',
+  normal: 'font-normal',
+  light: 'font-light',
+};
+
 const Sizes = {
   default: 'text-sm',
   large: 'text-2xl',
@@ -51,6 +58,7 @@ export const Button = ({
   className,
   variant = 'primary',
   size = 'default',
+  fontWeight = 'default',
   loading = false,
   disabled,
   iconBefore,
@@ -63,6 +71,7 @@ export const Button = ({
   const hoverStyle = ButtonHoverStyle[disabled ? 'disabled' : variant];
   const textStyle = TextStyle[disabled ? 'disabled' : variant];
   const sizeStyle = Sizes[size];
+  const fontWeightStyle = FontWeight[fontWeight];
 
   return (
     <button
@@ -78,7 +87,7 @@ export const Button = ({
     >
       {loading && <Spinner />}
       {iconBefore && iconBefore}
-      <p className={classNames('font-semibold leading-4', textStyle, sizeStyle)}>{title}</p>
+      <p className={classNames('leading-4', textStyle, sizeStyle, fontWeightStyle)}>{title}</p>
       {iconAfter && iconAfter}
     </button>
   );

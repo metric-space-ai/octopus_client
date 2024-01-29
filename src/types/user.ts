@@ -1,4 +1,6 @@
-export type TRole = 'ROLE_ADMIN' | 'ROLE_COMPANY_ADMIN_USER' | 'ROLE_PRIVATE_USER' | 'ROLE_PUBLIC_USER';
+export type TRole = 'ROLE_ADMIN' | 'ROLE_COMPANY_ADMIN_USER' | 'ROLE_PRIVATE_USER' | 'ROLE_PUBLIC_USER' | '';
+export type PartialTRoleLabel = Partial<Record<TRole, string>>;
+
 export interface IUserProfile {
   id: string;
   user_id: string;
@@ -6,7 +8,7 @@ export interface IUserProfile {
   job_title: string;
   language: string;
   text_size: number;
-  roles: string[];
+  roles: TRole[];
   photo_file_name: string | null;
 }
 export interface IUser {
@@ -18,6 +20,7 @@ export interface IUser {
   deleted_at: string | null;
   id: string;
   updated_at: string | null;
+  profile?: IUserProfile;
 }
 export interface ICreateUser {
   email: string;
@@ -28,3 +31,4 @@ export interface ICreateUser {
   password: string;
   repeat_password: string;
 }
+

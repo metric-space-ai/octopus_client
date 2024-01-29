@@ -21,16 +21,6 @@ export interface IContentSafety {
   content_safety_disabled_until: string;
 }
 
-export interface ISimpleAppDetails {
-  code: string;
-  created_at: string;
-  description: string;
-  formatted_name: string;
-  id: string;
-  is_enabled: boolean;
-  name: string;
-  updated_at: string;
-}
 export interface IChatMessage {
   id: string;
   created_at: string;
@@ -52,7 +42,9 @@ export interface IChatMessage {
     name: string;
     photo_file_name: string;
   };
-  simple_app_id: string;
+  simple_app_id: string | null;
+  simple_app_data: string | null;
+  wasp_app_id: string | null;
 }
 
 export interface TranslatorType {

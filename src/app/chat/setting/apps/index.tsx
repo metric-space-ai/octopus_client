@@ -9,7 +9,7 @@ const Applications = (props: Props) => {
   const [addAppsModal, setAddAppsModal] = useState(false);
   return (
     <>
-      <div className='w-full pt-[84px] flex flex-col items-center '>
+      <div className='w-full pt-[84px] flex flex-col px-6'>
         <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-20 bg-white'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
             <h1 className='text-lg leading-7 text-content-black font-poppins-semibold'>Apps</h1>

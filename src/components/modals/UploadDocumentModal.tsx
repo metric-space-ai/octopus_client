@@ -15,14 +15,10 @@ import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
-import _Highlight from 'react-highlight';
+import Highlight from 'react-highlight';
 import {
-  addPluginConfigurationApi,
   getPluginByIdApi,
-  getServerResourcesApi,
-  startPluginInstallationApi,
-  uploadNewPluginApi,
-} from '@/services/auth.service';
+} from '@/services/settings.service';
 import {AxiosError} from 'axios';
 import {IPlugin, IResources} from '@/types/plugin';
 import {useAuthContext} from '@/contexts/authContext';
@@ -36,7 +32,6 @@ interface ModalProps {
   onClose: () => void;
 }
 
-const Highlight = React.memo(_Highlight);
 
 const SetupEnvironment = [
   {
@@ -85,8 +80,6 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
   const [pluginInstalled, setPluginInstalled] = useState(false);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
-
-  const {getAllPlugins} = useAuthContext();
 
   const handleSubmitSecondStep = async () => {};
 

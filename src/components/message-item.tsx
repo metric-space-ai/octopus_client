@@ -42,6 +42,11 @@ import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
 import {Popover} from '@headlessui/react';
 import CustomSwitch from './switch/custom-switch';
+import {useDispatch} from 'react-redux';
+import {getWaspAppSourceDocByChatIdAndWaspId} from '@/app/lib/features/waspApps/waspAppsSlice';
+import {useSelector} from 'react-redux';
+import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
+import { AppDispatch } from '@/app/lib/store';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -60,8 +65,10 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     replaceMessageWithAnonymized,
     replaceMessageWithNotSensitive,
     updateContentSafety,
-    newMessage,
   } = useChatStore();
+  const dispatch = useDispatch<AppDispatch>();
+  const {app_src: wasp_app_src, isLoading: waspAppIsLoading} = useSelector(selectWaspApps);
+
   const {user} = useAuthContext();
   const timeoutRef = useRef(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -90,6 +97,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
 
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
+  const [hasWaspApp, setHasWaspApp] = useState(false);
 
   const prevMessage = item.response;
 
@@ -122,6 +130,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   };
 
   const handleGetAppCode = async () => {
+    if (!item.simple_app_id) return;
     try {
       const {status, data} = await getChatMessageApplicationCodeApi(item.simple_app_id);
 
@@ -204,7 +213,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       changeSensitiveStatus(item.is_sensitive);
       changeSensitiveStatusUserId(item.profile.user_id);
     }
-    if(item.chat_message_files){
+    if (item.chat_message_files) {
       setIsFileMessage(item.chat_message_files.length > 0);
     }
   };
@@ -241,6 +250,13 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
     if (item.status === 'Answered' && item.simple_app_id) {
       handleGetAppCode();
+    }
+    if (item.status === 'Answered' && item.wasp_app_id) {
+      console.log({wasp_app_src});
+      dispatch(getWaspAppSourceDocByChatIdAndWaspId(item));
+      setHasWaspApp(true);
+    } else {
+      setHasWaspApp(false);
     }
     return () => {
       if (timeoutRef.current) {
@@ -339,13 +355,44 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               )}
             </div>
           </div>
-
+          {/* <div className='flex flex-col'> */}
+          {/* <Funding /> */}
+          {/* <Research /> */}
+          {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
           <div
             className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
               // applicationInnerHTML ? `min-h-[${iframeheight}]` :
               ''
             }`}
           >
+            {hasWaspApp && (
+              <div className='relative'>
+                {waspAppIsLoading ? (
+                  <div className='flex flex-col gap-6 items-center '>
+                    <h1 className='text-content-white text-xl w-full text-center'>Please Be Pationt - wasp app is Loading</h1>
+                    <AnimateDots />
+                  </div>
+                ) : (
+                  <>
+                    <iframe
+                      ref={iframeRef}
+                      style={{minHeight: iframeheight}}
+                      className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}] flex-1`}
+                      srcDoc={wasp_app_src}
+                      // height={iframeheight}
+                      onLoad={onLoadPrepareIframe}
+                    ></iframe>
+                    {/* <IconButton
+                              className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
+                              onClick={() => setIframeWithSrcModal(true)}
+                              >
+                              <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
+                            </IconButton> */}
+                  </>
+                )}
+              </div>
+            )}
+
             {loading ? (
               <AnimateDots />
             ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
@@ -523,6 +570,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                 </>
               ))}
           </div>
+          {/* </div> */}
         </div>
         {isCurrentUser && loading && (
           <div className='mt-4 flex justify-center'>

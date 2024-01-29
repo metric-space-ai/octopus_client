@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
+import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 
@@ -14,19 +14,22 @@ import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
-import _Highlight from 'react-highlight';
+import Highlight from 'react-highlight';
+
+import {AxiosError} from 'axios';
+import {IPlugin, IResources} from '@/types/plugin';
+import {PLUGINSTATUS} from '@/constant';
+import {Spinner} from '../spinner';
 import {
   addPluginConfigurationApi,
   getPluginByIdApi,
   getServerResourcesApi,
   startPluginInstallationApi,
   uploadNewPluginApi,
-} from '@/services/auth.service';
-import {AxiosError} from 'axios';
-import {IPlugin, IResources} from '@/types/plugin';
-import {useAuthContext} from '@/contexts/authContext';
-import {PLUGINSTATUS} from '@/constant';
-import {Spinner} from '../spinner';
+} from '@/services/settings.service';
+import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/lib/store';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
@@ -41,8 +44,7 @@ interface IFormInputs {
   id: number;
 }
 
-const Highlight = React.memo(_Highlight);
-
+// const Highlight = React.memo(_Highlight);
 const SetupEnvironment = [
   {
     id: 'setup_1',
@@ -68,6 +70,7 @@ const SetupEnvironment = [
 ];
 
 export const UploadPluginModal = ({open, onClose}: ModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
   const [uploadStarted, setUploadStarted] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -92,8 +95,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
   const inputFileRef = useRef<HTMLInputElement>(null);
   const timeoutRef = useRef(0);
-
-  const {getAllPlugins} = useAuthContext();
 
   const handleSubmitSecondStep = async () => {
     if (fileUploaded && currentStep === ADDPLUGINSTEPS.Setup) {
@@ -567,7 +568,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       </div>
                     )}
                     {selectedPlugin && selectedPlugin.status === PLUGINSTATUS.ParsingStarted && (
-                      <div className='flex flex-col flex-auto h-full w-full px-7'>
+                      <div className='flex flex-col flex-1 mb-8 w-full px-7'>
                         <div className='flex gap-4 items-center justify-center w-full bg-white rounded-20 p-5 h-full'>
                           <div className='scale-150'>
                             <Spinner />
@@ -676,7 +677,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           loading={loading}
                           disabled={loading || !pluginInstalled}
                           onClick={() => {
-                            getAllPlugins();
+                            dispatch(getAllPlugins());
                             handleCloseModal();
                           }}
                         />

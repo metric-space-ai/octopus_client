@@ -1,33 +1,62 @@
-import {Button} from '@/components/buttons';
-import React, {useState} from 'react';
-import PluginsData from './pluginsDetails';
-import { UploadPluginModal } from '@/components/modals/UploadPluginModal';
+import {Tab} from '@headlessui/react';
+import classNames from 'classnames';
+import React from 'react';
+import AiServices from '../ai-services';
+import SimpleApps from '../simpleApps';
+import WaspApps from '../waspApps';
 
 type Props = {};
 
-const Plugins = (props: Props) => {
-  const [addPluginsModal, setAddPluginsModal] = useState(false);
+const plugin = (props: Props) => {
   return (
-    <>
-      <div className='w-full pt-[84px] flex flex-col items-center '>
-        <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-20 bg-white'>
-          <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
-            <h1 className='text-lg leading-7 text-content-black font-poppins-semibold'>Plugins</h1>
-            <Button
-              className='!px-6 font-poppins-semibold text-sm !h-34-px'
-              variant='primary'
-              title='Upload plugin'
-              onClick={() => setAddPluginsModal(true)}
-            />
-          </div>
-          <div className='max-w-full'>
-            <PluginsData />
-          </div>
-        </div>
-      </div>
-      <UploadPluginModal open={addPluginsModal} onClose={() => setAddPluginsModal(false)} />
-    </>
+    <div className='flex flex-col mt-[76px] px-6 w-full max-w-[700px]'>
+      <Tab.Group>
+        <Tab.List className='flex rounded-t-xl'>
+          <Tab
+            className={({selected}) =>
+              classNames(
+                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none',
+                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+              )
+            }
+          >
+            AI Services
+          </Tab>
+          <Tab
+            className={({selected}) =>
+              classNames(
+                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none',
+                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+              )
+            }
+          >
+            HTML
+          </Tab>
+          <Tab
+            className={({selected}) =>
+              classNames(
+                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none ',
+                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+              )
+            }
+          >
+            WASP
+          </Tab>
+        </Tab.List>
+        <Tab.Panels className='h-[420px] max-h-[420px] flex flex-col w-full py-[18px] px-6 rounded-r-20 rounded-bl-20 bg-white'>
+          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+            <AiServices />
+          </Tab.Panel>
+          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+            <SimpleApps />
+          </Tab.Panel>
+          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+            <WaspApps />
+          </Tab.Panel>
+        </Tab.Panels>
+      </Tab.Group>
+    </div>
   );
 };
 
-export default Plugins;
+export default plugin;

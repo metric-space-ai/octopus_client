@@ -8,7 +8,7 @@ import {
   ShieldCheckIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {Button, IconButton} from './buttons';
+import {Button, IconButton} from '../../buttons';
 import {useDebouncedCallback} from 'use-debounce';
 import {autoGrowTextArea} from '@/helpers';
 

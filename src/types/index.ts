@@ -4,3 +4,6 @@ export * from './user';
 export * from './workspace';
 export * from './plugin';
 export * from './app';
+export * from './parameter';
+export * from './simpleApp';
+export * from './waspApp';

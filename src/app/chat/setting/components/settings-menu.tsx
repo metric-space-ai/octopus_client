@@ -9,6 +9,7 @@ import {
   ClipboardDocumentListIcon,
   DocumentDuplicateIcon,
   CodeBracketIcon,
+  AdjustmentsHorizontalIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
@@ -16,8 +17,20 @@ import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {Button} from '@/components/buttons';
 import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, VERSION_NUM} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
+import {TRole} from '@/types';
 
-const SIDEBAR = [
+const SIDEBAR: {
+  id: string;
+  tab_name: string;
+  title: string;
+  icon: React.ForwardRefExoticComponent<
+    React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> & {
+      title?: string;
+      titleId?: string;
+    } & React.RefAttributes<SVGSVGElement>
+  >;
+  permission: TRole;
+}[] = [
   {
     id: 'tab_details',
     tab_name: 'details',
@@ -67,6 +80,13 @@ const SIDEBAR = [
     icon: ClipboardDocumentListIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
   },
+  {
+    id: 'tab_parameters',
+    tab_name: 'parameters',
+    title: 'Parameters',
+    icon: AdjustmentsHorizontalIcon,
+    permission: '',
+  },
   // {
   //   id: 'tab_apps',
   //   tab_name: 'apps',
@@ -99,7 +119,7 @@ export const SettingsMenu = () => {
             (!elem.permission || user?.roles.includes(elem.permission || ROLE_ADMIN)) && (
               <Button
                 key={elem.id}
-                className='border border-transparent hover:border-black !pl-6 !justify-start !h-9'
+                className='border border-transparent hover:border-black !pl-6 !justify-start !h-9 '
                 variant={menu === elem.tab_name || (menu === null && index === 0) ? 'secondary' : 'transparent'}
                 iconBefore={
                   <elem.icon

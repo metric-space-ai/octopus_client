@@ -13,6 +13,8 @@ import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
 
 import {copyToClipboard} from '../helpers';
 
+import "./../assets/atelier-cave-dark.css";
+
 export function Mermaid(props: {code: string}) {
   const ref = useRef<HTMLDivElement>(null);
   const [hasError, setHasError] = useState(false);

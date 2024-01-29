@@ -14,7 +14,7 @@ import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 import CustomCheckbox from '../custom-checkbox';
-import _Highlight from 'react-highlight';
+import Highlight from 'react-highlight';
 // import {
 //   addAppConfigurationApi,
 //   getAppByIdApi,
@@ -41,7 +41,7 @@ interface IFormInputs {
   id: number;
 }
 
-const Highlight = React.memo(_Highlight);
+// const Highlight = React.memo(_Highlight);
 
 const SetupEnvironment = [
   {

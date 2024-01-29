@@ -21,6 +21,7 @@ const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
+  const [inputIsDisabled, setInputIsDisabled] = useState(false);
   const [expandedAgents, setExpandedAgents] = useState(true);
   const [openVoiceChatModal, setOpenVoiceChatModal] = useState(false);
   const [showWarningSnackBarWhenSafetyDisabled, setShowWarningSnackBarWhenSafetyDisabled] = useState(false);
@@ -85,7 +86,16 @@ export default function ChatPage() {
   };
 
   const checkChatInputIsDisabled = () => {
-    return isSensitiveChecked && enabledContentSafety && !showChatPrompt && isSensitiveUserId === user?.user_id;
+    const isSensitivePresent = messages.some(
+      (message) =>
+        (isSensitiveChecked || message.is_sensitive) &&
+        enabledContentSafety &&
+        !showChatPrompt &&
+        isSensitiveUserId === user?.user_id,
+    );
+
+    setInputIsDisabled(isSensitivePresent);
+     
   };
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
@@ -109,8 +119,8 @@ export default function ChatPage() {
   }, [showWarningSnackBarWhenSafetyDisabled]);
 
   useEffect(() => {
-    if (scrollRef) setAutoScroll(false);
-  }, [scrollRef]);
+    checkChatInputIsDisabled();
+  }, [messages, enabledContentSafety]);
 
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
@@ -140,9 +150,12 @@ export default function ChatPage() {
           ) : showChatPrompt ? (
             <ChatPrompt handleInputChange={onInput} />
           ) : (
-            messages?.map((item) => (
-              <MessageItem key={item.id} item={item} changeSafety={setShowWarningSnackBarWhenSafetyDisabled} />
-            ))
+            messages?.map(
+              (item) =>
+                ((item.is_sensitive && user?.user_id === item.user_id) || !item.is_sensitive) && (
+                  <MessageItem key={item.id} item={item} changeSafety={setShowWarningSnackBarWhenSafetyDisabled} />
+                ),
+            )
           )}
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>
@@ -154,7 +167,7 @@ export default function ChatPage() {
               ref={inputRef}
               // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
               className={`w-full border py-4 pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
-                checkChatInputIsDisabled() ? 'opacity-40 cursor-not-allowed' : ''
+                inputIsDisabled ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
               onInput={(e) => onInput(e.currentTarget.value)}
@@ -164,12 +177,12 @@ export default function ChatPage() {
               onBlur={() => setAutoScroll(false)}
               rows={inputRows}
               autoFocus={true}
-              disabled={checkChatInputIsDisabled()}
+              disabled={inputIsDisabled}
             />
             <IconButton
               className='absolute right-2 top-[calc(50%-20px)] '
-              disabled={checkChatInputIsDisabled()}
-              onClick={() => (checkChatInputIsDisabled() ? undefined : doSubmit(userInput))}
+              disabled={inputIsDisabled}
+              onClick={() => (inputIsDisabled ? undefined : doSubmit(userInput))}
             >
               <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
             </IconButton>

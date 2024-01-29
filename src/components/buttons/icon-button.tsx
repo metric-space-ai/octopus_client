@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-type ButtonProps = {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary' | 'secondary' | 'dark' | 'disabled' | 'grey';
   loading?: boolean;
   disabled?: boolean;
@@ -8,7 +8,7 @@ type ButtonProps = {
   href?: string;
   children?: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
-};
+}
 
 const ButtonStyle = {
   default: 'bg-transparent',

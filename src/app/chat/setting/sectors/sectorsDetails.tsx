@@ -36,7 +36,7 @@ export default function SectorsData({isLoading, workspaces, onEditWorkspace, onD
               </div>
             )
           : workspaces.map((workspace, index) => (
-              <Disclosure>
+              <Disclosure key={workspace.id}>
                 {({open}) => (
                   <>
                     <div className='flex justify-start py-3 items-center'>

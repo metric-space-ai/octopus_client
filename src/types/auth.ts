@@ -1,9 +1,11 @@
+import { TRole } from "./user";
+
 export interface IAuthData {
   id: string;
   user_id: string;
   expired_at: string;
   data: {
-    roles: string[];
+    roles: TRole[];
   };
 }
 

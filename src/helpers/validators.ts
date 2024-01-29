@@ -31,3 +31,32 @@ export const authValidator = {
     minLength: 5,
   },
 };
+
+export const keywordValidator = {
+  keyword: {
+    required: 'this field is required',
+    maxLength: 100,
+  },
+};
+
+export const parameterValidator = {
+  name: {
+    required: 'this field is required',
+    maxLength: 40,
+  },
+  value: {
+    required: 'this field is required',
+    maxLength: 50,
+  },
+};
+
+export const waspAppFormValidator = {
+  name: {
+    required: 'this field is required',
+    maxLength: 40,
+  },
+  description: {
+    required: 'this field is required',
+    maxLength: 50,
+  },
+};

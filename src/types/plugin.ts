@@ -61,6 +61,7 @@ export interface IPlugin {
   updated_at: string;
   ai_functions: null | undefined | IAIFunctions[];
   parser_feedback: string | null;
+  allowed_user_ids?: string[];
 }
 
 export interface IDeviceMap {

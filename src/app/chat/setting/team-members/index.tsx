@@ -19,8 +19,8 @@ const TeamMembers = (props: Props) => {
 
   return (
     <>
-       <div className='w-full pt-[84px] flex md:gap-12 lg:gap-16 xl:gap-20 pl-6'>
-        <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-20 bg-white'>
+       <div className='w-full pt-[84px] flex md:gap-4 lg:gap-6 px-6'>
+        <div className='flex flex-col w-full max-w-[689px] px-6 py-4 rounded-20 bg-white'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
             <h1 className='text-lg leading-7 text-content-black font-semibold'>team members</h1>
             <Button
@@ -30,11 +30,11 @@ const TeamMembers = (props: Props) => {
               onClick={() => setAddNewUserModal(true)}
             />
           </div>
-          <div className='max-w-full'>
+          <div className='h-full max-h-[420px] overflow-auto relative -mx-4 px-4 custom-scrollbar-thumb'>
             <TeamMebersTable />
           </div>
         </div>
-        <div className='hidden lg:flex flex-col gap-6'>
+        <div className='hidden lg:flex flex-col gap-6 w-44 pr-1'>
           {DESCRIPTIONS.map((desc) => (
             <div key={desc.key} className='flex flex-col gap-1'>
               <h2 className='text-content-grey-900 font-poppins-semibold text-sm leading-5'>{desc.title}</h2>

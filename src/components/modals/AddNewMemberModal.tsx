@@ -15,6 +15,9 @@ import {useSettingsContext} from '@/contexts/settingsContext';
 import toast from 'react-hot-toast';
 import {createTeamMemberApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
+import {useDispatch} from 'react-redux';
+import {addNewTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
+import { AppDispatch } from '@/app/lib/store';
 
 interface ModalProps {
   open: boolean;
@@ -30,6 +33,7 @@ interface IFormInputs {
 }
 
 export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState([ROLEOPTIONS[2]]);
   const [invitationSentModal, setInvitationSentModal] = useState(false);
@@ -65,22 +69,24 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
       roles,
     };
     setLoading(true);
-    try {
-      const {status, data} = await createTeamMemberApi(payload);
-      if (status === 201) {
-        if (teamMembers) {
-          setTeamMembers((prev) => (prev ? [...prev, data] : [data]));
-        }
-        toast.success(`(${payload.name}) has successfully been added as a new user.`);
-        closeDialog();
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-    } finally {
-      setLoading(false);
-    }
+    dispatch(addNewTeamMember(payload));
+    setLoading(false);
+    // try {
+    //   const {status, data} = await createTeamMemberApi(payload);
+    //   if (status === 201) {
+    //     if (teamMembers) {
+    //       setTeamMembers((prev) => (prev ? [...prev, data] : [data]));
+    //     }
+    //     toast.success(`(${payload.name}) has successfully been added as a new user.`);
+    //     closeDialog();
+    //   }
+    // } catch (err) {
+    //   if (err instanceof AxiosError) {
+    //     toast.error(err?.response?.data.error);
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
     // setInvitationSentModal(true);
   };
 
@@ -196,9 +202,8 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                         <Button
                           className='mt-2 w-1/2 !h-10 border'
                           variant='transparent'
-                          title={!loading ? `Cancel` : ''}
+                          title='Cancel'
                           onClick={closeDialog}
-                          disabled={loading}
                         />
                         <Button
                           className='mt-2 w-1/2 !h-10'

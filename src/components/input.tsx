@@ -6,7 +6,7 @@ import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {UseFormRegisterReturn} from 'react-hook-form';
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   inputCoverClassName?: string;
   label?: string;
@@ -26,6 +26,7 @@ export const Input = ({
   errors,
   rules,
   onBlur,
+  ...rest
 }: InputProps) => {
   const [hidePassword, setHidePassword] = useState(false);
   return (
@@ -38,6 +39,7 @@ export const Input = ({
           className='w-full text-base text-content-black outline-none'
           type={type === 'password' ? (hidePassword ? 'text' : 'password') : type}
           placeholder={placeholder}
+          {...rest}
         />
         {type === 'password' && (
           <div

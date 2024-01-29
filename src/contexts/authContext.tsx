@@ -18,33 +18,23 @@ import {
   updateSingleUserById,
   updateUserProfile,
   updateUserProfilePic,
-  getAllPluginsApi,
-  getPluginByIdApi,
-  getAiFunctionsByServiceIdApi,
 } from '../services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin} from '@/types/plugin';
-import {AI_SERVICES_SETUP_STATUS} from '@/constant';
 
 interface IAuthContext {
   isAuthenticated: boolean;
   user: IUserProfile | null;
   setUser: (key: IUserProfile | null) => void;
   singleUser: IUser | null;
-  selectedPlugin: IPlugin | null;
-  reloadPluginAvailable: boolean;
   loading: boolean;
   authLoading: boolean;
-  plugins: IPlugin[] | undefined;
-  setPlugins: React.Dispatch<React.SetStateAction<IPlugin[] | undefined>>;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
   onUploadPlugin: (payload: FormData) => void;
   onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
   onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
   getSingleUser: () => void;
-  getAllPlugins: () => void;
-  getPluginById: (payload: string) => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
@@ -58,18 +48,15 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [user, setUser] = useState<IUserProfile | null>(null);
   const [singleUser, setSingleUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [servicesFunctionIsChecked, setServicesFunctionIsChecked] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
-  const [reloadPluginAvailable, setReloadPluginAvailable] = useState<boolean>(false);
-  const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
-  const [plugins, setPlugins] = useState<IPlugin[]>();
+
   const {setAxiosConfiguration} = useApiClient();
 
-  // useEffect(() => {
-  //   if (!user) return;
-  //   let html = document.getElementsByTagName('html')[0];
-  //   html.style.fontSize = `${user.text_size}px`;
-  // }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    let html = document.getElementsByTagName('html')[0];
+    html.style.fontSize = `${user.text_size}px`;
+  }, [user]);
 
   useEffect(() => {
     setAuthLoading(true);
@@ -91,46 +78,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         });
     }
   }, [authData]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (plugins && plugins.length > 0 && !servicesFunctionIsChecked) {
-      setServicesFunctionIsChecked(true);
-      handleGetPluginFunctions(plugins);
-    }
-  }, [plugins]);
-
-  const handleGetPluginFunctions = async (inputPlugins: IPlugin[]) => {
-    setLoading(true);
-
-    if (inputPlugins) {
-      const result: IPlugin[] | [] = [];
-      for (const plugin of inputPlugins) {
-        const {id, is_enabled, setup_status} = plugin;
-        if (plugin.ai_functions === undefined && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
-          try {
-            const {status, data} = await getAiFunctionsByServiceIdApi(id);
-            if (status === 200) {
-              const resultPlugin: IPlugin = {...plugin, ai_functions: data.length > 0 ? data : null};
-
-              result.push(resultPlugin as never);
-            }
-          } catch (err) {
-            if (err instanceof AxiosError) {
-              toast.error(err?.response?.data.error);
-            }
-            result.push({...plugin, ai_functions: null} as never);
-          } finally {
-          }
-        } else {
-          result.push({...plugin, ai_functions: null} as never);
-        }
-      }
-      setPlugins(result);
-    } else {
-      setPlugins(inputPlugins);
-    }
-    setLoading(false);
-  };
 
   const handleLogin = (email: string, password: string) => {
     setLoading(true);
@@ -163,45 +110,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
       });
   };
 
-  const handlegetAllPlugins = async () => {
-    setLoading(true);
-    try {
-      const {status, data} = await getAllPluginsApi();
-      if (status === 200) {
-        // setPlugins(data);
-        handleGetPluginFunctions(data);
-        setReloadPluginAvailable(false);
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(
-          err?.response?.data.error
-            ? err.response.data.error
-            : 'It appears that something went wrong, so please try refreshing the page',
-        );
-        setReloadPluginAvailable(true);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGetPluginsById = async (payload: string) => {
-    setLoading(true);
-    try {
-      const {status, data} = await getPluginByIdApi(payload);
-      if (status === 200) {
-        setSelectedPlugin(data);
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleUploadNewPlugin = async (payload: FormData) => {
     setLoading(true);
     try {
@@ -227,8 +135,6 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .then((res) => {
           toast.success('successfully updated');
           setUser({...res.data, roles: authData.data.roles});
-
-          // setUser({...res.data, roles: authData.data.roles});
         })
         .catch((error) => {
           toast.error(error.response?.data?.error);
@@ -300,16 +206,10 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     user,
     setUser,
     singleUser,
-    plugins,
-    setPlugins,
-    selectedPlugin,
-    reloadPluginAvailable,
     loading,
     authLoading,
     onLogin: handleLogin,
     onRegister: handleRegister,
-    getAllPlugins: handlegetAllPlugins,
-    getPluginById: handleGetPluginsById,
     onUploadPlugin: handleUploadNewPlugin,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
     onUpdateProfile: handleUpdateUserProfile,

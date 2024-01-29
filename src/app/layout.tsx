@@ -5,6 +5,7 @@ import {Toaster} from 'react-hot-toast';
 
 import {RedirectPathProvider} from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
+import StoreProvider from './StoreProvider';
 
 export const metadata = {
   title: 'Octopus',
@@ -32,14 +33,15 @@ const poppins = Poppins({
 });
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
-
   return (
     <html lang='en' className={`${poppins.variable}`} style={{fontSize: 16}}>
-      <body className='poppins-regular bg-content-black'>
-        <AuthProvider>
-          <RedirectPathProvider>{children}</RedirectPathProvider>
-          <Toaster position='top-right' />
-        </AuthProvider>
+      <body className='poppins-regular bg-content-black' suppressHydrationWarning={true}>
+        <StoreProvider>
+          <AuthProvider>
+            <RedirectPathProvider>{children}</RedirectPathProvider>
+            <Toaster position='top-right' />
+          </AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

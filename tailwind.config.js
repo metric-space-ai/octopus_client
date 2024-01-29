@@ -46,6 +46,8 @@ module.exports = {
           green: '#67A800',
           'red-600': '#DB3A34',
           'red-400': '#EA6C68',
+          'grey-tab': '#E6E3E8',
+          
         },
         success: {
           default: '#00875A',

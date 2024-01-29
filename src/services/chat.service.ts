@@ -1,7 +1,7 @@
 import {
   IChatMessage,
   IContentSafety,
-  ISimpleAppDetails,
+  ISimpleApp,
   ITicket,
   IWorkspace,
   TranslatorResponse,
@@ -49,7 +49,7 @@ export const getChatMessagesApi = async (ticketId: string) => {
 };
 
 export const getChatMessageApplicationApi = async (appId: string) => {
-  return apiHub.get<ISimpleAppDetails>(`api/v1/simple-apps/${appId}`);
+  return apiHub.get<ISimpleApp>(`api/v1/simple-apps/${appId}`);
 };
 
 export const getChatMessageApplicationCodeApi = async (appId: string) => {

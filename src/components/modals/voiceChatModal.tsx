@@ -160,7 +160,7 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                         className={`rounded-full w-12 h-12 relative ${
                           isListening && step === 1 ? 'ring-4 ring-content-accent/[0.15] animate-ring-5s' : ''
                         }`}
-                        src={`${ImagesBaseUrl}${user?.photo_file_name}`}
+                        src={`${ImagesBaseUrl}${user.photo_file_name}`}
                       />:
                       <UserIcon className={`rounded-full w-12 h-12 relative text-content-grey-100 ${
                         isListening && step === 1 ? 'ring-4 ring-content-accent/[0.15] animate-ring-5s' : ''

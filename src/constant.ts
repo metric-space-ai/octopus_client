@@ -1,7 +1,7 @@
 import ISO6391 from 'iso-639-1';
-import {TRole} from './types';
+import {PartialTRoleLabel, TRole} from './types';
 
-export const VERSION_NUM = 'v0.2.5';
+export const VERSION_NUM = 'v0.7.0';
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
 export const DEFAULT_API_HOST = 'https://chatgpt1.nextweb.fun/api/proxy';
 
@@ -65,7 +65,8 @@ export const ROLE_PRIVATE_USER: TRole = 'ROLE_PRIVATE_USER';
 export const ROLE_PUBLIC_USER: TRole = 'ROLE_PUBLIC_USER';
 
 export const ROLESARRAYVALUE: TRole[] = [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, ROLE_PRIVATE_USER, ROLE_PUBLIC_USER];
-export const ROLESLABEL = {
+
+export const ROLESLABEL: PartialTRoleLabel = {
   ROLE_ADMIN: 'Admin',
   ROLE_COMPANY_ADMIN_USER: 'Admin user',
   ROLE_PRIVATE_USER: 'Private user',

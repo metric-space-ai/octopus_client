@@ -3,20 +3,23 @@
 import {useRouter, useSearchParams} from 'next/navigation';
 
 import {SettingsMenu} from './components/settings-menu';
+
 import MyDetailPage from './my-details';
 import PasswordPage from './password';
 import GeneralSettings from './general-settings';
 import TeamMembers from './team-members';
 import Sectors from './sectors';
-import {useAuthContext} from '@/contexts/authContext';
-import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
-import {ShieldExclamationIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import Plugins from './pluggins';
 import Documents from './documents';
+import Parameters from './parameters';
 import SettingsProvider from '@/contexts/settingsContext';
+
 import {TRole} from '@/types';
 import {Spinner} from '@/components/spinner';
 // import Applications from './apps';
+import {useAuthContext} from '@/contexts/authContext';
+import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
+import {ShieldExclamationIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {IconButton} from '@/components/buttons';
 import {paths} from '@/config/path';
 
@@ -50,6 +53,7 @@ export default function SettingPage() {
           {menu === 'password' && <PasswordPage />}
           {menu === 'general' && <GeneralSettings />}
           {menu === 'documents' && <Documents />}
+          {menu === 'parameters' && <Parameters />}
           {/* {menu === 'apps' && <Applications />} */}
           {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role as TRole)) ? (
             <>
