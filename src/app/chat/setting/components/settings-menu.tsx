@@ -15,9 +15,13 @@ import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 
 import {Button} from '@/components/buttons';
-import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, VERSION_NUM} from '@/constant';
+import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {TRole} from '@/types';
+import {useEffect, useState} from 'react';
+import {getAppVersionApi} from '@/services/settings.service';
+import toast from 'react-hot-toast';
+import {AxiosError} from 'axios';
 
 const SIDEBAR: {
   id: string;
@@ -97,6 +101,8 @@ const SIDEBAR: {
 ];
 
 export const SettingsMenu = () => {
+  const [appVersion, setAppVersion] = useState('');
+  const [versionIsLoading, setVersionIsLoading] = useState(false);
   const {user} = useAuthContext();
 
   const router = useRouter();
@@ -109,6 +115,23 @@ export const SettingsMenu = () => {
     params.set('menu', idx);
     router.replace(pathname + '?' + params.toString());
   };
+  const getAppVersion = async () => {
+    setVersionIsLoading(true);
+    try {
+      const {status, data} = await getAppVersionApi();
+
+      if (status === 200) setAppVersion(data.version);
+    } catch (err) {
+      // setApps(beforeChange);
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+    }
+  };
+  useEffect(() => {
+    getAppVersion();
+  }, []);
 
   return (
     <div className='flex flex-col'>
@@ -136,7 +159,13 @@ export const SettingsMenu = () => {
               />
             ),
         )}
-        <span className='text-xxl font-semibold text-content-red-400'>{VERSION_NUM}</span>
+        <span className='text-xxl font-semibold text-content-red-400'>
+          {versionIsLoading && !appVersion ? (
+            <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-full h-8 '></div>
+          ) : (
+            appVersion
+          )}
+        </span>
       </div>
     </div>
   );

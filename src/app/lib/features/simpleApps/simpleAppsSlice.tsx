@@ -10,7 +10,7 @@ import {
   deleteSimpleAppByIdApi,
   getSimpleAppsNameApi,
 } from '@/services/settings.service';
-import {ISimpleApp} from '@/types';
+import {ISimpleApp, ValidationErrors} from '@/types';
 
 interface SimpleAppsStates {
   entities: ISimpleApp[] | null;
@@ -108,10 +108,6 @@ export const getAllSimpleApps = createAsyncThunk('/simpleApps/getAllSimpleApps',
   return data;
 });
 
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
 
 export const updateSimpleApp = createAsyncThunk(
   '/simpleApps/updateSimpleApp',

@@ -10,7 +10,7 @@ import {
   updatePluginByIdApi,
   updatetAiFunctionsByIdApi,
 } from '@/services/settings.service';
-import {IAIFunctions, ICreateUser, IPlugin, IPluginActivation} from '@/types';
+import {IAIFunctions, ICreateUser, IPlugin, IPluginActivation, ValidationErrors} from '@/types';
 
 import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
@@ -143,11 +143,6 @@ export const putAllowedUsersForAiAccess = createAsyncThunk(
     }
   },
 );
-
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
 
 type TUpdatePluginInputs = {
   plugin_id: string;

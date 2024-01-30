@@ -8,7 +8,7 @@ import {
   getAllTeamMembersApi,
   updateTeamMemberApi,
 } from '@/services/settings.service';
-import {ICreateUser, IUser} from '@/types';
+import {ICreateUser, IUser, ValidationErrors} from '@/types';
 
 
 interface TeamMembersStates {
@@ -79,10 +79,6 @@ export const getAllTeamMembers = createAsyncThunk('/teamMembers/getAllTeamMember
   return data;
 });
 
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
 
 export const updateTeamMember = createAsyncThunk(
   '/teamMembers/updateTeamMember',

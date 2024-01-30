@@ -1,4 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {Popover} from '@headlessui/react';
 
 import {toast} from 'react-hot-toast';
 
@@ -39,14 +41,10 @@ import {AnimateDots, LogoIcon} from './svgs';
 import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
-import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
-import {Popover} from '@headlessui/react';
-import CustomSwitch from './switch/custom-switch';
-import {useDispatch} from 'react-redux';
-import {getWaspAppSourceDocByChatIdAndWaspId} from '@/app/lib/features/waspApps/waspAppsSlice';
-import {useSelector} from 'react-redux';
+import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
-import { AppDispatch } from '@/app/lib/store';
+import WaspAppIframe from './wasp-app-iframe';
+import CustomSwitch from './switch/custom-switch';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -66,7 +64,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     replaceMessageWithNotSensitive,
     updateContentSafety,
   } = useChatStore();
-  const dispatch = useDispatch<AppDispatch>();
   const {app_src: wasp_app_src, isLoading: waspAppIsLoading} = useSelector(selectWaspApps);
 
   const {user} = useAuthContext();
@@ -252,8 +249,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       handleGetAppCode();
     }
     if (item.status === 'Answered' && item.wasp_app_id) {
-      console.log({wasp_app_src});
-      dispatch(getWaspAppSourceDocByChatIdAndWaspId(item));
       setHasWaspApp(true);
     } else {
       setHasWaspApp(false);
@@ -366,31 +361,8 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
             }`}
           >
             {hasWaspApp && (
-              <div className='relative'>
-                {waspAppIsLoading ? (
-                  <div className='flex flex-col gap-6 items-center '>
-                    <h1 className='text-content-white text-xl w-full text-center'>Please Be Pationt - wasp app is Loading</h1>
-                    <AnimateDots />
-                  </div>
-                ) : (
-                  <>
-                    <iframe
-                      ref={iframeRef}
-                      style={{minHeight: iframeheight}}
-                      className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}] flex-1`}
-                      srcDoc={wasp_app_src}
-                      // height={iframeheight}
-                      onLoad={onLoadPrepareIframe}
-                    ></iframe>
-                    {/* <IconButton
-                              className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
-                              onClick={() => setIframeWithSrcModal(true)}
-                              >
-                              <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
-                            </IconButton> */}
-                  </>
-                )}
-              </div>
+              <WaspAppIframe item={item}/>
+            
             )}
 
             {loading ? (
@@ -609,10 +581,10 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       </div>
 
       {applicationInnerHTML && (
-        <IframeWithSrcDialog
+        <IframeWithSrcDocDialog
           open={iframeWithSrcModal}
           onClose={() => setIframeWithSrcModal(false)}
-          src={applicationInnerHTML}
+          srcDoc={applicationInnerHTML}
         />
       )}
       {item.profile?.photo_file_name && (

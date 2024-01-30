@@ -7,3 +7,4 @@ export * from './app';
 export * from './parameter';
 export * from './simpleApp';
 export * from './waspApp';
+export * from './service';

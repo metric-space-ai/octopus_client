@@ -8,10 +8,10 @@ import {IconButton} from '../buttons';
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  src: string;
+  srcDoc: string;
 }
 
-export const IframeWithSrcDialog = ({open, onClose, src}: ModalProps) => {
+export const IframeWithSrcDocDialog = ({open, onClose, srcDoc}: ModalProps) => {
   return (
     <>
       <Transition appear show={open} as={Fragment}>
@@ -51,7 +51,7 @@ export const IframeWithSrcDialog = ({open, onClose, src}: ModalProps) => {
                   <iframe style={{
                     height: 'calc(100vh - 108px)',
                     width: 'calc(100vw - 108px)',
-                  }} className={`w-full h-full [&_body]:m-0 flex-1`} src={src}></iframe>
+                  }} className={`w-full h-full bg-red text-content-white [&_body]:m-0 flex-1`} srcDoc={srcDoc}></iframe>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

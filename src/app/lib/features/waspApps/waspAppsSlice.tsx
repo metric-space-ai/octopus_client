@@ -10,7 +10,7 @@ import {
   deleteWaspAppByIdApi,
   getWaspAppSourceDocByChatIdAndWaspIdApi,
 } from '@/services/settings.service';
-import {IChatMessage, IWaspApp} from '@/types';
+import {IChatMessage, IWaspApp, ValidationErrors} from '@/types';
 
 interface WaspAppsStates {
   entities: IWaspApp[] | null;
@@ -109,6 +109,7 @@ const waspAppsSlice = createSlice({
         state.isLoading = false;
         if (payload) {
           state.app_src = payload;
+          console.log({getWaspAppSourceDocByChatIdAndWaspId:payload})
         }
       });
   },
@@ -161,11 +162,6 @@ export const getWaspAppSourceDocByChatIdAndWaspId = createAsyncThunk(
     }
   },
 );
-
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
 
 export const updateWaspApp = createAsyncThunk(
   '/waspApps/updateWaspApp',

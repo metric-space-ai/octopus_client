@@ -164,7 +164,11 @@ export const updateWaspAppByIdApi = () => {
 export const deleteWaspAppByIdApi = (wasp_id: string) => {
   return apiHub.delete<IWaspApp>(`api/v1/wasp-apps/${wasp_id}`);
 };
-  
-  export const getWaspAppSourceDocByChatIdAndWaspIdApi = (wasp_id: string,chat_message_id:string) => {
-    return apiHub.get<string>(`api/v1/wasp-apps/${wasp_id}/${chat_message_id}/proxy-frontend`);
-  };
+
+export const getWaspAppSourceDocByChatIdAndWaspIdApi = (wasp_id: string, chat_message_id: string) => {
+  return apiHub.get<string>(`api/v1/wasp-apps/${wasp_id}/${chat_message_id}/proxy-frontend`);
+};
+
+export const getAppVersionApi = () => {
+  return apiHub.get<{version: string}>(`api/v1/version`);
+};

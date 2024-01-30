@@ -2,7 +2,7 @@ import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
-import {IParameter} from '@/types';
+import {IParameter, ValidationErrors} from '@/types';
 import {
   createNewParameterApi,
   deleteParameterByIdApi,
@@ -90,10 +90,6 @@ export const getParameter = createAsyncThunk('/parameters/getParameter', async (
   return data;
 });
 
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
 
 export const updateParameter = createAsyncThunk(
   '/parameters/updateParameter',
