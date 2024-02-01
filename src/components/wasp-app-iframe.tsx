@@ -24,11 +24,14 @@ const WaspAppIframe = ({item}: IAppIframeProps) => {
     setTimeout(() => fixFrameHeight, 5000);
     setAppIsLoading(false);
   };
+  useEffect(() =>{
+    setTimeout(() => fixFrameHeight, 10000);
+  },[]);
   return (
     <div className='relative'>
       {appIsLoading && (
         <div className='flex flex-col gap-6 items-center '>
-          <h1 className='text-content-white text-xl w-full text-center'>Please Be Pationt - wasp app is Loading</h1>
+          <h1 className='text-content-white text-xl w-full text-center'>the app is loading</h1>
           <AnimateDots />
         </div>
       )}
