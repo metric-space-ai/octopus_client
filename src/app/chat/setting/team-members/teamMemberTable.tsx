@@ -63,7 +63,6 @@ const TeamMebersTable = (props: Props) => {
             <ArrowsUpDownIcon width={9} height={9} className='text-content-grey-600 ml-1.5' />
           </div>
           <span className='w-[122px] text-content-grey-600 text-xs font-normal text-left self-center'>User role</span>
-          <span className='w-[122px] text-content-grey-600 text-xs font-normal text-left self-center'>AI access</span>
         </div>
         <div className='flex flex-col'>
           {isLoading ? (

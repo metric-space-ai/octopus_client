@@ -6,6 +6,5 @@ export interface IWaspApp {
   is_enabled: boolean;
   name: string;
   created_at: string;
-  deleted_at: string | null;
   updated_at: string | null;
 }

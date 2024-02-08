@@ -11,7 +11,7 @@ export interface IChatMessageFile {
   id: string;
   chat_message_id: string;
   file_name: string;
-  media_type: string;
+  media_type: 'video/mp4' | 'image/jpeg';
   created_at: string;
   deleted_at: string;
 }
@@ -27,7 +27,7 @@ export interface IChatMessage {
   user_id: string;
   estimated_response_at: string;
   chat_id: string;
-  chat_message_files: [IChatMessageFile];
+  chat_message_files: IChatMessageFile[];
   is_sensitive: boolean;
   is_anonymized: boolean;
   is_marked_as_not_sensitive: boolean;

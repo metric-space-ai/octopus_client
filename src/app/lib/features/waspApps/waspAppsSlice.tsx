@@ -66,13 +66,13 @@ const waspAppsSlice = createSlice({
       .addCase(updateWaspApp.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities) {
-          // state.entities = [...state.entities].flatMap((member) => (member.id === payload.id ? payload : member));
+          state.entities = [...state.entities].flatMap((app) => (app.id === payload.id ? payload : app));
         }
       })
       .addCase(deleteWaspAppById.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities) {
-          // state.entities = [...state.entities].filter((member) => member.id !== payload);
+          state.entities = [...state.entities].filter((app) => app.id !== payload);
         }
       })
       .addCase(uploadNewWaspApp.pending, (state) => {
@@ -165,11 +165,11 @@ export const getWaspAppSourceDocByChatIdAndWaspId = createAsyncThunk(
 
 export const updateWaspApp = createAsyncThunk(
   '/waspApps/updateWaspApp',
-  async (member: IWaspApp, {rejectWithValue}) => {
+  async (payload: IWaspApp, {rejectWithValue}) => {
     try {
-      // const {status, data} = await updateWaspAppByIdApi();
-      // if (status === 200) toast.success(`Successful update.`);
-      // return data;
+      const {status, data} = await updateWaspAppByIdApi(payload);
+      if (status === 200) toast.success(`Successful update.`);
+      return data;
     } catch (err) {
       let error = err as AxiosError<ValidationErrors, any>;
 

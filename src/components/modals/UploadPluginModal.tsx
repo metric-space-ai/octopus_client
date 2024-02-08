@@ -17,7 +17,7 @@ import CustomCheckbox from '../custom-checkbox';
 import Highlight from 'react-highlight';
 
 import {AxiosError} from 'axios';
-import {IPlugin, IResources} from '@/types/plugin';
+// import {IPlugin, IResources} from '@/types/plugin';
 import {PLUGINSTATUS} from '@/constant';
 import {Spinner} from '../spinner';
 import {
@@ -28,8 +28,9 @@ import {
   uploadNewPluginApi,
 } from '@/services/settings.service';
 import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/app/lib/store';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@/app/lib/store';
+import {IDeviceMap, IPlugin, IResources} from '@/types';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
@@ -81,27 +82,32 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [fileText, setFileText] = useState('');
 
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
-
-  const [active, setActive] = useState(false);
-  const [setupFormIsValid, setSetupFormIsValid] = useState(false);
   const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
   const [resources, setResources] = useState<IResources>();
-
-  const [deviceMapConfig, setDeviceMapConfig] = useState({cpu: false});
 
   const [installStarted, setInstallStarted] = useState(false);
   const [installPercentage, setInstallPercentage] = useState(0);
   const [pluginInstalled, setPluginInstalled] = useState(false);
+  const [activatedGPU, setActivatedGPU] = useState<string[]>([]);
+  const [activatedCPU, setActivatedCPU] = useState<(keyof IDeviceMap)[] | []>([]);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef(0);
 
   const handleSubmitSecondStep = async () => {
     if (fileUploaded && currentStep === ADDPLUGINSTEPS.Setup) {
       setLoading(true);
       if (!selectedPlugin || !resources) return;
+      const device_map = Object.entries(resources.device_map).reduce((acc: IDeviceMap, [key, value]) => {
+        if (activatedCPU.includes(key as never)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+      const gpus = resources.gpus.filter((gpu) => activatedGPU.includes(gpu.id));
+
+      const payload = {device_map, gpus};
       try {
-        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, resources.device_map);
+        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, payload);
         if (status === 200) {
           setSelectedPlugin(data);
           toast.success('upload successfull');
@@ -194,8 +200,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setFileUploaded(false);
     setCurrentStep(ADDPLUGINSTEPS.Upload);
     setFileText('');
-    setActive(false);
-    setSetupFormIsValid(false);
+
     setInstallStarted(false);
     setInstallPercentage(0);
     setPluginInstalled(false);
@@ -301,6 +306,23 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       setLoading(false);
     }
   };
+
+  const handleChangeCpuActivation = (check: boolean, cpu_key: string) => {
+    if (check) {
+      setActivatedCPU((prevValues) => [...prevValues, cpu_key]);
+    } else {
+      setActivatedCPU((prevValues) => prevValues.filter((val) => val !== cpu_key));
+    }
+  };
+
+  const handleChangeGpuActivation = (check: boolean, gpu_id: string) => {
+    if (check) {
+      setActivatedGPU((prevValues) => [...prevValues, gpu_id]);
+    } else {
+      setActivatedGPU((prevValues) => prevValues.filter((val) => val !== gpu_id));
+    }
+  };
+
   useEffect(() => {
     if (currentStep === ADDPLUGINSTEPS.Installation) {
       handleStartInstallationApi();
@@ -353,7 +375,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
               >
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
-                transform border border-content-primary bg-content-grey-100
+                transform border border-content-primary bg-content-grey-100 custom-scrollbar-thumb
                  pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
                 >
                   <div className='flex justify-between items-start mb-16 relative'>
@@ -533,37 +555,47 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                         </div>
 
                         <div className='flex flex-col w-full lg:w-7/12 max-w-[452px]'>
-                          <h5 className='text-sm font-poppins-semibold text-content-black mb-8 text-left'>
+                          <h5
+                            className='text-sm font-poppins-semibold text-content-black mb-8 text-left'
+                            onClick={() => console.log({activatedGPU, activatedCPU})}
+                          >
                             Assign a plugin to computer resources
                           </h5>
 
-                          {resources && resources.device_map.cpu && (
-                            <div className='flex flex-col gap-3 mb-3'>
-                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                                <CustomCheckbox
-                                  active={deviceMapConfig.cpu}
-                                  onChange={(check: boolean) => setDeviceMapConfig((prev) => ({...prev, cpu: check}))}
-                                  title={`cpu`}
-                                  description={resources.device_map.cpu}
-                                />
-                                <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* {setupEnv.map((setup, inx) => (
-                            <div key={setup.id} className='flex flex-col gap-3 mb-3'>
-                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                                <CustomCheckbox
-                                  active={setup.active}
-                                  onChange={(check: boolean) => handleChangeSetup(check, inx)}
-                                  title={setup.title}
-                                  description={setup.desc}
-                                />
-                                <span className='text-content-grey-600 text-xs ml-auto'>{setup.space}</span>
-                              </div>
-                            </div>
-                          ))} */}
+                          <div className='flex flex-col gap-3 mb-3 max-h-64 relative -mr-4 pr-4   custom-scrollbar-thumb'>
+                            {/* {resources && resources.device_map.cpu && ( */}
+                            {resources &&
+                              Object.entries(resources.device_map).map(([key, value]) => (
+                                <div
+                                  key={`${key}-${value}`}
+                                  className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'
+                                >
+                                  <CustomCheckbox
+                                    active={activatedCPU.includes(key as never)}
+                                    onChange={(check: boolean) => handleChangeCpuActivation(check, key)}
+                                    title={key}
+                                    description={value}
+                                  />
+                                  <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
+                                </div>
+                              ))}
+                            {resources &&
+                              resources.gpus.length > 0 &&
+                              resources.gpus.map((gpu) => (
+                                <div
+                                  key={gpu.id}
+                                  className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'
+                                >
+                                  <CustomCheckbox
+                                    active={activatedGPU.includes(gpu.id)}
+                                    onChange={(check: boolean) => handleChangeGpuActivation(check, gpu.id)}
+                                    title={gpu.name}
+                                    description={gpu.memory_used}
+                                  />
+                                  <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
+                                </div>
+                              ))}
+                          </div>
                         </div>
                       </div>
                     )}

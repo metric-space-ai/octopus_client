@@ -9,6 +9,7 @@ import {
   IParameter,
   ISimpleApp,
   IWaspApp,
+  IGpus,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -52,7 +53,7 @@ export const startPluginInstallationApi = (plugin_id: string) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
 };
 
-export const addPluginConfigurationApi = (plugin_id: string, payload: IDeviceMap) => {
+export const addPluginConfigurationApi = (plugin_id: string, payload: {device_map: IDeviceMap, gpus: IGpus[]}) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map: payload});
 };
 
@@ -157,8 +158,13 @@ export const uploadNewWaspAppApi = (payload: FormData) => {
   });
 };
 
-export const updateWaspAppByIdApi = () => {
-  // return apiHub.put<IWaspApp>(`api/v1/wasp-apps/${parameter_id}`, payload);
+export const updateWaspAppByIdApi = (wasp_app:IWaspApp) => {
+  const {id,name,description,is_enabled} = wasp_app;
+  return apiHub.put<IWaspApp>(`api/v1/wasp-apps/${id}`, {name,description,is_enabled}, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const deleteWaspAppByIdApi = (wasp_id: string) => {

@@ -277,20 +277,24 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
             ) : (
               <UserIcon className='w-9 h-9 text-content-grey-100' />
             )}
-            {item.is_anonymized ? (
-              <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                <SparklesIcon width={14} height={14} className='text-content-accent' />
-              </div>
-            ) : item.is_marked_as_not_sensitive ? (
-              <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                <ExclamationTriangleIcon width={14} height={14} className='text-red-600' />
-              </div>
-            ) : (
-              isSensitive && (
-                <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                  <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
-                </div>
-              )
+            {user?.user_id === item.user_id && (
+              <>
+                {item.is_anonymized ? (
+                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                    <SparklesIcon width={14} height={14} className='text-content-accent' />
+                  </div>
+                ) : item.is_marked_as_not_sensitive ? (
+                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                    <ExclamationTriangleIcon width={14} height={14} className='text-red-600' />
+                  </div>
+                ) : (
+                  isSensitive && (
+                    <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
+                      <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
+                    </div>
+                  )
+                )}
+              </>
             )}
           </div>
           <div className='flex-1 mt-1'>
@@ -311,11 +315,15 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                   <span className='whitespace-pre-wrap text-base leading-6 text-content-black'>
                     {prepareIfResponseIncludesMessage()}
                   </span>
-                  {item.is_anonymized && (
-                    <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* Sensitive data  has been replaced by anonymized data`}</span>
-                  )}
-                  {item.is_marked_as_not_sensitive && (
-                    <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* marked  as Not Sensitive`}</span>
+                  {user?.user_id === item.user_id && (
+                    <>
+                      {item.is_anonymized && (
+                        <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* Sensitive data  has been replaced by anonymized data`}</span>
+                      )}
+                      {item.is_marked_as_not_sensitive && (
+                        <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* marked  as Not Sensitive`}</span>
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -360,16 +368,13 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               ''
             }`}
           >
-            {hasWaspApp && (
-              <WaspAppIframe item={item}/>
-            
-            )}
+            {hasWaspApp && <WaspAppIframe item={item} />}
 
             {loading ? (
               <AnimateDots />
             ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
               isFileMessage ? (
-                <FileMarkdownContent content={item.chat_message_files} title={item.message} />
+                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} />
               ) : (
                 <>
                   {applicationInnerHTML ? (

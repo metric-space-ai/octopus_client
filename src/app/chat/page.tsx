@@ -86,16 +86,18 @@ export default function ChatPage() {
   };
 
   const checkChatInputIsDisabled = () => {
-    const isSensitivePresent = messages.some(
-      (message) =>
-        (isSensitiveChecked || message.is_sensitive) &&
-        enabledContentSafety &&
-        !showChatPrompt &&
-        isSensitiveUserId === user?.user_id,
-    );
+    // const isSensitivePresent = messages.some(
+    //   (message) =>
+    //     (isSensitiveChecked || message.is_sensitive) &&
+    //     enabledContentSafety &&
+    //     !showChatPrompt &&
+    //     isSensitiveUserId === user?.user_id,
+    // );
+    if (messages.length === 0) return;
+    const message = messages[messages.length - 1];
+    const isSensitivePresent = (isSensitiveChecked || message.is_sensitive) && enabledContentSafety && !showChatPrompt;
 
     setInputIsDisabled(isSensitivePresent);
-     
   };
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
@@ -152,7 +154,9 @@ export default function ChatPage() {
           ) : (
             messages?.map(
               (item) =>
-                ((item.is_sensitive && user?.user_id === item.user_id) || !item.is_sensitive) && (
+                ((item.is_sensitive && user?.user_id === item.user_id) ||
+                  item.is_marked_as_not_sensitive ||
+                  !item.is_sensitive) && (
                   <MessageItem key={item.id} item={item} changeSafety={setShowWarningSnackBarWhenSafetyDisabled} />
                 ),
             )

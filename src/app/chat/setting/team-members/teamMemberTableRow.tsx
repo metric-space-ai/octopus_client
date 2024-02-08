@@ -19,12 +19,7 @@ type Props = {
 export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [roleIsLoading, setRoleIsLoading] = useState(false);
-  const [aiAccess, setAiAccess] = useState<IPlugin[] | []>([]);
 
-  const handleChangeUserAiAccess = async (services: IPlugin[]) => {
-    console.log({services});
-    setAiAccess(services);
-  };
   const handleChangeUserRole = async (roles: TRole[]) => {
     if (roles.includes(ROLE_ADMIN)) return;
     const payload = {
@@ -54,7 +49,6 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
         {/* <img src={userImageSample.src} className='rounded-full w-11 h-11' /> */}
         <div
           className='flex items-center justify-center w-11 h-11 bg-content-accent-light-11 rounded-full overflow-hidden'
-          onClick={() => console.log({aiAccess})}
         >
           {user.profile?.photo_file_name ? (
             <img
@@ -69,9 +63,9 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
           )}
         </div>
         <div className={`flex flex-col gap-0.5 ${user.is_enabled ? 'justify-start' : 'justify-center'}`}>
-          {/* {user.is_enabled && (
-            <h6 className='font-semibold text-xs leading-5'>{user.}</h6>
-          )} */}
+          {user.is_enabled && (
+            <h6 className='font-semibold text-xs leading-5'>{user.profile?.name}</h6>
+          )}
           <p
             className={`font-normal text-xs leading-5 w-[165px] truncate ... ${
               user.is_enabled ? 'text-content-grey-900' : 'text-content-grey-600'
@@ -149,78 +143,6 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
         )}
       </div>
 
-      <div className='w-[119px] flex justify-start items-center'>
-        {pluginsIsLoading ? (
-          <div className='flex justify-start py-3 items-center animate-pulse'>
-            <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-36 h-10'></div>
-            <div className=' bg-gray-300 rounded- allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
-          </div>
-        ) : (
-          plugins && (
-            <Listbox value={aiAccess} onChange={handleChangeUserAiAccess} multiple>
-              <div className='mt-1'>
-                <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
-                  <span
-                    className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
-                    title={aiAccess?.map((plugin) => plugin.original_file_name).join(', ')}
-                  >
-                    {aiAccess.length === 0 ? (
-                      'none'
-                    ) : (
-                      <>
-                        {aiAccess.length === 1 && aiAccess[0].original_file_name}
-                        {aiAccess.length > 1 && aiAccess.length === plugins.length && 'All'}
-                        {aiAccess.length > 1 && aiAccess.length !== plugins.length && `${aiAccess.length} services`}
-                      </>
-                    )}
-                  </span>
-
-                  <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
-                    <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
-                  </span>
-                </Listbox.Button>
-                <Transition
-                  as={Fragment}
-                  leave='transition ease-in duration-100'
-                  leaveFrom='opacity-100'
-                  leaveTo='opacity-0'
-                >
-                  <Listbox.Options className='absolute mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
-                    {plugins.map((plugin) => (
-                      <Listbox.Option
-                        key={plugin.id}
-                        className={({active}) =>
-                          `relative select-none py-2 pl-10 pr-4 ${active ? 'bg-content-grey-100' : 'text-gray-900'} 
-                          ${
-                            ''
-                            // plugin === ROLE_ADMIN
-                            //   ? 'focus:outline-none opacity-50 bg-content-grey-100 hover:bg-content-grey-100'
-                            //   : 'cursor-pointer'
-                          }`
-                        }
-                        value={plugin}
-                      >
-                        {({selected}) => (
-                          <>
-                            <span className='block truncate' title={plugin.original_file_name}>
-                              {plugin.original_file_name}
-                            </span>
-                            {selected && (
-                              <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-content-primary'>
-                                <CheckIcon className='h-5 w-5' aria-hidden='true' />
-                              </span>
-                            )}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </Transition>
-              </div>
-            </Listbox>
-          )
-        )}
-      </div>
       <span className='ml-auto cursor-pointer flex items-center'>
         <TrashIcon
           width={16}

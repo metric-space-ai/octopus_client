@@ -65,9 +65,10 @@ export interface IPlugin {
 }
 
 export interface IDeviceMap {
-  cpu?: string;
+  // cpu?: string;
+  [key: string]: string;
 }
-interface IGpus {
+export interface IGpus {
   id: string;
   memory_free: string;
   memory_total: string;
@@ -84,9 +85,4 @@ export interface IResources {
   memory_used: string;
   physical_cpus: number;
 
-  // device_map: {
-  //   additionalProp1: 'string';
-  //   additionalProp2: 'string';
-  //   additionalProp3: 'string';
-  // };
 }

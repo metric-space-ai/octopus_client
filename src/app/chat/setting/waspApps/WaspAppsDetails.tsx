@@ -5,7 +5,7 @@ import {TrashIcon, ChevronUpIcon, ChevronDownIcon, CheckIcon} from '@heroicons/r
 import CustomSwitch from '@/components/switch/custom-switch';
 import {IWaspApp} from '@/types';
 import {useSelector, useDispatch} from 'react-redux';
-import {getAllWaspApps, deleteWaspAppById} from '@/app/lib/features/waspApps/waspAppsSlice';
+import {getAllWaspApps, deleteWaspAppById, updateWaspApp} from '@/app/lib/features/waspApps/waspAppsSlice';
 
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import Highlight from 'react-highlight';
@@ -14,7 +14,7 @@ import './../../../../assets/atelier-cave-dark.css';
 import RemoveWaspAppModal from '@/components/modals/RemoveWaspAppModal';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
-import { AppDispatch } from '@/app/lib/store';
+import {AppDispatch} from '@/app/lib/store';
 
 export default function WaspAppsDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,9 +34,10 @@ export default function WaspAppsDetails() {
     dispatch(deleteWaspAppById(selectedWaspApp.id));
   };
 
-  const handleChangeWaspAppActivation = async (app_id: string, check: boolean) => {
+  const handleChangeWaspAppActivation = async (app: IWaspApp, check: boolean) => {
     if (!waspApps) return;
-
+    const payload: IWaspApp = {...app, is_enabled: check};
+    dispatch(updateWaspApp(payload));
     // const payload: IWaspAppActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
     // const beforeChange = [...waspApps];
     // setWaspApps([...waspApps.flatMap((p) => (p.id === app_id ? {...p, is_enabled: check} : p))]);
@@ -135,13 +136,19 @@ export default function WaspAppsDetails() {
                           </div>
 
                           <div className='flex w-28 pr-1.5'>
-                            <p className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...' title={app.description}>
+                            <p
+                              className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'
+                              title={app.description}
+                            >
                               {app.description}
                             </p>
                           </div>
 
                           <div className='flex w-28 pr-1.5'>
-                            <p className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...' title={app.formatted_name}>
+                            <p
+                              className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'
+                              title={app.formatted_name}
+                            >
                               {app.formatted_name}
                             </p>
                           </div>
@@ -163,13 +170,15 @@ export default function WaspAppsDetails() {
                                     <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
                                       <span
                                         className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
-                                        title={!app.allowed_user_ids || app.allowed_user_ids.length === 0 ? (
-                                          'none'
-                                        ):allUsers
-                                          ?.map((user) =>
-                                            app.allowed_user_ids?.includes(user.id) ? user.profile?.name : '',
-                                          )
-                                          .join(', ')}
+                                        title={
+                                          !app.allowed_user_ids || app.allowed_user_ids.length === 0
+                                            ? 'none'
+                                            : allUsers
+                                                ?.map((user) =>
+                                                  app.allowed_user_ids?.includes(user.id) ? user.profile?.name : '',
+                                                )
+                                                .join(', ')
+                                        }
                                       >
                                         {!app.allowed_user_ids || app.allowed_user_ids.length === 0 ? (
                                           'none'
@@ -235,7 +244,7 @@ export default function WaspAppsDetails() {
                           <div className='flex justify-center items-center w-20 pl-1.5'>
                             <CustomSwitch
                               active={app.is_enabled}
-                              onChange={(check: boolean) => handleChangeWaspAppActivation(app.id, check)}
+                              onChange={(check: boolean) => handleChangeWaspAppActivation(app, check)}
                             />
                           </div>
 
