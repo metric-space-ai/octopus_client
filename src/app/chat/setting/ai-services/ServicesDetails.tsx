@@ -5,7 +5,6 @@ import {TrashIcon, ChevronUpIcon, ChevronDownIcon, CheckIcon} from '@heroicons/r
 import PluginsBadge from './badge';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {RemovePluginModal} from '@/components/modals/RemovePluginModal';
-import {useAuthContext} from '@/contexts/authContext';
 import {IAIFunctions, IPlugin, IPluginActivation, IUser} from '@/types';
 import CustomCheckbox from '@/components/custom-checkbox';
 import {IconButton} from '@/components/buttons';
@@ -24,7 +23,8 @@ import {
 } from '@/app/lib/features/aiServices/aiServicesSlice';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
-import { AppDispatch } from '@/app/lib/store';
+import {AppDispatch} from '@/app/lib/store';
+import ServiceFunctions from './ServiceFunctions';
 
 export default function PluginsDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,8 +32,6 @@ export default function PluginsDetails() {
   const {entities: allUsers, isLoading: usersIsLoading} = useSelector(selectTeamMembers);
 
   const [removePluginsModal, setRemovePluginsModal] = useState(false);
-  const [aiFunctionsLoading, setAiFunctionsLoading] = useState(false);
-  const [deleteFunctionsIsLoading, setDeleteFunctionsIsLoading] = useState(false);
   const [selectedPlugin, setSelectedPlugin] = useState<IPlugin>();
 
   const handleOpenDeletePluginModal = (plugin: IPlugin) => {
@@ -46,9 +44,8 @@ export default function PluginsDetails() {
     if (allowedUsers.length === 0) {
       dispatch(putAllowedUsersForAiAccess({plugin_id, allowedUsers: []}));
     } else {
-      // const result = allowedUsers.reduce((acc,user)=>(acc.push(user.id)),[]:string[])
       const userIds: string[] = allowedUsers.map((user) => user.id);
-      // console.log({userIds});
+
       dispatch(putAllowedUsersForAiAccess({plugin_id, allowedUsers: userIds}));
     }
   };
@@ -61,69 +58,7 @@ export default function PluginsDetails() {
     if (!plugins) return;
 
     const payload: IPluginActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
-    // const beforeChange = [...plugins];
-    // setPlugins([...plugins.flatMap((p) => (p.id === plugin_id ? {...p, is_enabled: check} : p))]);
     dispatch(updatePluginById({plugin_id, payload}));
-    // try {
-    //   const {status} = await updatePluginByIdApi(plugin_id, payload);
-    //   if (status === 201) {
-    //     toast.success('updated successfully');
-    //   } else {
-    //     setPlugins(beforeChange);
-    //   }
-    // } catch (err) {
-    //   setPlugins(beforeChange);
-    //   if (err instanceof AxiosError) {
-    //     toast.error(err?.response?.data.error);
-    //   }
-    // } finally {
-    // }
-  };
-
-  const handleChangeAiFunctionActivation = async (
-    index: number,
-    funcIndex: number,
-    serviceFunction: IAIFunctions,
-    check: boolean,
-  ) => {
-    if (!plugins) return;
-    setAiFunctionsLoading(true);
-    // const payload = {...serviceFunction, is_enabled: check};
-    // const beforeChange = [...plugins];
-    // const result = [...plugins];
-    // result[index].ai_functions![funcIndex].is_enabled = check;
-    // setPlugins(result);
-    try {
-      dispatch(updatetAiFunctionsById(serviceFunction));
-      // const {status} = await updatetAiFunctionsByIdApi(function.ai_service_id, function.id, payload);
-      // if (status === 200) {
-      //   toast.success('updated successfully');
-      // } else {
-      //   setPlugins(beforeChange);
-      // }
-      // } catch (err) {
-      //   setPlugins(beforeChange);
-      //   if (err instanceof AxiosError) {
-      //     toast.error(err?.response?.data.error);
-      //   }
-    } finally {
-      setAiFunctionsLoading(false);
-    }
-  };
-
-  const handleDeleteServiceAiFunction = async (index: number, service_function: IAIFunctions) => {
-    if (!plugins) return;
-    setDeleteFunctionsIsLoading(true);
-    try {
-      dispatch(deletetAiFunctionsById(service_function));
-      // const {status} = await deletetAiFunctionsByIdApi(func.ai_service_id, func.id);
-      // if (status === 204) {
-      //   toast.success('deleted successfully');
-      //   getAllPlugins();
-      // }
-    } finally {
-      setDeleteFunctionsIsLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -135,17 +70,17 @@ export default function PluginsDetails() {
     <>
       <div className='w-full'>
         <div className='mx-auto custom-scrollbar-thumb'>
-          <div className='flex mb-2'>
+          <div className='flex mb-2 gap-1'>
             <div className='w-52'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
             </div>
-            <div className='w-28'>
+            {/* <div className='w-28'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
-            </div>
-            <div className='w-[122px]'>
+            </div> */}
+            <div className='w-[122px] text-center'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Users</span>
             </div>
-            <div className='w-24 flex justify-center'>
+            <div className='w-28 flex justify-center'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Status</span>
             </div>
             <div className='w-20 flex justify-center'>
@@ -153,7 +88,7 @@ export default function PluginsDetails() {
             </div>
           </div>
 
-          <div className='max-h-[420px] h-full min-w-[570px] overflow-auto'>
+          <div className='max-h-[420px] h-full min-w-[570px] custom-scrollbar-thumb'>
             {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2
@@ -174,29 +109,25 @@ export default function PluginsDetails() {
                   <Disclosure key={plugin.id}>
                     {({open}) => (
                       <Fragment>
-                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100 gap-1'>
                           <div className='flex gap-3 w-52 items-center truncate overflow-hidden'>
-                            {plugin.ai_functions && plugin.ai_functions.length > 0 && (
-                              <Disclosure.Button className='flex items-center'>
-                                <ChevronUpIcon
-                                  className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
-                                />
-                              </Disclosure.Button>
-                            )}
-                            <div className={`flex items-center ${plugin.ai_functions ? '' : 'pl-8'}`}>
-                              <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>
-                                {plugin.original_file_name}
-                              </p>
-                            </div>
+                            <Disclosure.Button className='flex items-center'>
+                              <ChevronUpIcon
+                                className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
+                              />
+                            </Disclosure.Button>
+                            <p className='text-xs leading-5 text-content-black font-poppins-semibold truncate ...' title={plugin.original_file_name}>
+                              {plugin.original_file_name}
+                            </p>
                           </div>
-                          <p className='text-xxs leading-4 w-24 text-content-grey-900 font-poppins-medium'>
-                            {/* {plugin.device_map} */}
-                          </p>
+                          {/* <p className='text-xxs leading-4 w-24 text-content-grey-900 font-poppins-medium'>
+                            
+                          </p> */}
 
                           <div className='w-[119px] flex justify-start items-center'>
                             {usersIsLoading ? (
                               <div className='flex justify-start py-3 items-center animate-pulse'>
-                                <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-36 h-10'></div>
+                                <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-36 h-8'></div>
                                 <div className=' bg-gray-300 rounded- allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
                               </div>
                             ) : (
@@ -210,11 +141,15 @@ export default function PluginsDetails() {
                                     <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
                                       <span
                                         className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
-                                        title={allUsers
-                                          ?.map((user) =>
-                                            plugin.allowed_user_ids?.includes(user.id) ? user.profile?.name : '',
-                                          )
-                                          .join(', ')}
+                                        title={
+                                          !plugin.allowed_user_ids || plugin.allowed_user_ids.length === 0
+                                            ? 'none'
+                                            : allUsers
+                                                ?.map((user) =>
+                                                  plugin.allowed_user_ids?.includes(user.id) ? user.profile?.name : '',
+                                                )
+                                                .join(', ')
+                                        }
                                       >
                                         {!plugin.allowed_user_ids || plugin.allowed_user_ids.length === 0 ? (
                                           'none'
@@ -222,7 +157,9 @@ export default function PluginsDetails() {
                                           <>
                                             {plugin.allowed_user_ids?.length === 1
                                               ? allUsers.map((user) => (
-                                                  <Fragment key={`${user.company_id}-${user.id}`}>{user.id === plugin.allowed_user_ids?.[0] && user.profile?.name}</Fragment>
+                                                  <Fragment key={`${user.company_id}-${user.id}`}>
+                                                    {user.id === plugin.allowed_user_ids?.[0] && user.profile?.name}
+                                                  </Fragment>
                                                 ))
                                               : plugin.allowed_user_ids?.length === plugin.allowed_user_ids?.length
                                               ? 'All Members'
@@ -292,42 +229,16 @@ export default function PluginsDetails() {
                           </div>
 
                           <span
-                            className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                            className='ml-auto p-1.5 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
                             onClick={() => handleOpenDeletePluginModal(plugin)}
                           >
                             <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
                           </span>
                         </div>
-                        {plugin.ai_functions && (
                           <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
-                            <div className='flex flex-col gap-3 pl-9 w-full'>
-                              {plugin.ai_functions.map((func, funcIndex) => (
-                                <div key={func.id} className='flex w-full items-center justify-between'>
-                                  <CustomCheckbox
-                                    active={func.is_enabled}
-                                    onChange={(check: boolean) =>
-                                      !aiFunctionsLoading
-                                        ? handleChangeAiFunctionActivation(index, funcIndex, func, check)
-                                        : {}
-                                    }
-                                    disabled={aiFunctionsLoading}
-                                    title={func.description}
-                                  />
-                                  <IconButton
-                                    className='top-4 right-4 mr-5 bg-content-red-600/20 hover:bg-content-red-600/40'
-                                    onClick={() => handleDeleteServiceAiFunction(index, func)}
-                                  >
-                                    {deleteFunctionsIsLoading ? (
-                                      <Spinner />
-                                    ) : (
-                                      <TrashIcon className='w-4 h-4 text-content-primary' />
-                                    )}
-                                  </IconButton>
-                                </div>
-                              ))}
-                            </div>
+                            <ServiceFunctions serviceId={plugin.id} ai_functions={plugin.ai_functions} />
                           </Disclosure.Panel>
-                        )}
+                        
                       </Fragment>
                     )}
                   </Disclosure>
@@ -350,68 +261,7 @@ export default function PluginsDetails() {
               )}
             </Disclosure>
           )}
-          {/* <Disclosure>
-            {({open}) => (
-              <>
-                <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
-                  <div className='flex gap-3 w-52 items-center'>
-                    <Disclosure.Button className='flex items-center'>
-                      <ChevronUpIcon className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`} />
-                    </Disclosure.Button>
-                    <div className='flex items-center '>
-                      <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>Plugin name 1</p>
-                    </div>
-                  </div>
-                  <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
-                    0.7 / 24GB on GPU2
-                  </p>
-                  <div className='w-24 text-xs flex justify-center'>
-                    <PluginsBadge variant='info' label='Setup' />
-                  </div>
-                  <div className='flex justify-center items-center w-20'>
-                    <Switch
-                      checked={active}
-                      onChange={(checked) => setActive(checked)}
-                      className={classNames(
-                        `${
-                          active
-                            ? 'bg-content-accent shadow-switch-active'
-                            : ' shadow-switch-deactive bg-content-grey-100'
-                        } relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
-                      )}
-                    >
-                      {' '}
-                      <span className='sr-only'>Use setting</span>
-                      <span
-                        aria-hidden='true'
-                        className={classNames(
-                          `${
-                            active
-                              ? 'translate-x-5 shadow-switch-circle-active bg-content-grey-100'
-                              : 'translate-x-0 shadow-switch-circle-deactive bg-white'
-                          } pointer-events-none inline-block h-4 w-4 transform rounded-full ring-0 transition duration-200 ease-in-out`,
-                        )}
-                      />
-                    </Switch>
-                  </div>
-
-                  <span
-                    className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
-                    onClick={() => setRemovePluginsModal(true)}
-                  >
-                    <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
-                  </span>
-                </div>
-                <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 py-3'>
-                  <p className='w-full text-xs leading-5 text-content-grey-900 font-poppins-medium ml-3'>
-                    Enhance your ChatGPT experience with ImageFlow Connect – a powerful plugin that seamlessly
-                    integrates image uploading capabilities into your conversations. With ImageFlow Connect, you can
-                    effortlessly share visual context by uploading images directly within the chat interface.
-                  </p>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure> */}
+         
         </div>
       </div>
       {selectedPlugin && (

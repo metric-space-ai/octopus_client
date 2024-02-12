@@ -74,6 +74,7 @@ export interface IGpus {
   memory_total: string;
   memory_used: string;
   name: string;
+  cuda: string;
 }
 
 export interface IResources {
@@ -84,5 +85,4 @@ export interface IResources {
   memory_total: string;
   memory_used: string;
   physical_cpus: number;
-
 }

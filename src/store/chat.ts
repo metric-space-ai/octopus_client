@@ -361,6 +361,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
               set({messages: res.data});
             }
           });
+        } else {
+          if (res.data.status === 'Answered'){
+            const result = messages.flatMap((message) => (message.id === res.data.id ? res.data : message));
+            set({messages: result});
+          }
         }
       }
     });

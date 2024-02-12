@@ -53,8 +53,8 @@ export const startPluginInstallationApi = (plugin_id: string) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
 };
 
-export const addPluginConfigurationApi = (plugin_id: string, payload: {device_map: IDeviceMap, gpus: IGpus[]}) => {
-  return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map: payload});
+export const addPluginConfigurationApi = (plugin_id: string, device_map: IDeviceMap) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map});
 };
 
 export const uploadNewPluginApi = (payload: FormData) => {
@@ -82,7 +82,7 @@ export const updatetAiFunctionsByIdApi = (
   ai_function_id: string,
   payload: {is_enabled: boolean},
 ) => {
-  return apiHub.put<IAIFunctions[]>(`api/v1/ai-functions/${ai_service_id}/${ai_function_id}`, payload);
+  return apiHub.put<IAIFunctions>(`api/v1/ai-functions/${ai_service_id}/${ai_function_id}`, payload);
 };
 
 export const getServerResourcesApi = () => {
@@ -158,13 +158,17 @@ export const uploadNewWaspAppApi = (payload: FormData) => {
   });
 };
 
-export const updateWaspAppByIdApi = (wasp_app:IWaspApp) => {
-  const {id,name,description,is_enabled} = wasp_app;
-  return apiHub.put<IWaspApp>(`api/v1/wasp-apps/${id}`, {name,description,is_enabled}, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+export const updateWaspAppByIdApi = (wasp_app: IWaspApp) => {
+  const {id, name, description, is_enabled} = wasp_app;
+  return apiHub.put<IWaspApp>(
+    `api/v1/wasp-apps/${id}`,
+    {name, description, is_enabled},
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     },
-  });
+  );
 };
 
 export const deleteWaspAppByIdApi = (wasp_id: string) => {

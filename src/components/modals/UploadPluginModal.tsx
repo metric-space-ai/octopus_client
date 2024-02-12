@@ -103,11 +103,10 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
         }
         return acc;
       }, {});
-      const gpus = resources.gpus.filter((gpu) => activatedGPU.includes(gpu.id));
+      // const gpus = resources.gpus.filter((gpu) => activatedGPU.includes(gpu.id));
 
-      const payload = {device_map, gpus};
       try {
-        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, payload);
+        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, device_map);
         if (status === 200) {
           setSelectedPlugin(data);
           toast.success('upload successfull');
@@ -565,21 +564,42 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           <div className='flex flex-col gap-3 mb-3 max-h-64 relative -mr-4 pr-4   custom-scrollbar-thumb'>
                             {/* {resources && resources.device_map.cpu && ( */}
                             {resources &&
-                              Object.entries(resources.device_map).map(([key, value]) => (
-                                <div
-                                  key={`${key}-${value}`}
-                                  className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'
-                                >
-                                  <CustomCheckbox
-                                    active={activatedCPU.includes(key as never)}
-                                    onChange={(check: boolean) => handleChangeCpuActivation(check, key)}
-                                    title={key}
-                                    description={value}
-                                  />
-                                  <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
-                                </div>
-                              ))}
-                            {resources &&
+                              Object.entries(resources.device_map).map(([key, value]) =>
+                                key === 'cpu' ? (
+                                  <div
+                                    key={`${key}-${value}`}
+                                    className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'
+                                  >
+                                    <CustomCheckbox
+                                      active={activatedCPU.includes(key as never)}
+                                      onChange={(check: boolean) => handleChangeCpuActivation(check, key)}
+                                      title={key}
+                                      description={value}
+                                    />
+                                    <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
+                                  </div>
+                                ) : (
+                                  resources.gpus.length > 0 &&
+                                  resources.gpus.map(
+                                    (gpu) =>
+                                      gpu.cuda === key && (
+                                        <div
+                                          key={`${key}-${value}`}
+                                          className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'
+                                        >
+                                          <CustomCheckbox
+                                            active={activatedCPU.includes(key as never)}
+                                            onChange={(check: boolean) => handleChangeCpuActivation(check, key)}
+                                            title={gpu.name}
+                                            description={gpu.memory_used}
+                                          />
+                                          <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
+                                        </div>
+                                      ),
+                                  )
+                                ),
+                              )}
+                            {/* {resources &&
                               resources.gpus.length > 0 &&
                               resources.gpus.map((gpu) => (
                                 <div
@@ -594,7 +614,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                   />
                                   <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
                                 </div>
-                              ))}
+                              ))} */}
                           </div>
                         </div>
                       </div>

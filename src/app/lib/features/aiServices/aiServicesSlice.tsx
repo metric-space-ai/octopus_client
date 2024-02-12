@@ -1,7 +1,6 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import {
-  createTeamMemberApi,
   deletePluginByIdApi,
   deletetAiFunctionsByIdApi,
   getAiFunctionsByServiceIdApi,
@@ -10,7 +9,7 @@ import {
   updatePluginByIdApi,
   updatetAiFunctionsByIdApi,
 } from '@/services/settings.service';
-import {IAIFunctions, ICreateUser, IPlugin, IPluginActivation, ValidationErrors} from '@/types';
+import {IAIFunctions, IPlugin, IPluginActivation, ValidationErrors} from '@/types';
 
 import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
@@ -21,6 +20,9 @@ interface AiServicesStates {
   hasError: boolean;
   errorMessage: string | undefined;
   reloadPluginIsAvailable: boolean;
+  functionIsLoading: boolean;
+  deleteFunctionsIsLoading: boolean;
+  updateAiFunctionIsLoading: boolean;
 }
 // Define the initial state using that type
 const initialState: AiServicesStates = {
@@ -29,6 +31,9 @@ const initialState: AiServicesStates = {
   hasError: false,
   errorMessage: '',
   reloadPluginIsAvailable: false,
+  functionIsLoading: false,
+  deleteFunctionsIsLoading: false,
+  updateAiFunctionIsLoading: false,
 };
 
 const aiServicesSlice = createSlice({
@@ -61,12 +66,10 @@ const aiServicesSlice = createSlice({
         state.reloadPluginIsAvailable = true;
       })
       .addCase(getAllPlugins.fulfilled, (state, action) => {
-        console.log('getAllPlugins fulfilled');
         state.isLoading = false;
         state.entities = action.payload;
       })
       .addCase(updatePluginById.fulfilled, (state, {payload}) => {
-        console.log('updatePluginById fulfilled');
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].flatMap((plugin) =>
@@ -75,39 +78,64 @@ const aiServicesSlice = createSlice({
         }
       })
       .addCase(putAllowedUsersForAiAccess.fulfilled, (state, {payload}) => {
-        console.log('putAllowedUsersForAiAccess fulfilled');
         state.isLoading = false;
         if (state.entities && payload) {
           state.entities = [...state.entities].flatMap((plugin) => (plugin.id === payload.id ? {...payload} : plugin));
         }
       })
       .addCase(deletePluginById.fulfilled, (state, {payload}) => {
-        console.log('deletePluginById fulfilled');
         state.isLoading = false;
         if (state.entities) {
           // state.entities = [...state.entities].filter((plugin) => plugin.id !== payload.id);
         }
+      })
+
+      .addCase(updatetAiFunctionsById.pending, (state, action) => {
+        state.updateAiFunctionIsLoading = true;
+      })
+      .addCase(updatetAiFunctionsById.rejected, (state, action) => {
+        state.updateAiFunctionIsLoading = false;
       })
       .addCase(updatetAiFunctionsById.fulfilled, (state, {payload}) => {
-        console.log('updatetAiFunctionsById fulfilled');
-        state.isLoading = false;
-        if (state.entities) {
-          // state.entities = [...state.entities].filter((plugin) => plugin.id !== payload.id);
+        state.updateAiFunctionIsLoading = false;
+        if (state.entities && payload) {
+          state.entities = [...state.entities].map((plugin) =>
+            plugin.id === payload.ai_service_id && plugin.ai_functions && plugin.ai_functions.length > 0
+              ? {
+                  ...plugin,
+                  ai_functions: plugin.ai_functions.flatMap((ai_func) =>
+                    ai_func.id === payload.id ? {...payload} : ai_func,
+                  ),
+                }
+              : plugin,
+          );
         }
       })
+      .addCase(deletetAiFunctionsById.pending, (state, action) => {
+        state.deleteFunctionsIsLoading = true;
+      })
+      .addCase(deletetAiFunctionsById.rejected, (state, action) => {
+        state.deleteFunctionsIsLoading = false;
+      })
       .addCase(deletetAiFunctionsById.fulfilled, (state, {payload}) => {
-        console.log('deletetAiFunctionsById fulfilled');
-        state.isLoading = false;
-        // if (state.entities) {
-        // state.entities = [...state.entities].filter((plugin) => plugin.id !== payload.id);
-        // }
+        state.deleteFunctionsIsLoading = false;
+        if (state.entities && payload) {
+          state.entities = [...state.entities].map((plugin) =>
+            plugin.id === payload.ai_service_id && plugin.ai_functions && plugin.ai_functions.length > 0
+              ? {
+                  ...plugin,
+                  ai_functions: plugin.ai_functions.filter((ai_func) => ai_func.id !== payload.id),
+                }
+              : plugin,
+          );
+        }
       });
   },
 });
 
 export const getAllPlugins = createAsyncThunk('/aiServices/getAllPlugins', async () => {
   // try {
-  console.log('dispatch getAllPlugins runs');
+
   const {status, data} = await getAllPluginsApi();
   return data;
   // if (status === 200) {
@@ -224,17 +252,18 @@ export const updatetAiFunctionsById = createAsyncThunk(
   '/aiServices/updatetAiFunctionsById',
   async (payload: IAIFunctions, {rejectWithValue, dispatch}) => {
     try {
-      const {status} = await updatetAiFunctionsByIdApi(payload.ai_service_id, payload.id, {
+      const {status, data} = await updatetAiFunctionsByIdApi(payload.ai_service_id, payload.id, {
         is_enabled: payload.is_enabled,
       });
 
       if (status === 200) {
         toast.success('updated successfully');
+        if (data) {
+          return data;
+        } else {
+          return payload;
+        }
       }
-      // if (status === 204) {
-      //   toast.success(`the function has successfully been removed.`);
-      //   dispatch(getAllPlugins());
-      // }
     } catch (err) {
       let error = err as AxiosError<ValidationErrors, any>;
 
