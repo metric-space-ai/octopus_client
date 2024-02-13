@@ -38,20 +38,19 @@ export function SideBar(props: {className?: string}) {
         }, 10000);
       }
     },
-    [chatStore.getContentSafety],
+    [chatStore.refreshMessage],
   );
 
   useEffect(() => {
     if (user) {
       checkDataProtection(user.user_id);
-      console.log({user})
     }
     return () => {
       if (timeoutRef.current) {
         clearInterval(timeoutRef.current);
       }
     };
-  }, [checkDataProtection]);
+  }, [user, checkDataProtection]);
 
   useEffect(() => {
     if (!chatStore.enabledContentSafety && chatStore.contentSafetyDetails.content_safety_disabled_until) {
