@@ -15,7 +15,7 @@ import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 
 import {Button} from '@/components/buttons';
-import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
+import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, VERSION_NUM} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {TRole} from '@/types';
 import {useEffect, useState} from 'react';
