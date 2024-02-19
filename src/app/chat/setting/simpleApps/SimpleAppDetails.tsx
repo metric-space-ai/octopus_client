@@ -79,7 +79,7 @@ export default function SimpleAppsDetails() {
             </div>
           </div>
 
-          <div className='max-h-[420px] h-full min-w-[570px] overflow-auto'>
+          <div className='max-h-[280px] h-full min-w-[570px] custom-scrollbar-thumb'>
             {reloadSimpleAppIsAvailable && (
               <div className='w-full'>
                 <h2

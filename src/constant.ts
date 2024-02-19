@@ -1,5 +1,5 @@
 import ISO6391 from 'iso-639-1';
-import {PartialTRoleLabel, TRole} from './types';
+import {PartialTRoleLabel, TRecordPluginStatus, TRole} from './types';
 
 export const APPREQUESTBASEURL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 export const VERSION_NUM = 'v0.7.0';
@@ -114,7 +114,7 @@ export const WORKSPACETYPE = {
   PUBLIC: 'Public',
   PRIVATE: 'Private',
 };
-export const PLUGINSTATUS = {
+export const PLUGINSTATUS: TRecordPluginStatus = {
   Configuration: 'Configuration',
   Error: 'Error',
   Initial: 'Initial',

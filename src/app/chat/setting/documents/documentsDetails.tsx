@@ -2,7 +2,7 @@ import {useState, useEffect, Fragment} from 'react';
 import {Disclosure} from '@headlessui/react';
 
 import {TrashIcon, ChevronUpIcon} from '@heroicons/react/24/outline';
-import {RemovePluginModal} from '@/components/modals/RemovePluginModal';
+import {RemovePluginModal} from '@/components/modals/pluginModals/RemovePluginModal';
 import {useAuthContext} from '@/contexts/authContext';
 import {AxiosError} from 'axios';
 

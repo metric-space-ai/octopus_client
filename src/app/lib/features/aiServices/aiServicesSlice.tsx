@@ -6,8 +6,9 @@ import {
   getAiFunctionsByServiceIdApi,
   getAllPluginsApi,
   putAllowedUsersForAiAccessApi,
-  updatePluginByIdApi,
+  changePluginActivitiesByPluginIdApi,
   updatetAiFunctionsByIdApi,
+  getServiceLogsByPluginIdApi,
 } from '@/services/settings.service';
 import {IAIFunctions, IPlugin, IPluginActivation, ValidationErrors} from '@/types';
 
@@ -23,6 +24,10 @@ interface AiServicesStates {
   functionIsLoading: boolean;
   deleteFunctionsIsLoading: boolean;
   updateAiFunctionIsLoading: boolean;
+  selectedPlugin: IPlugin | null;
+  openPluginLogsModal: boolean;
+  openRemovePluginDialog: boolean;
+  pluginLogIsLoading: boolean;
 }
 // Define the initial state using that type
 const initialState: AiServicesStates = {
@@ -34,12 +39,24 @@ const initialState: AiServicesStates = {
   functionIsLoading: false,
   deleteFunctionsIsLoading: false,
   updateAiFunctionIsLoading: false,
+  selectedPlugin: null,
+  openPluginLogsModal: false,
+  openRemovePluginDialog: false,
+  pluginLogIsLoading: false,
 };
 
 const aiServicesSlice = createSlice({
   name: 'aiServices',
   initialState,
   reducers: {
+    mergeLogsToPluginById: (state, {payload}: PayloadAction<{logs: string; service_id: string}>) => {
+      if (state.entities) {
+        const {logs, service_id} = payload;
+        state.entities = [...state.entities].flatMap((plugin) =>
+          plugin.id === service_id ? {...plugin, logs} : plugin,
+        );
+      }
+    },
     mergeFunctionToPluginById: (
       state,
       {payload}: PayloadAction<{service_functions: IAIFunctions[]; service_id: string}>,
@@ -49,6 +66,15 @@ const aiServicesSlice = createSlice({
           plugin.id === payload.service_id ? {...plugin, ai_functions: payload.service_functions ?? null} : plugin,
         );
       }
+    },
+    handleChangeSelectedPlugin: (state, {payload}: PayloadAction<IPlugin | null>) => {
+      state.selectedPlugin = payload;
+    },
+    handleChangeOpenPluginLogsDialog: (state, {payload}: PayloadAction<boolean>) => {
+      state.openPluginLogsModal = payload;
+    },
+    handleChangeOpenRemovePluginDialog: (state, {payload}: PayloadAction<boolean>) => {
+      state.openRemovePluginDialog = payload;
     },
   },
   extraReducers(builder) {
@@ -69,11 +95,34 @@ const aiServicesSlice = createSlice({
         state.isLoading = false;
         state.entities = action.payload;
       })
-      .addCase(updatePluginById.fulfilled, (state, {payload}) => {
+      .addCase(changePluginActivitiesByPluginId.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].flatMap((plugin) =>
             plugin.id === payload?.plugin_id ? {...plugin, is_enabled: payload.is_enabled} : plugin,
+          );
+        }
+      })
+      .addCase(getServiceLogsByPluginId.pending, (state, action) => {
+        state.pluginLogIsLoading = true;
+        state.hasError = false;
+        state.errorMessage = '';
+      })
+      .addCase(getServiceLogsByPluginId.rejected, (state, action) => {
+        state.hasError = true;
+        state.pluginLogIsLoading = false;
+        state.errorMessage = action.error.message;
+      })
+      .addCase(getServiceLogsByPluginId.fulfilled, (state, {payload}) => {
+        state.pluginLogIsLoading = false;
+        if (state.entities && payload) {
+          const {logs, service_id} = payload;
+          // state.entities = [...state.entities].flatMap((plugin) =>
+          //   plugin.id === payload.id ? {...plugin, ...payload} : plugin,
+          // );
+
+          state.entities = [...state.entities].flatMap((plugin) =>
+            plugin.id === service_id ? {...plugin, logs} : plugin,
           );
         }
       })
@@ -143,6 +192,29 @@ export const getAllPlugins = createAsyncThunk('/aiServices/getAllPlugins', async
   // }
 });
 
+export const getServiceLogsByPluginId = createAsyncThunk(
+  '/aiServices/getServiceLogsByPluginId',
+  async (service_id: string, {rejectWithValue, dispatch}) => {
+    try {
+      const {status, data: logs} = await getServiceLogsByPluginIdApi(service_id);
+      if (status === 200) {
+        // dispatch(mergeLogsToPluginById({logs, service_id}));
+        return {logs, service_id};
+      }
+    } catch (err) {
+      let error = err as AxiosError<ValidationErrors, any>;
+
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 type TAiAllowAccess = {
   plugin_id: string;
   allowedUsers: string[] | [];
@@ -177,11 +249,11 @@ type TUpdatePluginInputs = {
   payload: IPluginActivation;
 };
 
-export const updatePluginById = createAsyncThunk(
-  '/aiServices/updatePluginById',
+export const changePluginActivitiesByPluginId = createAsyncThunk(
+  '/aiServices/changePluginActivitiesByPluginId',
   async ({plugin_id, payload}: TUpdatePluginInputs, {rejectWithValue}) => {
     try {
-      const {status} = await updatePluginByIdApi(plugin_id, payload);
+      const {status} = await changePluginActivitiesByPluginIdApi(plugin_id, payload);
       if (status === 201) {
         toast.success('updated successfully');
         return {plugin_id, ...payload};
@@ -199,6 +271,29 @@ export const updatePluginById = createAsyncThunk(
     }
   },
 );
+
+// export const updatePluginById = createAsyncThunk(
+//   '/aiServices/updatePluginById',
+//   async ({id, formData}: {id: string; formData: FormData}, {rejectWithValue}) => {
+//     try {
+//       const {status, data} = await updatePluginByIdApi(id, formData);
+//       if (status === 200) {
+//         toast.success('updated successfully');
+//       }
+//       return data;
+//     } catch (err) {
+//       let error = err as AxiosError<ValidationErrors, any>;
+
+//       if (err instanceof AxiosError) {
+//         toast.error(err?.response?.data.error);
+//       }
+//       if (!error.response) {
+//         throw error;
+//       }
+//       return rejectWithValue(error.response.data);
+//     }
+//   },
+// );
 
 export const deletePluginById = createAsyncThunk(
   '/aiServices/deletePluginById',
@@ -300,37 +395,12 @@ export const getAiFunctionsByPluginId = createAsyncThunk(
   },
 );
 
-// const handleGetPluginFunctions = async (inputPlugins: IPlugin[]) => {
-//   if (inputPlugins) {
-//     const result: IPlugin[] | [] = [];
-//     for (const plugin of inputPlugins) {
-//       const {id, is_enabled, setup_status} = plugin;
-
-//       if (plugin.ai_functions === undefined && setup_status === AI_SERVICES_SETUP_STATUS.Performed) {
-//         try {
-//           const {status, data} = await getAiFunctionsByServiceIdApi(id);
-//           if (status === 200) {
-//             const resultPlugin: IPlugin = {...plugin, ai_functions: data.length > 0 ? data : null};
-//             result.push(resultPlugin as never);
-//           }
-//         } catch (err) {
-//           if (err instanceof AxiosError) {
-//             toast.error(err?.response?.data.error);
-//           }
-//           result.push({...plugin, ai_functions: null} as never);
-//         } finally {
-//         }
-//       } else {
-//         result.push({...plugin, ai_functions: null} as never);
-//       }
-//     }
-//     // setPlugins(result);
-//   } else {
-//     // // setPlugins(inputPlugins);
-//   }
-//   // setLoading(false);
-// };
-
-const {mergeFunctionToPluginById} = aiServicesSlice.actions;
+export const {
+  mergeFunctionToPluginById,
+  handleChangeSelectedPlugin,
+  handleChangeOpenPluginLogsDialog,
+  handleChangeOpenRemovePluginDialog,
+  mergeLogsToPluginById,
+} = aiServicesSlice.actions;
 
 export default aiServicesSlice.reducer;

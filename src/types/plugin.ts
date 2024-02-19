@@ -28,6 +28,23 @@ export interface IAIFunctions {
   deleted_at: string | null;
   updated_at: string | null;
 }
+
+export type TRecordPluginStatus = Record<TPluginStatus, TPluginStatus>;
+export type TPartialPluginStatus = Partial<TPluginStatus>;
+
+export type TPluginStatus =
+  | 'Configuration'
+  | 'Error'
+  | 'Initial'
+  | 'InstallationFinished'
+  | 'InstallationStarted'
+  | 'MaliciousCodeDetected'
+  | 'ParsingFinished'
+  | 'ParsingStarted'
+  | 'Running'
+  | 'Setup'
+  | 'Stopped';
+
 export interface IPlugin {
   id: string;
   device_map: string | null;
@@ -42,18 +59,7 @@ export interface IPlugin {
   required_python_version: string;
   setup_execution_time: number;
   setup_status: 'Performed' | 'NotPerformed';
-  status:
-    | 'Configuration'
-    | 'Error'
-    | 'Initial'
-    | 'InstallationFinished'
-    | 'InstallationStarted'
-    | 'MaliciousCodeDetected'
-    | 'ParsingFinished'
-    | 'ParsingStarted'
-    | 'Running'
-    | 'Setup'
-    | 'Stopped';
+  status: TPluginStatus;
   created_at: string;
   deleted_at: null;
   health_check_at: string | null;
@@ -62,6 +68,8 @@ export interface IPlugin {
   ai_functions: null | undefined | IAIFunctions[];
   parser_feedback: string | null;
   allowed_user_ids?: string[];
+  type: 'Normal' | 'System';
+  logs: string | null;
 }
 
 export interface IDeviceMap {

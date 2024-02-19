@@ -59,7 +59,7 @@ export default function WaspAppsDetails() {
   };
 
   const handleChangeUserWaspAccess = (wasp_id: string, allowedUsers: IWaspApp[]) => {
-    console.log({allowedUsers});
+    
     if (allowedUsers.length === 0) {
       // dispatch(putAllowedUsersForAiAccess({wasp_id, allowedUsers: []}));
     } else {
@@ -102,7 +102,7 @@ export default function WaspAppsDetails() {
             </div>
           </div>
 
-          <div className='max-h-[420px] h-full min-w-[570px] overflow-auto'>
+          <div className='max-h-[280px] h-full min-w-[570px] overflow-auto custom-scrollbar-thumb'>
             {reloadWaspAppIsAvailable && (
               <div className='w-full'>
                 <h2
@@ -162,12 +162,11 @@ export default function WaspAppsDetails() {
                             ) : (
                               allUsers && (
                                 <Listbox
-                                  //  value={aiAccess}
                                   onChange={(value: IWaspApp[] | []) => handleChangeUserWaspAccess(app.id, value)}
                                   multiple
                                 >
-                                  <div className='mt-1'>
-                                    <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
+                                  <div className='mt-1 relative'>
+                                    <Listbox.Button className=' w-[122px] relative cursor-pointer rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
                                       <span
                                         className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
                                         title={
@@ -207,7 +206,7 @@ export default function WaspAppsDetails() {
                                       leaveFrom='opacity-100'
                                       leaveTo='opacity-0'
                                     >
-                                      <Listbox.Options className='absolute mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
+                                      <Listbox.Options className='absolute top-8 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
                                         {allUsers.map((user) => (
                                           <Listbox.Option
                                             key={user.id}

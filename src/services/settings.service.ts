@@ -49,12 +49,16 @@ export const getPluginByIdApi = (plugin_id: string) => {
   return apiHub.get<IPlugin>(`api/v1/ai-services/${plugin_id}`);
 };
 
+export const getServiceLogsByPluginIdApi = (plugin_id: string) => {
+  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/logs`);
+};
+
 export const startPluginInstallationApi = (plugin_id: string) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
 };
 
-export const addPluginConfigurationApi = (plugin_id: string, device_map: IDeviceMap) => {
-  return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, {device_map});
+export const addPluginConfigurationApi = (plugin_id: string, payload: {device_map: IDeviceMap; type: string}) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, payload);
 };
 
 export const uploadNewPluginApi = (payload: FormData) => {
@@ -65,8 +69,16 @@ export const uploadNewPluginApi = (payload: FormData) => {
   });
 };
 
-export const updatePluginByIdApi = (plugin_id: string, payload: IPluginActivation) => {
+export const changePluginActivitiesByPluginIdApi = (plugin_id: string, payload: IPluginActivation) => {
   return apiHub.post<string>(`api/v1/ai-services/${plugin_id}`, payload);
+};
+
+export const updatePluginByIdApi = (id: string, file: FormData) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${id}`, file, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const getAiFunctionsByServiceIdApi = (ai_service_id: string) => {

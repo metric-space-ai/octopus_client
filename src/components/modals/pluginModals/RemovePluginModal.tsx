@@ -4,18 +4,17 @@ import {useEffect, useRef} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
-import {Button, IconButton} from '../buttons';
-import { IPlugin } from '@/types/plugin';
+import {Button, IconButton} from '../../buttons';
+import {IPlugin} from '@/types/plugin';
 
 interface ModalProps {
   open: boolean;
   onDelete: () => void;
   onClose: () => void;
-  plugin:IPlugin
+  plugin: IPlugin;
 }
 
-export const RemovePluginModal = ({open, onClose, onDelete,plugin}: ModalProps) => {
-  const [loading, setLoading] = useState(false);
+export const RemovePluginModal = ({open, onClose, onDelete, plugin}: ModalProps) => {
   const [deleteStarted, setDeleteStarted] = useState(false);
   const [deleteConfirmed, setDeleteConfirmed] = useState(false);
   const [percent, setPercent] = useState(0);
@@ -66,7 +65,10 @@ export const RemovePluginModal = ({open, onClose, onDelete,plugin}: ModalProps) 
             >
               <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2 mb-5'>
-                  <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black max-w-sm truncate overflow-hidden'>
+                  <Dialog.Title
+                    as='h3'
+                    className='text-2xl font-semibold text-content-black max-w-sm truncate overflow-hidden'
+                  >
                     {deleteStarted
                       ? `“${plugin.original_file_name}” removing`
                       : deleteConfirmed
@@ -126,7 +128,6 @@ export const RemovePluginModal = ({open, onClose, onDelete,plugin}: ModalProps) 
                         className='flex-1 !h-11'
                         variant='dangerous'
                         title='Remove plugin'
-                        loading={loading}
                         onClick={handleDeletePlugin}
                       />
                       <Button

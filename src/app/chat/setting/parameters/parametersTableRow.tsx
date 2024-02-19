@@ -11,19 +11,13 @@ type Props = {
 
 export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter}: Props) => {
   return (
-    <div className='h-[59px] flex border-b-content-grey-100 border-b items-center'>
+    <div className='h-[51px] flex border-b-content-grey-100 border-b items-center py-[15px]'>
       <h6
         className={`w-48 truncate ... font-normal text-xs leading-5 text-content-black font-poppins-semibold block mr-4`}
       >
         {parameter.name}
       </h6>
 
-      <p
-        className={`block items-center text-xs leading-5 w-[170px] mr-3 truncate ...
-            text-content-grey-900`}
-      >
-        {parameter.id}
-      </p>
 
       <div className='flex justify-start items-center flex-1'>
         <span

@@ -25,10 +25,9 @@ const parametersTable = ({parameters, handleOpenDeleteDialog, handleOpenEditDial
         <div className='h-7 flex items-centers'>
           <span className='w-52 text-content-grey-600 text-xs font-normal text-left'>Name</span>
 
-          <span className='w-[182px] text-content-grey-600 text-xs font-normal text-left'>Key</span>
           <span className='w-28 text-content-grey-600 text-xs font-normal text-left'>Value</span>
         </div>
-        <div className='flex flex-col'>
+        <div className='flex flex-col max-h-[420px] custom-scrollbar-thumb relative -mr-4 pr-4'>
           {parametersIsLoading ? (
             <>
               <div className='flex justify-start items-center animate-pulse w-full pr-3 h-[59px]'>

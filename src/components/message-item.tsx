@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
 import {Popover} from '@headlessui/react';
 
 import {toast} from 'react-hot-toast';
@@ -42,7 +41,6 @@ import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
-import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import WaspAppIframe from './wasp-app-iframe';
 import CustomSwitch from './switch/custom-switch';
 
@@ -64,7 +62,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     replaceMessageWithNotSensitive,
     updateContentSafety,
   } = useChatStore();
-  const {app_src: wasp_app_src, isLoading: waspAppIsLoading} = useSelector(selectWaspApps);
 
   const {user} = useAuthContext();
   const timeoutRef = useRef(0);

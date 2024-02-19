@@ -1,42 +1,53 @@
-import {useState, useEffect, Fragment} from 'react';
+import {useEffect, Fragment} from 'react';
 import {Disclosure, Listbox, Transition} from '@headlessui/react';
 
-import {TrashIcon, ChevronUpIcon, ChevronDownIcon, CheckIcon} from '@heroicons/react/24/outline';
+import {
+  TrashIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  CheckIcon,
+  PencilSquareIcon,
+  DocumentTextIcon,
+} from '@heroicons/react/24/outline';
 import PluginsBadge from './badge';
 import CustomSwitch from '@/components/switch/custom-switch';
-import {RemovePluginModal} from '@/components/modals/RemovePluginModal';
-import {IAIFunctions, IPlugin, IPluginActivation, IUser} from '@/types';
-import CustomCheckbox from '@/components/custom-checkbox';
-import {IconButton} from '@/components/buttons';
-import {Spinner} from '@/components/spinner';
+import {IPlugin, IPluginActivation, IUser} from '@/types';
 import {PLUGINSTATUS} from '@/constant';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
 import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
 import {
-  deletePluginById,
-  deletetAiFunctionsById,
   getAllPlugins,
   putAllowedUsersForAiAccess,
-  updatePluginById,
-  updatetAiFunctionsById,
+  changePluginActivitiesByPluginId,
+  handleChangeSelectedPlugin,
+  handleChangeOpenPluginLogsDialog,
+  handleChangeOpenRemovePluginDialog,
 } from '@/app/lib/features/aiServices/aiServicesSlice';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
 import {AppDispatch} from '@/app/lib/store';
 import ServiceFunctions from './ServiceFunctions';
+import classNames from 'classnames';
 
-export default function PluginsDetails() {
+type Props = {
+  handleOpenExistedPluginModal: (plugin: IPlugin) => void;
+  handleOpenPluginLogsModal: (plugin: IPlugin) => void;
+};
+
+export default function AiServicesDetails({handleOpenExistedPluginModal, handleOpenPluginLogsModal}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const {entities: plugins, isLoading, reloadPluginIsAvailable} = useSelector(selectAiServicess);
+
   const {entities: allUsers, isLoading: usersIsLoading} = useSelector(selectTeamMembers);
 
-  const [removePluginsModal, setRemovePluginsModal] = useState(false);
-  const [selectedPlugin, setSelectedPlugin] = useState<IPlugin>();
-
+  const handleOpenEditPluginDialog = (plugin: IPlugin) => {
+    dispatch(handleChangeOpenPluginLogsDialog(true));
+    dispatch(handleChangeSelectedPlugin(plugin));
+  };
   const handleOpenDeletePluginModal = (plugin: IPlugin) => {
-    setSelectedPlugin(plugin);
-    setRemovePluginsModal(true);
+    dispatch(handleChangeSelectedPlugin(plugin));
+    dispatch(handleChangeOpenRemovePluginDialog(true));
   };
 
   const handleChangeUserAiAccess = (plugin_id: string, allowedUsers: IUser[]) => {
@@ -49,16 +60,12 @@ export default function PluginsDetails() {
       dispatch(putAllowedUsersForAiAccess({plugin_id, allowedUsers: userIds}));
     }
   };
-  const handleConfirmDeletePlugin = async () => {
-    if (!selectedPlugin) return;
-    dispatch(deletePluginById(selectedPlugin));
-  };
 
   const handleChangePluginActivation = async (plugin_id: string, check: boolean) => {
     if (!plugins) return;
 
     const payload: IPluginActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
-    dispatch(updatePluginById({plugin_id, payload}));
+    dispatch(changePluginActivitiesByPluginId({plugin_id, payload}));
   };
 
   useEffect(() => {
@@ -72,7 +79,7 @@ export default function PluginsDetails() {
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2 gap-1'>
             <div className='w-52'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
+              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>sss Name</span>
             </div>
             {/* <div className='w-28'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
@@ -88,7 +95,7 @@ export default function PluginsDetails() {
             </div>
           </div>
 
-          <div className='max-h-[420px] h-full min-w-[570px] custom-scrollbar-thumb'>
+          <div className='max-h-[280px] h-full min-w-[570px] custom-scrollbar-thumb'>
             {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2
@@ -116,7 +123,18 @@ export default function PluginsDetails() {
                                 className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`}
                               />
                             </Disclosure.Button>
-                            <p className='text-xs leading-5 text-content-black font-poppins-semibold truncate ...' title={plugin.original_file_name}>
+                            {/* {plugin.status === PLUGINSTATUS.Configuration && (
+                              <span className='flex h-2 w-2 '>
+                                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-content-accent-hover opacity-75'></span>
+                                <span className='relative inline-flex rounded-full h-1 w-1 bg-content-accent-hover'></span>
+                              </span>
+                            )} */}
+                            <p
+                              className={classNames(
+                                'text-xs leading-5 text-content-black font-poppins-semibold truncate ... ',
+                              )}
+                              title={plugin.original_file_name}
+                            >
                               {plugin.original_file_name}
                             </p>
                           </div>
@@ -124,20 +142,19 @@ export default function PluginsDetails() {
                             
                           </p> */}
 
-                          <div className='w-[119px] flex justify-start items-center'>
-                            {usersIsLoading ? (
-                              <div className='flex justify-start py-3 items-center animate-pulse'>
-                                <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-36 h-8'></div>
+                          <div className='w-[122px] flex justify-start items-center'>
+                            {usersIsLoading && !allUsers ? (
+                              <div className='flex justify-start items-center animate-pulse'>
+                                <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-[122px] h-8'></div>
                                 <div className=' bg-gray-300 rounded- allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
                               </div>
                             ) : (
                               allUsers && (
                                 <Listbox
-                                  //  value={aiAccess}
                                   onChange={(value: IUser[] | []) => handleChangeUserAiAccess(plugin.id, value)}
                                   multiple
                                 >
-                                  <div className='mt-1'>
+                                  <div className='mt-1 relative'>
                                     <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
                                       <span
                                         className='block text-xs text-content-grey-900 w-[98px] h-4 leading-4 truncate ...'
@@ -178,7 +195,7 @@ export default function PluginsDetails() {
                                       leaveFrom='opacity-100'
                                       leaveTo='opacity-0'
                                     >
-                                      <Listbox.Options className='absolute mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
+                                      <Listbox.Options className='absolute top-0 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
                                         {allUsers.map((user) => (
                                           <Listbox.Option
                                             key={user.id}
@@ -230,15 +247,26 @@ export default function PluginsDetails() {
 
                           <span
                             className='ml-auto p-1.5 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                            onClick={() => handleOpenExistedPluginModal(plugin)}
+                          >
+                            <PencilSquareIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                          </span>
+                          <span
+                            className='ml-auto p-1.5 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                            onClick={() => handleOpenPluginLogsModal(plugin)}
+                          >
+                            <DocumentTextIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                          </span>
+                          <span
+                            className='ml-auto p-1.5 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
                             onClick={() => handleOpenDeletePluginModal(plugin)}
                           >
                             <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
                           </span>
                         </div>
-                          <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
-                            <ServiceFunctions serviceId={plugin.id} ai_functions={plugin.ai_functions} />
-                          </Disclosure.Panel>
-                        
+                        <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
+                          <ServiceFunctions serviceId={plugin.id} ai_functions={plugin.ai_functions} />
+                        </Disclosure.Panel>
                       </Fragment>
                     )}
                   </Disclosure>
@@ -261,20 +289,8 @@ export default function PluginsDetails() {
               )}
             </Disclosure>
           )}
-         
         </div>
       </div>
-      {selectedPlugin && (
-        <RemovePluginModal
-          onDelete={handleConfirmDeletePlugin}
-          open={removePluginsModal}
-          plugin={selectedPlugin}
-          onClose={() => {
-            setRemovePluginsModal(false);
-            setSelectedPlugin(undefined);
-          }}
-        />
-      )}
     </>
   );
 }

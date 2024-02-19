@@ -35,7 +35,7 @@ export function SideBar(props: {className?: string}) {
       if (user_id) {
         timeoutRef.current = window.setInterval(() => {
           chatStore.getContentSafety(user_id);
-        }, 10000);
+        }, 12000);
       }
     },
     [chatStore.refreshMessage],

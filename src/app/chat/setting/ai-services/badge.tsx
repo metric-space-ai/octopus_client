@@ -1,10 +1,11 @@
 import {Spinner} from '@/components/spinner';
 import {AI_SERVICES_SETUP_STATUS, PLUGINSTATUS} from '@/constant';
 import {spaceBeforeCapitalLetters} from '@/helpers';
+import {TPartialPluginStatus} from '@/types';
 import React from 'react';
 
 type Props = {
-  variant?: 'Setup' | 'Error' | 'Running' | 'Stopped' | string;
+  variant?: TPartialPluginStatus;
   label: string;
   setupStatus?: string;
 };
@@ -22,10 +23,15 @@ const PluginsBadge = ({variant = 'Running', label = '', setupStatus}: Props) => 
           : 'bg-content-accent-hover/10 text-content-accent-hover'
       } `}
     >
-      <span title={spaceBeforeCapitalLetters(label)} className='flex items-center justify-center gap-1 w-[88px] overflow-hidden truncate ... text-center'>
-      {[PLUGINSTATUS.InstallationFinished, PLUGINSTATUS.Setup, PLUGINSTATUS.InstallationStarted].includes(variant) &&
-        setupStatus === AI_SERVICES_SETUP_STATUS.NotPerformed && <Spinner size='small' />}
-        {variant === PLUGINSTATUS.InstallationFinished ? 'In Progress' : spaceBeforeCapitalLetters(label)}
+      <span
+        title={spaceBeforeCapitalLetters(label)}
+        className='flex items-center justify-center gap-1 w-[88px] overflow-hidden truncate ... text-center'
+      >
+        {[PLUGINSTATUS.InstallationFinished, PLUGINSTATUS.Setup, PLUGINSTATUS.InstallationStarted].includes(variant) &&
+          setupStatus === AI_SERVICES_SETUP_STATUS.NotPerformed && <Spinner size='small' />}
+        {variant === PLUGINSTATUS.InstallationFinished && setupStatus === AI_SERVICES_SETUP_STATUS.NotPerformed
+          ? 'In Progress'
+          : spaceBeforeCapitalLetters(label)}
       </span>
     </span>
   );
