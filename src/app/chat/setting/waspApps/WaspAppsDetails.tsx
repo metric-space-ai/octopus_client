@@ -1,73 +1,51 @@
-import {useState, useEffect, Fragment} from 'react';
+import {useEffect, Fragment} from 'react';
 import {Disclosure, Listbox, Transition} from '@headlessui/react';
 
-import {TrashIcon, ChevronUpIcon, ChevronDownIcon, CheckIcon} from '@heroicons/react/24/outline';
+import {TrashIcon, ChevronDownIcon, CheckIcon} from '@heroicons/react/24/outline';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {IWaspApp} from '@/types';
 import {useSelector, useDispatch} from 'react-redux';
-import {getAllWaspApps, deleteWaspAppById, updateWaspApp} from '@/app/lib/features/waspApps/waspAppsSlice';
+import {
+  getAllWaspApps,
+  updateWaspApp,
+  handleChangeSelectedWaspApp,
+  handleChangeOpenRemoveWaspAppDialog,
+  putAllowedUsersForWaspAppAccess,
+} from '@/app/lib/features/waspApps/waspAppsSlice';
 
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import Highlight from 'react-highlight';
 
 import './../../../../assets/atelier-cave-dark.css';
-import RemoveWaspAppModal from '@/components/modals/RemoveWaspAppModal';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
 import {AppDispatch} from '@/app/lib/store';
 
-export default function WaspAppsDetails() {
+type Props = {
+  handleOpenExistedWaspAppModal: (waspApp: IWaspApp) => void;
+};
+export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const {entities: waspApps, isLoading, reloadWaspAppIsAvailable} = useSelector(selectWaspApps);
   const {entities: allUsers, isLoading: usersIsLoading} = useSelector(selectTeamMembers);
-
-  const [openRemoveWaspAppsModal, setOpenRemoveWaspAppsModal] = useState(false);
-  const [selectedWaspApp, setSelectedWaspApp] = useState<IWaspApp>();
-
-  const handleOpenDeleteWaspAppModal = (waspApp: IWaspApp) => {
-    setSelectedWaspApp(waspApp);
-    setOpenRemoveWaspAppsModal(true);
-  };
-
-  const handleConfirmDeleteWaspApp = async () => {
-    if (!selectedWaspApp) return;
-    dispatch(deleteWaspAppById(selectedWaspApp.id));
-  };
 
   const handleChangeWaspAppActivation = async (app: IWaspApp, check: boolean) => {
     if (!waspApps) return;
     const payload: IWaspApp = {...app, is_enabled: check};
     dispatch(updateWaspApp(payload));
-    // const payload: IWaspAppActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
-    // const beforeChange = [...waspApps];
-    // setWaspApps([...waspApps.flatMap((p) => (p.id === app_id ? {...p, is_enabled: check} : p))]);
-    // dispatch(deleteWaspAppById({app_id, payload}));
-    // try {
-    //   const {status} = await updateWaspAppByIdApi(app_id, payload);
-    //   if (status === 201) {
-    //     toast.success('updated successfully');
-    //   } else {
-    //     setWaspApps(beforeChange);
-    //   }
-    // } catch (err) {
-    //   setWaspApps(beforeChange);
-    //   if (err instanceof AxiosError) {
-    //     toast.error(err?.response?.data.error);
-    //   }
-    // } finally {
-    // }
   };
 
   const handleChangeUserWaspAccess = (wasp_id: string, allowedUsers: IWaspApp[]) => {
-    
     if (allowedUsers.length === 0) {
-      // dispatch(putAllowedUsersForAiAccess({wasp_id, allowedUsers: []}));
+      dispatch(putAllowedUsersForWaspAppAccess({wasp_id, allowedUsers: []}));
     } else {
-      // const result = allowedUsers.reduce((acc,user)=>(acc.push(user.id)),[]:string[])
       const userIds: string[] = allowedUsers.map((user) => user.id);
-      // console.log({userIds});
-      // dispatch(putAllowedUsersForAiAccess({wasp_id, allowedUsers: userIds}));
+      dispatch(putAllowedUsersForWaspAppAccess({wasp_id, allowedUsers: userIds}));
     }
+  };
+  const handleOpenDeleteWaspAppModal = (waspApp: IWaspApp) => {
+    dispatch(handleChangeSelectedWaspApp(waspApp));
+    dispatch(handleChangeOpenRemoveWaspAppDialog(true));
   };
 
   useEffect(() => {
@@ -102,7 +80,7 @@ export default function WaspAppsDetails() {
             </div>
           </div>
 
-          <div className='max-h-[280px] h-full min-w-[570px] overflow-auto custom-scrollbar-thumb'>
+          <div className='h-[280px] min-w-[570px] overflow-auto custom-scrollbar-thumb'>
             {reloadWaspAppIsAvailable && (
               <div className='w-full'>
                 <h2
@@ -154,8 +132,8 @@ export default function WaspAppsDetails() {
                           </div>
 
                           <div className='w-32 flex justify-start items-center'>
-                            {usersIsLoading ? (
-                              <div className='flex justify-start py-3 items-center animate-pulse'>
+                            {usersIsLoading && !allUsers ? (
+                              <div className='flex justify-start items-center animate-pulse'>
                                 <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-[122px] h-9'></div>
                                 <div className=' bg-gray-300 rounded- allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
                               </div>
@@ -206,7 +184,7 @@ export default function WaspAppsDetails() {
                                       leaveFrom='opacity-100'
                                       leaveTo='opacity-0'
                                     >
-                                      <Listbox.Options className='absolute top-8 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
+                                      <Listbox.Options className='absolute top-5 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
                                         {allUsers.map((user) => (
                                           <Listbox.Option
                                             key={user.id}
@@ -259,7 +237,7 @@ export default function WaspAppsDetails() {
                   </Disclosure>
                 ))}
           </div>
-          {isLoading && (
+          {isLoading && !waspApps && (
             <Disclosure>
               {({open}) => (
                 <>
@@ -278,17 +256,6 @@ export default function WaspAppsDetails() {
           )}
         </div>
       </div>
-      {selectedWaspApp && (
-        <RemoveWaspAppModal
-          onDelete={handleConfirmDeleteWaspApp}
-          open={openRemoveWaspAppsModal}
-          waspApp={selectedWaspApp}
-          onClose={() => {
-            setOpenRemoveWaspAppsModal(false);
-            setSelectedWaspApp(undefined);
-          }}
-        />
-      )}
     </>
   );
 }

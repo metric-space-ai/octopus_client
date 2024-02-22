@@ -2,6 +2,7 @@ import ISO6391 from 'iso-639-1';
 import {PartialTRoleLabel, TRecordPluginStatus, TRole} from './types';
 
 export const APPREQUESTBASEURL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+export const WASPAPPREQUESTBASEURL = process.env.NEXT_PUBLIC_WASP_BASE_URL ?? '';
 export const VERSION_NUM = 'v0.7.0';
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
 export const DEFAULT_API_HOST = 'https://chatgpt1.nextweb.fun/api/proxy';
@@ -145,3 +146,12 @@ const languageList = ISO6391.getAllNames();
 export const ImagesBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const LANGUAGES = languageList.map((value, index) => ({id: index, name: value}));
+
+export const UPLOADWASPAPPSTEPS = {SelectFile: 1, Upload: 2};
+
+export const VALIDWASPFILE = {
+  Format: '.zip',
+  Types: ['application/zip', 'application/x-zip', 'application/x-zip-compressed', 'zip'],
+};
+
+export const INSTANCETYPES: string[] = ['Private', 'Shared'];

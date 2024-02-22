@@ -9,6 +9,7 @@ import {UseFormRegisterReturn} from 'react-hook-form';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   inputCoverClassName?: string;
+  labelClassName?: string;
   label?: string;
   type?: string;
   placeholder?: string;
@@ -21,6 +22,7 @@ export const Input = ({
   className,
   inputCoverClassName = '',
   label,
+  labelClassName = '',
   type,
   placeholder,
   errors,
@@ -31,7 +33,9 @@ export const Input = ({
   const [hidePassword, setHidePassword] = useState(false);
   return (
     <div className={classNames(className)}>
-      {label && <p className='mb-2 font-normal text-xs text-content-secondary'>{label}</p>}
+      {label && (
+        <p className={classNames('mb-2 font-normal text-xs text-content-secondary', labelClassName)}>{label}</p>
+      )}
       <div className={`relative px-5 py-2 bg-content-white rounded-[48px] ${inputCoverClassName}`}>
         <input
           {...rules}

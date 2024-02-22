@@ -7,6 +7,8 @@ import {
   ArrowUpTrayIcon,
   CheckIcon,
   ClipboardDocumentIcon,
+  CodeBracketIcon,
+  DocumentIcon,
   ExclamationTriangleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
@@ -26,10 +28,7 @@ import {
   updatePluginByIdApi,
   uploadNewPluginApi,
 } from '@/services/settings.service';
-import {
-  getAllPlugins,
-  handleChangeSelectedPlugin,
-} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {getAllPlugins, handleChangeSelectedPlugin} from '@/app/lib/features/aiServices/aiServicesSlice';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@/app/lib/store';
 import {IDeviceMap, IPlugin, IResources} from '@/types';
@@ -39,6 +38,7 @@ import InstallationPluginSection from './InstallationPluginSection';
 import InstallationStartedSection from './InstallationStartedSection';
 import ConfigurationSection from './ConfigurationSection';
 import UploadPluginModalHeaderSection from './UploadPluginModalHeaderSection';
+import classNames from 'classnames';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
@@ -53,6 +53,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const {selectedPlugin} = useSelector(selectAiServicess);
 
   const [code, setCode] = useState(``);
+  const [updateWithTextEditor, setUpdateWithTextEditor] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadStarted, setUploadStarted] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -84,7 +85,10 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       // const gpus = resources.gpus.filter((gpu) => activatedGPU.includes(gpu.id));
 
       try {
-        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, {device_map, type: pluginType});
+        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, {
+          device_map,
+          type: pluginType,
+        });
         if (status === 200) {
           dispatch(handleChangeSelectedPlugin(data));
           setCurrentStep(ADDPLUGINSTEPS.PreparingForInstall);
@@ -101,16 +105,28 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
   const handleSubmitFirstStep = async () => {
     setLoading(true);
+
+    if (currentStep !== ADDPLUGINSTEPS.Upload) return;
+
     if (selectedPlugin) {
-      const blob = new Blob([code], {type: 'text/plain'});
       const formData = new FormData();
-      formData.append('file', blob, selectedPlugin.original_file_name);
+
+      if (updateWithTextEditor) {
+        const blob = new Blob([code], {type: 'text/plain'});
+        formData.append('file', blob, selectedPlugin.original_file_name);
+      } else if (file) {
+        const newFile = new File([file], selectedPlugin.original_file_name, {type: 'application/octet-stream'});
+        formData.append('file', newFile);
+      }
+      formData.append('bypass_code_check', 'true');
+
       // dispatch(updatePluginById({id: selectedPlugin.id, formData}));
       try {
         const {status, data} = await updatePluginByIdApi(selectedPlugin.id, formData);
         if (status === 200) {
           toast.success('code updated');
           setCurrentStep(ADDPLUGINSTEPS.Setup);
+          // handleCloseModal();
         }
         return data;
       } catch (err) {
@@ -120,10 +136,10 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       } finally {
         setLoading(false);
       }
-    } else if (fileUploaded && file && currentStep === ADDPLUGINSTEPS.Upload) {
-      const newFile = new File([file], file.name, {type: 'application/octet-stream'});
-
+    } else if (fileUploaded && file) {
       const formData = new FormData();
+
+      const newFile = new File([file], file.name, {type: 'application/octet-stream'});
       formData.append('file', newFile);
       try {
         const {status, data} = await uploadNewPluginApi(formData);
@@ -197,6 +213,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     setPluginInstalled(false);
     setLoading(false);
     dispatch(handleChangeSelectedPlugin(null));
+    setUpdateWithTextEditor(false);
+    setCode('');
     onClose();
   };
 
@@ -282,14 +300,17 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   }, [currentStep, selectedPlugin]);
 
   useEffect(() => {
-    if (selectedPlugin && selectedPlugin.original_function_body && currentStep === ADDPLUGINSTEPS.Upload) {
+    if (selectedPlugin && currentStep === ADDPLUGINSTEPS.Upload) {
       if (selectedPlugin.status === PLUGINSTATUS.Configuration) {
         setCurrentStep(ADDPLUGINSTEPS.Setup);
         setPluginType(selectedPlugin.type);
-      } else {
-        setCode(selectedPlugin.original_function_body);
       }
+
+      setCode(selectedPlugin.original_function_body ?? '');
+
+      setUpdateWithTextEditor(true);
     }
+
     if (selectedPlugin && selectedPlugin.status === PLUGINSTATUS.ParsingStarted) {
       toast.success('The installation process is underway');
     }
@@ -359,28 +380,40 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                   <div className='flex flex-col flex-auto justify-between '>
                     {currentStep === ADDPLUGINSTEPS.Upload && (
                       <>
-                        {selectedPlugin && selectedPlugin.original_function_body ? (
-                          <div className='h-[360px] max-h-full custom-scrollbar-thumb'>
-                            <CodeEditor
-                              value={code}
-                              language='python'
-                              placeholder='Please enter Python code.'
-                              onChange={(evn) => setCode(evn.target.value)}
-                              padding={16}
-                              style={{
-                                backgroundColor: '#f5f5f5',
-                                fontFamily:
-                                  'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                              }}
-                            />
-                          </div>
+                        {selectedPlugin && updateWithTextEditor ? (
+                          <>
+                            <div className='h-[360px] max-h-full custom-scrollbar-thumb'>
+                              <CodeEditor
+                                value={code}
+                                language='python'
+                                placeholder='Please enter Python code.'
+                                onChange={(evn) => setCode(evn.target.value)}
+                                padding={16}
+                                style={{
+                                  backgroundColor: '#f5f5f5',
+                                  fontFamily:
+                                    'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                                }}
+                              />
+                            </div>
+                            <div className='flex h-10'>
+                              <IconButton className='' onClick={() => setUpdateWithTextEditor(false)} variant='primary'>
+                                <DocumentIcon className='w-6 h-6 text-content-white' />
+                              </IconButton>
+                              {/* <Button type='button' variant='primary' title='switch to uploader' /> */}
+                            </div>
+                          </>
                         ) : (
-                          <div className=' flex flex-col '>
+                          <div
+                            className={classNames(
+                              'flex flex-col',
+                              !fileIsSelected && !file && 'flex-1 justify-between',
+                            )}
+                          >
                             <div
                               onDrop={(e) => handleDropFiles(e)}
                               onDragOver={handleDragFiles}
-                              className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6
-                        bg-white border-2 border-content-accent border-dashed rounded-20 '
+                              className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-white border-2 border-content-accent border-dashed rounded-20 '
                             >
                               <IconButton
                                 className='top-4 right-4 block mx-auto bg-content-accent-light-15 mb-5'
@@ -403,7 +436,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                 onChange={(e) => handleCustomSelectFile(e)}
                               />
                             </div>
-                            {fileIsSelected && !!file && (
+                            {fileIsSelected && !!file ? (
                               <div className='flex flex-wrap py-3 px-8 bg-content-white rounded-20 w-full items-center justify-between relative'>
                                 <div className='flex gap-4 items-center max-w-full'>
                                   <div className='flex w-56 pr-2 items-center'>
@@ -439,6 +472,18 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                   </IconButton>
                                 </div>
                               </div>
+                            ) : (
+                              selectedPlugin && (
+                                <div className='flex h-10 mb-3'>
+                                  <IconButton
+                                    className=''
+                                    onClick={() => setUpdateWithTextEditor(true)}
+                                    variant='primary'
+                                  >
+                                    <CodeBracketIcon className='w-6 h-6 text-content-white' />
+                                  </IconButton>
+                                </div>
+                              )
                             )}
                           </div>
                         )}

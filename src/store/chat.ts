@@ -362,7 +362,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
             }
           });
         } else {
-          if (res.data.status === 'Answered'){
+          if (lastMessage.status === 'Asked' && res.data.status === 'Answered') {
             const result = messages.flatMap((message) => (message.id === res.data.id ? res.data : message));
             set({messages: result});
           }

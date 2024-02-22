@@ -357,7 +357,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
           </div>
           {/* <div className='flex flex-col'> */}
           {/* <Funding /> */}
-          {/* <Research /> */}
+          {/* <Consultant /> */}
           {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
           <div
             className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
@@ -380,8 +380,8 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                         <>
                           <iframe
                             ref={iframeRef}
-                            style={{minHeight: iframeheight}}
-                            className={`w-full bg-red text-content-white [&_body]:m-0 min-h-[${iframeheight}] flex-1`}
+                            style={{height: iframeheight, minHeight: 360}}
+                            className={`w-full bg-red text-content-white [&_body]:m-0 flex-1`}
                             srcDoc={applicationInnerHTML}
                             // height={iframeheight}
                             onLoad={onLoadPrepareIframe}

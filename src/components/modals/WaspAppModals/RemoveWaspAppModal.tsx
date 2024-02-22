@@ -4,7 +4,7 @@ import {useEffect, useRef} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
-import {Button, IconButton} from '../buttons';
+import {Button, IconButton} from '../../buttons';
 import {IWaspApp} from '@/types';
 
 interface ModalProps {

@@ -72,10 +72,10 @@ const ConfigurationSection = ({
           Assign a plugin to computer resources
         </h5>
 
-        <div className='flex flex-col gap-3 mb-3 relative mr-3'>
+        <div className='flex flex-col gap-3 mb-3 relative'>
           <Listbox value={pluginType} onChange={setPluginType}>
             <div className='relative mt-1'>
-              <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
+              <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary h-11'>
                 <div className='flex gap-1 items-center'>
                   <span className='text-base text-content-grey-900'>{`Type: ${pluginType}`}</span>
                 </div>
@@ -95,7 +95,7 @@ const ConfigurationSection = ({
                     <Listbox.Option
                       key={type}
                       className={({active}) =>
-                        `relative select-none py-2 pl-10 pr-4 ${active ? 'bg-content-grey-100' : 'text-gray-900'}`
+                        `relative select-none py-2 pl-10 pr-4 cursor-pointer ${active ? 'bg-content-grey-100' : 'text-gray-900'}`
                       }
                       value={type}
                     >
@@ -146,7 +146,7 @@ const ConfigurationSection = ({
                           onChange={(check: boolean) => handleChangeCpuActivation(check, key)}
                           title={gpu.name}
                         />
-                        <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_used} of ${resources.memory_total}`}</span>
+                        <span className='text-content-grey-600 text-xs ml-auto'>{`${gpu.memory_used} of ${gpu.memory_total}`}</span>
                       </div>
                     ),
                 )

@@ -116,11 +116,13 @@ const aiServicesSlice = createSlice({
       .addCase(getServiceLogsByPluginId.fulfilled, (state, {payload}) => {
         state.pluginLogIsLoading = false;
         if (state.entities && payload) {
+          
           const {logs, service_id} = payload;
+          console.log("payload", payload);
+          console.log("service_id", service_id);
           // state.entities = [...state.entities].flatMap((plugin) =>
           //   plugin.id === payload.id ? {...plugin, ...payload} : plugin,
           // );
-
           state.entities = [...state.entities].flatMap((plugin) =>
             plugin.id === service_id ? {...plugin, logs} : plugin,
           );

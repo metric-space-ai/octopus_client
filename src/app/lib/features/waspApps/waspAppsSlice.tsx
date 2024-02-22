@@ -9,6 +9,7 @@ import {
   updateWaspAppByIdApi,
   deleteWaspAppByIdApi,
   getWaspAppSourceDocByChatIdAndWaspIdApi,
+  putAllowedUsersForWaspAppAccessApi,
 } from '@/services/settings.service';
 import {IChatMessage, IWaspApp, ValidationErrors} from '@/types';
 
@@ -22,6 +23,9 @@ interface WaspAppsStates {
   uploadIsLoading: boolean;
   editIsLoading: boolean;
   uploadSucceeded: boolean;
+  reloadWaspIsAvailable: boolean;
+  selectedWaspApp: IWaspApp | null;
+  openRemoveWaspAppDialog: boolean;
 }
 // Define the initial state using that type
 const initialState: WaspAppsStates = {
@@ -34,6 +38,9 @@ const initialState: WaspAppsStates = {
   uploadIsLoading: false,
   editIsLoading: false,
   uploadSucceeded: false,
+  reloadWaspIsAvailable: false,
+  selectedWaspApp: null,
+  openRemoveWaspAppDialog: false,
 };
 
 const waspAppsSlice = createSlice({
@@ -45,6 +52,12 @@ const waspAppsSlice = createSlice({
     },
     setUploadSucceeded: (state, action: PayloadAction<boolean>) => {
       state.uploadSucceeded = action.payload;
+    },
+    handleChangeSelectedWaspApp: (state, {payload}: PayloadAction<IWaspApp | null>) => {
+      state.selectedWaspApp = payload;
+    },
+    handleChangeOpenRemoveWaspAppDialog: (state, {payload}: PayloadAction<boolean>) => {
+      state.openRemoveWaspAppDialog = payload;
     },
   },
   extraReducers(builder) {
@@ -109,7 +122,13 @@ const waspAppsSlice = createSlice({
         state.isLoading = false;
         if (payload) {
           state.app_src = payload;
-          console.log({getWaspAppSourceDocByChatIdAndWaspId:payload})
+          console.log({getWaspAppSourceDocByChatIdAndWaspId: payload});
+        }
+      })
+      .addCase(putAllowedUsersForWaspAppAccess.fulfilled, (state, {payload}) => {
+        state.isLoading = false;
+        if (state.entities && payload) {
+          state.entities = [...state.entities].flatMap((wasp_app) => (wasp_app.id === payload.id ? {...payload} : wasp_app));
         }
       });
   },
@@ -229,6 +248,37 @@ export const deleteWaspAppById = createAsyncThunk(
     }
   },
 );
-export const {setUploadIsLoading, setUploadSucceeded} = waspAppsSlice.actions;
+
+type TWaspAppAllowAccess = {
+  wasp_id: string;
+  allowedUsers: string[] | [];
+};
+export const putAllowedUsersForWaspAppAccess = createAsyncThunk(
+  '/aiServices/putAllowedUsersForWaspAppAccess',
+  async ({wasp_id, allowedUsers}: TWaspAppAllowAccess, {rejectWithValue, dispatch}) => {
+    try {
+      const {status, data} = await putAllowedUsersForWaspAppAccessApi(wasp_id, allowedUsers);
+      if (status === 200) {
+        toast.success('updated successfully');
+        return data;
+      } else {
+        dispatch(getAllWaspApps());
+      }
+    } catch (err) {
+      let error = err as AxiosError<ValidationErrors, any>;
+
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+export const {setUploadIsLoading, setUploadSucceeded, handleChangeSelectedWaspApp, handleChangeOpenRemoveWaspAppDialog} =
+  waspAppsSlice.actions;
 
 export default waspAppsSlice.reducer;

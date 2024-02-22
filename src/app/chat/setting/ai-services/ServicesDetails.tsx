@@ -51,7 +51,6 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
   };
 
   const handleChangeUserAiAccess = (plugin_id: string, allowedUsers: IUser[]) => {
-    console.log({allowedUsers});
     if (allowedUsers.length === 0) {
       dispatch(putAllowedUsersForAiAccess({plugin_id, allowedUsers: []}));
     } else {
@@ -95,7 +94,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
             </div>
           </div>
 
-          <div className='max-h-[280px] h-full min-w-[570px] custom-scrollbar-thumb'>
+          <div className='h-[280px] min-w-[570px] custom-scrollbar-thumb'>
             {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2

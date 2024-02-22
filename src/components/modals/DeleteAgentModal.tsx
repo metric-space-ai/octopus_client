@@ -17,7 +17,6 @@ interface ModalProps {
 
 export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => {
   const [loading, setLoading] = useState(false);
-  console.log({tab});
 
   return (
     <Transition appear show={open} as={Fragment}>

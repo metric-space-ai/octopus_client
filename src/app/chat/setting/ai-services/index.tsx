@@ -54,12 +54,7 @@ const AiServices = (props: Props) => {
     <>
       <div className='flex flex-col w-full px-4 py-4'>
         <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
-          <h1
-            className='text-lg leading-7 text-content-black font-poppins-semibold'
-            
-          >
-            Plugins
-          </h1>
+          <h1 className='text-lg leading-7 text-content-black font-poppins-semibold'>Plugins</h1>
           <Button
             className='!px-6 font-poppins-semibold text-sm !h-34-px'
             variant='primary'

@@ -1,12 +1,40 @@
 import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import { UploadWaspAppModal } from '@/components/modals/UploadWaspAppModal';
+import {UploadWaspAppModal} from '@/components/modals/WaspAppModals';
 import WaspAppsDetails from './WaspAppsDetails';
+import {IWaspApp} from '@/types';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@/app/lib/store';
+import {useSelector} from 'react-redux';
+import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
+import {
+  deleteWaspAppById,
+  handleChangeOpenRemoveWaspAppDialog,
+  handleChangeSelectedWaspApp,
+} from '@/app/lib/features/waspApps/waspAppsSlice';
+import RemoveWaspAppModal from '@/components/modals/WaspAppModals/RemoveWaspAppModal';
 
 type Props = {};
 
 const WaspApps = (props: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const {selectedWaspApp, openRemoveWaspAppDialog} = useSelector(selectWaspApps);
   const [openwaspAppModal, setOpenwaspAppModal] = useState(false);
+
+  const handleOpenExistedWaspAppModal = (waspApp: IWaspApp) => {
+    dispatch(handleChangeSelectedWaspApp(waspApp));
+    setOpenwaspAppModal(true);
+  };
+  const handleOpenUploadNewWaspApp = () => {
+    setOpenwaspAppModal(true);
+    dispatch(handleChangeSelectedWaspApp(null));
+  };
+
+  const handleConfirmDeleteWaspApp = async () => {
+    if (!selectedWaspApp) return;
+    dispatch(deleteWaspAppById(selectedWaspApp.id));
+  };
   return (
     <>
       <div className='flex flex-col w-full px-4 py-4'>
@@ -16,13 +44,24 @@ const WaspApps = (props: Props) => {
             className='!px-6 font-poppins-semibold text-sm !h-34-px'
             variant='primary'
             title='Upload Wasp'
-            onClick={() => setOpenwaspAppModal(true)}
+            onClick={handleOpenUploadNewWaspApp}
           />
         </div>
         <div className='max-w-full'>
-          <WaspAppsDetails />
+          <WaspAppsDetails handleOpenExistedWaspAppModal={handleOpenExistedWaspAppModal} />
         </div>
       </div>
+      {selectedWaspApp && (
+        <RemoveWaspAppModal
+          onDelete={handleConfirmDeleteWaspApp}
+          open={openRemoveWaspAppDialog}
+          waspApp={selectedWaspApp}
+          onClose={() => {
+            dispatch(handleChangeOpenRemoveWaspAppDialog(false));
+            dispatch(handleChangeSelectedWaspApp(null));
+          }}
+        />
+      )}
       <UploadWaspAppModal open={openwaspAppModal} onClose={() => setOpenwaspAppModal(false)} />
     </>
   );

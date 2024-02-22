@@ -32,7 +32,9 @@ export const useApiClient = () => {
     apiHub.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 401) {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled');
+        } else if (error.response?.status === 401) {
           setAuthData(null);
         } else if (error.response?.status === 403) {
           toast.error('No enough permission to make a request.');
@@ -46,3 +48,11 @@ export const useApiClient = () => {
 };
 
 export default apiHub;
+
+export const apiWaspHub = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_WASP_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    // 'content-type': 'application/x-www-form-urlencoded'
+  },
+});

@@ -50,7 +50,7 @@ export const getPluginByIdApi = (plugin_id: string) => {
 };
 
 export const getServiceLogsByPluginIdApi = (plugin_id: string) => {
-  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/logs`);
+  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/logs?limit=100`);
 };
 
 export const startPluginInstallationApi = (plugin_id: string) => {
@@ -168,6 +168,10 @@ export const uploadNewWaspAppApi = (payload: FormData) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+export const putAllowedUsersForWaspAppAccessApi = (wasp_app_id: string, allowed_user_ids: string[]) => {
+  return apiHub.put<IWaspApp>(`api/v1/wasp-apps/${wasp_app_id}/allowed-users`, {allowed_user_ids});
 };
 
 export const updateWaspAppByIdApi = (wasp_app: IWaspApp) => {
