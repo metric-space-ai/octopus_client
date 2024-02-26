@@ -50,7 +50,7 @@ export const getPluginByIdApi = (plugin_id: string) => {
 };
 
 export const getServiceLogsByPluginIdApi = (plugin_id: string) => {
-  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/logs?limit=100`);
+  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/logs?limit=150`);
 };
 
 export const startPluginInstallationApi = (plugin_id: string) => {

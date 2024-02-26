@@ -111,9 +111,6 @@ export const Consultant = ({}: IConsult) => {
     }
   }, [step]);
 
-  useEffect(() => {
-    console.log({response});
-  }, [response]);
 
   const putNewAnswer = async (chat: IConsultantChat[]) => {
     setIsLoading(true);

@@ -4,10 +4,10 @@ import Highlight from 'react-highlight';
 
 type Props = {
   installPercentage: number;
-  function_body: string;
+  processed_function_body: string;
 };
 
-const InstallationPluginSection = ({installPercentage, function_body}: Props) => {
+const InstallationPluginSection = ({installPercentage, processed_function_body}: Props) => {
   return (
     <div className='flex flex-col flex-auto'>
       <div className='flex flex-col mb-6'>
@@ -46,7 +46,7 @@ const InstallationPluginSection = ({installPercentage, function_body}: Props) =>
                            [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-content-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
                            [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
         >
-          {function_body}
+          {processed_function_body}
         </Highlight>
       </div>
     </div>

@@ -13,11 +13,12 @@ interface IAppIframeProps {
 const WaspAppIframe = ({item}: IAppIframeProps) => {
   const waspFrameRef = useRef<HTMLIFrameElement>(null);
   const [appIsLoading, setAppIsLoading] = useState(true);
-  const [height, setHeight] = useState('420px');
+  const [height, setHeight] = useState('600px');
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
 
   const fixFrameHeight = () => {
-    setHeight(`${waspFrameRef?.current?.contentWindow?.document.body.scrollHeight ?? 420} + ${24} + px`);
+    console.log("onload is returning")
+    setHeight(`${waspFrameRef?.current?.contentWindow?.document.body.scrollHeight ?? 600} + ${24} + px`);
     setAppIsLoading(false);
   };
   const onload = () => {

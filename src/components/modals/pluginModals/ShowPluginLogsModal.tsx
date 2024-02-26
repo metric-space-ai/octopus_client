@@ -24,12 +24,11 @@ export const ShowPluginLogsModal = ({open, onClose, plugin, isLoading}: ModalPro
   const dispatch = useDispatch<AppDispatch>();
 
   const handleCloseModal = () => {
-    // setLoading(false);
     onClose();
   };
 
   useEffect(() => {
-    dispatch(getServiceLogsByPluginId(plugin.id));
+    dispatch(getServiceLogsByPluginId(plugin));
   }, []);
 
   return (
@@ -78,19 +77,20 @@ export const ShowPluginLogsModal = ({open, onClose, plugin, isLoading}: ModalPro
                   <div className='flex flex-col justify-between flex-1'>
                     <div
                       className={classNames(
-                        'h-[420px] max-h-full custom-scrollbar-thumb bg-content-black text-content-white p-1',
-                        isLoading && 'flex items-center justify-center',
-                        !isLoading && ' text-left',
+                        'h-[420px] max-h-full custom-scrollbar-thumb bg-content-black text-content-white p-1 flex',
+                        isLoading && 'items-center justify-center',
+                        !isLoading && ' text-left flex-col',
+                        "[&_pre]:flex-1"
                       )}
                     >
-                      {isLoading ? (
+                      {isLoading && !plugin.logs ? (
                         <Spinner size='medium' />
                       ) : (
                         <Highlight
                           innerHTML={false}
                           className='text-content-white [&_.hljs-keyword]:text-content-blue-light [&_.hljs-string]:text-content-green [&_.hljs-selector-class]:text-content-red-400
                            [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-content-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
-                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500 custom-scrollbar-thumb'
+                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500 custom-scrollbar-thumb h-full'
                         >
                           {plugin.logs ? plugin.logs : 'No Logs Were Found To Display'}
                         </Highlight>

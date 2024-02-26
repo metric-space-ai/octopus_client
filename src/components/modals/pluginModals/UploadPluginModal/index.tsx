@@ -39,6 +39,7 @@ import InstallationStartedSection from './InstallationStartedSection';
 import ConfigurationSection from './ConfigurationSection';
 import UploadPluginModalHeaderSection from './UploadPluginModalHeaderSection';
 import classNames from 'classnames';
+import CustomCheckbox from '@/components/custom-checkbox';
 
 const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
@@ -69,6 +70,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [pluginInstalled, setPluginInstalled] = useState(false);
   const [activatedCPU, setActivatedCPU] = useState<(keyof IDeviceMap)[] | []>([]);
   const [pluginType, setPluginType] = useState('Normal');
+  const [bypassCodeCheck, setBypassCodeCheck] = useState(false);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -108,8 +110,9 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
 
     if (currentStep !== ADDPLUGINSTEPS.Upload) return;
 
+    const formData = new FormData();
+    formData.append('bypass_code_check', `${bypassCodeCheck}`);
     if (selectedPlugin) {
-      const formData = new FormData();
 
       if (updateWithTextEditor) {
         const blob = new Blob([code], {type: 'text/plain'});
@@ -118,7 +121,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
         const newFile = new File([file], selectedPlugin.original_file_name, {type: 'application/octet-stream'});
         formData.append('file', newFile);
       }
-      formData.append('bypass_code_check', 'true');
 
       // dispatch(updatePluginById({id: selectedPlugin.id, formData}));
       try {
@@ -137,8 +139,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
         setLoading(false);
       }
     } else if (fileUploaded && file) {
-      const formData = new FormData();
-
       const newFile = new File([file], file.name, {type: 'application/octet-stream'});
       formData.append('file', newFile);
       try {
@@ -215,6 +215,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     dispatch(handleChangeSelectedPlugin(null));
     setUpdateWithTextEditor(false);
     setCode('');
+    dispatch(getAllPlugins());
     onClose();
   };
 
@@ -396,18 +397,24 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                 }}
                               />
                             </div>
-                            <div className='flex h-10'>
+                            <div className='flex h-10 gap-6 items-center'>
                               <IconButton className='' onClick={() => setUpdateWithTextEditor(false)} variant='primary'>
                                 <DocumentIcon className='w-6 h-6 text-content-white' />
                               </IconButton>
+
+                              <CustomCheckbox
+                                active={bypassCodeCheck}
+                                onChange={setBypassCodeCheck}
+                                title={'Bypass Code Check'}
+                              />
                               {/* <Button type='button' variant='primary' title='switch to uploader' /> */}
                             </div>
                           </>
                         ) : (
                           <div
                             className={classNames(
-                              'flex flex-col',
-                              !fileIsSelected && !file && 'flex-1 justify-between',
+                              'flex flex-col flex-1',
+                              !fileIsSelected && !file && 'justify-between',
                             )}
                           >
                             <div
@@ -474,7 +481,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                               </div>
                             ) : (
                               selectedPlugin && (
-                                <div className='flex h-10 mb-3'>
+                                <div className='flex h-10 mb-3 gap-6 items-center'>
                                   <IconButton
                                     className=''
                                     onClick={() => setUpdateWithTextEditor(true)}
@@ -482,8 +489,23 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                   >
                                     <CodeBracketIcon className='w-6 h-6 text-content-white' />
                                   </IconButton>
+
+                                  <CustomCheckbox
+                                    active={bypassCodeCheck}
+                                    onChange={setBypassCodeCheck}
+                                    title={'Bypass Code Check'}
+                                  />
                                 </div>
                               )
+                            )}
+                            {!selectedPlugin && (
+                              <div className='flex h-10 mb-3 gap-6 pl-16 items-center mt-auto'>
+                                <CustomCheckbox
+                                  active={bypassCodeCheck}
+                                  onChange={setBypassCodeCheck}
+                                  title={'Bypass Code Check'}
+                                />
+                              </div>
                             )}
                           </div>
                         )}
@@ -522,12 +544,14 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                     {currentStep === ADDPLUGINSTEPS.Installation && selectedPlugin && (
                       <InstallationPluginSection
                         installPercentage={installPercentage}
-                        function_body={selectedPlugin.original_function_body}
+                        processed_function_body={
+                          selectedPlugin.processed_function_body ?? selectedPlugin.original_function_body
+                        }
                       />
                     )}
 
                     <div className='flex gap-4 px-4 md:px-8 lg:px-12 xl:px-20 mx-1'>
-                      {currentStep === ADDPLUGINSTEPS.Upload && (
+                      {currentStep === ADDPLUGINSTEPS.Upload || currentStep === ADDPLUGINSTEPS.Installation ? (
                         <Button
                           type='button'
                           className='flex-1 !h-11'
@@ -535,8 +559,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           title='Cancel'
                           onClick={handleCloseModal}
                         />
-                      )}
-                      {currentStep !== ADDPLUGINSTEPS.Upload && (
+                      ) : (
                         <Button
                           type='button'
                           className='flex-1 !h-11'
@@ -575,10 +598,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                           title='Continue'
                           loading={loading}
                           disabled={loading || !pluginInstalled}
-                          onClick={() => {
-                            dispatch(getAllPlugins());
-                            handleCloseModal();
-                          }}
+                          onClick={handleCloseModal}
                         />
                       )}
                     </div>

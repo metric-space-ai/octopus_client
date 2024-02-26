@@ -68,7 +68,9 @@ const aiServicesSlice = createSlice({
       }
     },
     handleChangeSelectedPlugin: (state, {payload}: PayloadAction<IPlugin | null>) => {
+      console.log({handleChangeSelectedPlugin:payload});
       state.selectedPlugin = payload;
+
     },
     handleChangeOpenPluginLogsDialog: (state, {payload}: PayloadAction<boolean>) => {
       state.openPluginLogsModal = payload;
@@ -116,16 +118,10 @@ const aiServicesSlice = createSlice({
       .addCase(getServiceLogsByPluginId.fulfilled, (state, {payload}) => {
         state.pluginLogIsLoading = false;
         if (state.entities && payload) {
-          
-          const {logs, service_id} = payload;
-          console.log("payload", payload);
-          console.log("service_id", service_id);
           // state.entities = [...state.entities].flatMap((plugin) =>
           //   plugin.id === payload.id ? {...plugin, ...payload} : plugin,
           // );
-          state.entities = [...state.entities].flatMap((plugin) =>
-            plugin.id === service_id ? {...plugin, logs} : plugin,
-          );
+          state.entities = [...state.entities].flatMap((plugin) => (plugin.id === payload.id ? payload : plugin));
         }
       })
       .addCase(putAllowedUsersForAiAccess.fulfilled, (state, {payload}) => {
@@ -196,12 +192,12 @@ export const getAllPlugins = createAsyncThunk('/aiServices/getAllPlugins', async
 
 export const getServiceLogsByPluginId = createAsyncThunk(
   '/aiServices/getServiceLogsByPluginId',
-  async (service_id: string, {rejectWithValue, dispatch}) => {
+  async (plugin: IPlugin, {rejectWithValue, dispatch}) => {
     try {
-      const {status, data: logs} = await getServiceLogsByPluginIdApi(service_id);
+      const {status, data: logs} = await getServiceLogsByPluginIdApi(plugin.id);
       if (status === 200) {
-        // dispatch(mergeLogsToPluginById({logs, service_id}));
-        return {logs, service_id};
+        dispatch(handleChangeSelectedPlugin({...plugin, logs}));
+        return {...plugin, logs};
       }
     } catch (err) {
       let error = err as AxiosError<ValidationErrors, any>;
