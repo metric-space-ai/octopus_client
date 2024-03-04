@@ -1,4 +1,4 @@
-import {Fragment, useReducer, useState} from 'react';
+import {Fragment, useEffect, useReducer, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import classNames from 'classnames';
 
@@ -37,6 +37,10 @@ export const AddDefinitionModal = ({open, onClose, addKeyword}: ModalProps) => {
     addKeyword(keyword);
     setLoading(false);
   };
+
+  useEffect(() => {
+    setValue('keyword', '');
+  }, []);
 
   return (
     <Transition appear show={open} as={Fragment}>

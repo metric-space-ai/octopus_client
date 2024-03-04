@@ -1,8 +1,7 @@
 export interface IKeywordsCollection {
-  id: string;
   title: string;
-  definitions_in: IKeyword[];
-  definitions_out: IKeyword[];
+  in_scope: string[];
+  out_scope: string[];
 }
 
 export interface IKeyword {
@@ -30,3 +29,23 @@ export interface IMessageItem {
   response: string;
   status: 'asking' | 'answered';
 }
+
+export interface IPostTopicResponse {
+  Text?: {
+    response: string;
+  };
+  Error?: {
+    error: string;
+  };
+}
+
+export interface IPostTopicResponseParsed {
+  status: string;
+  result: IKeywordsCollection[];
+}
+
+export interface IPostSpecificationsResponseParsed {
+  status: string;
+  result: TExemplaryKeywords[];
+}
+export type TExemplaryKeywords = string[];

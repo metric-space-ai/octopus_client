@@ -1,4 +1,4 @@
-import {Fragment, useReducer, useState} from 'react';
+import {Fragment, useEffect, useReducer, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import classNames from 'classnames';
 
@@ -7,8 +7,8 @@ import {XMarkIcon} from '@heroicons/react/24/outline';
 
 import {keywordValidator} from '@/helpers/validators';
 
-import {Button, IconButton} from '../buttons';
-import {Input} from '../input';
+import {Button, IconButton} from '../../buttons';
+import {Input} from '../../input';
 
 interface ModalProps {
   open: boolean;
@@ -39,6 +39,9 @@ export const AddNewKeyword = ({open, onClose, addKeyword}: ModalProps) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    setValue('keyword', '');
+  }, []);
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog className='relative z-10' as='div' onClose={onClose}>

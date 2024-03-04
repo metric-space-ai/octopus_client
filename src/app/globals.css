@@ -64,6 +64,10 @@ body {
   background-color: #AAAAAA;
 }
 
+.break-word-break {
+  word-break: break-word;
+}
+
 /*
  * Poppins 
 ================================================================================ */

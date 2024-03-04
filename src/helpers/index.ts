@@ -6,6 +6,13 @@ export function trimTopic(topic: string) {
   return topic.replace(/[，。！？”“"、,.!?]*$/, '');
 }
 
+export const clearWhitespaces = (text: string) => {
+  if (text) {
+    return text.replace(/\s+/g, '');
+  }
+  return text;
+};
+
 export async function copyToClipboard(text: string) {
   try {
     await navigator.clipboard.writeText(text);

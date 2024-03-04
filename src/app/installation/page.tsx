@@ -27,7 +27,7 @@ const InstallationPage = () => {
   } = useForm<IFormInputs>();
   const [setupRequired, setSetupRequired] = useState(false);
   const [loading, setLoading] = useState(false);
-  const disabled = !setupRequired;
+  // const disabled = !setupRequired;
 
   useEffect(() => {
     checkSetupApi().then((res) => {
@@ -99,7 +99,7 @@ const InstallationPage = () => {
             </span>
             <Button
               className='mt-4 w-full !h-11 rounded-[40px]'
-              disabled={disabled}
+              disabled={!setupRequired}
               loading={loading}
               title='Install Octopus AI'
             />

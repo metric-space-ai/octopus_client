@@ -34,7 +34,7 @@ export const resetPassword = async (token: string, password: string) => {
 };
 
 export const checkSetupApi = async () => {
-  return apiHub.get('api/v1/setup');
+  return apiHub.get<{setup_required: boolean}>('api/v1/setup');
 };
 
 export const setupApi = async (payload: ICompanyRegisterPayload) => {
@@ -67,4 +67,3 @@ export const updateUserProfilePic = async (id: string, payload: FormData) => {
     },
   });
 };
-

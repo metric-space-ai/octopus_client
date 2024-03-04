@@ -10,6 +10,12 @@ import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
 import {RightPanel} from '../components/right-panel';
+import {useEffect} from 'react';
+import {checkSetupApi} from '@/services/auth.service';
+import {AxiosError} from 'axios';
+
+import {paths} from '@/config/path';
+import { useRouter } from 'next/navigation';
 
 interface IFormInputs {
   email: string;
@@ -17,6 +23,8 @@ interface IFormInputs {
 }
 
 const LoginPage = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -28,6 +36,23 @@ const LoginPage = () => {
     const {email, password} = data;
     onLogin(email, password);
   };
+
+  const handleGetSetupRequired = async () => {
+    try {
+      const {status, data} = await checkSetupApi();
+      if (status === 200) {
+        if (data.setup_required) router.push(paths.installation);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.error);
+      }
+    }
+    // setSetupRequired(res.data?.setup_required ?? false);
+  };
+  useEffect(() => {
+    handleGetSetupRequired();
+  }, []);
 
   return (
     <div className='min-h-full grid sm:grid-cols-2 gap-3'>

@@ -49,5 +49,9 @@ export const RedirectPathProvider = ({children}: {children: React.ReactNode}): R
     return <Redirect to={paths.login} />;
   }
 
+  // if (pathname.includes('installation') && !isAuthenticated) {
+  //   return <Redirect to={paths.installation} />;
+  // }
+
   return children;
 };

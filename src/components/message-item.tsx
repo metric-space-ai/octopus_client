@@ -309,7 +309,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                 />
               ) : (
                 <div className='flex flex-col gap-1'>
-                  <span className='whitespace-pre-wrap text-base leading-6 text-content-black'>
+                  <span className='whitespace-pre-wrap text-base leading-6 text-content-black break-word-break'>
                     {prepareIfResponseIncludesMessage()}
                   </span>
                   {user?.user_id === item.user_id && (
@@ -357,7 +357,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
           </div>
           {/* <div className='flex flex-col'> */}
           {/* <Funding /> */}
-          {/* <Consultant /> */}
+          {/* <Research /> */}
           {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
           <div
             className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
