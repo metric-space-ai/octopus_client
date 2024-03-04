@@ -6,7 +6,7 @@
     "dev": "next dev -p 3030",
     "build": "next build",
     "start": "next start",
-    "custom-start": "cross-env NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL node src/config/set-env.js && next build && next start",
+    "custom-start": "cross-env NEXT_PUBLIC_DOMAIN=$NEXT_PUBLIC_DOMAIN NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL node src/config/set-env.js && next build && next start",
     "lint": "next lint",
     "lint:code:fix": "eslint src --ext .js,.ts,.tsx --fix"
   },
