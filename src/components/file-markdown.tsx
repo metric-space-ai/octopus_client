@@ -39,12 +39,11 @@ export function FileMarkdownContent({mediaFiles, width = 400, height = 200, clas
           <div key={media.id} className={classNames('flex items-center gap-2 relative', className)}>
             {media.media_type.includes('image') && (
               <div className='flex relative'>
-                <Image
+                <img
                   src={`${ImagesBaseUrl}${media.file_name}`}
                   width={width}
                   height={height}
                   alt={title ?? ''}
-                  loading='lazy'
                   onLoad={(e) => setLoaded(true)}
                   className='rounded-4'
                   onClick={() => handleOpenMedaIndialog(media)}

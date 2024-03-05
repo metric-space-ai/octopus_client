@@ -59,10 +59,9 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
 
                   {media.media_type.includes('image') && (
                     <>
-                      <Image
+                      <img
                         src={`${ImagesBaseUrl}${media.file_name}`}
                         alt={title ?? ''}
-                        loading='lazy'
                         onLoad={(e) => setLoaded(true)}
                         width={width}
                         height={height}
