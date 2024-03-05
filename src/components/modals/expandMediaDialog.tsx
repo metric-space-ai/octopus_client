@@ -18,7 +18,7 @@ interface ModalProps {
 }
 
 export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, height = 400}: ModalProps) => {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
 
   return (
     <>
@@ -62,17 +62,16 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
                       <img
                         src={`${ImagesBaseUrl}${media.file_name}`}
                         alt={title ?? ''}
-                        onLoad={(e) => setLoaded(true)}
                         width={width}
                         height={height}
                         className='rounded-4 w-full h-full'
                       />
-                      {!loaded && (
+                      {/* {!loaded && (
                         <div
                           className={`mx-2 bg-gray-300 rounded-4 dark:bg-gray-600 absolute left-0 animate-pulse`}
                           style={{width, height}}
                         ></div>
-                      )}
+                      )} */}
                     </>
                   )}
                   {media.media_type.includes('video') && (

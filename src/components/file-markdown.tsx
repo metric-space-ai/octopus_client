@@ -19,7 +19,7 @@ interface FileMarkdownProps {
 }
 
 export function FileMarkdownContent({mediaFiles, width = 400, height = 200, className, title}: FileMarkdownProps) {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
   const [selectedMedia, setSelectedMedia] = useState<IChatMessageFile>();
   const [openExpandMediaDialog, setOpenExpandMediaDialog] = useState(false);
 
@@ -44,16 +44,15 @@ export function FileMarkdownContent({mediaFiles, width = 400, height = 200, clas
                   width={width}
                   height={height}
                   alt={title ?? ''}
-                  onLoad={(e) => setLoaded(true)}
                   className='rounded-4'
                   onClick={() => handleOpenMedaIndialog(media)}
                 />
-                {!loaded && (
+                {/* {!loaded && (
                   <div
                     className={`mx-2 bg-gray-300 rounded-4 dark:bg-gray-600 absolute left-0 animate-pulse`}
                     style={{width, height}}
                   ></div>
-                )}
+                )} */}
                 <IconButton
                   className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
                   onClick={() => handleOpenMedaIndialog(media)}
