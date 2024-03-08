@@ -14,6 +14,9 @@ import {UPLOADWASPAPPSTEPS} from '@/constant';
 import UploadWaspAppModalHeader from './UploadWaspAppModalHeader';
 import UploadWaspSelectFileSection from './UploadWaspSelectFileSection';
 import WaspAppDialogFormInputs from './WaspAppDialogForm';
+import {extractMetaUploadNewWaspAppApi} from '@/services/settings.service';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
 interface ModalProps {
   open: boolean;
@@ -32,6 +35,7 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [file, setFile] = useState<File | null>(null);
   const [fileIsSelected, setFileIsSelected] = useState(false);
+  const [extractMetaIsLoading, setExtractMetaIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(UPLOADWASPAPPSTEPS.SelectFile);
 
   const [instance_type, setInstance_type] = useState<'Shared' | 'Private'>('Shared');
@@ -44,9 +48,27 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
     formState: {errors},
   } = useForm<IWaspFormInputs>();
 
-  const handleSubmitFirstStep = () => {
+  const handleSubmitFirstStep = async () => {
     if (fileIsSelected && file && currentStep === UPLOADWASPAPPSTEPS.SelectFile) {
-      setCurrentStep(UPLOADWASPAPPSTEPS.Upload);
+      setExtractMetaIsLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const {status, data} = await extractMetaUploadNewWaspAppApi(formData);
+        if (status === 201) {
+          const {description, title} = data;
+          setValue('name', title);
+          setValue('description', description);
+
+          setCurrentStep(UPLOADWASPAPPSTEPS.Upload);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally {
+        setExtractMetaIsLoading(false);
+      }
     }
   };
 
@@ -181,9 +203,9 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
                             type='button'
                             className='flex-1 !h-11'
                             variant={'primary'}
-                            title={!uploadIsLoading ? 'Continue' : ''}
-                            loading={uploadIsLoading}
-                            disabled={!fileIsSelected || uploadIsLoading}
+                            title={extractMetaIsLoading ? '' : 'Continue'}
+                            loading={extractMetaIsLoading}
+                            disabled={!fileIsSelected || extractMetaIsLoading}
                             onClick={handleSubmitFirstStep}
                           />
                         )}

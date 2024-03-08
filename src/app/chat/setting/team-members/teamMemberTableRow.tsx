@@ -4,19 +4,20 @@ import {Listbox, Transition} from '@headlessui/react';
 import {ImagesBaseUrl, ROLESARRAYVALUE, ROLESLABEL, ROLE_ADMIN} from '@/constant';
 // import {useSettingsContext} from '@/contexts/settingsContext';
 
-import {CheckIcon, ChevronDownIcon, TrashIcon, UserIcon} from '@heroicons/react/24/outline';
+import {CheckIcon, ChevronDownIcon, LockClosedIcon, TrashIcon, UserIcon} from '@heroicons/react/24/outline';
 import {useDispatch} from 'react-redux';
 import {updateTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
-import { AppDispatch } from '@/app/lib/store';
+import {AppDispatch} from '@/app/lib/store';
 
 type Props = {
   user: IUser;
   deleteUser: (member: IUser) => void;
+  resetUserPassword: (member: IUser) => void;
   plugins: IPlugin[] | undefined;
   pluginsIsLoading: boolean;
 };
 
-export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}: Props) => {
+export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading, resetUserPassword}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [roleIsLoading, setRoleIsLoading] = useState(false);
 
@@ -47,9 +48,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
     <div className='gap-2 py-3 h-68-px border-b-content-grey-100 border-b flex'>
       <div className='flex gap-4 w-[224px] '>
         {/* <img src={userImageSample.src} className='rounded-full w-11 h-11' /> */}
-        <div
-          className='flex items-center justify-center w-11 h-11 bg-content-accent-light-11 rounded-full overflow-hidden'
-        >
+        <div className='flex items-center justify-center w-11 h-11 bg-content-accent-light-11 rounded-full overflow-hidden'>
           {user.profile?.photo_file_name ? (
             <img
               src={`${ImagesBaseUrl}public/${user.profile.photo_file_name}`}
@@ -63,9 +62,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
           )}
         </div>
         <div className={`flex flex-col gap-0.5 ${user.is_enabled ? 'justify-start' : 'justify-center'}`}>
-          {user.is_enabled && (
-            <h6 className='font-semibold text-xs leading-5'>{user.profile?.name}</h6>
-          )}
+          {user.is_enabled && <h6 className='font-semibold text-xs leading-5'>{user.profile?.name}</h6>}
           <p
             className={`font-normal text-xs leading-5 w-[165px] truncate ... ${
               user.is_enabled ? 'text-content-grey-900' : 'text-content-grey-600'
@@ -143,7 +140,13 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading}
         )}
       </div>
 
-      <span className='ml-auto cursor-pointer flex items-center'>
+      <span className='ml-auto cursor-pointer flex items-center gap-4'>
+        <LockClosedIcon
+          width={16}
+          height={16}
+          className='text-content-grey-600 hover:text-content-grey-900'
+          onClick={() => resetUserPassword(user)}
+        />
         <TrashIcon
           width={16}
           height={16}

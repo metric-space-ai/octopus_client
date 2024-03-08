@@ -43,7 +43,7 @@ module.exports = (phase, {defaultConfig}) => {
     NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   };
-  console.log({NEXT_PUBLIC_DOMAIN: env.NEXT_PUBLIC_DOMAIN});
+  
   // Return the next config along with the environment variables
   return {
     ...defaultConfig,

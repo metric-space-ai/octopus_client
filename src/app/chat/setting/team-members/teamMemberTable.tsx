@@ -8,33 +8,46 @@ import {useDispatch, useSelector} from 'react-redux';
 import {deleteTeamMember, getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
 import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
-import { selectAiServicess } from '@/app/lib/features/aiServices/aiServicesSelector';
-import { AppDispatch } from '@/app/lib/store';
+import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
+import {AppDispatch} from '@/app/lib/store';
+import {ResetTeamMemberPasswordModal} from '@/components/modals/ResetTeamMemberPasswordModal';
 
 type Props = {};
 
 const TeamMebersTable = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const {entities, isLoading} = useSelector(selectTeamMembers);
-  const {entities:plugins, isLoading: pluginsIsLoading} = useSelector(selectAiServicess);
+  const {entities: plugins, isLoading: pluginsIsLoading} = useSelector(selectAiServicess);
   const [openDeleteUserDialog, setDeleteUserDialog] = useState(false);
-  const [selectedUserForRemove, setSelectedUserForRemove] = useState<IUser | null>(null);
+  const [openResetMemberPassDialog, setOpenResetMemberPassDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   // const {getTeamMembers, teamMembers, deleteTeamMember} = useSettingsContext();
 
+  const handleOpenResetMemberPasswordDialog = (member: IUser) => {
+    console.log({member});
+    setSelectedUser(member);
+    setOpenResetMemberPassDialog(true);
+  };
+
   const handleOpenDeleteDialog = (member: IUser) => {
-    setSelectedUserForRemove(member);
+    setSelectedUser(member);
     setDeleteUserDialog(true);
   };
+
+  const handleCloseResetMemberPasswordDialog = () => {
+    setSelectedUser(null);
+    setDeleteUserDialog(false);
+  };
   const handleCloseRemoveMemberDialog = () => {
-    setSelectedUserForRemove(null);
+    setSelectedUser(null);
     setDeleteUserDialog(false);
   };
 
   const handleAcceptDeleteMember = () => {
-    if (selectedUserForRemove) {
-      // deleteTeamMember(selectedUserForRemove.id);
-      dispatch(deleteTeamMember(selectedUserForRemove.id));
+    if (selectedUser) {
+      // deleteTeamMember(selectedUser.id);
+      dispatch(deleteTeamMember(selectedUser.id));
       handleCloseRemoveMemberDialog();
     }
   };
@@ -51,7 +64,6 @@ const TeamMebersTable = (props: Props) => {
   return (
     <>
       <div className='table-auto w-[638px] max-w-full'>
-    
         <div className='h-8 flex items-centers'>
           <span className='w-[224px] text-content-grey-600 text-xs font-normal text-left self-center'>Name</span>
 
@@ -81,15 +93,31 @@ const TeamMebersTable = (props: Props) => {
               </div>
             )
           ) : (
-            entities.map((user) => <TeamMemberTableRow key={user.id} deleteUser={handleOpenDeleteDialog} user={user} plugins={plugins} pluginsIsLoading={pluginsIsLoading}/>)
+            entities.map((user) => (
+              <TeamMemberTableRow
+                key={user.id}
+                deleteUser={handleOpenDeleteDialog}
+                user={user}
+                plugins={plugins}
+                pluginsIsLoading={pluginsIsLoading}
+                resetUserPassword={handleOpenResetMemberPasswordDialog}
+              />
+            ))
           )}
         </div>
       </div>
-      {selectedUserForRemove && openDeleteUserDialog && (
+      {selectedUser && openResetMemberPassDialog && (
+        <ResetTeamMemberPasswordModal
+          onClose={handleCloseResetMemberPasswordDialog}
+          open={openResetMemberPassDialog}
+          member={selectedUser}
+        />
+      )}
+      {selectedUser && openDeleteUserDialog && (
         <RemoveTeamMemberModal
           onClose={handleCloseRemoveMemberDialog}
           open={openDeleteUserDialog}
-          member={selectedUserForRemove}
+          member={selectedUser}
           onDelete={handleAcceptDeleteMember}
         />
       )}

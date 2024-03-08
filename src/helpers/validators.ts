@@ -57,6 +57,5 @@ export const waspAppFormValidator = {
   },
   description: {
     required: 'this field is required',
-    maxLength: 50,
   },
 };

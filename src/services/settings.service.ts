@@ -25,6 +25,11 @@ export const updateTeamMemberApi = (payload: IUser) => {
   return apiHub.put<IUser>(`api/v1/users/${id}`, data);
 };
 
+export const resetTeamMemberPasswordApi = async (token: string, password: string) => {
+  const payload = {password, repeat_password: password};
+  return apiHub.put(`api/v1/auth/${token}`, payload);
+};
+
 export const createTeamMemberApi = (payload: ICreateUser) => {
   return apiHub.post<IUser>(`api/v1/users`, payload);
 };
@@ -160,6 +165,14 @@ export const getWaspAppsApi = () => {
 
 export const getWaspAppByIdApi = (wasp_id: string) => {
   return apiHub.get<IWaspApp>(`api/v1/wasp-apps/${wasp_id}`);
+};
+
+export const extractMetaUploadNewWaspAppApi = (payload: FormData) => {
+  return apiHub.post<{title: string; description: string}>(`api/v1/wasp-apps/extract-meta`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const uploadNewWaspAppApi = (payload: FormData) => {

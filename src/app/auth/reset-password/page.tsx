@@ -11,7 +11,7 @@ import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {Logo} from '@/components/logo';
 import {authValidator} from '@/helpers/validators';
-import {resetPassword} from '@/services/auth.service';
+import {resetPasswordApi} from '@/services/auth.service';
 
 import {RightPanel} from '../components/right-panel';
 
@@ -32,7 +32,7 @@ const ResetPasswordPage = () => {
   const onSubmit = async (data: IFormInputs) => {
     const {password} = data;
     setLoading(true);
-    resetPassword('', password)
+    resetPasswordApi('', password)
       .then(() => {
         toast.success('Password changed successfully. Please login to start.');
         router.push('/auth/login');

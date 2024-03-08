@@ -18,7 +18,7 @@ interface ModalProps {
 }
 
 export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, height = 400}: ModalProps) => {
-  const [loaded, setLoaded] = useState(true);
+  // const [loaded, setLoaded] = useState(true);
 
   return (
     <>
@@ -62,6 +62,8 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
                       <img
                         src={`${ImagesBaseUrl}${media.file_name}`}
                         alt={title ?? ''}
+                        loading='lazy'
+                        // onLoad={(e) => setLoaded(true)}
                         width={width}
                         height={height}
                         className='rounded-4 w-full h-full'

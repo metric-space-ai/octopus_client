@@ -1,31 +1,16 @@
-import React, {Fragment, useEffect, useRef, useState} from 'react';
-import {Button, IconButton} from '../../buttons';
-import classNames from 'classnames';
-import {
-  ArrowPathIcon,
-  ChevronUpIcon,
-  PaperAirplaneIcon,
-  PencilSquareIcon,
-  PlusIcon,
-  StopIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-
-import {useDebouncedCallback} from 'use-debounce';
-import {autoGrowTextArea, clearWhitespaces} from '@/helpers';
+import React, {useState} from 'react';
+import {Button} from '../../buttons';
+import {clearWhitespaces} from '@/helpers';
 import {AddDefinitionModal} from './AddDefinitionModal';
 import {
-  IExamples,
-  IKeyword,
   IKeywordsCollection,
   IPostSpecificationsResponseParsed,
   IPostTopicResponse,
-  IPostTopicResponseParsed,
   IResearchResult,
   TExemplaryKeywords,
 } from './types';
 import ResearchItemRow from './ResearchItemRow';
-import { RESEARCHRESULTS, RESEARCHSTEPS} from './researchConstant';
+import {RESEARCHRESULTS, RESEARCHSTEPS} from './researchConstant';
 import apiHub from '@/hooks/useApiClient';
 import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
@@ -36,7 +21,7 @@ import TopicSection from './TopicSection';
 type Props = {};
 
 const Research = (props: Props) => {
-  const formRef = useRef<HTMLFormElement>(null);
+  // const formRef = useRef<HTMLFormElement>(null);
 
   const [topic, setTopic] = useState('');
   const [researchSteps, setResearchSteps] = useState(RESEARCHSTEPS.startTopic);

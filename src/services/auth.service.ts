@@ -28,7 +28,7 @@ export const forgotPassword = async (email: string) => {
   return apiHub.post('api/v1/password-resets', payload);
 };
 
-export const resetPassword = async (token: string, password: string) => {
+export const resetPasswordApi = async (token: string, password: string) => {
   const payload = {password, repeat_password: password};
   return apiHub.put(`api/v1/password-resets/${token}`, payload);
 };

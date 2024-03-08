@@ -19,7 +19,7 @@ interface FileMarkdownProps {
 }
 
 export function FileMarkdownContent({mediaFiles, width = 400, height = 200, className, title}: FileMarkdownProps) {
-  const [loaded, setLoaded] = useState(true);
+  // const [loaded, setLoaded] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<IChatMessageFile>();
   const [openExpandMediaDialog, setOpenExpandMediaDialog] = useState(false);
 
@@ -44,6 +44,8 @@ export function FileMarkdownContent({mediaFiles, width = 400, height = 200, clas
                   width={width}
                   height={height}
                   alt={title ?? ''}
+                  loading='lazy'
+                  // onLoad={(e) => setLoaded(true)}
                   className='rounded-4'
                   onClick={() => handleOpenMedaIndialog(media)}
                 />
