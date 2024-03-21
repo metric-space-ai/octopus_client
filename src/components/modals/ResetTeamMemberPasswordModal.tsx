@@ -106,7 +106,7 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
                     placeholder='New Password'
                     errors={errors.newPassword && errors.newPassword.message}
                     rules={register('newPassword', {...authValidator.password})}
-                  />{' '}
+                  />
                   <Input
                     type='password'
                     label='Confirm Password'

@@ -19,7 +19,7 @@ import {
 import {ShieldCheckIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
 
-import {ImagesBaseUrl, LANGUAGES} from '@/constant';
+import {APPREQUESTBASEURL, ImagesBaseUrl, LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {
   getChatMessageApplicationCodeApi,
@@ -41,7 +41,7 @@ import {AxiosError} from 'axios';
 
 import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
-import WaspAppIframe from './wasp-app-iframe';
+import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
 
 interface IMessageItem {
@@ -212,21 +212,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
   };
 
-  // useEffect(() => {
-  //   const checkIsUpdated = () => {
-  //     const created = new Date(item.created_at);
-  //     const updated = new Date(item.updated_at);
-  //     created.setSeconds(0, 0);
-  //     updated.setSeconds(0, 0);
-  //     if (created.getTime() >= updated.getTime()) {
-  //       setMessageEditable(true);
-  //     } else {
-  //       setMessageEditable(false);
-  //     }
-  //   };
-  //   checkIsUpdated();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [item]);
 
   useEffect(() => {
     if (item.status === 'Asked') {
@@ -365,13 +350,13 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               ''
             }`}
           >
-            {hasWaspApp && <WaspAppIframe item={item} />}
+            {hasWaspApp && <AppIframe src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`} loadingTitle='the app is loading' />}
 
             {loading ? (
               <AnimateDots />
             ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
               isFileMessage ? (
-                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} />
+                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} messageId={item.id}  />
               ) : (
                 <>
                   {applicationInnerHTML ? (
@@ -396,7 +381,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                       )}
                     </div>
                   ) : (
-                    <MarkdownContent content={response ?? item.response} />
+                    <MarkdownContent content={response} />
                   )}
                 </>
               )

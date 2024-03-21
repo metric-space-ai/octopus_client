@@ -1,12 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {IFundingText} from './types';
 import TextAreaSection from './TextAreaSection';
 import {Button} from '@/components/buttons';
 
-type Props = {result: IFundingText; handleImproveWritingText: (row: IFundingText) => Promise<void>};
+type Props = {result: IFundingText; handleImproveWritingText: (row: IFundingText) => Promise<void>; isLoading: boolean};
 
-const FormulationRow = ({result, handleImproveWritingText}: Props) => {
-  const [text, setText] = useState(result.text);
+const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) => {
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(false);
+    }
+  }, [isLoading]);
+  useEffect(() => {
+    setText(result.text);
+  }, [result]);
   return (
     <div className='flex flex-col'>
       <h3
@@ -16,7 +25,12 @@ const FormulationRow = ({result, handleImproveWritingText}: Props) => {
         {result.title}
       </h3>
       {/* <p className='text-xs text-content-black mb-3.5'>{result.description}</p> */}
-      <TextAreaSection value={text} setValue={setText} textareaCustomClassName='max-h-40' />
+      <TextAreaSection
+        value={text}
+        setValue={setText}
+        textareaCustomClassName='max-h-40'
+        disabled={loading && isLoading}
+      />
       {/* {selectedResult === result.id || result.communicates.length > 0 ? (
               <Disclosure>
                 {({open}) => (
@@ -127,10 +141,15 @@ const FormulationRow = ({result, handleImproveWritingText}: Props) => {
         />
         <Button
           size='small'
-          title='Text Verbessern'
+          title={loading && isLoading ? '' : 'Text Verbessern'}
+          loading={loading && isLoading}
+          disabled={loading && isLoading}
           variant='primary'
           fontWeight='normal'
-          onClick={() => handleImproveWritingText(result)}
+          onClick={() => {
+            handleImproveWritingText({...result, text});
+            setLoading(true);
+          }}
           className='rounded-[40px] w-[220px] !h-8'
         />
       </div>

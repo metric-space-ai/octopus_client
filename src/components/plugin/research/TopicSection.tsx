@@ -1,11 +1,13 @@
-import {Button} from '@/components/buttons';
-import classNames from 'classnames';
 import React, {useState} from 'react';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
+import classNames from 'classnames';
+
 import {IKeywordsCollection, IPostTopicResponse, IPostTopicResponseParsed} from './types';
 import apiHub from '@/hooks/useApiClient';
 import {RESEARCHSTEPS} from './researchConstant';
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
+
+import {Button} from '@/components/buttons';
 
 type Props = {
   topic: string;
@@ -27,19 +29,21 @@ const TopicSection = ({topic, setTopic, setSpecifications, setResearchSteps}: Pr
       });
 
       if (status === 201) {
-        if (data.Text?.response) {
-          const parsedData: IPostTopicResponseParsed = JSON.parse(data.Text.response);
-          if (parsedData.status === 'ok') {
-            console.log({parsedData});
-            setSpecifications(parsedData.result);
-            setResearchSteps(RESEARCHSTEPS.Specification);
-          }
-        } else if (data.Error?.error) {
+        if (data.Error) {
           const parsedData: {error: string} = JSON.parse(data.Error.error);
           toast.error(parsedData.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (Text?.response) {
+            const parsedData: IPostTopicResponseParsed = JSON.parse(Text.response);
+            if (parsedData.status === 'ok') {
+              console.log({parsedData});
+              setSpecifications(parsedData.result);
+              setResearchSteps(RESEARCHSTEPS.Specification);
+            }
+          }
         }
       }
-      // }
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);

@@ -4,36 +4,22 @@ export interface IKeywordsCollection {
   out_scope: string[];
 }
 
-export interface IKeyword {
-  definitionId: string;
-  value: string;
-}
-
-export interface IExamples {
-  id: string;
-  value: string;
-}
-
-export interface IResearchResult {
-  id: string;
-  name: string;
-  url: string;
-  grade: number;
-  information: string;
-  messages: IMessageItem[];
-}
-
 export interface IMessageItem {
-  id: string;
-  message: string;
-  response: string;
-  status: 'asking' | 'answered';
+  content: string;
+  role: 'user' | 'system';
 }
 
+export interface IPostResquestErrorResponse {
+  error: string;
+}
 export interface IPostTopicResponse {
-  Text?: {
-    response: string;
-  };
+  Mixed?: [
+    {
+      Text?: {
+        response: string;
+      };
+    },
+  ];
   Error?: {
     error: string;
   };
@@ -49,3 +35,35 @@ export interface IPostSpecificationsResponseParsed {
   result: TExemplaryKeywords[];
 }
 export type TExemplaryKeywords = string[];
+
+export interface ISearchInGoogleResponse {
+  status: string;
+  result: ISearchInGoogleResponseResult[];
+}
+export interface ISearchInGoogleResponseResult {
+  'Contained information': string;
+  Index: number;
+  Occurrences: number;
+  'Source link': string;
+  'Source name': string;
+  Text: string | null;
+}
+
+export interface IResearchResult {
+  containedInformation: string;
+  index: number;
+  occurrences: number;
+  sourceLink: string;
+  sourceName: string;
+  text: string | null;
+  messages: IMessageItem[] | null;
+}
+
+export interface IChatItem {
+  content: string;
+  role: 'user' | 'system';
+}
+export interface IChatResponseResult {
+  chat: (IChatItem | IChatItem[])[];
+  status: string;
+}

@@ -1,33 +1,34 @@
 import React, {useState} from 'react';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
+
 import {Button} from '../../buttons';
 import {clearWhitespaces} from '@/helpers';
 import {AddDefinitionModal} from './AddDefinitionModal';
 import {
+  IChatItem,
+  IChatResponseResult,
   IKeywordsCollection,
-  IPostSpecificationsResponseParsed,
   IPostTopicResponse,
   IResearchResult,
+  ISearchInGoogleResponse,
   TExemplaryKeywords,
 } from './types';
 import ResearchItemRow from './ResearchItemRow';
-import {RESEARCHRESULTS, RESEARCHSTEPS} from './researchConstant';
+import {RESEARCHSTEPS} from './researchConstant';
 import apiHub from '@/hooks/useApiClient';
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import SpecificationSection from './SpecificationSection';
 import HeaderSection from './HeaderSection';
 import TopicSection from './TopicSection';
+import {ContainedInformationDialog} from './ContainedInformationDialog';
 
 type Props = {};
 
 const Research = (props: Props) => {
-  // const formRef = useRef<HTMLFormElement>(null);
-
   const [topic, setTopic] = useState('');
   const [researchSteps, setResearchSteps] = useState(RESEARCHSTEPS.startTopic);
   const [exemplaryKeywords, setExemplaryKeywords] = useState<TExemplaryKeywords[] | undefined>(undefined);
-  const [researchResults, setResearchResults] = useState<IResearchResult[]>(RESEARCHRESULTS);
-  const [coreIdea, setCoreIdea] = useState('');
+  const [researchResults, setResearchResults] = useState<IResearchResult[]>();
   const [definitionTitleOnEditMode, setKeywordTitleOnEditMode] = useState('');
   const [addNewKeywordCategoryId, setAddNewKeywordCategoryId] = useState('');
   const [editKeywordsTitle, setEditKeywordsTitle] = useState('');
@@ -36,6 +37,8 @@ const Research = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [specifcations, setSpecifications] = useState<IKeywordsCollection[] | undefined>(undefined);
   const [addDefinitionType, setAddDefinitionType] = useState<'in' | 'out' | ''>('');
+  const [showContainedInformationDialog, setShowContainedInformationDialog] = useState(false);
+  const [containedInformationText, setContainedInformationText] = useState('');
 
   const handleCloseAddDefinitionModal = () => {
     setAddKewordModal(false);
@@ -79,6 +82,7 @@ const Research = (props: Props) => {
     const query = [...exemplaryKeywords].flatMap((keywords) => keywords.map((keyword) => keyword));
     setIsLoading(true);
     try {
+      console.log('search_in_google ... runs');
       const {status, data} = await apiHub.post<IPostTopicResponse>('api/v1/ai-functions/direct-call', {
         name: 'search_in_google',
         parameters: {
@@ -91,18 +95,29 @@ const Research = (props: Props) => {
           ],
         },
       });
-      console.log('search_in_google ... runs');
       if (status === 201) {
-        if (data.Text?.response) {
-          const parsedData: IPostSpecificationsResponseParsed = JSON.parse(data.Text.response);
-          console.log({parsedData: JSON.parse(data.Text.response)});
-          // if (parsedData.status === 'ok') {
-          //   setExemplaryKeywords(parsedData.result);
-          //   setResearchSteps(RESEARCHSTEPS.Examples);
-          // }
-        } else if (data.Error?.error) {
+        if (data.Error) {
           const parsedData: {error: string} = JSON.parse(data.Error.error);
           toast.error(parsedData.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (Text?.response) {
+            const parsedData: ISearchInGoogleResponse = JSON.parse(Text.response);
+            console.log({parsedData});
+            if (parsedData.status === 'ok') {
+              const payload: IResearchResult[] = parsedData.result.flatMap((res) => ({
+                containedInformation: res['Contained information'],
+                index: res.Index,
+                occurrences: res.Occurrences,
+                sourceLink: res['Source link'],
+                sourceName: res['Source name'],
+                text: res.Text,
+                messages: null,
+              }));
+              setResearchResults(payload);
+              setResearchSteps(RESEARCHSTEPS.ResearchResults);
+            }
+          }
         }
       }
       // }
@@ -130,6 +145,52 @@ const Research = (props: Props) => {
       return true;
     }
     return false;
+  };
+
+  const handleShowContainedInformation = (text: string) => {
+    setShowContainedInformationDialog(true);
+    setContainedInformationText(text);
+  };
+
+  const handleSubmitChat = async (userInput: string, researchItem: IResearchResult) => {
+    setIsLoading(true);
+    try {
+      console.log('chat ... runs');
+      const {status, data} = await apiHub.post<IPostTopicResponse>('api/v1/ai-functions/direct-call', {
+        name: 'chat',
+        parameters: {
+          question: userInput,
+          chat: researchItem.messages ?? [],
+          information: researchItem.containedInformation ?? '',
+        },
+      });
+      if (status === 201) {
+        if (data.Error) {
+          const parsedData: {error: string} = JSON.parse(data.Error.error);
+          toast.error(parsedData.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (Text?.response) {
+            const parsedData: IChatResponseResult = JSON.parse(Text.response);
+            console.log({parsedData: parsedData.chat, researchItem});
+            const filteredChat: IChatItem[] = parsedData.chat.flat().filter((ch) => 'content' in ch);
+            if (!researchResults) return;
+            const result = researchResults.flatMap((research) =>
+              clearWhitespaces(research.sourceName) === clearWhitespaces(researchItem.sourceName)
+                ? {...research, messages: filteredChat}
+                : research,
+            );
+            setResearchResults(result);
+          }
+        }
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -195,7 +256,7 @@ const Research = (props: Props) => {
                   className='rounded-[40px] w-[220px] !h-9'
                 />
                 <Button
-                  title='Confirm keywords'
+                  title={isLoading ? '' : 'Confirm keywords'}
                   variant='primary'
                   onClick={handleConfirmGoogleSearchKeywords}
                   className='rounded-[40px] w-[220px] !h-9'
@@ -228,15 +289,19 @@ const Research = (props: Props) => {
                       </span>
                     </div>
                   </div>
-                  {researchResults.map((research) => (
-                    <ResearchItemRow
-                      key={research.id}
-                      researchItem={research}
-                      // onInput={onInput}
-                      // onInputKeyDown={onInputKeyDown}
-                      // doSubmit={doSubmit}
-                    />
-                  ))}
+                  {researchResults &&
+                    researchResults.map((research) => (
+                      <ResearchItemRow
+                        key={`research-number-${research.index}`}
+                        researchItem={research}
+                        handleShowContainedInformation={handleShowContainedInformation}
+                        submitChat={handleSubmitChat}
+                        isLoading={isLoading}
+                        // onInput={onInput}
+                        // onInputKeyDown={onInputKeyDown}
+                        // doSubmit={doSubmit}
+                      />
+                    ))}
                 </div>
               </div>
               <Button
@@ -249,13 +314,24 @@ const Research = (props: Props) => {
           )}
         </div>
       </div>
-
-      <AddDefinitionModal
-        open={addKewordModal}
-        onClose={handleCloseAddDefinitionModal}
-        addKeyword={(definition: string) => handleAddNewKeyWord(definition)}
-        // addKeyword={(definition: string) => console.log(definition)}
-      />
+      {addKewordModal && (
+        <AddDefinitionModal
+          open={addKewordModal}
+          onClose={handleCloseAddDefinitionModal}
+          addKeyword={(definition: string) => handleAddNewKeyWord(definition)}
+          // addKeyword={(definition: string) => console.log(definition)}
+        />
+      )}
+      {showContainedInformationDialog && (
+        <ContainedInformationDialog
+          open={showContainedInformationDialog}
+          containedInformation={containedInformationText}
+          onClose={() => {
+            setShowContainedInformationDialog(false);
+            setContainedInformationText('');
+          }}
+        />
+      )}
     </>
   );
 };

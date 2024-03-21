@@ -6,13 +6,13 @@ type Props = {
   value: string;
   className?: string;
   textareaCustomClassName?: string;
+  disabled?: boolean;
 };
 
-const TextAreaSection = ({setValue, value, className = '', textareaCustomClassName = ''}: Props) => {
+const TextAreaSection = ({setValue, value, className = '', textareaCustomClassName = '', disabled = false}: Props) => {
   return (
     <div className={classNames('flex relative items-center mb-5', className)}>
       <textarea
-        //   ref={inputRef}
         className={classNames(
           `w-full border py-2 px-4 pb-6 rounded-[18px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb bg-content-grey-100`,
           textareaCustomClassName,
@@ -20,9 +20,9 @@ const TextAreaSection = ({setValue, value, className = '', textareaCustomClassNa
         placeholder='Core-idea'
         onInput={(e) => setValue(e.currentTarget.value)}
         value={value}
-        //   onKeyDown={(e) => onInputKeyDown(e, answerInput, response)}
         rows={15}
         autoFocus={true}
+        disabled={disabled}
       />
       <span
         className={classNames(`text-content-grey-400 text-xs absolute right-3 bottom-2`, {

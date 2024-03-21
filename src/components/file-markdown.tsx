@@ -4,13 +4,15 @@ import {useState} from 'react';
 import classNames from 'classnames';
 
 import {IChatMessageFile} from '@/types';
-import {ImagesBaseUrl} from '@/constant';
+import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
 import Image from 'next/image';
 import {IconButton} from './buttons';
 import {ArrowsPointingOutIcon} from '@heroicons/react/24/outline';
 import {ExpandMediaDialog} from './modals/expandMediaDialog';
+import AppIframe from './app-iframe';
 
 interface FileMarkdownProps {
+  messageId: string;
   mediaFiles: IChatMessageFile[];
   width?: number;
   height?: number;
@@ -18,7 +20,7 @@ interface FileMarkdownProps {
   title?: string;
 }
 
-export function FileMarkdownContent({mediaFiles, width = 400, height = 200, className, title}: FileMarkdownProps) {
+export function FileMarkdownContent({messageId,mediaFiles, width = 400, height = 200, className, title}: FileMarkdownProps) {
   // const [loaded, setLoaded] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<IChatMessageFile>();
   const [openExpandMediaDialog, setOpenExpandMediaDialog] = useState(false);
@@ -68,6 +70,11 @@ export function FileMarkdownContent({mediaFiles, width = 400, height = 200, clas
                 <video width='400' className='w-full' controls>
                   <source src={`${ImagesBaseUrl}${media.file_name}`} type={media.media_type} />
                 </video>
+              </div>
+            )}
+            {media.media_type.includes('text/html') && (
+              <div className="w-full text-center">
+                <AppIframe src={`${APPREQUESTBASEURL}api/v1/chat-message-files/${messageId}/${media.id}/render-html`} loadingTitle='the model is Loading' />
               </div>
             )}
           </div>

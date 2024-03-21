@@ -1,16 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {AnimateDots} from './svgs';
-import {IChatMessage} from '@/types';
 import {IconButton} from './buttons';
-import {APPREQUESTBASEURL} from '@/constant';
 import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
 import {ArrowsPointingOutIcon} from '@heroicons/react/24/outline';
 
 interface IAppIframeProps {
-  item: IChatMessage;
+  src: string;
+  loadingTitle:string
 }
 
-const WaspAppIframe = ({item}: IAppIframeProps) => {
+const AppIframe = ({src,loadingTitle}: IAppIframeProps) => {
   const waspFrameRef = useRef<HTMLIFrameElement>(null);
   const [appIsLoading, setAppIsLoading] = useState(true);
   const [height, setHeight] = useState('630px');
@@ -32,7 +31,7 @@ const WaspAppIframe = ({item}: IAppIframeProps) => {
     <div className='relative'>
       {appIsLoading && (
         <div className='flex flex-col gap-6 items-center '>
-          <h1 className='text-content-white text-xl w-full text-center'>the app is loading</h1>
+          <h1 className='text-content-white text-xl w-full text-center'>{loadingTitle}</h1>
           <AnimateDots />
         </div>
       )}
@@ -42,7 +41,7 @@ const WaspAppIframe = ({item}: IAppIframeProps) => {
           ref={waspFrameRef}
           className={`w-full bg-red bg-content-white [&_body]:m-0 flex-1 custom-scrollbar-thumb`}
           // src={`http://localhost:3030/chat/setting?menu=sectors`}
-          src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
+          src={src}
           height={height}
           onLoad={onload}
         ></iframe>
@@ -57,9 +56,9 @@ const WaspAppIframe = ({item}: IAppIframeProps) => {
       <IframeWithSrcDialog
         open={iframeWithSrcModal}
         onClose={() => setIframeWithSrcModal(false)}
-        src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
+        src={src}
       />
     </div>
   );
 };
-export default WaspAppIframe;
+export default AppIframe;

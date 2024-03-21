@@ -10,11 +10,10 @@ type Props = {
   formulationResults: IFundingText[] | undefined;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   handleImproveWritingText: (row: IFundingText) => Promise<void>;
+  isLoading: boolean;
 };
 
-const FormulationSection = ({formulationResults, setStep, handleImproveWritingText}: Props) => {
-  // const inputRef = useRef<HTMLTextAreaElement>(null);
-
+const FormulationSection = ({formulationResults, setStep, handleImproveWritingText, isLoading}: Props) => {
   return (
     <div className='flex flex-col gap-5'>
       <div className='custom-scrollbar-thumb h-[402px] flex flex-col gap-8'>
@@ -24,6 +23,7 @@ const FormulationSection = ({formulationResults, setStep, handleImproveWritingTe
               key={clearWhitespaces(result.title)}
               result={result}
               handleImproveWritingText={handleImproveWritingText}
+              isLoading={isLoading}
             />
           ))}
       </div>

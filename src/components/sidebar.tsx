@@ -35,10 +35,10 @@ export function SideBar(props: {className?: string}) {
       if (user_id) {
         timeoutRef.current = window.setInterval(() => {
           chatStore.getContentSafety(user_id);
-        }, 12000);
+        }, 10000);
       }
     },
-    [chatStore.refreshMessage],
+    [chatStore.contentSafetyDetails],
   );
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export function SideBar(props: {className?: string}) {
         clearInterval(timeoutRef.current);
       }
     };
-  }, [user, checkDataProtection]);
+  }, [checkDataProtection]);
 
   useEffect(() => {
     if (!chatStore.enabledContentSafety && chatStore.contentSafetyDetails.content_safety_disabled_until) {

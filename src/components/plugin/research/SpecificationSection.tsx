@@ -1,10 +1,11 @@
+import React, {useState} from 'react';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
+import {PencilSquareIcon, PlusIcon, XMarkIcon} from '@heroicons/react/24/outline';
+
 import {Button, IconButton} from '@/components/buttons';
 import {clearWhitespaces} from '@/helpers';
-import {PencilSquareIcon, PlusIcon, XMarkIcon} from '@heroicons/react/24/outline';
-import React, {useState} from 'react';
 import {IKeywordsCollection, IPostSpecificationsResponseParsed, IPostTopicResponse, TExemplaryKeywords} from './types';
-import toast from 'react-hot-toast';
-import {AxiosError} from 'axios';
 import {RESEARCHSTEPS} from './researchConstant';
 import apiHub from '@/hooks/useApiClient';
 
@@ -87,18 +88,20 @@ const SpecificationSection = ({
       });
 
       if (status === 201) {
-        if (data.Text?.response) {
-          const parsedData: IPostSpecificationsResponseParsed = JSON.parse(data.Text.response);
-          console.log({parsedData: JSON.parse(data.Text.response)});
+        if (data.Error) {
+          const parsedData: {error: string} = JSON.parse(data.Error.error);
+          toast.error(parsedData.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (!Text) return;
+          const parsedData: IPostSpecificationsResponseParsed = JSON.parse(Text.response);
+          console.log({parsedData: JSON.parse(Text.response)});
           if (parsedData.status === 'ok' && typeof parsedData.result !== 'string') {
             setExemplaryKeywords(parsedData.result);
             setResearchSteps(RESEARCHSTEPS.Examples);
           } else if (typeof parsedData.result === 'string') {
             toast.error(parsedData.result);
           }
-        } else if (data.Error?.error) {
-          const parsedData: {error: string} = JSON.parse(data.Error.error);
-          toast.error(parsedData.error);
         }
       }
       // }
@@ -116,7 +119,7 @@ const SpecificationSection = ({
       <div className='custom-scrollbar-thumb h-[402px] flex flex-col gap-4'>
         {specifcations &&
           specifcations.map((elem, elemIndex) => (
-            <div className='flex flex-col gap-3 mb-4' key={clearWhitespaces(elem.title)}>
+            <div className='flex flex-col gap-3 mb-4' key={`sepecification-section-${clearWhitespaces(elem.title)}`}>
               {definitionTitleOnEditMode === clearWhitespaces(elem.title) ? (
                 <div className='flex items-center relative max-w-fit'>
                   <input
@@ -244,14 +247,14 @@ const SpecificationSection = ({
           ))}
       </div>
       <div className='flex gap-2.5'>
-        {/* <Button
-      title='Back to core-idea'
-      variant='outline'
-      onClick={() => setResearchSteps((currentStep) => currentStep - 1)}
-      className='rounded-[40px] w-[220px] !h-9'
-  /> */}
         <Button
-          title='Confirm specification'
+          title='Back to core-idea'
+          variant='outline'
+          onClick={() => setResearchSteps((currentStep) => currentStep - 1)}
+          className='rounded-[40px] w-[220px] !h-9'
+        />
+        <Button
+          title={isLoading ? '' : 'Confirm specification'}
           variant='primary'
           onClick={handleConfirmSpecifications}
           // onClick={handleGoToScondLevel}

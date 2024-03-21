@@ -22,11 +22,17 @@ export interface IFormulationResultCommunicate {
   status: 'asking' | 'answered';
 }
 export interface IFormulationResultCommunicate {}
-
+export interface IPostResquestErrorResponse {
+  error: string;
+}
 export interface IFormulationResultCommunicateResponse {
-  Text?: {
-    response: string;
-  };
+  Mixed?: [
+    {
+      Text?: {
+        response: string;
+      };
+    },
+  ];
   Error?: {
     error: string;
   };

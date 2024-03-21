@@ -27,10 +27,6 @@ import ApplicationSectionRow from './ApplicationSectionRow';
 type Props = {};
 
 const Funding = (props: Props) => {
-  // const formRef = useRef<HTMLFormElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  // const [keywordsCollection, setKeywordsCollection] = useState(KEYWORDSCOLLECTION);
   const [formulationResults, setFormulationResults] = useState<IFundingText[]>();
   const [currentStep, setStep] = useState(FUNDSTEPS.CoreIdea);
   const [coreIdea, setCoreIdea] = useState('');
@@ -71,24 +67,24 @@ const Funding = (props: Props) => {
           parameters: payload,
         },
       );
-      // console.log({status,data})
-      if (data.Text?.response) {
-        const parsedData: IFundingImproveWritingResultParsed = JSON.parse(data.Text.response);
+      if (status === 201) {
+        if (data.Error) {
+          const parsedData: {error: string} = JSON.parse(data.Error.error);
+          toast.error(parsedData.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (!Text?.response) return;
+          const parsedData: IFundingImproveWritingResultParsed = JSON.parse(Text.response);
 
-        if (parsedData.status === 'ok') {
-          // setFormulationResults((prevFR)=>prevFR?.flatMap((fr)=>fr.title === row.title ? {...fr,text:parsedData.result}:fr))
-          setFormulationResults((prevFR) =>
-            prevFR?.flatMap((formulation) =>
-              formulation.title === row.title ? {...formulation, text: parsedData.result} : formulation,
-            ),
-          );
-          // setBulletPoints(parsedData.result);
-          // setStep(FUNDSTEPS.Application);
+          if (parsedData.status === 'ok') {
+            console.log({parsedData, formulationResults, row});
+            setFormulationResults((prevFR) =>
+              prevFR?.flatMap((formulation) =>
+                formulation.title.trim() === row.title.trim() ? {...formulation, text: parsedData.result} : formulation,
+              ),
+            );
+          }
         }
-      } else if (data.Error?.error) {
-        const parsedData: {error: string} = JSON.parse(data.Error.error);
-        console.log({error: parsedData.error});
-        toast.error(parsedData.error);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -111,17 +107,19 @@ const Funding = (props: Props) => {
           },
         },
       );
-      // console.log({status,data})
-      if (data.Text?.response) {
-        const parsedData: IFormulationResultCreateNewFundingTopicParsed = JSON.parse(data.Text.response);
-        // const parsedData: IFormulationResultCreateNewFundingTopicParsed = CREATENEWFUNDINGRESPONSE;
+
+      if (data.Error) {
+        const parsedData: {error: string} = JSON.parse(data.Error.error);
+        toast.error(parsedData.error);
+      } else if (data.Mixed && data.Mixed.length > 0) {
+        const {Text} = data.Mixed[0];
+        if (!Text?.response) return;
+        const parsedData: IFormulationResultCreateNewFundingTopicParsed = JSON.parse(Text.response);
+
         if (parsedData.status === 'ok') {
           setBulletPoints(parsedData.result);
           setStep(FUNDSTEPS.Application);
         }
-      } else if (data.Error?.error) {
-        const parsedData: {error: string} = JSON.parse(data.Error.error);
-        toast.error(parsedData.error);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -146,14 +144,16 @@ const Funding = (props: Props) => {
           parameters: payload,
         },
       );
-      if (data.Text?.response) {
-        const parsedData: IFundingResultCreateTextsParsed = JSON.parse(data.Text.response);
+      if (data.Error) {
+        const parsedData: {error: string} = JSON.parse(data.Error.error);
+        toast.error(parsedData.error);
+      } else if (data.Mixed && data.Mixed.length > 0) {
+        const {Text} = data.Mixed[0];
+        if (!Text?.response) return;
+        const parsedData: IFundingResultCreateTextsParsed = JSON.parse(Text.response);
         console.log({formulation: parsedData.result});
         setFormulationResults(parsedData.result);
         setStep(FUNDSTEPS.Formulation);
-      } else if (data.Error?.error) {
-        const parsedData: {error: string} = JSON.parse(data.Error.error);
-        toast.error(parsedData.error);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -181,8 +181,13 @@ const Funding = (props: Props) => {
           parameters: payload,
         },
       );
-      if (data.Text?.response) {
-        const parsedData: IFormulationResultImprovePhraseParsed = JSON.parse(data.Text.response);
+      if (data.Error) {
+        const parsedData: {error: string} = JSON.parse(data.Error.error);
+        toast.error(parsedData.error);
+      } else if (data.Mixed && data.Mixed.length > 0) {
+        const {Text} = data.Mixed[0];
+        if (!Text?.response) return;
+        const parsedData: IFormulationResultImprovePhraseParsed = JSON.parse(Text.response);
         console.log({parsedData, bulletPoints, bulletPoint});
         if (parsedData.status === 'ok') {
           setBulletPoints((prevBPs) =>
@@ -191,20 +196,8 @@ const Funding = (props: Props) => {
             ),
           );
         }
-        // const parsedData: {
-        //   result: string[];
-        //   status: string;
-        // } = IMPROVEPHRASERESPONSE;
 
         toast.success('Phrase Improved');
-        //       setChatArchive(callback_data.chat);
-
-        // setBulletPoints(parsedData.result);
-        // setStep(FUNDSTEPS.Application);
-        //     }
-      } else if (data.Error?.error) {
-        const parsedData: {error: string} = JSON.parse(data.Error.error);
-        toast.error(parsedData.error);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -262,7 +255,6 @@ const Funding = (props: Props) => {
                   loading={isLoading}
                   disabled={isLoading}
                   onClick={handleGenerateTexts}
-                  // onClick={handleGoToScondLevel}
                   className='rounded-[40px] w-[220px] !h-9'
                 />
               </div>
@@ -272,14 +264,8 @@ const Funding = (props: Props) => {
           {currentStep === FUNDSTEPS.Formulation && (
             <FormulationSection
               formulationResults={formulationResults}
-              // selectedResult={selectedResult}
-              // onInputKeyDown={onInputKeyDown}
-              // onInput={onInput}
-              // userInput={userInput}
-              // inputRows={inputRows}
-              // doSubmit={doSubmit}
-              // setSelectedResult={setSelectedResult}
               setStep={setStep}
+              isLoading={isLoading}
               handleImproveWritingText={handleImproveWritingText}
             />
           )}
@@ -291,7 +277,6 @@ const Funding = (props: Props) => {
               loading={isLoading}
               onClick={handleCreateNewFundingTopic}
               className='rounded-[40px] w-[220px] !h-9'
-              //   iconBefore={<ArrowPathIcon className='w-5 h-5 text-white' />}
             />
           )}
         </div>

@@ -57,20 +57,19 @@ export default function ChatPage() {
     },
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(measure, [userInput]);
+
   const checkMessageResponse = useCallback(
     (chatId: string) => {
       if (chatId) {
         timeoutRef.current = window.setInterval(() => {
-          // if (messages.find((message) => message.chat_id === chatId && message.status === 'Asked'))
           refreshMessage(chatId);
         }, 10000);
       }
     },
     [refreshMessage],
   );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(measure, [userInput]);
 
   useEffect(() => {
     checkMessageResponse(currentTicketId);
