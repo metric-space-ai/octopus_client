@@ -10,6 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   inputCoverClassName?: string;
   labelClassName?: string;
+  inputClassName?: string;
   label?: string;
   type?: string;
   placeholder?: string;
@@ -23,6 +24,7 @@ export const Input = ({
   inputCoverClassName = '',
   label,
   labelClassName = '',
+  inputClassName = '',
   type,
   placeholder,
   errors,
@@ -36,11 +38,11 @@ export const Input = ({
       {label && (
         <p className={classNames('mb-2 font-normal text-xs text-content-secondary', labelClassName)}>{label}</p>
       )}
-      <div className={`relative px-5 py-2 bg-content-white rounded-[48px] ${inputCoverClassName}`}>
+      <div className={classNames(`relative px-5 py-2 bg-content-white rounded-[48px]`, inputCoverClassName)}>
         <input
           {...rules}
           onBlur={onBlur}
-          className='w-full text-base text-content-black outline-none'
+          className={classNames('w-full text-base text-content-black outline-none', inputClassName)}
           type={type === 'password' ? (hidePassword ? 'text' : 'password') : type}
           placeholder={placeholder}
           {...rest}

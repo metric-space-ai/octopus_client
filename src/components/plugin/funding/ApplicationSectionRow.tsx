@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {IFundingBulletPoint} from './types';
 import {clearWhitespaces} from '@/helpers';
 import {Button, IconButton} from '@/components/buttons';
-import {PencilSquareIcon, PlusIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {PencilSquareIcon, PlusIcon, TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
 type Props = {
   bulletPoints: IFundingBulletPoint[];
@@ -44,6 +44,14 @@ const ApplicationSectionRow = ({
   const addKeywordTitleToEditMode = (title: string) => {
     setKeywordTitleOnEditMode({key: clearWhitespaces(title), title});
     setEditKeywordsTitle(title);
+  };
+  const handleRemoveBulletPointPhrase = (title: string, index: number) => {
+    const result = bulletPoints.flatMap((item) =>
+      clearWhitespaces(item.title) === clearWhitespaces(title)
+        ? {...item, phrases: item.phrases.filter((_, idx) => index !== idx)}
+        : item,
+    );
+    setBulletPoints(result);
   };
   const clearKeywordTitleToEditMode = () => {
     setKeywordTitleOnEditMode({key: '', title: ''});
@@ -92,11 +100,13 @@ const ApplicationSectionRow = ({
     setIsLoading(true);
     handleFundingImprovePhrase(bulletPoint);
   };
+
   useEffect(() => {
     if (!improvePhraseLoading && isLoading) {
       setIsLoading(false);
     }
   }, [improvePhraseLoading]);
+
   return (
     <div className='flex flex-col gap-3 mb-4'>
       {keywordTitleOnEditMode.key === clearWhitespaces(bulletPoint.title) ? (
@@ -120,6 +130,9 @@ const ApplicationSectionRow = ({
           <IconButton className='!p-0' onClick={() => addKeywordTitleToEditMode(bulletPoint.title)}>
             <PencilSquareIcon className='w-4 h-4 text-content-black' />
           </IconButton>
+          {/* <IconButton className='!p-0' onClick={() => handleRemoveBulletPoint(bulletPoint.title)}>
+            <TrashIcon className='w-4 h-4 text-content-black' />
+          </IconButton> */}
         </div>
       )}
       <div className='flex flex-wrap gap-2 whitespace-pre-wrap'>
@@ -148,7 +161,10 @@ const ApplicationSectionRow = ({
             >
               <span className='text-xs leading-5 text-content-black'>{phrase}</span>
               <IconButton className='!p-0' onClick={() => handleOpenEditKeywordValue(phrase, bulletPoint.title)}>
-                <PencilSquareIcon className='w-4 h-4 text-content-grey-600' />
+                <PencilSquareIcon className='w-4 h-4 text-content-grey-600 hover:text-content-accent' />
+              </IconButton>
+              <IconButton className='!p-0' onClick={() => handleRemoveBulletPointPhrase(bulletPoint.title, index)}>
+                <TrashIcon className='w-4 h-4 text-content-grey-600 hover:text-content-red-600' />
               </IconButton>
             </div>
           ) : (

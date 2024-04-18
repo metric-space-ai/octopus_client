@@ -7,9 +7,10 @@ type Props = {
   className?: string;
   textareaCustomClassName?: string;
   disabled?: boolean;
+  maxLenght?: number;
 };
 
-const TextAreaSection = ({setValue, value, className = '', textareaCustomClassName = '', disabled = false}: Props) => {
+const TextAreaSection = ({setValue, value, className = '', textareaCustomClassName = '', disabled = false,maxLenght=1000}: Props) => {
   return (
     <div className={classNames('flex relative items-center mb-5', className)}>
       <textarea
@@ -26,9 +27,9 @@ const TextAreaSection = ({setValue, value, className = '', textareaCustomClassNa
       />
       <span
         className={classNames(`text-content-grey-400 text-xs absolute right-3 bottom-2`, {
-          '!text-content-red-600': value.length > 1000,
+          '!text-content-red-600': value.length > maxLenght,
         })}
-      >{`${value.length}/1000`}</span>
+      >{`${value.length}/${maxLenght}`}</span>
     </div>
   );
 };

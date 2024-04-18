@@ -68,7 +68,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeheight, setIframeheight] = useState('0px');
   const [isEditMode, setIsEditMode] = useState(false);
-  const [response, setResponse] = useState(item.response);
+  const [response, setResponse] = useState(item.response ?? '');
   const [messageText, setMessageText] = useState(item.message);
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
   const [selected, setSelected] = useState(LANGUAGES[36]);
@@ -93,7 +93,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
   const [hasWaspApp, setHasWaspApp] = useState(false);
 
-  const prevMessage = item.response;
+  const prevMessage = item.response ?? '';
 
   const checkMessageResponse = useCallback(
     (after: number) => {
@@ -186,7 +186,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     changeSensitiveStatus(false);
   };
   const prepareIfResponseIncludesMessage = () => {
-    if (isSensitive && messageText.includes(response)) {
+    if (isSensitive && response && messageText.includes(response)) {
       const responseSlices = messageText.split(response);
       return (
         <>
@@ -212,8 +212,8 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
   };
 
-
   useEffect(() => {
+    if (item.response) setResponse(item.response);
     if (item.status === 'Asked') {
       setLoading(true);
       const estimationResponseTime = new Date(item.estimated_response_at);
@@ -242,7 +242,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
-
+  
   return (
     <>
       <div className='mt-5 text-between_sm_base'>
@@ -341,7 +341,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
             </div>
           </div>
           {/* <div className='flex flex-col'> */}
-          {/* <Funding /> */}
+          {/* <WaspAppGenerator /> */}
           {/* <Research /> */}
           {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
           <div
@@ -350,13 +350,18 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               ''
             }`}
           >
-            {hasWaspApp && <AppIframe src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`} loadingTitle='the app is loading' />}
+            {hasWaspApp && (
+              <AppIframe
+                src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
+                loadingTitle='the app is loading'
+              />
+            )}
 
             {loading ? (
               <AnimateDots />
             ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
               isFileMessage ? (
-                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} messageId={item.id}  />
+                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} messageId={item.id} />
               ) : (
                 <>
                   {applicationInnerHTML ? (
@@ -381,7 +386,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                       )}
                     </div>
                   ) : (
-                    <MarkdownContent content={response} />
+                    <MarkdownContent content={response ?? ''} />
                   )}
                 </>
               )
@@ -408,7 +413,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                     </Popover>
                   </div>
                 </div>
-                <SensitiveMarkdownContent content={item.response} />
+                <SensitiveMarkdownContent content={item.response ?? ''} />
               </div>
             )}
             {!loading &&
@@ -558,7 +563,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
         <TranslatorModal
           open={showTranslatorModal}
           onClose={() => setShowTranslatorModal(false)}
-          text={response ?? item.response}
+          text={response ?? item.response ?? ''}
           setText={setResponse}
           selected={selected}
           setSelected={setSelected}

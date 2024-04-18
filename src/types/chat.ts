@@ -33,7 +33,7 @@ export interface IChatMessage {
   is_marked_as_not_sensitive: boolean;
   is_not_checked_by_system: boolean;
   message: string;
-  response: string;
+  response: string | null;
   status: 'Asked' | 'Answered';
   updated_at: string;
   profile: {

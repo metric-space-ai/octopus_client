@@ -28,6 +28,7 @@ module.exports = {
           white: '#FFFFFF',
           'grey-50': 'var(--Grey-600, #5C5C5C)',
           'grey-100': '#F5F5F5',
+          'grey-300': '#888888',
           'grey-400': '#989898',
           'grey-600': '#5C5C5C',
           'grey-900': '#2C2C2C',
@@ -47,7 +48,7 @@ module.exports = {
           'red-600': '#DB3A34',
           'red-400': '#EA6C68',
           'grey-tab': '#E6E3E8',
-          
+          'border-dark': '#0F172A',
         },
         success: {
           default: '#00875A',
@@ -84,7 +85,9 @@ module.exports = {
         'chat-screen-height': 'calc(100vh - 72px)',
         'capture-button': '104px',
         84: '84px',
+        21: '5.25rem',
         '34-px': '34px',
+        '9.5': '2.375rem',
         'profile-drawer': '168px',
         '68-px': '68px',
         '45-px': '45px',

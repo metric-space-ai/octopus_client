@@ -24,11 +24,64 @@ import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
 import ApplicationSectionRow from './ApplicationSectionRow';
 
+const PHRASES = [
+  {
+    phrases: [
+      '1. Titelvorschlag: "Automatisierte Herstellung von Graphit- und Kohlenelektroden für die Industrie"',
+      '2. Titelvorschlag: "Effiziente Produktionsprozesse für industrielle Schmelzöfen"',
+      '3. Titelvorschlag: "Innovative Fertigungslösungen für Elektroden in der Stahl- und Aluminiumindustrie"',
+    ],
+    title: 'Titel des Vorhabens',
+  },
+  {
+    phrases: [
+      '- Effizienzsteigerung in der Herstellung von Graphit- und Kohlenstoffkomponenten',
+      '- Reduzierung der Produktionszeiten',
+      '- Minimierung von Rüstzeiten durch Automatisierung',
+      '- Verbesserung der Arbeitssicherheit durch den Wegfall manueller Prozesse',
+      '- Steigerung der Produktqualität durch präzisere Fertigung',
+    ],
+    title: 'Ziel des Vorhabens',
+  },
+  {
+    phrases: [
+      '1. Forschung und Entwicklung:',
+      '   - Untersuchung von automatisierten Herstellungsprozessen für Graphit- und Kohlenstoffkomponenten',
+      '   - Entwicklung von speziellen Maschinen und Anlagen für die automatisierte Produktion',
+      '',
+      '2. Technologische Umsetzung:',
+      '   - Implementierung von Robotern und automatisierten Systemen in die Produktionsstätten',
+      '   - Integration von IoT-Technologien zur Steuerung und Überwachung der Produktionsprozesse',
+      '',
+      '3. Optimierung der Produktionsabläufe:',
+      '   - Analyse der bestehenden manuellen Produktionsschritte und Identifizierung von Optimierungspotenzialen',
+      '   - Implementierung von Lean-Prinzipien, um Prozesse effizienter zu gestalten',
+      '',
+      '4. Qualitätssicherung und Arbeitssicherheit:',
+      '   - Entwicklung von Prüfverfahren zur Sicherstellung der Qualität der hergestellten Komponenten',
+      '   - Implementierung von Sicherheitsmaßnahmen in den automatisierten Anlagen, um Unfälle zu vermeiden',
+      '',
+      '5. Evaluierung und Testphase:',
+      '   - Durchführung von Testläufen mit den automatisierten Produktionsanlagen',
+      '   - Überwachung und Bewertung der Produktionsdaten, um Verbesserungen vorzunehmen',
+      '',
+      '6. Schulung und Training:',
+      '   - Schulung der Mitarbeiter im Umgang mit den neuen automatisierten Anlagen',
+      '   - Training des Personals für Wartungs- und Reparaturarbeiten an den Maschinen',
+      '',
+      '7. Dokumentation und Berichterstattung:',
+      '   - Dokumentation aller Entwicklungs- und Produktionsprozesse',
+    ],
+    title: 'Beschreibung aller Arbeiten',
+  },
+];
+
 type Props = {};
 
 const Funding = (props: Props) => {
   const [formulationResults, setFormulationResults] = useState<IFundingText[]>();
   const [currentStep, setStep] = useState(FUNDSTEPS.CoreIdea);
+  // const [currentStep, setStep] = useState(FUNDSTEPS.Application);
   const [coreIdea, setCoreIdea] = useState('');
   const [addNewKeywordCategoryId, setAddNewKeywordCategoryId] = useState('');
   const [addKewordModal, setAddKewordModal] = useState(false);
@@ -36,6 +89,7 @@ const Funding = (props: Props) => {
   const [improvePhraseLoading, setImprovePhraseLoading] = useState(false);
 
   const [bulletPoints, setBulletPoints] = useState<IFundingBulletPoint[] | undefined>();
+  // const [bulletPoints, setBulletPoints] = useState<IFundingBulletPoint[] | undefined>(PHRASES);
 
   const handleAddNewKeyWord = (keyword: string) => {
     if (!bulletPoints) return;

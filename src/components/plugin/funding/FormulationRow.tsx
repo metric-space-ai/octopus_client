@@ -30,6 +30,7 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
         setValue={setText}
         textareaCustomClassName='max-h-40'
         disabled={loading && isLoading}
+        maxLenght={800}
       />
       {/* {selectedResult === result.id || result.communicates.length > 0 ? (
               <Disclosure>
@@ -143,10 +144,11 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
           size='small'
           title={loading && isLoading ? '' : 'Text Verbessern'}
           loading={loading && isLoading}
-          disabled={loading && isLoading}
+          disabled={(loading && isLoading) || text.length > 800}
           variant='primary'
           fontWeight='normal'
           onClick={() => {
+            if (text.length > 800) return;
             handleImproveWritingText({...result, text});
             setLoading(true);
           }}
