@@ -78,7 +78,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2 gap-1'>
             <div className='w-52'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>sss Name</span>
+              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
             </div>
             {/* <div className='w-28'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>

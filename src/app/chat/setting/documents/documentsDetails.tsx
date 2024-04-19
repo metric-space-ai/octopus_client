@@ -21,7 +21,7 @@ import {
   getAllPlugins,
   updatetAiFunctionsById,
 } from '@/app/lib/features/aiServices/aiServicesSlice';
-import { AppDispatch } from '@/app/lib/store';
+import {AppDispatch} from '@/app/lib/store';
 
 export default function DocumentsDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -88,9 +88,9 @@ export default function DocumentsDetail() {
     }
   };
 
-  useEffect(() => {
-    dispatch(getAllPlugins());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getAllPlugins());
+  // }, []);
 
   return (
     <>
@@ -119,79 +119,86 @@ export default function DocumentsDetail() {
                 </h2>
               </div>
             )}
-            {!plugins || plugins.length === 0
-              ? !isLoading && (
-                  <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                    <h2 className='text-lg text-content-accent uppercase'>not found</h2>
-                  </div>
-                )
-              : plugins.map((plugin, index) => (
-                  <Disclosure key={plugin.id}>
-                    {({open}) => (
-                      <Fragment>
-                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
-                          <div className='flex gap-3 w-52 items-center'>
-                            <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3 truncate ...'>
-                              {plugin.original_file_name}
-                            </p>
-                          </div>
-                          <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium pl-2'>
-                            {bytesCalculator(224500000)}
-                          </p>
-                          <div className='flex justify-center items-center w-28'>
-                            <p className='text-xs leading-5 text-content-grey-900 font-poppins-semibold ml-3'>
-                              Only me
-                            </p>
-                            {plugin.ai_functions && plugin.ai_functions.length > 0 && (
-                              <Disclosure.Button className='flex items-center ml-1'>
-                                <ChevronUpIcon
-                                  className={`${!open ? 'rotate-180 transform' : ''} h-3 w-3 text-content-grey-900`}
-                                />
-                              </Disclosure.Button>
-                            )}
-                          </div>
+            <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
+              
+            </div>
+            {false && (
+              <>
+                {!plugins || plugins?.length === 0
+                  ? !isLoading && (
+                      <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
+                        <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                      </div>
+                    )
+                  : plugins?.map((plugin, index) => (
+                      <Disclosure key={plugin.id}>
+                        {({open}) => (
+                          <Fragment>
+                            <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                              <div className='flex gap-3 w-52 items-center'>
+                                <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3 truncate ...'>
+                                  {plugin.original_file_name}
+                                </p>
+                              </div>
+                              <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium pl-2'>
+                                {bytesCalculator(224500000)}
+                              </p>
+                              <div className='flex justify-center items-center w-28'>
+                                <p className='text-xs leading-5 text-content-grey-900 font-poppins-semibold ml-3'>
+                                  Only me
+                                </p>
+                                {plugin.ai_functions && plugin.ai_functions.length > 0 && (
+                                  <Disclosure.Button className='flex items-center ml-1'>
+                                    <ChevronUpIcon
+                                      className={`${!open ? 'rotate-180 transform' : ''} h-3 w-3 text-content-grey-900`}
+                                    />
+                                  </Disclosure.Button>
+                                )}
+                              </div>
 
-                          <span
-                            className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
-                            onClick={() => handleOpenDeletePluginModal(plugin)}
-                          >
-                            <TrashIcon width={16} height={16} className='text-content-grey-900 cursor-pointer' />
-                          </span>
-                        </div>
-                        {plugin.ai_functions && (
-                          <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
-                            <div className='flex flex-col gap-3 pl-9 w-full'>
-                              {plugin.ai_functions.map((func, funcIndex) => (
-                                <div key={func.id} className='flex w-full items-center justify-between'>
-                                  <CustomCheckbox
-                                    active={func.is_enabled}
-                                    onChange={(check: boolean) =>
-                                      !aiFunctionsLoading
-                                        ? handleChangeAiFunctionActivation(index, funcIndex, func, check)
-                                        : {}
-                                    }
-                                    disabled={aiFunctionsLoading}
-                                    title={func.description}
-                                  />
-                                  <IconButton
-                                    className='top-4 right-4 mr-5 ml-1 bg-content-red-600/20 hover:bg-content-red-600/40'
-                                    onClick={() => handleDeleteServiceAiFunction(index, func)}
-                                  >
-                                    {deleteFunctionsIsLoading ? (
-                                      <Spinner />
-                                    ) : (
-                                      <TrashIcon className='w-4 h-4 text-content-primary' />
-                                    )}
-                                  </IconButton>
-                                </div>
-                              ))}
+                              <span
+                                className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                                onClick={() => handleOpenDeletePluginModal(plugin)}
+                              >
+                                <TrashIcon width={16} height={16} className='text-content-grey-900 cursor-pointer' />
+                              </span>
                             </div>
-                          </Disclosure.Panel>
+                            {plugin.ai_functions && (
+                              <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
+                                <div className='flex flex-col gap-3 pl-9 w-full'>
+                                  {plugin.ai_functions.map((func, funcIndex) => (
+                                    <div key={func.id} className='flex w-full items-center justify-between'>
+                                      <CustomCheckbox
+                                        active={func.is_enabled}
+                                        onChange={(check: boolean) =>
+                                          !aiFunctionsLoading
+                                            ? handleChangeAiFunctionActivation(index, funcIndex, func, check)
+                                            : {}
+                                        }
+                                        disabled={aiFunctionsLoading}
+                                        title={func.description}
+                                      />
+                                      <IconButton
+                                        className='top-4 right-4 mr-5 ml-1 bg-content-red-600/20 hover:bg-content-red-600/40'
+                                        onClick={() => handleDeleteServiceAiFunction(index, func)}
+                                      >
+                                        {deleteFunctionsIsLoading ? (
+                                          <Spinner />
+                                        ) : (
+                                          <TrashIcon className='w-4 h-4 text-content-primary' />
+                                        )}
+                                      </IconButton>
+                                    </div>
+                                  ))}
+                                </div>
+                              </Disclosure.Panel>
+                            )}
+                          </Fragment>
                         )}
-                      </Fragment>
-                    )}
-                  </Disclosure>
-                ))}
+                      </Disclosure>
+                    ))}
+              </>
+            )}
           </div>
           {isLoading && (
             <Disclosure>

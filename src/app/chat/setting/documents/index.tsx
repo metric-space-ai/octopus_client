@@ -1,7 +1,7 @@
 import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
 import DocumentsData from './documentsDetails';
-import { UploadDocumentModal } from '@/components/modals/UploadDocumentModal';
+import {UploadDocumentModal} from '@/components/modals/UploadDocumentModal';
 
 type Props = {};
 
@@ -17,7 +17,8 @@ const Documents = (props: Props) => {
               className='!px-6 font-poppins-semibold text-sm !h-34-px'
               variant='primary'
               title='Upload Document'
-              onClick={() => setAddDocumentsModal(true)}
+              disabled
+              // onClick={() => setAddDocumentsModal(true)}
             />
           </div>
           <div className='max-w-full'>

@@ -39,7 +39,7 @@ export default function ChatPage() {
   } = useChatStore();
   const {user} = useAuthContext();
 
-  const {scrollRef, setAutoScroll} = useScrollToBottom();
+  const {scrollRef, setAutoScroll, autoScroll} = useScrollToBottom();
   const timeoutRef = useRef(0);
   const showChatPrompt = messages?.length === 0 || isNewTicket;
   // auto grow input
@@ -127,6 +127,18 @@ export default function ChatPage() {
   useEffect(() => {
     checkChatInputIsDisabled();
   }, [messages, enabledContentSafety]);
+
+  useEffect(() => {
+    if (autoScroll) {
+      setAutoScroll(false);
+    }
+  }, [autoScroll]);
+
+  useEffect(() => {
+    if (messages.length) {
+      setAutoScroll(true);
+    }
+  }, [messages]);
 
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
