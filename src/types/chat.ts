@@ -11,9 +11,10 @@ export interface IChatMessageFile {
   id: string;
   chat_message_id: string;
   file_name: string;
-  media_type: 'video/mp4' | 'image/jpeg';
+  media_type: 'video/mp4' | 'image/jpeg' | 'text/plain';
   created_at: string;
-  deleted_at: string;
+  deleted_at: string | null;
+  original_file_name?: string;
 }
 
 export interface IContentSafety {
