@@ -28,7 +28,7 @@ import {
   updateContentSafetyApi,
 } from '@/services/chat.service';
 import {useChatStore} from '@/store';
-import {IChatMessage} from '@/types';
+import {IAiFunctionErrorParsed, IChatMessage} from '@/types';
 
 import {Button, IconButton} from './buttons';
 import {FileMarkdownContent} from './file-markdown';
@@ -54,7 +54,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     editMessage,
     updateMessage,
     deleteMessage,
-    refreshMessage,
     enabledContentSafety,
     changeSensitiveStatus,
     changeSensitiveStatusUserId,
@@ -89,6 +88,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [showUserImageModal, setShowUserImageModal] = useState(false);
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
+  const [aiFunctionErrorMessage, setAiFunctionErrorMessage] = useState('');
 
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
   const [hasWaspApp, setHasWaspApp] = useState(false);
@@ -180,7 +180,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     if (!user) return;
     setDisableLoading(true);
     await updateChatMessageApi(item.chat_id, item.id, item.message, true);
-    refreshMessage(item.chat_id);
+    // refreshMessage(item.chat_id);
     setDisableLoading(false);
     updateContentSafetyApi(30, user.user_id);
     changeSensitiveStatus(false);
@@ -240,9 +240,26 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
         clearTimeout(timeoutRef.current);
       }
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
-  
+
+  useEffect(() => {
+    if (item.ai_function_error) {
+      const errorMessage: IAiFunctionErrorParsed = JSON.parse(item.ai_function_error);
+      if (errorMessage.response) {
+        setAiFunctionErrorMessage(
+          `${errorMessage.response}${errorMessage.file_attachments?.[0] && ` - "${errorMessage.file_attachments[0].content}"`}`,
+        );
+      }
+      if (errorMessage.error) {
+        setAiFunctionErrorMessage(errorMessage.error);
+      }
+    } else {
+      setAiFunctionErrorMessage('');
+    }
+  }, [item]);
+
   return (
     <>
       <div className='mt-5 text-between_sm_base'>
@@ -345,6 +362,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
           {/* <Research /> */}
           {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
           <div
+            id='12345678932654987'
             className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
               // applicationInnerHTML ? `min-h-[${iframeheight}]` :
               ''
@@ -357,64 +375,71 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               />
             )}
 
-            {loading ? (
-              <AnimateDots />
-            ) : !isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
-              isFileMessage ? (
-                <FileMarkdownContent mediaFiles={item.chat_message_files} title={item.message} messageId={item.id} />
-              ) : (
-                <>
-                  {applicationInnerHTML ? (
-                    <div className='relative'>
-                      {!iframeWithSrcModal && (
-                        <>
-                          <iframe
-                            ref={iframeRef}
-                            style={{height: iframeheight, minHeight: 360}}
-                            className={`w-full bg-red text-content-white [&_body]:m-0 flex-1`}
-                            srcDoc={applicationInnerHTML}
-                            // height={iframeheight}
-                            onLoad={onLoadPrepareIframe}
-                          ></iframe>
-                          <IconButton
-                            className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
-                            onClick={() => setIframeWithSrcModal(true)}
+            {loading && <AnimateDots />}
+            {!loading && (
+              <>
+                {!isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
+                  <>
+                    {applicationInnerHTML ? (
+                      <div className='relative'>
+                        {!iframeWithSrcModal && (
+                          <>
+                            <iframe
+                              ref={iframeRef}
+                              style={{height: iframeheight, minHeight: 360}}
+                              className={`w-full bg-red text-content-white [&_body]:m-0 flex-1`}
+                              srcDoc={applicationInnerHTML}
+                              // height={iframeheight}
+                              onLoad={onLoadPrepareIframe}
+                            ></iframe>
+                            <IconButton
+                              className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
+                              onClick={() => setIframeWithSrcModal(true)}
+                            >
+                              <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
+                            </IconButton>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <MarkdownContent content={response ?? ''} />
+                    )}
+                    {isFileMessage && (
+                      <FileMarkdownContent
+                        mediaFiles={item.chat_message_files}
+                        title={item.message}
+                        messageId={item.id}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <div className='flex-1'>
+                    <div className=' flex justify-between'>
+                      <div className='text-red-400 text-sm mb-3'>
+                        Sensitive content is detected. Chat temporarily blocked for safety.
+                      </div>
+                      <div>
+                        <Popover className={'relative'}>
+                          <Popover.Button>
+                            <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-white cursor-pointer' />
+                          </Popover.Button>
+                          <Popover.Panel
+                            className={
+                              'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[280px] -right-8 top-3'
+                            }
                           >
-                            <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
-                          </IconButton>
-                        </>
-                      )}
+                            <p className='text-content-white text-xxs font-poppins-light'>
+                              Content Safety found sensitive information in the message, which included a password.
+                            </p>
+                          </Popover.Panel>
+                        </Popover>
+                      </div>
                     </div>
-                  ) : (
-                    <MarkdownContent content={response ?? ''} />
-                  )}
-                </>
-              )
-            ) : (
-              <div className='flex-1'>
-                <div className=' flex justify-between'>
-                  <div className='text-red-400 text-sm mb-3'>
-                    Sensitive content is detected. Chat temporarily blocked for safety.
+                    <SensitiveMarkdownContent content={item.response ?? ''} />
                   </div>
-                  <div>
-                    <Popover className={'relative'}>
-                      <Popover.Button>
-                        <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-white cursor-pointer' />
-                      </Popover.Button>
-                      <Popover.Panel
-                        className={
-                          'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[280px] -right-8 top-3'
-                        }
-                      >
-                        <p className='text-content-white text-xxs font-poppins-light'>
-                          Content Safety found sensitive information in the message, which included a password.
-                        </p>
-                      </Popover.Panel>
-                    </Popover>
-                  </div>
-                </div>
-                <SensitiveMarkdownContent content={item.response ?? ''} />
-              </div>
+                )}
+                {aiFunctionErrorMessage && <div className='text-red-400 text-base mb-3'>{aiFunctionErrorMessage}</div>}
+              </>
             )}
             {!loading &&
               (!isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (

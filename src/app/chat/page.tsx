@@ -22,7 +22,7 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [userInput, setUserInput] = useState('');
   const [inputIsDisabled, setInputIsDisabled] = useState(false);
-  const [expandedAgents, setExpandedAgents] = useState(true);
+  const [expandedAgents, setExpandedAgents] = useState(false);
   const [openVoiceChatModal, setOpenVoiceChatModal] = useState(false);
   const [showWarningSnackBarWhenSafetyDisabled, setShowWarningSnackBarWhenSafetyDisabled] = useState(false);
 

@@ -109,7 +109,11 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   },
   checkContentSafetyDetails(contentSafety: IContentSafety) {
     if (contentSafety && new Date(contentSafety.content_safety_disabled_until).getTime() > new Date().getTime()) {
-      set({enabledContentSafety: false, contentSafetyDetails: contentSafety});
+      if (get().enabledContentSafety) {
+        set({enabledContentSafety: false, contentSafetyDetails: contentSafety});
+      } else {
+        set({contentSafetyDetails: contentSafety});
+      }
     } else {
       set({enabledContentSafety: true, contentSafetyDetails: contentSafety});
     }
@@ -333,13 +337,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       if (hasLoading) set({loading: false});
     }
   },
-  // changeContentSafteyStatus(status: boolean) {
-  //   // set((prev)=>{return {...prev, enabled:status}});
-  //   if (!status) {
-  //     localStorage.setItem('contentSafetyTimestamp', new Date().toUTCString());
-  //   }
-  //   set({enabledContentSafety: status});
-  // },
   changeSensitiveStatus(status: boolean) {
     set({isSensitiveChecked: status});
   },

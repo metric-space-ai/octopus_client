@@ -45,6 +45,18 @@ export interface IChatMessage {
   simple_app_id: string | null;
   simple_app_data: string | null;
   wasp_app_id: string | null;
+  ai_function_id: string | null;
+  ai_function_error: string | null;
+}
+
+export interface IAiFunctionErrorParsed {
+  file_attachments?: {
+    content: string;
+    file_name: string;
+    media_type: string;
+  }[];
+  response?: string;
+  error?: string;
 }
 
 export interface TranslatorType {
