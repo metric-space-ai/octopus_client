@@ -124,7 +124,7 @@ export function FileMarkdownContent({
             {media.media_type.includes('text/plain') && media.original_file_name && (
               <div className='flex flex-col gap-6'>
                 <Button
-                  className='!px-6 font-poppins-semibold text-sm !h-34-px hidden'
+                  className='!px-6 font-poppins-semibold text-sm !h-34-px'
                   iconBefore={<ArrowDownTrayIcon className='text-content-white w-4 h-4' />}
                   variant='primary'
                   title={'download file'}

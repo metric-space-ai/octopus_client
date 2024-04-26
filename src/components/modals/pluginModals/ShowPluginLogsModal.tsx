@@ -74,7 +74,7 @@ export const ShowPluginLogsModal = ({open, onClose, plugin, isLoading}: ModalPro
                       <XMarkIcon className='w-5 h-5 text-content-primary' />
                     </IconButton>
                   </div>
-                  <div className='flex flex-col justify-between flex-1 gap-6'>
+                  <div className='flex flex-col justify-between flex-1 gap-6 overflow-hidden'>
                     <div
                       className={classNames(
                         'max-h-full custom-scrollbar-thumb bg-content-black text-content-white p-1 flex flex-1',
