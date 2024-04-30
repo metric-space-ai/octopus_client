@@ -10,6 +10,7 @@ import {ArrowDownTrayIcon, ArrowsPointingOutIcon} from '@heroicons/react/24/outl
 import {ExpandMediaDialog} from './modals/expandMediaDialog';
 import AppIframe from './app-iframe';
 import {nanoid} from '@reduxjs/toolkit';
+import {PdfTypeIcon} from './svgs';
 
 interface FileMarkdownProps {
   messageId: string;
@@ -78,7 +79,6 @@ export function FileMarkdownContent({
     }
   };
   useEffect(() => {
-    console.log('check handleGetTextFileContent');
     setTextFileContent([]);
     handleGetTextFileContent();
   }, [mediaFiles]);
@@ -86,7 +86,7 @@ export function FileMarkdownContent({
     <>
       <div className='flex flex-col gap-6 pt-6'>
         {mediaFiles.map((media) => (
-          <div key={media.id} className={classNames('flex items-center gap-2 relative', className)}>
+          <div key={media.id} className={classNames('flex items-center gap-4 relative', className)}>
             {media.media_type.includes('image') && (
               <div className='flex relative'>
                 <img
@@ -121,8 +121,30 @@ export function FileMarkdownContent({
               </div>
             )}
 
+            {media.media_type.includes('application/pdf') && (media.file_name || media.original_file_name) && (
+              <div
+                className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer'
+                onClick={() =>
+                  handleDownloadTextFile(
+                    media.original_file_name ?? `${media.file_name}.pdf`,
+                    `${ImagesBaseUrl}${media.file_name}`,
+                  )
+                }
+              >
+                <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-[#DC0F4B] '>
+                  <PdfTypeIcon className='w-4 text-content-white' />
+                </div>
+                <div className='flex flex-col'>
+                  <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                    {media.original_file_name ?? media.id}
+                  </p>
+                  <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>PDF</span>
+                </div>
+              </div>
+            )}
+
             {media.media_type.includes('text/plain') && media.original_file_name && (
-              <div className='flex flex-col gap-6'>
+              <div className='flex flex-col gap-3'>
                 <Button
                   className='!px-6 font-poppins-semibold text-sm !h-34-px'
                   iconBefore={<ArrowDownTrayIcon className='text-content-white w-4 h-4' />}
