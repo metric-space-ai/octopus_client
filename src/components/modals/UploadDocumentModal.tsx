@@ -2,60 +2,24 @@ import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} fr
 
 import {Dialog, Transition} from '@headlessui/react';
 
-import {
-  ArrowUpTrayIcon,
-  CheckIcon,
-  ClipboardDocumentIcon,
-  ClipboardDocumentListIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-import {useForm} from 'react-hook-form';
+import {ArrowUpTrayIcon, CheckIcon, ClipboardDocumentIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
 import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
-import CustomCheckbox from '../custom-checkbox';
-import Highlight from 'react-highlight';
-import {
-  getPluginByIdApi,
-} from '@/services/settings.service';
+
+import {createNewDocumentApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
-import {IPlugin, IResources} from '@/types/plugin';
-import {useAuthContext} from '@/contexts/authContext';
+
 import CustomRadiobox from '../custom-radiobox';
 
-const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
-const ADDDOCUMENTSSTEPS = {Upload: 1, Setup: 2};
+const ADDDOCUMENTSSTEPS = {SelecFile: 1, Uploaded: 2};
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-
-const SetupEnvironment = [
-  {
-    id: 'setup_1',
-    title: 'CPU',
-    desc: 'Intel Core i7-13700K',
-    space: '8GB of 16GB',
-    active: false,
-  },
-  {
-    id: 'setup_2',
-    title: 'GPU (Discrete)',
-    desc: 'NVIDIA GeForce MX250',
-    space: '9GB of 11GB',
-    active: false,
-  },
-  {
-    id: 'setup_3',
-    title: 'GPU (Integrated)',
-    desc: 'Intel UHD Graphics',
-    space: '0.7GB of 2GB',
-    active: false,
-  },
-];
 
 export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -64,48 +28,30 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
   const [file, setFile] = useState<File>();
   const [fileIsSelected, setFileIsSelected] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
-  const [currentStep, setCurrentStep] = useState(ADDDOCUMENTSSTEPS.Upload);
-
-  const [selectedPlugin, setSelectedPlugin] = useState<IPlugin | null>(null);
-
-  const [active, setActive] = useState(false);
-  const [setupFormIsValid, setSetupFormIsValid] = useState(false);
-  const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
-  const [resources, setResources] = useState<IResources>();
-
-  const [deviceMapConfig, setDeviceMapConfig] = useState({cpu: false});
-
-  const [installStarted, setInstallStarted] = useState(false);
-  const [installPercentage, setInstallPercentage] = useState(0);
-  const [pluginInstalled, setPluginInstalled] = useState(false);
+  const [currentStep, setCurrentStep] = useState(ADDDOCUMENTSSTEPS.SelecFile);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmitSecondStep = async () => {};
 
   const handleSubmitFirstStep = async () => {
-    if (fileUploaded && file && currentStep === ADDDOCUMENTSSTEPS.Upload) {
+    if (fileUploaded && file && currentStep === ADDDOCUMENTSSTEPS.SelecFile) {
       setLoading(true);
-      const newFile = new File([file], file.name, {type: 'application/octet-stream'});
-
       const formData = new FormData();
-      formData.append('file', newFile);
-      console.log({file, newFile, formData});
-      // try {
-      //   const {status, data} = await uploadNewPluginApi(formData);
-      //   if (status === 201) {
-      //     setSelectedPlugin(data);
-      //     setCurrentStep(ADDDOCUMENTSSTEPS.Setup);
-      //     toast.success('upload successfull');
-      //   }
-      // } catch (err) {
-      //   if (err instanceof AxiosError) {
-      //     toast.error(err?.response?.data.error);
-      //   }
-      // } finally {
-      //   setLoading(false);
-      // }
-      setLoading(false);
+      formData.append('file', file);
+      console.log({file, formData});
+      try {
+        const {status, data} = await createNewDocumentApi(formData);
+        if (status === 201) {
+          setCurrentStep(ADDDOCUMENTSSTEPS.Uploaded);
+          toast.success('upload successfull');
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -114,12 +60,14 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
   };
   const handleDropFiles = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    handleCheckFileIsValid(e.dataTransfer.files[0]);
+    const {files} = e.dataTransfer;
+    handleCheckFileIsValid(files[files.length - 1]);
   };
   const handleCustomSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files) {
-      handleCheckFileIsValid(e.target.files[0]);
+      const {files} = e.target;
+      handleCheckFileIsValid(files[files.length - 1]);
     }
   };
 
@@ -127,14 +75,7 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
     setFile(undefined);
   };
   const handleCheckFileIsValid = (file: File) => {
-    console.log({file});
-    // if (file.name.includes(VALIDPLUGINFILE.Format) && file.type.includes(VALIDPLUGINFILE.Type)) {
     setFile(file);
-    // } else {
-    //   toast.error(
-    //     `An incorrect file has been selected for the selected file. format:${file.name} _ type:${file.type} The expected format is "*.py" and valid type is "text/x-python"`,
-    //   );
-    // }
   };
 
   const handleCloseModal = () => {
@@ -143,24 +84,11 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
     setFile(undefined);
     setFileIsSelected(false);
     setFileUploaded(false);
-    setCurrentStep(ADDDOCUMENTSSTEPS.Upload);
-    setActive(false);
-    setSetupFormIsValid(false);
-    setInstallStarted(false);
-    setInstallPercentage(0);
-    setPluginInstalled(false);
+    setCurrentStep(ADDDOCUMENTSSTEPS.SelecFile);
     setLoading(false);
-
     onClose();
   };
 
-  const handleChangeSetup = (check: boolean, inx: number) => {
-    const result = [...setupEnv];
-    result[inx].active = check;
-
-    // const setup = {...setupEnv[inx],active:check};
-    setSetupEnv(result);
-  };
 
   useEffect(() => {
     if (file) {
@@ -173,43 +101,6 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
       setUploadPercentage(0);
     }
   }, [file]);
-
-  useEffect(() => {
-    if (installStarted) {
-      const countdown = () => {
-        if (installPercentage < 99) {
-          // handleGetInstallationProgress();
-          setInstallPercentage((prev) => prev + 1);
-        } else {
-          // setPluginInstalled(true);
-          // setInstallStarted(false);
-        }
-      };
-      setTimeout(countdown, Math.floor(Math.random() * 1000) + 500);
-    }
-    if (installStarted && installPercentage === 1) {
-      handleGetInstallationProgress();
-    }
-  }, [installStarted, installPercentage]);
-
-  const handleGetInstallationProgress = async () => {
-    if (!selectedPlugin) return;
-    try {
-      const {status, data} = await getPluginByIdApi(selectedPlugin.id);
-      if (status === 200) {
-        setSelectedPlugin(data);
-        setInstallPercentage(data.progress);
-        if (data.progress === 100) {
-          setPluginInstalled(true);
-          setInstallStarted(false);
-        }
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-    }
-  };
 
   useEffect(() => {
     if (uploadStarted) {
@@ -270,49 +161,46 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                     </IconButton>
                   </div>
                   <div className='flex flex-col flex-auto justify-between '>
-                    {currentStep === ADDDOCUMENTSSTEPS.Upload && (
+                    {currentStep === ADDDOCUMENTSSTEPS.SelecFile && (
                       <div className=' flex flex-col '>
                         {fileIsSelected && !!file ? (
                           <>
-                          <div className='flex flex-wrap py-3 px-8 bg-content-white rounded-20 w-full items-center justify-between relative'>
-                            <div className='flex gap-4 items-center max-w-full'>
-                              <div className='flex w-56 pr-2 items-center'>
-                                {fileUploaded && (
-                                  <span className='w-6 h-6 rounded-full flex justify-center items-center mr-6 bg-content-accent-light-11'>
-                                    <CheckIcon width={16} height={16} className='text-content-grey-600' />
-                                  </span>
-                                )}
-                                <ClipboardDocumentIcon width={24} height={24} className='text-content-grey-600' />
-                                <p className='font-semibold text-xs text-content-black ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
-                                  {file.name}
-                                </p>
-                              </div>
-                              <span className='text-xs text-content-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
-                                {bytesCalculator(file.size)}
-                              </span>
-                            </div>
-                            <div className='flex justify-end items-center gap-6'>
-                              {(uploadStarted || fileUploaded) && (
-                                <div className='flex items-center gap-2 max-w-full'>
-                                  <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[170px] '>
-                                    <div
-                                      className='h-1.5 bg-content-accent transition-all'
-                                      style={{width: `${uploadPercentage}%`}}
-                                    ></div>
-                                  </div>
-                                  <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
-                                    {`${uploadPercentage} %`}
-                                  </span>
+                            <div className='flex flex-wrap py-3 px-8 bg-content-white rounded-20 w-full items-center justify-between relative'>
+                              <div className='flex gap-4 items-center max-w-full'>
+                                <div className='flex w-56 pr-2 items-center'>
+                                  {fileUploaded && (
+                                    <span className='w-6 h-6 rounded-full flex justify-center items-center mr-6 bg-content-accent-light-11'>
+                                      <CheckIcon width={16} height={16} className='text-content-grey-600' />
+                                    </span>
+                                  )}
+                                  <ClipboardDocumentIcon width={24} height={24} className='text-content-grey-600' />
+                                  <p className='font-semibold text-xs text-content-black ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
+                                    {file.name}
+                                  </p>
                                 </div>
-                              )}
-                              <IconButton className='!p-0' onClick={handleDeleteFile}>
-                                <XMarkIcon className='w-5 h-5 text-content-primary' />
-                              </IconButton>
+                                <span className='text-xs text-content-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
+                                  {bytesCalculator(file.size)}
+                                </span>
+                              </div>
+                              <div className='flex justify-end items-center gap-6'>
+                                {(uploadStarted || fileUploaded) && (
+                                  <div className='flex items-center gap-2 max-w-full'>
+                                    <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[170px] '>
+                                      <div
+                                        className='h-1.5 bg-content-accent transition-all'
+                                        style={{width: `${uploadPercentage}%`}}
+                                      ></div>
+                                    </div>
+                                    <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                      {`${uploadPercentage} %`}
+                                    </span>
+                                  </div>
+                                )}
+                                <IconButton className='!p-0' onClick={handleDeleteFile}>
+                                  <XMarkIcon className='w-5 h-5 text-content-primary' />
+                                </IconButton>
+                              </div>
                             </div>
-                          </div>
-                          <div className='pt-8 flex flex-col'>
-                          <CustomRadiobox  />
-                          </div>
                           </>
                         ) : (
                           <div
@@ -333,7 +221,6 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                             <h6 className='font-poppins-semibold text-sm text-content-grey-900 mb-3'>
                               Drag & drop file to upload
                             </h6>
-                            <p className='text-xs text-content-grey-600 '>Files in .py file format only</p>
                             <input
                               type='file'
                               className='hidden'
@@ -346,7 +233,7 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                       </div>
                     )}
 
-                    {currentStep === ADDDOCUMENTSSTEPS.Setup && !!file && (
+                    {currentStep === ADDDOCUMENTSSTEPS.Uploaded && !!file && (
                       <div className='flex flex-col lg:flex-row gap-8 justify-between'>
                         <div className='flex flex-col w-5/12'>
                           <div className='flex gap-3 mb-6'>
@@ -360,82 +247,45 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                               </p>
                             </div>
                           </div>
-                          <div className='flex'>
-                            <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md'>
-                              Enhance your ChatGPT experience with ImageFlow Connect – a powerful plugin that seamlessly
-                              integrates image uploading capabilities into your conversations.
-                              <br />
-                              <br />
-                              With ImageFlow Connect, you can effortlessly share visual context by uploading images
-                              directly within the chat interface.
+                            <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
+                              <CheckIcon className='inline-block w-5 h-5 text-content-green mr-1'/>
+                              File Is Uploaded
                             </p>
-                          </div>
-                        </div>
-
-                        <div className='flex flex-col w-full lg:w-7/12 max-w-[452px]'>
-                          <h5 className='text-sm font-poppins-semibold text-content-black mb-8 text-left'>
-                            Assign a plugin to computer resources
-                          </h5>
-
-                          {resources && resources.device_map.cpu && (
-                            <div className='flex flex-col gap-3 mb-3'>
-                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                                <CustomCheckbox
-                                  active={deviceMapConfig.cpu}
-                                  onChange={(check: boolean) => setDeviceMapConfig((prev) => ({...prev, cpu: check}))}
-                                  title={`cpu`}
-                                  description={resources.device_map.cpu}
-                                />
-                                <span className='text-content-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* {setupEnv.map((setup, inx) => (
-                            <div key={setup.id} className='flex flex-col gap-3 mb-3'>
-                              <div className='w-full flex bg-white rounded-[40px] px-6 py-3 h-45-px items-center'>
-                                <CustomCheckbox
-                                  active={setup.active}
-                                  onChange={(check: boolean) => handleChangeSetup(check, inx)}
-                                  title={setup.title}
-                                  description={setup.desc}
-                                />
-                                <span className='text-content-grey-600 text-xs ml-auto'>{setup.space}</span>
-                              </div>
-                            </div>
-                          ))} */}
                         </div>
                       </div>
                     )}
 
                     <div className='flex gap-4 px-4 md:px-8 lg:px-12 xl:px-20 mx-1'>
-                      <Button
-                        type='button'
-                        className='flex-1 !h-11'
-                        variant='outline'
-                        title='Cancel'
-                        onClick={handleCloseModal}
-                      />
-                      {currentStep === ADDDOCUMENTSSTEPS.Upload && (
-                        <Button
-                          type='button'
-                          className='flex-1 !h-11'
-                          variant={fileUploaded ? 'primary' : 'disabled'}
-                          title={!loading ? 'Continue' : ''}
-                          loading={loading}
-                          disabled={loading || !fileUploaded}
-                          onClick={handleSubmitFirstStep}
-                        />
+                      {currentStep === ADDDOCUMENTSSTEPS.SelecFile && (
+                        <>
+                          <Button
+                            type='button'
+                            className='flex-1 !h-11'
+                            variant='outline'
+                            title='Cancel'
+                            onClick={handleCloseModal}
+                            disabled={loading}
+                          />
+                          <Button
+                            type='button'
+                            className='flex-1 !h-11'
+                            variant={fileUploaded ? 'primary' : 'disabled'}
+                            title={!loading ? 'Continue' : ''}
+                            loading={loading}
+                            disabled={loading || !fileUploaded}
+                            onClick={handleSubmitFirstStep}
+                          />
+                        </>
                       )}
-                      {currentStep === ADDDOCUMENTSSTEPS.Setup && (
+                      {currentStep === ADDDOCUMENTSSTEPS.Uploaded && (
                         <Button
                           type='button'
                           className='flex-1 !h-11'
                           variant={'primary'}
-                          title='Upload document'
+                          title='Close Dialog'
                           loading={loading}
                           disabled={loading}
-                          onClick={handleSubmitSecondStep}
+                          onClick={handleCloseModal}
                         />
                       )}
                     </div>

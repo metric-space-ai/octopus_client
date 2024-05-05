@@ -249,7 +249,9 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       const errorMessage: IAiFunctionErrorParsed = JSON.parse(item.ai_function_error);
       if (errorMessage.response) {
         setAiFunctionErrorMessage(
-          `${errorMessage.response}${errorMessage.file_attachments?.[0] && ` - "${errorMessage.file_attachments[0].content}"`}`,
+          `${errorMessage.response}${
+            errorMessage.file_attachments?.[0] && ` - "${errorMessage.file_attachments[0].content}"`
+          }`,
         );
       }
       if (errorMessage.error) {
@@ -360,9 +362,11 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
           {/* <div className='flex flex-col'> */}
           {/* <WaspAppGenerator /> */}
           {/* <Research /> */}
-          {/* <iframe className='w-full custom-scrollbar-thumb h-[650px]' src='http://localhost:3000/' /> */}
+          {/* <iframe
+            className='w-full custom-scrollbar-thumb h-[650px]'
+            src={`http://localhost:3000/?messageId=${item.id}`}
+          /> */}
           <div
-            id='12345678932654987'
             className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
               // applicationInnerHTML ? `min-h-[${iframeheight}]` :
               ''

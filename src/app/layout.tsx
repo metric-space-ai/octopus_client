@@ -6,10 +6,17 @@ import {Toaster} from 'react-hot-toast';
 import {RedirectPathProvider} from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
 import StoreProvider from './StoreProvider';
+import { StrictMode } from 'react';
 
 export const metadata = {
   title: 'Octopus',
   description: 'Your personal ChatGPT Chat Bot.',
+  icons: {
+    iconDark: "/logo-dark.png",
+    iconLight: "/logo-light.png",
+    shortcut: "/apple-touch-icon.png",
+    apple: "/apple-touch-icon.png",
+  },
   viewport: {
     width: 'device-width',
     initialScale: 1,
@@ -34,15 +41,17 @@ const poppins = Poppins({
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang='en' className={`${poppins.variable}`} style={{fontSize: 16}}>
-      <body className='poppins-regular bg-content-black' suppressHydrationWarning={true}>
-        <StoreProvider>
-          <AuthProvider>
-            <RedirectPathProvider>{children}</RedirectPathProvider>
-            <Toaster position='top-right' />
-          </AuthProvider>
-        </StoreProvider>
-      </body>
-    </html>
+    <StrictMode>
+      <html lang='en' className={`${poppins.variable}`} style={{fontSize: 16}}>
+        <body className='poppins-regular bg-content-black' suppressHydrationWarning={true}>
+          <StoreProvider>
+            <AuthProvider>
+              <RedirectPathProvider>{children}</RedirectPathProvider>
+              <Toaster position='top-right' />
+            </AuthProvider>
+          </StoreProvider>
+        </body>
+      </html>
+    </StrictMode>
   );
 }

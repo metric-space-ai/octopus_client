@@ -8,3 +8,4 @@ export * from './parameter';
 export * from './simpleApp';
 export * from './waspApp';
 export * from './service';
+export * from './document';

@@ -10,6 +10,7 @@ import {
   ISimpleApp,
   IWaspApp,
   IGpus,
+  IDocument,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -106,6 +107,26 @@ export const getServerResourcesApi = () => {
   return apiHub.get<IResources>(`api/v1/server-resources`);
 };
 
+export const getAllDocumentsApi = () => {
+  return apiHub.get<IDocument[]>(`api/v1/nextcloud-files`);
+};
+
+export const createNewDocumentApi = (payload: FormData) => {
+  return apiHub.post<IDocument>(`api/v1/nextcloud-files`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const updateDocumentByIdApi = (documentId: string, payload: Pick<IDocument, 'file_name'>) => {
+  return apiHub.put<IDocument>(`api/v1/nextcloud-files/${documentId}`, payload);
+};
+
+export const deleteDocumentByIdApi = (document_id: string) => {
+  return apiHub.delete<IDocument>(`api/v1/nextcloud-files/${document_id}`);
+};
+
 export const getParametersApi = () => {
   return apiHub.get<IParameter[]>(`api/v1/parameters`);
 };
@@ -114,11 +135,11 @@ export const getParameterByIdApi = (parameter_id: string) => {
   return apiHub.get<IParameter>(`api/v1/parameters/${parameter_id}`);
 };
 
-export const createNewParameterApi = (payload: {name: string; value: string}) => {
+export const createNewParameterApi = (payload: Pick<IParameter, 'name' | 'value'>) => {
   return apiHub.post<IParameter>(`api/v1/parameters`, payload);
 };
 
-export const updateParameterByIdApi = (parameter_id: string, payload: {name: string; value: string}) => {
+export const updateParameterByIdApi = (parameter_id: string, payload: Pick<IParameter, 'name' | 'value'>) => {
   return apiHub.put<IParameter>(`api/v1/parameters/${parameter_id}`, payload);
 };
 

@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {IChatMessageFile} from '@/types';
 import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
 import {Button, IconButton} from './buttons';
-import {ArrowDownTrayIcon, ArrowsPointingOutIcon} from '@heroicons/react/24/outline';
+import {ArrowDownTrayIcon, ArrowsPointingOutIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
 import {ExpandMediaDialog} from './modals/expandMediaDialog';
 import AppIframe from './app-iframe';
 import {nanoid} from '@reduxjs/toolkit';
@@ -140,6 +140,36 @@ export function FileMarkdownContent({
                   </p>
                   <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>PDF</span>
                 </div>
+              </div>
+            )}
+            {media.media_type.includes('audio/aa') && (media.file_name || media.original_file_name) && (
+              <div className='flex flex-col gap-4'>
+                <div
+                  className={classNames(
+                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer',
+                    'hidden',
+                  )}
+                  onClick={() =>
+                    handleDownloadTextFile(
+                      media.original_file_name ?? `${media.file_name}.aac`,
+                      `${ImagesBaseUrl}${media.file_name}`,
+                    )
+                  }
+                >
+                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-content-accent '>
+                    <MusicalNoteIcon className='w-4 text-content-white' />
+                  </div>
+                  <div className='flex flex-col'>
+                    <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                      {media.original_file_name ?? media.id}
+                    </p>
+                    <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>aac</span>
+                  </div>
+                </div>
+                <figure>
+                  <figcaption className='text-content-white mb-2'>Listen to : {media.original_file_name}</figcaption>
+                  <audio className='w-full' controls src={`${ImagesBaseUrl}${media.file_name}`}></audio>
+                </figure>
               </div>
             )}
 

@@ -17,8 +17,7 @@ const Documents = (props: Props) => {
               className='!px-6 font-poppins-semibold text-sm !h-34-px'
               variant='primary'
               title='Upload Document'
-              disabled
-              // onClick={() => setAddDocumentsModal(true)}
+              onClick={() => setAddDocumentsModal(true)}
             />
           </div>
           <div className='max-w-full'>

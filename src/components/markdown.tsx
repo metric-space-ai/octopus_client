@@ -13,7 +13,8 @@ import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
 
 import {copyToClipboard} from '../helpers';
 
-import "./../assets/atelier-cave-dark.css";
+import './../assets/atelier-cave-dark.css';
+import {LinkIcon} from '@heroicons/react/24/outline';
 
 export function Mermaid(props: {code: string}) {
   const ref = useRef<HTMLDivElement>(null);
@@ -86,7 +87,10 @@ export function PreCode(props: {children: any}) {
   return (
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
-      <pre className='relative text-xs p-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap word-break' ref={ref}>
+      <pre
+        className='relative text-xs p-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap word-break'
+        ref={ref}
+      >
         <span
           className="absolute right-2 top-2 cursor-pointer after:content-['Copy']"
           onClick={() => {
@@ -105,7 +109,7 @@ export function PreCode(props: {children: any}) {
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-col text-white gap-2'
+      className='flex flex-col text-white gap-2 [&_p]:break-all '
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[
         RehypeKatex,
@@ -123,7 +127,12 @@ function _MarkDownContent(props: {content: string}) {
           const href = aProps.href || '';
           const isInternal = /^\/#/i.test(href);
           const target = isInternal ? '_self' : aProps.target ?? '_blank';
-          return <a {...aProps} target={target} />;
+          return (
+            <>
+              <LinkIcon className='w-3 h-3 inline-block mr-1' />
+              <a {...aProps} target={target} className='underline' />
+            </>
+          );
         },
       }}
     >

@@ -7,11 +7,13 @@ export interface ITicket {
   workspace_id: string;
 }
 
+export type TMedtaTypes = 'video/mp4' | 'image/jpeg' | 'text/plain' | 'application/pdf' | 'text/html' | 'audio/aa';
+
 export interface IChatMessageFile {
   id: string;
   chat_message_id: string;
   file_name: string;
-  media_type: 'video/mp4' | 'image/jpeg' | 'text/plain' | 'application/pdf';
+  media_type: TMedtaTypes | string;
   created_at: string;
   deleted_at: string | null;
   original_file_name?: string;

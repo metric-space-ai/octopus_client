@@ -4,6 +4,7 @@ import aiServicesSlice from './features/aiServices/aiServicesSlice';
 import parametersSlice from './features/parameters/parametersSlice';
 import simpleAppsSlice from './features/simpleApps/simpleAppsSlice';
 import waspAppsSlice from './features/waspApps/waspAppsSlice';
+import documentsSlice from './features/documents/documentsSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -13,6 +14,7 @@ export const makeStore = () => {
       parameters: parametersSlice,
       simpleApps: simpleAppsSlice,
       waspApps: waspAppsSlice,
+      documents: documentsSlice,
     },
   });
 };

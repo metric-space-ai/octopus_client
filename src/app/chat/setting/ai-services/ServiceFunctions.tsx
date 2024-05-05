@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import CustomCheckbox from '@/components/custom-checkbox';
 import {Spinner} from '@/components/spinner';
-import {IAIFunctions} from '@/types/document';
+import {IAIFunctions} from '@/types';
 import {TrashIcon} from '@heroicons/react/24/outline';
 import {
   deletetAiFunctionsById,
