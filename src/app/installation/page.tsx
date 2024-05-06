@@ -9,7 +9,9 @@ import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {Logo} from '@/components/logo';
 import {authValidator} from '@/helpers/validators';
-import {checkSetupApi, setupApi} from '@/services/auth.service';
+import {setupApi} from '@/services/auth.service';
+import {useAuthContext} from '@/contexts/authContext';
+import {paths} from '@/config/path';
 
 interface IFormInputs {
   email: string;
@@ -25,15 +27,24 @@ const InstallationPage = () => {
     watch,
     formState: {errors},
   } = useForm<IFormInputs>();
+  const {setupInfo, onCheckSetup, setupInfoLoading} = useAuthContext();
   const [setupRequired, setSetupRequired] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const disabled = !setupRequired;
 
   useEffect(() => {
-    checkSetupApi().then((res) => {
-      setSetupRequired(res.data?.setup_required ?? false);
-    });
+    if (!setupInfo && !setupInfoLoading) {
+      onCheckSetup();
+    }
   }, []);
+
+  useEffect(() => {
+    if (setupInfo) {
+      const {setup_required, registration_allowed} = setupInfo;
+      if (setup_required && registration_allowed) {
+        setSetupRequired(true);
+      }
+    }
+  }, [setupInfo]);
 
   const onSubmit = async (data: IFormInputs) => {
     const {email, company_name, password, repeat_password} = data;

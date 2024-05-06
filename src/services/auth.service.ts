@@ -1,4 +1,4 @@
-import {IUser, IUserProfile} from '@/types';
+import {IUser, IUserProfile, IUserSetup} from '@/types';
 import {
   IAuthData,
   ICompanyRegisterPayload,
@@ -33,8 +33,8 @@ export const resetPasswordApi = async (token: string, password: string) => {
   return apiHub.put(`api/v1/password-resets/${token}`, payload);
 };
 
-export const checkSetupApi = async () => {
-  return apiHub.get<{setup_required: boolean}>('api/v1/setup');
+export const checkSetupApi = () => {
+  return apiHub.get<IUserSetup>('api/v1/setup');
 };
 
 export const setupApi = async (payload: ICompanyRegisterPayload) => {

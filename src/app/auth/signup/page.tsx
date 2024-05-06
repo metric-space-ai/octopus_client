@@ -8,6 +8,9 @@ import {Input} from '@/components/input';
 import {Logo} from '@/components/logo';
 import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
+import {useEffect} from 'react';
+import {useRouter} from 'next/router';
+import {paths} from '@/config/path';
 
 interface IFormInputs {
   email: string;
@@ -17,13 +20,15 @@ interface IFormInputs {
 }
 
 const SignupPage = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: {errors},
   } = useForm<IFormInputs>();
-  const {loading, onRegister} = useAuthContext();
+  const {loading, onRegister, onCheckSetup, setupInfo, setupInfoLoading} = useAuthContext();
 
   const onSubmit = async (data: IFormInputs) => {
     const {email, username, password, repeat_password} = data;
@@ -31,7 +36,17 @@ const SignupPage = () => {
     const payload = {email, name: username, password, repeat_password, job_title: 'worker'};
     onRegister(payload);
   };
-
+  useEffect(() => {
+    if (!setupInfo && !setupInfoLoading) {
+      onCheckSetup();
+    }
+  }, []);
+  useEffect(() => {
+    if (setupInfo) {
+      const {setup_required, registration_allowed} = setupInfo;
+      if (setup_required && registration_allowed) router.push(paths.installation);
+    }
+  }, [setupInfo]);
   return (
     <div className='min-h-full flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
       <Logo className='absolute left-10 top-10' withText />

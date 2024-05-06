@@ -11,11 +11,9 @@ import {authValidator} from '@/helpers/validators';
 
 import {RightPanel} from '../components/right-panel';
 import {useEffect} from 'react';
-import {checkSetupApi} from '@/services/auth.service';
-import {AxiosError} from 'axios';
 
 import {paths} from '@/config/path';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
 interface IFormInputs {
   email: string;
@@ -30,29 +28,24 @@ const LoginPage = () => {
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
-  const {loading, onLogin} = useAuthContext();
+  const {loading, onLogin, setupInfo, onCheckSetup, setupInfoLoading} = useAuthContext();
 
   const onSubmit = async (data: IFormInputs) => {
     const {email, password} = data;
     onLogin(email, password);
   };
 
-  const handleGetSetupRequired = async () => {
-    try {
-      const {status, data} = await checkSetupApi();
-      if (status === 200) {
-        if (data.setup_required) router.push(paths.installation);
-      }
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err?.response?.data.error);
-      }
-    }
-    // setSetupRequired(res.data?.setup_required ?? false);
-  };
   useEffect(() => {
-    handleGetSetupRequired();
+    if (!setupInfo && !setupInfoLoading) {
+      onCheckSetup();
+    }
   }, []);
+  useEffect(() => {
+    if (setupInfo) {
+      const {setup_required, registration_allowed} = setupInfo;
+      if (setup_required && registration_allowed) router.push(paths.installation);
+    }
+  }, [setupInfo]);
 
   return (
     <div className='min-h-full grid sm:grid-cols-2 gap-3'>

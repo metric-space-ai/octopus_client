@@ -22,6 +22,10 @@ export interface IUser {
   updated_at: string | null;
   profile?: IUserProfile;
 }
+export interface IUserSetup {
+  registration_allowed: boolean;
+  setup_required: boolean;
+}
 export interface ICreateUser {
   email: string;
   is_enabled: true;
@@ -31,4 +35,3 @@ export interface ICreateUser {
   password: string;
   repeat_password: string;
 }
-

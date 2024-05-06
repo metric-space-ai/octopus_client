@@ -8,9 +8,10 @@ import {toast} from 'react-hot-toast';
 import {useApiClient} from '@/hooks';
 import {useAuthStore} from '@/store';
 import {IRegisterPayload, IUpdateUserPayload, IUpdateUserProfilePayload} from '@/types/auth';
-import {IUser, IUserProfile} from '@/types/user';
+import {IUser, IUserProfile, IUserSetup} from '@/types/user';
 
 import {
+  checkSetupApi,
   getProfile,
   getSingleUserById,
   login,
@@ -21,6 +22,7 @@ import {
 } from '../services/auth.service';
 import {AxiosError} from 'axios';
 import {IPlugin} from '@/types/plugin';
+import {paths} from '@/config/path';
 
 interface IAuthContext {
   isAuthenticated: boolean;
@@ -29,6 +31,9 @@ interface IAuthContext {
   singleUser: IUser | null;
   loading: boolean;
   authLoading: boolean;
+  setupInfo: IUserSetup | undefined;
+  setupInfoLoading: boolean;
+  onCheckSetup: () => void;
   onLogin: (email: string, password: string) => void;
   onRegister: (payload: IRegisterPayload) => void;
   onUploadPlugin: (payload: FormData) => void;
@@ -49,6 +54,8 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const [singleUser, setSingleUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  const [setupInfo, setSetupInfo] = useState<IUserSetup>();
+  const [setupInfoLoading, setSetupInfoLoading] = useState<boolean>(false);
 
   const {setAxiosConfiguration} = useApiClient();
 
@@ -78,6 +85,22 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         });
     }
   }, [authData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleCheckSetup = async () => {
+    setSetupInfoLoading(true);
+    try {
+      const {status, data} = await checkSetupApi();
+      if (status === 200) {
+        setSetupInfo(data);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log(err?.response?.data.error);
+      }
+    } finally {
+      setSetupInfoLoading(false);
+    }
+  };
 
   const handleLogin = (email: string, password: string) => {
     setLoading(true);
@@ -208,7 +231,10 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     singleUser,
     loading,
     authLoading,
+    setupInfo,
+    setupInfoLoading,
     onLogin: handleLogin,
+    onCheckSetup: handleCheckSetup,
     onRegister: handleRegister,
     onUploadPlugin: handleUploadNewPlugin,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
