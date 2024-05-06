@@ -1,15 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 import {Button, GoogleButton} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {Logo} from '@/components/logo';
 import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
-import {useEffect} from 'react';
-import {useRouter} from 'next/router';
 import {paths} from '@/config/path';
 
 interface IFormInputs {
@@ -41,10 +41,12 @@ const SignupPage = () => {
       onCheckSetup();
     }
   }, []);
+  const redirectToInstallation = () => router.push(paths.installation);
+
   useEffect(() => {
     if (setupInfo) {
       const {setup_required, registration_allowed} = setupInfo;
-      if (setup_required && registration_allowed) router.push(paths.installation);
+      if (setup_required && registration_allowed) redirectToInstallation();
     }
   }, [setupInfo]);
   return (
