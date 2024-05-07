@@ -11,7 +11,9 @@ import {bytesCalculator} from '@/helpers';
 import {createNewDocumentApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
 
-import CustomRadiobox from '../custom-radiobox';
+import {getAllDocuments} from '@/app/lib/features/documents/documentsSlice';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@/app/lib/store';
 
 const ADDDOCUMENTSSTEPS = {SelecFile: 1, Uploaded: 2};
 
@@ -20,8 +22,9 @@ interface ModalProps {
   onClose: () => void;
 }
 
-
 export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [loading, setLoading] = useState(false);
   const [uploadStarted, setUploadStarted] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -31,7 +34,6 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
   const [currentStep, setCurrentStep] = useState(ADDDOCUMENTSSTEPS.SelecFile);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
-
 
   const handleSubmitFirstStep = async () => {
     if (fileUploaded && file && currentStep === ADDDOCUMENTSSTEPS.SelecFile) {
@@ -43,6 +45,8 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
         const {status, data} = await createNewDocumentApi(formData);
         if (status === 201) {
           setCurrentStep(ADDDOCUMENTSSTEPS.Uploaded);
+          dispatch(getAllDocuments());
+
           toast.success('upload successfull');
         }
       } catch (err) {
@@ -88,7 +92,6 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
     setLoading(false);
     onClose();
   };
-
 
   useEffect(() => {
     if (file) {
@@ -247,10 +250,10 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                               </p>
                             </div>
                           </div>
-                            <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
-                              <CheckIcon className='inline-block w-5 h-5 text-content-green mr-1'/>
-                              File Is Uploaded
-                            </p>
+                          <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
+                            <CheckIcon className='inline-block w-5 h-5 text-content-green mr-1' />
+                            File Is Uploaded
+                          </p>
                         </div>
                       </div>
                     )}

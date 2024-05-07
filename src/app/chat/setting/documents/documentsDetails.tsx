@@ -1,19 +1,21 @@
-import {useState, useEffect, Fragment} from 'react';
+import {useState, useEffect} from 'react';
 import {Disclosure} from '@headlessui/react';
 
-import {TrashIcon, ChevronUpIcon, GlobeAltIcon, PhotoIcon, DocumentTextIcon, FilmIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
-import {RemovePluginModal} from '@/components/modals/pluginModals/RemovePluginModal';
-import {useAuthContext} from '@/contexts/authContext';
-import {AxiosError} from 'axios';
-
-import toast from 'react-hot-toast';
+import {
+  TrashIcon,
+  GlobeAltIcon,
+  PhotoIcon,
+  DocumentTextIcon,
+  FilmIcon,
+  MusicalNoteIcon,
+} from '@heroicons/react/24/outline';
 import {IDocument} from '@/types';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch} from '@/app/lib/store';
 import {selectDocuments} from '@/app/lib/features/documents/documentsSelector';
 import {deleteDocumentById, getAllDocuments} from '@/app/lib/features/documents/documentsSlice';
 import {DeleteDocumentModalDialog} from '@/components/modals';
-import { PdfTypeIcon } from '@/components/svgs';
+import {PdfTypeIcon} from '@/components/svgs';
 
 export default function DocumentsDetail() {
   const dispatch = useDispatch<AppDispatch>();
@@ -85,16 +87,16 @@ export default function DocumentsDetail() {
                       {document.media_type === 'text/plain' && (
                         <DocumentTextIcon className='w-4 h-4 text-content-accent-hover' />
                       )}
-                      {document.media_type === 'image/jpeg' && (
+                      {document.media_type.includes('image') && (
                         <PhotoIcon className='w-4 h-4 text-content-accent-hover' />
                       )}
                       {document.media_type === 'application/pdf' && (
                         <PdfTypeIcon className='w-4 h-4 text-content-accent-hover' />
                       )}
-                      {document.media_type === 'video/mp4' && (
+                      {document.media_type.includes('video') && (
                         <FilmIcon className='w-4 h-4 text-content-accent-hover' />
                       )}
-                      {document.media_type === 'audio/aa' && (
+                      {document.media_type.includes('audio') && (
                         <MusicalNoteIcon className='w-4 h-4 text-content-accent-hover' />
                       )}
                       <p

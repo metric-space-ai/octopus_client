@@ -7,7 +7,7 @@ export interface ITicket {
   workspace_id: string;
 }
 
-export type TMedtaTypes = 'video/mp4' | 'image/jpeg' | 'text/plain' | 'application/pdf' | 'text/html' | 'audio/aa';
+export type TMedtaTypes = 'video/mp4' | 'image/jpeg' | 'image/png' | 'text/plain' | 'application/pdf' | 'text/html' | 'audio/aa';
 
 export interface IChatMessageFile {
   id: string;
