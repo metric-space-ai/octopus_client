@@ -50,11 +50,20 @@ export const DropdownTranslateChat = ({
       },
     };
     try {
-      const {data} = await directCall(payload);
-      setText(data?.Text.response);
-      setSelectedLanguage(selected?.name);
-      setShowOriginal(true);
-      onClose();
+      const {data, status} = await directCall(payload);
+      if (status === 201) {
+        if (data.Error) {
+          const parsedError: {error: string} = JSON.parse(data.Error.error);
+          toast.error(parsedError.error);
+        } else if (data.Mixed && data.Mixed.length > 0) {
+          const {Text} = data.Mixed[0];
+          if (!Text?.response) return;
+          setText(Text.response);
+          setSelectedLanguage(selected?.name);
+          setShowOriginal(true);
+          onClose();
+        }
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);

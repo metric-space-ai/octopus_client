@@ -2,16 +2,17 @@ import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
-import {IDocument, ValidationErrors} from '@/types';
+import {IDocument, TNextCluodDoc, ValidationErrors} from '@/types';
 import {
-  createNewDocumentApi,
+  createNewNextCloudDocumentsApi,
   deleteDocumentByIdApi,
   getAllDocumentsApi,
+  getAllNextCloudDocumentsApi,
   updateDocumentByIdApi,
 } from '@/services/settings.service';
 
 type DocumentStates = {
-  entities: IDocument[] | null;
+  entities: TNextCluodDoc[] | null;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string | undefined;
@@ -31,54 +32,59 @@ const documentsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getAllDocuments.pending, (state, action) => {
+      .addCase(getAllNextCloudDocuments.pending, (state, action) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
       })
-      .addCase(getAllDocuments.rejected, (state, action) => {
+      .addCase(getAllNextCloudDocuments.rejected, (state, action) => {
         state.hasError = true;
         state.isLoading = false;
         state.errorMessage = action.error.message;
       })
-      .addCase(getAllDocuments.fulfilled, (state, action) => {
-        console.log('getAllDocuments fulfilled');
+      .addCase(getAllNextCloudDocuments.fulfilled, (state, action) => {
+        console.log('getAllNextCloudDocuments fulfilled');
         state.isLoading = false;
 
         state.entities = action.payload;
       })
-      .addCase(updateDocument.fulfilled, (state, {payload}) => {
-        console.log('updateDocument fulfilled');
-        state.isLoading = false;
-        if (state.entities) {
-          state.entities = [...state.entities].flatMap((document) =>
-            document.id === payload.id ? payload : document,
-          );
-        }
-      })
-      .addCase(deleteDocumentById.fulfilled, (state, {payload}) => {
-        console.log('deleteDocumentById fulfilled');
-        state.isLoading = false;
-        if (state.entities) {
-          // state.entities = [...state.entities].filter((document) => document.id !== payload);
-        }
-      })
-      .addCase(createNewDocument.fulfilled, (state, {payload}) => {
-        console.log('createNewDocument fulfilled');
-        state.isLoading = false;
-        // if (state.entities) {
-        //   state.entities = [...state.entities, payload];
-        // } else {
-        //   // state.entities = [payload];
-        // }
-      });
+      // .addCase(updateDocument.fulfilled, (state, {payload}) => {
+      //   console.log('updateDocument fulfilled');
+      //   state.isLoading = false;
+      //   if (state.entities) {
+      //     state.entities = [...state.entities].flatMap((document) =>
+      //       document.id === payload.id ? payload : document,
+      //     );
+      //   }
+      // })
+      // .addCase(deleteDocumentById.fulfilled, (state, {payload}) => {
+      //   console.log('deleteDocumentById fulfilled');
+      //   state.isLoading = false;
+      //   if (state.entities) {
+      //     // state.entities = [...state.entities].filter((document) => document.id !== payload);
+      //   }
+      // })
+      // .addCase(createNewDocument.fulfilled, (state, {payload}) => {
+      //   console.log('createNewDocument fulfilled');
+      //   state.isLoading = false;
+      //   // if (state.entities) {
+      //   //   state.entities = [...state.entities, payload];
+      //   // } else {
+      //   //   // state.entities = [payload];
+      //   // }
+      // });
   },
 });
 
-export const getAllDocuments = createAsyncThunk('/documents/getAllDocuments', async () => {
+// export const getAllDocuments = createAsyncThunk('/documents/getAllDocuments', async () => {
+//   // try {
+//   console.log('dispatch getAllDocuments runs');
+//   const {data} = await getAllDocumentsApi();
+//   return data;
+// });
+export const getAllNextCloudDocuments = createAsyncThunk('/documents/getAllNextCloudDocuments', async () => {
   // try {
-  console.log('dispatch getAllDocuments runs');
-  const {data} = await getAllDocumentsApi();
+  const {data} = await getAllNextCloudDocumentsApi();
   return data;
 });
 
@@ -109,10 +115,10 @@ export const createNewDocument = createAsyncThunk(
   '/documents/createNewDocument',
   async (document: FormData, {rejectWithValue, dispatch}) => {
     try {
-      const {data, status} = await createNewDocumentApi(document);
+      const {data, status} = await createNewNextCloudDocumentsApi(document);
       if (status === 201) {
         toast.success(`The Docment has been added.`);
-        dispatch(getAllDocuments());
+        dispatch(getAllNextCloudDocuments());
       }
 
       return data;
@@ -137,7 +143,7 @@ export const deleteDocumentById = createAsyncThunk(
       const {status} = await deleteDocumentByIdApi(payload);
       if (status === 204) {
         toast.success(`document has successfully been removed.`);
-        dispatch(getAllDocuments());
+        // dispatch(getAllDocuments());
       }
       return payload;
     } catch (err) {

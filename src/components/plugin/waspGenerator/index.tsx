@@ -135,7 +135,7 @@ const WaspAppGenerator = (props: Props) => {
                     </div>
                   )}
                 </div>
-                <div className='flex flex-col lg:flex-row gap-3 min-h-[80px]'>
+                <div className='flex flex-col md:flex-row gap-3 min-h-[80px]'>
                   <div className='flex w-full md:w-auto min-w-[233px] flex-col rounded-3xl bg-content-grey-900 pl-4 py-3 pr-1.5'>
                     <div className='w-full h-full custom-scrollbar-thumb flex flex-col gap-2 max-h-[223px]'>
                       {steps === GENERATINGAPPSTEPS.Second &&
@@ -167,7 +167,7 @@ const WaspAppGenerator = (props: Props) => {
                   </div>
                   <div
                     className={classNames(
-                      'flex-1 flex flex-col rounded-3xl bg-content-grey-100 py-3 pl-4 pr-1.5 lg:max-w-[calc(100%_-_245px)]',
+                      'flex-1 flex flex-col rounded-3xl bg-content-grey-100 py-3 pl-4 pr-1.5 md:max-w-[calc(100%_-_245px)]',
                     )}
                   >
                     <div
@@ -221,8 +221,8 @@ const WaspAppGenerator = (props: Props) => {
                   <Input
                     label='API access URL:'
                     labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
-                    inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100'}
-                    inputClassName='!text-sm font-normal !bg-transparent'
+                    inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
+                    inputClassName='!text-sm font-normal !bg-transparent border-0'
                     type='text'
                     placeholder='https://api.example.com'
                   />
@@ -231,8 +231,8 @@ const WaspAppGenerator = (props: Props) => {
                   <Input
                     label='Secret access token:'
                     labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
-                    inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100'}
-                    inputClassName='!text-sm font-normal !bg-transparent'
+                    inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
+                    inputClassName='!text-sm font-normal !bg-transparent border-0'
                     type='text'
                     placeholder='https://api.example.com'
                     className='text-content-grey-100'
@@ -341,8 +341,8 @@ const WaspAppGenerator = (props: Props) => {
             <Input
               label='App name:'
               labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
-              inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100'}
-              inputClassName='!text-sm font-normal !bg-transparent'
+              inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
+              inputClassName='!text-sm font-normal !bg-transparent border-0'
               type='text'
               placeholder='https://api.example.com'
             />
@@ -355,8 +355,8 @@ const WaspAppGenerator = (props: Props) => {
                 rows={3}
                 //   label='Description:'
                 //   labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
-                //   inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100'}
-                //   inputClassName='!text-sm font-normal !bg-transparent'
+                //   inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
+                //   inputClassName='!text-sm font-normal !bg-transparent border-0'
                 //   type='text'
                 placeholder='https://api.example.com'
               />

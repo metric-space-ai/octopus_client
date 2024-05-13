@@ -8,10 +8,10 @@ import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
 import {bytesCalculator} from '@/helpers';
 
-import {createNewDocumentApi} from '@/services/settings.service';
+import {createNewNextCloudDocumentsApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
 
-import {getAllDocuments} from '@/app/lib/features/documents/documentsSlice';
+import {getAllNextCloudDocuments} from '@/app/lib/features/documents/documentsSlice';
 import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@/app/lib/store';
 
@@ -42,10 +42,10 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
       formData.append('file', file);
       console.log({file, formData});
       try {
-        const {status, data} = await createNewDocumentApi(formData);
+        const {status, data} = await createNewNextCloudDocumentsApi(formData);
         if (status === 201) {
           setCurrentStep(ADDDOCUMENTSSTEPS.Uploaded);
-          dispatch(getAllDocuments());
+          dispatch(getAllNextCloudDocuments());
 
           toast.success('upload successfull');
         }

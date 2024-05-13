@@ -7,7 +7,14 @@ export interface ITicket {
   workspace_id: string;
 }
 
-export type TMedtaTypes = 'video/mp4' | 'image/jpeg' | 'image/png' | 'text/plain' | 'application/pdf' | 'text/html' | 'audio/aa';
+export type TMedtaTypes =
+  | 'video/mp4'
+  | 'image/jpeg'
+  | 'image/png'
+  | 'text/plain'
+  | 'application/pdf'
+  | 'text/html'
+  | 'audio/aa';
 
 export interface IChatMessageFile {
   id: string;
@@ -72,14 +79,26 @@ export interface TranslatorType {
 }
 
 export interface TranslatorResponse {
-  id: string;
-  progress: number;
-  status: string;
-  Text: {
-    response: string;
+  Mixed?: [
+    {
+      Text?: {
+        response: string;
+      };
+    },
+  ];
+  Error?: {
+    error: string;
   };
-  file_attachements: File[];
 }
+// export interface TranslatorResponse {
+//   id: string;
+//   progress: number;
+//   status: string;
+//   Text: {
+//     response: string;
+//   };
+//   file_attachements: File[];
+// }
 
 export interface LanguageType {
   id: number;

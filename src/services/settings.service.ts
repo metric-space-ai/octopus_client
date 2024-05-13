@@ -11,6 +11,7 @@ import {
   IWaspApp,
   IGpus,
   IDocument,
+  TNextCluodDoc,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -111,8 +112,12 @@ export const getAllDocumentsApi = () => {
   return apiHub.get<IDocument[]>(`api/v1/nextcloud-files`);
 };
 
-export const createNewDocumentApi = (payload: FormData) => {
-  return apiHub.post<IDocument>(`api/v1/nextcloud-files`, payload, {
+export const getAllNextCloudDocumentsApi = () => {
+  return apiHub.get<TNextCluodDoc[]>(`api/v1/nextcloud-raw-files`);
+};
+
+export const createNewNextCloudDocumentsApi = (payload: FormData) => {
+  return apiHub.post<TNextCluodDoc>(`api/v1/nextcloud-raw-files`, payload, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
