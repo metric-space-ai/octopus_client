@@ -5,8 +5,8 @@ import classNames from 'classnames';
 
 import {IChatMessageFile} from '@/types';
 import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
-import {Button, IconButton} from './buttons';
-import {ArrowDownTrayIcon, ArrowsPointingOutIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
+import { IconButton} from './buttons';
+import {ArrowDownTrayIcon, ArrowsPointingOutIcon, DocumentTextIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
 import {ExpandMediaDialog} from './modals/expandMediaDialog';
 import AppIframe from './app-iframe';
 import {nanoid} from '@reduxjs/toolkit';
@@ -175,21 +175,33 @@ export function FileMarkdownContent({
 
             {media.media_type.includes('text/plain') && media.original_file_name && (
               <div className='flex flex-col gap-3'>
-                <Button
-                  className='!px-6 font-poppins-semibold text-sm !h-34-px'
-                  iconBefore={<ArrowDownTrayIcon className='text-content-white w-4 h-4' />}
-                  variant='primary'
-                  title={'download file'}
+                <div
+                  className={classNames(
+                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] mr-auto bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer',
+                  )}
                   onClick={() =>
                     handleDownloadTextFile(media.original_file_name ?? '', `${ImagesBaseUrl}${media.file_name}`)
                   }
-                />
+                >
+                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-content-accent '>
+                    <DocumentTextIcon className='w-4 text-content-white' />
+                  </div>
+                  <div className='flex flex-col'>
+                    <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                      {media.original_file_name ?? media.id}
+                    </p>
+                    <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>txt</span>
+                  </div>
+                </div>
                 {textFileContent.length > 0 &&
                   textFileContent.map((file) => {
                     if (file.file_name !== media.file_name) return null;
                     return (
                       <div key={`media-text-file-${file.file_name}`} className='flex flex-col text-content-white'>
-                        {textFileContent && file.content.map((text) => <pre key={nanoid(6)}>{`${text}`}</pre>)}
+                        {textFileContent &&
+                          file.content.map((text) => (
+                            <pre key={nanoid(6)} className='whitespace-pre-wrap leading-tight mb-1'>{`${text}`}</pre>
+                          ))}
                       </div>
                     );
                   })}
