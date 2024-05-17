@@ -106,10 +106,31 @@ export function PreCode(props: {children: any}) {
   );
 }
 
+const isLongTextWithoutSpaces = (text: string): boolean => {
+  const words = text.split(/\s+/);
+  return words.every((word) => word.length > 30);
+};
+
+const CustomParagraph = ({node, ...props}: any) => {
+  
+  const textContent = node.children.map((child: any) => child.value).join(' ');
+  const isLongWithoutSpaces = isLongTextWithoutSpaces(textContent);
+
+  const className = isLongWithoutSpaces
+    ? 'break-all'
+    : 'break-words';
+
+  return (
+    <p className={className} {...props}>
+      {props.children}
+    </p>
+  );
+};
+
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-col text-white gap-2 [&_p]:break-all '
+      className='flex flex-col text-white gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[
         RehypeKatex,
@@ -134,6 +155,7 @@ function _MarkDownContent(props: {content: string}) {
             </>
           );
         },
+        p: CustomParagraph,
       }}
     >
       {props.content}
