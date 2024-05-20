@@ -219,7 +219,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     //   console.log({status, data, wasp_app});
     // } catch (err) {
     //   let error = err as AxiosError<ValidationErrors, any>;
-
     //   if (err instanceof AxiosError) {
     //     toast.error(err?.response?.data.error);
     //   }
@@ -396,6 +395,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               // applicationInnerHTML ? `min-h-[${iframeheight}]` :
               ''
             }`}
+            style={{backgroundColor: item.color ?? ''}}
           >
             {hasWaspApp && (
               <AppIframe
