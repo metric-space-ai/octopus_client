@@ -27,12 +27,7 @@ import {Input} from './input';
 // };
 const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
   const {
-    editMessage,
-    updateMessage,
-    deleteMessage,
-    refreshMessage,
     enabledContentSafety,
-    changeSensitiveStatus,
   } = useChatStore();
   const [isSensitive, setIsSensitive] = useState(false);
   const [loading, setLoading] = useState(false);
