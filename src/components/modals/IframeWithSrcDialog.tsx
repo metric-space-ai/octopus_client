@@ -9,9 +9,10 @@ interface ModalProps {
   open: boolean;
   onClose: () => void;
   src: string;
+  bgColor: string;
 }
 
-export const IframeWithSrcDialog = ({open, onClose, src}: ModalProps) => {
+export const IframeWithSrcDialog = ({open, onClose, src, bgColor}: ModalProps) => {
   return (
     <>
       <Transition appear show={open} as={Fragment}>
@@ -42,16 +43,22 @@ export const IframeWithSrcDialog = ({open, onClose, src}: ModalProps) => {
                   style={{
                     minHeight: 'calc(100vh - 60px)',
                     minWidth: 'calc(100vw - 60px)',
+                    backgroundColor: bgColor,
                   }}
                   className='w-full h-full relative transform border border-content-primary bg-content-grey-100 p-6 rounded-[20px] align-middle shadow-xl transition-all'
                 >
                   <IconButton className='absolute top-4 right-4' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5 text-content-primary' />
                   </IconButton>
-                  <iframe style={{
-                    height: 'calc(100vh - 108px)',
-                    width: 'calc(100vw - 108px)',
-                  }} className={`w-full h-full [&_body]:m-0 flex-1`} src={src}></iframe>
+                  <iframe
+                    style={{
+                      height: 'calc(100vh - 108px)',
+                      width: 'calc(100vw - 108px)',
+                      backgroundColor: bgColor ?? '',
+                    }}
+                    className={`w-full h-full [&_body]:m-0 flex-1`}
+                    src={src}
+                  ></iframe>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

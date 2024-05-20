@@ -128,7 +128,9 @@ const waspAppsSlice = createSlice({
       .addCase(putAllowedUsersForWaspAppAccess.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities && payload) {
-          state.entities = [...state.entities].flatMap((wasp_app) => (wasp_app.id === payload.id ? {...payload} : wasp_app));
+          state.entities = [...state.entities].flatMap((wasp_app) =>
+            wasp_app.id === payload.id ? {...payload} : wasp_app,
+          );
         }
       });
   },
@@ -163,10 +165,10 @@ export const getWaspAppById = createAsyncThunk(
 
 export const getWaspAppSourceDocByChatIdAndWaspId = createAsyncThunk(
   '/waspApps/getWaspAppSourceDocByChatIdAndWaspId',
-  async ({id, wasp_app_id}: IChatMessage, {rejectWithValue}) => {
+  async ({id, wasp_app_id}: Pick<IChatMessage, 'wasp_app_id' | 'id'>, {rejectWithValue}) => {
     if (!wasp_app_id) return;
     try {
-      const {status, data} = await getWaspAppSourceDocByChatIdAndWaspIdApi(wasp_app_id, id);
+      const {status, data} = await getWaspAppSourceDocByChatIdAndWaspIdApi({wasp_app_id, id});
       return data;
     } catch (err) {
       let error = err as AxiosError<ValidationErrors, any>;
@@ -278,7 +280,11 @@ export const putAllowedUsersForWaspAppAccess = createAsyncThunk(
   },
 );
 
-export const {setUploadIsLoading, setUploadSucceeded, handleChangeSelectedWaspApp, handleChangeOpenRemoveWaspAppDialog} =
-  waspAppsSlice.actions;
+export const {
+  setUploadIsLoading,
+  setUploadSucceeded,
+  handleChangeSelectedWaspApp,
+  handleChangeOpenRemoveWaspAppDialog,
+} = waspAppsSlice.actions;
 
 export default waspAppsSlice.reducer;

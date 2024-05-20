@@ -47,7 +47,7 @@ const WaspApps = (props: Props) => {
             onClick={handleOpenUploadNewWaspApp}
           />
         </div>
-        <div className='max-w-full'>
+        <div className='w-full relative'>
           <WaspAppsDetails handleOpenExistedWaspAppModal={handleOpenExistedWaspAppModal} />
         </div>
       </div>

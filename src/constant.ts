@@ -1,5 +1,6 @@
 import ISO6391 from 'iso-639-1';
-import {PartialTRoleLabel, TRecordPluginStatus, TRole} from './types';
+import {PartialTRoleLabel, TRecordPluginStatus, TRole, TWaspAppBgColor} from './types';
+import { nanoid } from '@reduxjs/toolkit';
 
 export const APPREQUESTBASEURL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 export const WASPAPPREQUESTBASEURL = process.env.NEXT_PUBLIC_WASP_BASE_URL ?? '';
@@ -41,6 +42,17 @@ export const NARROW_SIDEBAR_WIDTH = 100;
 export const ACCESS_CODE_PREFIX = 'ak-';
 
 export const LAST_INPUT_KEY = 'last-input';
+
+export const WASPAPPTEMPLATECOLOR:TWaspAppBgColor[] = [
+  {id:nanoid(16),value: '#F5F5F5', label: 'Default background'},
+  {id:nanoid(16),value: '#444444', label: 'Dark Gray'},
+  {id:nanoid(16),value: '#78866B', label: 'Moss Green'},
+  {id:nanoid(16),value: '#A9BA9D', label: 'Light Green'},
+  {id:nanoid(16),value: '#D0D9CD', label: 'Light Gray'},
+  {id:nanoid(16),value: '#B2BEB5', label: 'Grayish Green'},
+  {id:nanoid(16),value: '#828E84', label: 'Green Gray'},
+  {id:nanoid(16),value: '#687169', label: 'Dark Green'},
+];
 
 export const REQUEST_TIMEOUT_MS = 60000;
 

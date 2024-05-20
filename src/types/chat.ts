@@ -37,6 +37,7 @@ export interface IChatMessage {
   user_id: string;
   estimated_response_at: string;
   chat_id: string;
+  color?:null|string;
   chat_message_files: IChatMessageFile[];
   is_sensitive: boolean;
   is_anonymized: boolean;

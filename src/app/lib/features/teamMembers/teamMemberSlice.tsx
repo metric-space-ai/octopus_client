@@ -10,7 +10,6 @@ import {
 } from '@/services/settings.service';
 import {ICreateUser, IUser, ValidationErrors} from '@/types';
 
-
 interface TeamMembersStates {
   entities: IUser[] | null;
   isLoading: boolean;
@@ -42,26 +41,22 @@ const teamMembersSlice = createSlice({
         state.errorMessage = action.error.message;
       })
       .addCase(getAllTeamMembers.fulfilled, (state, action) => {
-        console.log('getAllTeamMembers fulfilled');
         state.isLoading = false;
         state.entities = action.payload;
       })
       .addCase(updateTeamMember.fulfilled, (state, {payload}) => {
-        console.log('updateTeamMember fulfilled');
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].flatMap((member) => (member.id === payload.id ? payload : member));
         }
       })
       .addCase(deleteTeamMember.fulfilled, (state, {payload}) => {
-        console.log('deleteTeamMember fulfilled');
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].filter((member) => member.id !== payload);
         }
       })
       .addCase(addNewTeamMember.fulfilled, (state, {payload}) => {
-        console.log('addNewTeamMember fulfilled');
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities, payload];
@@ -73,12 +68,9 @@ const teamMembersSlice = createSlice({
 });
 
 export const getAllTeamMembers = createAsyncThunk('/teamMembers/getAllTeamMembers', async () => {
-  // try {
-  console.log('dispatch getAllTeamMembers runs');
   const {data} = await getAllTeamMembersApi();
   return data;
 });
-
 
 export const updateTeamMember = createAsyncThunk(
   '/teamMembers/updateTeamMember',

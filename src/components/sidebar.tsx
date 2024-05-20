@@ -67,7 +67,7 @@ export function SideBar(props: {className?: string}) {
         const minutes = Math.floor(differenceInMilliseconds / (1000 * 60));
         const seconds = Math.floor((differenceInMilliseconds % (1000 * 60)) / 1000);
 
-        const newLocal = '(' + minutes + ':' + seconds + ')';
+        const newLocal = `(${minutes}:${seconds})`;
         if (minutes <= 0 && seconds <= 0) {
           if (user) chatStore.getContentSafety(user.user_id);
         } else {
@@ -165,7 +165,7 @@ export function SideBar(props: {className?: string}) {
         <IconButton
           variant='primary'
           onClick={() => {
-            chatStore.newTicket();
+            chatStore.changeNewTicketToggle();
           }}
         >
           <PlusIcon className='w-5 h-5 text-white' />
@@ -175,7 +175,7 @@ export function SideBar(props: {className?: string}) {
             className='w-full'
             title={Locale.Home.NewTicket}
             onClick={() => {
-              chatStore.newTicket();
+              chatStore.changeNewTicketToggle();
             }}
           />
         )}

@@ -19,6 +19,8 @@ export function ChatItem({
   selected,
   expanded,
   onRename = () => {},
+  isNewTicketOn = false,
+  newTicketToggler = () => {},
 }: {
   onClick?: () => void;
   onDelete?: () => void;
@@ -27,6 +29,8 @@ export function ChatItem({
   time: string;
   selected: boolean;
   expanded?: boolean;
+  isNewTicketOn?: boolean;
+  newTicketToggler?: (toggle: boolean) => void;
 }) {
   const draggableRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,15 +51,18 @@ export function ChatItem({
       });
     }
   }, [selected]);
+  const handleSwitchOffNewTicket = () => {
+    newTicketToggler(false);
+  };
   return (
     <div
       className={classNames(
         'flex justify-between relative px-3 py-[10px] rounded-full bg-content-black ',
         !expanded && '!px-[10px]',
         selected && 'bg-content-grey-100',
-        !selected && 'cursor-pointer',
+        (!selected || isNewTicketOn) && 'cursor-pointer',
       )}
-      onClick={!selected ? onClick : undefined}
+      onClick={!selected ? onClick : handleSwitchOffNewTicket}
     >
       <div className='flex items-center gap-2 w-full max-w-[210px]'>
         {<ChatBubbleLeftRightIcon className={classNames('w-5 h-5 text-white', selected && '!text-content-black')} />}
@@ -82,7 +89,8 @@ export function ChatItem({
               className={classNames(
                 'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
                 selected ? '!text-content-black' : '',
-              )} title={title}
+              )}
+              title={title}
             >
               {title}
             </div>
@@ -103,7 +111,10 @@ export function ChatItem({
               <XMarkIcon className='w-4 h-4' />
             </div>
           ) : (
-            <div className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer' onClickCapture={() => setEditable(true)}>
+            <div
+              className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer'
+              onClickCapture={() => setEditable(true)}
+            >
               <PencilSquareIcon className='w-4 h-4' />
             </div>
           )}
@@ -117,14 +128,9 @@ export function ChatItem({
 }
 
 export function ChatList({expanded}: {expanded?: boolean}) {
-  const {tickets, currentTicketId, selectTicketId, deleteTicket, renameTicket} = useChatStore();
+  const {tickets, currentTicketId, selectTicketId, deleteTicket, renameTicket, isNewTicket, changeNewTicketToggle} =
+    useChatStore();
 
-  // const checkWhenDidItHappened = useCallback(
-  //   (array: ITicket[], key: string) => {
-  //     return whenDidItHappened<ITicket>(array, key);
-  //   },
-  //   [tickets],
-  // );
   const {defaultValue, today, yesterday, older, prev7Days} = whenDidItHappened(tickets, 'updated_at');
 
   if (tickets)
@@ -137,6 +143,8 @@ export function ChatList({expanded}: {expanded?: boolean}) {
               <ChatItem
                 key={ticket.id}
                 title={ticket.name}
+                isNewTicketOn={isNewTicket}
+                newTicketToggler={changeNewTicketToggle}
                 time={new Date(ticket.updated_at).toLocaleString()}
                 expanded={expanded}
                 selected={ticket.id === currentTicketId}
@@ -164,6 +172,8 @@ export function ChatList({expanded}: {expanded?: boolean}) {
               <ChatItem
                 key={ticket.id}
                 title={ticket.name}
+                isNewTicketOn={isNewTicket}
+                newTicketToggler={changeNewTicketToggle}
                 time={new Date(ticket.updated_at).toLocaleString()}
                 expanded={expanded}
                 selected={ticket.id === currentTicketId}
@@ -190,6 +200,8 @@ export function ChatList({expanded}: {expanded?: boolean}) {
               <ChatItem
                 key={ticket.id}
                 title={ticket.name}
+                isNewTicketOn={isNewTicket}
+                newTicketToggler={changeNewTicketToggle}
                 time={new Date(ticket.updated_at).toLocaleString()}
                 expanded={expanded}
                 selected={ticket.id === currentTicketId}
@@ -212,6 +224,8 @@ export function ChatList({expanded}: {expanded?: boolean}) {
               <ChatItem
                 key={ticket.id}
                 title={ticket.name}
+                isNewTicketOn={isNewTicket}
+                newTicketToggler={changeNewTicketToggle}
                 time={new Date(ticket.updated_at).toLocaleString()}
                 expanded={expanded}
                 selected={ticket.id === currentTicketId}

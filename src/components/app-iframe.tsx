@@ -6,17 +6,18 @@ import {ArrowsPointingOutIcon} from '@heroicons/react/24/outline';
 
 interface IAppIframeProps {
   src: string;
-  loadingTitle:string
+  loadingTitle: string;
+  bgColor?: string;
 }
 
-const AppIframe = ({src,loadingTitle}: IAppIframeProps) => {
+const AppIframe = ({src, loadingTitle, bgColor}: IAppIframeProps) => {
   const waspFrameRef = useRef<HTMLIFrameElement>(null);
   const [appIsLoading, setAppIsLoading] = useState(true);
   const [height, setHeight] = useState('630px');
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
 
   const fixFrameHeight = () => {
-    console.log("onload is returning")
+    console.log('onload is returning');
     setHeight(`${waspFrameRef?.current?.contentWindow?.document.body.scrollHeight ?? 630} + ${24} + px`);
     setAppIsLoading(false);
   };
@@ -24,9 +25,9 @@ const AppIframe = ({src,loadingTitle}: IAppIframeProps) => {
     setTimeout(() => fixFrameHeight, 5000);
     setAppIsLoading(false);
   };
-  useEffect(() =>{
+  useEffect(() => {
     setTimeout(() => fixFrameHeight, 10000);
-  },[]);
+  }, []);
   return (
     <div className='relative'>
       {appIsLoading && (
@@ -39,7 +40,8 @@ const AppIframe = ({src,loadingTitle}: IAppIframeProps) => {
       {!iframeWithSrcModal && (
         <iframe
           ref={waspFrameRef}
-          className={`w-full bg-red bg-content-white [&_body]:m-0 flex-1 custom-scrollbar-thumb`}
+          className={`w-full bg-red bg-content-grey-100 [&_body]:m-0 flex-1 custom-scrollbar-thumb`}
+          style={{backgroundColor:bgColor}}
           // src={`http://localhost:3030/chat/setting?menu=sectors`}
           src={src}
           height={height}
@@ -53,11 +55,7 @@ const AppIframe = ({src,loadingTitle}: IAppIframeProps) => {
         <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
       </IconButton>
 
-      <IframeWithSrcDialog
-        open={iframeWithSrcModal}
-        onClose={() => setIframeWithSrcModal(false)}
-        src={src}
-      />
+      <IframeWithSrcDialog bgColor={bgColor??""} open={iframeWithSrcModal} onClose={() => setIframeWithSrcModal(false)} src={src} />
     </div>
   );
 };

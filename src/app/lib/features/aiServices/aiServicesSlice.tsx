@@ -68,9 +68,7 @@ const aiServicesSlice = createSlice({
       }
     },
     handleChangeSelectedPlugin: (state, {payload}: PayloadAction<IPlugin | null>) => {
-      console.log({handleChangeSelectedPlugin:payload});
       state.selectedPlugin = payload;
-
     },
     handleChangeOpenPluginLogsDialog: (state, {payload}: PayloadAction<boolean>) => {
       state.openPluginLogsModal = payload;

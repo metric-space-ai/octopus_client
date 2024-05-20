@@ -102,8 +102,6 @@ const simpleAppsSlice = createSlice({
 });
 
 export const getAllSimpleApps = createAsyncThunk('/simpleApps/getAllSimpleApps', async () => {
-  // try {
-  console.log('dispatch getAllSimpleApps runs');
   const {data} = await getSimpleAppsApi();
   return data;
 });

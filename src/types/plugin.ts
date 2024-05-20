@@ -32,6 +32,12 @@ export interface IAIFunctions {
 export type TRecordPluginStatus = Record<TPluginStatus, TPluginStatus>;
 export type TPartialPluginStatus = Partial<TPluginStatus>;
 
+export type TWaspAppBgColor = {
+  id: string;
+  value: string;
+  label: string;
+};
+
 export type TPluginStatus =
   | 'Configuration'
   | 'Error'
@@ -70,6 +76,7 @@ export interface IPlugin {
   allowed_user_ids?: string[];
   type: 'Normal' | 'System';
   logs: string | null;
+  color: string | null;
 }
 
 export interface IDeviceMap {

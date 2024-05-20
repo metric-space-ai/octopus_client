@@ -34,15 +34,15 @@ interface ChatStore {
   loading: boolean;
   contentSafetyDetails: IContentSafety;
   enabledContentSafety: boolean;
-  isSensitiveChecked: boolean;
-  isSensitiveUserId: string;
+  inputIsDesabled: boolean;
+  checkChatInputIsDisabled: () => void;
   createNewWorkspace: (name: string, type: string) => void;
   updateWorkspace: (idx: string, name: string, type: string) => void;
   deleteWorkspace: (idx: string) => void;
   getWorkspaces: () => void;
   setWorkspaceId: (idx: string) => void;
   selectTicketId: (idx: string) => void;
-  newTicket: () => void;
+  changeNewTicketToggle: (toggle?: boolean) => void;
   deleteTicket: (idx: string) => void;
   renameTicket: (idx: string, payload: {name: string}) => void;
   newMessage: (message: string, sensitivty_check: boolean) => Promise<void>;
@@ -57,8 +57,6 @@ interface ChatStore {
   getContentSafety: (user_id: string) => void;
   deleteContentSafety: (user_id: string) => void;
   updateContentSafety: (minutes: number, user_id: string) => void;
-  changeSensitiveStatus: (status: boolean) => void;
-  changeSensitiveStatusUserId: (id: string) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
@@ -74,8 +72,17 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
   messages: [],
   loading: false,
   enabledContentSafety: true,
-  isSensitiveChecked: false,
-  isSensitiveUserId: '',
+  inputIsDesabled: false,
+  checkChatInputIsDisabled() {
+    const messages = get().messages;
+    const message = messages[messages.length - 1];
+    const isSensitive =
+      message.is_sensitive &&
+      get().enabledContentSafety &&
+      !message.is_anonymized &&
+      !message.is_marked_as_not_sensitive;
+    set({inputIsDesabled: isSensitive});
+  },
   getWorkspaces() {
     getWorkspacesApi().then((res) => {
       const currentIdx = get().currentWorkspaceId;
@@ -137,6 +144,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
       if (status === 204) {
         get().checkContentSafetyDetails(data);
+        get().checkChatInputIsDisabled();
       } else {
         set({contentSafetyDetails: {id: '', content_safety_disabled_until: ''}});
       }
@@ -152,6 +160,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
 
       if (status === 201) {
         get().checkContentSafetyDetails(data);
+        get().checkChatInputIsDisabled();
       } else {
         set({contentSafetyDetails: {id: '', content_safety_disabled_until: ''}});
       }
@@ -191,7 +200,14 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     set({isNewTicket: false});
     getChatMessagesApi(idx)
       .then((res) => {
-        set({messages: res.data});
+        const message = res.data[res.data.length - 1];
+        const inputIsDesabled =
+          message.is_sensitive &&
+          get().enabledContentSafety &&
+          !message.is_anonymized &&
+          !message.is_marked_as_not_sensitive;
+
+        set({messages: res.data, inputIsDesabled});
       })
       .catch((e) => {
         // catch
@@ -201,8 +217,8 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
         set({loading: false});
       });
   },
-  newTicket() {
-    set({isNewTicket: true});
+  changeNewTicketToggle(toggle = true) {
+    set({isNewTicket: toggle});
   },
   deleteTicket(idx: string) {
     const currentIdx = get().currentWorkspaceId;
@@ -336,12 +352,6 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
     } finally {
       if (hasLoading) set({loading: false});
     }
-  },
-  changeSensitiveStatus(status: boolean) {
-    set({isSensitiveChecked: status});
-  },
-  changeSensitiveStatusUserId(id: string) {
-    set({isSensitiveUserId: id});
   },
   refreshMessage(chatId: string) {
     getLatestChatMessageApi(chatId).then((res) => {

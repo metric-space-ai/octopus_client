@@ -46,7 +46,7 @@ export function FileMarkdownContent({
     setOpenExpandMediaDialog(false);
   };
   const handleGetTextFileContent = async () => {
-    console.log('handleGetTextFileContent');
+    
     if (mediaFiles.length === 0) return;
 
     for (const mediaFile of mediaFiles) {

@@ -77,15 +77,11 @@ const parametersSlice = createSlice({
 });
 
 export const getAllParameters = createAsyncThunk('/parameters/getAllParameters', async () => {
-  // try {
-  console.log('dispatch getAllParameters runs');
   const {data} = await getParametersApi();
   return data;
 });
 
 export const getParameter = createAsyncThunk('/parameters/getParameter', async (payload: string) => {
-  // try {
-  console.log('dispatch getParameter runs');
   const {data} = await getParameterByIdApi(payload);
   return data;
 });

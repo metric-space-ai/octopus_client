@@ -28,7 +28,7 @@ import {
   updateContentSafetyApi,
 } from '@/services/chat.service';
 import {useChatStore} from '@/store';
-import {IAiFunctionErrorParsed, IChatMessage} from '@/types';
+import {IAiFunctionErrorParsed, IChatMessage, ValidationErrors} from '@/types';
 
 import {Button, IconButton} from './buttons';
 import {FileMarkdownContent} from './file-markdown';
@@ -43,6 +43,7 @@ import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
 import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
+import {getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -55,11 +56,10 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     updateMessage,
     deleteMessage,
     enabledContentSafety,
-    changeSensitiveStatus,
-    changeSensitiveStatusUserId,
     replaceMessageWithAnonymized,
     replaceMessageWithNotSensitive,
     updateContentSafety,
+    checkChatInputIsDisabled,
   } = useChatStore();
 
   const {user} = useAuthContext();
@@ -183,7 +183,6 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     // refreshMessage(item.chat_id);
     setDisableLoading(false);
     updateContentSafetyApi(30, user.user_id);
-    changeSensitiveStatus(false);
   };
   const prepareIfResponseIncludesMessage = () => {
     if (isSensitive && response && messageText.includes(response)) {
@@ -199,17 +198,35 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     return messageText;
   };
   const checkItemIsSensitive = () => {
+    checkChatInputIsDisabled();
+
     if (item.is_marked_as_not_sensitive || item.is_anonymized) {
-      changeSensitiveStatus(false);
       setIsSensitive(false);
     } else {
       setIsSensitive(item.is_sensitive);
-      changeSensitiveStatus(item.is_sensitive);
-      changeSensitiveStatusUserId(item.profile.user_id);
     }
-    if (item.chat_message_files) {
-      setIsFileMessage(item.chat_message_files.length > 0);
-    }
+  };
+
+  const handleCheckWaspAppError = async () => {
+    // const {id} = item;
+    // const wasp_app = {
+    //   description: 'Octopus law-consultant wasp app',
+    //   formatted_name: 'law-consultant',
+    //   id: '20198ce8-d90f-4199-8569-c44aa8b90e6f',
+    // };
+    // try {
+    //   const {status, data} = await getWaspAppLogsSourceDocByChatIdAndWaspIdApi({wasp_app_id: wasp_app.id, id});
+    //   console.log({status, data, wasp_app});
+    // } catch (err) {
+    //   let error = err as AxiosError<ValidationErrors, any>;
+
+    //   if (err instanceof AxiosError) {
+    //     toast.error(err?.response?.data.error);
+    //   }
+    //   if (!error.response) {
+    //     throw error;
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -220,21 +237,29 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       const now = new Date();
       const diffTime = estimationResponseTime.valueOf() - now.valueOf();
       checkMessageResponse(diffTime);
-    } else {
+    }
+    if (item.status === 'Answered') {
       setLoading(false);
-      // item.status === 'Answered'
-      // update sensitive flag
 
       checkItemIsSensitive();
+
+      if (item.chat_message_files) {
+        setIsFileMessage(item.chat_message_files.length > 0);
+      }
+
+      if (item.simple_app_id) {
+        handleGetAppCode();
+      }
+
+      if (item.wasp_app_id) {
+        const {id, wasp_app_id} = item;
+        setHasWaspApp(true);
+        // handleCheckWaspAppError();
+      } else {
+        setHasWaspApp(false);
+      }
     }
-    if (item.status === 'Answered' && item.simple_app_id) {
-      handleGetAppCode();
-    }
-    if (item.status === 'Answered' && item.wasp_app_id) {
-      setHasWaspApp(true);
-    } else {
-      setHasWaspApp(false);
-    }
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -376,6 +401,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               <AppIframe
                 src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
                 loadingTitle='the app is loading'
+                bgColor={item.color ?? '#F5F5F5'}
               />
             )}
 

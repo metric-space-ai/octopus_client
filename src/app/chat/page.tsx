@@ -34,8 +34,7 @@ export default function ChatPage() {
     newMessage,
     refreshMessage,
     enabledContentSafety,
-    isSensitiveChecked,
-    isSensitiveUserId,
+    inputIsDesabled,
   } = useChatStore();
   const {user} = useAuthContext();
 
@@ -85,22 +84,8 @@ export default function ChatPage() {
   };
 
   const checkChatInputIsDisabled = () => {
-    // const isSensitivePresent = messages.some(
-    //   (message) =>
-    //     (isSensitiveChecked || message.is_sensitive) &&
-    //     enabledContentSafety &&
-    //     !showChatPrompt &&
-    //     isSensitiveUserId === user?.user_id,
-    // );
-    if (messages.length === 0) return;
-    const message = messages[messages.length - 1];
-    const isSensitivePresent =
-      (isSensitiveChecked || message.is_sensitive) &&
-      enabledContentSafety &&
-      !showChatPrompt &&
-      !message.is_anonymized &&
-      !message.is_marked_as_not_sensitive;
-
+    if (messages.length === 0) return setInputIsDisabled(false);
+    const isSensitivePresent = !showChatPrompt && inputIsDesabled;
     setInputIsDisabled(isSensitivePresent);
   };
   const doSubmit = (userInput: string) => {
@@ -120,13 +105,12 @@ export default function ChatPage() {
   };
 
   useEffect(() => {
+    checkChatInputIsDisabled();
+  }, [inputIsDesabled, messages]);
+  useEffect(() => {
     const timeOutId = setTimeout(() => setShowWarningSnackBarWhenSafetyDisabled(false), 4000);
     return () => clearTimeout(timeOutId);
   }, [showWarningSnackBarWhenSafetyDisabled]);
-
-  useEffect(() => {
-    checkChatInputIsDisabled();
-  }, [messages, enabledContentSafety]);
 
   useEffect(() => {
     if (autoScroll) {
@@ -139,6 +123,14 @@ export default function ChatPage() {
       setAutoScroll(true);
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (isNewTicket) {
+      setInputIsDisabled(false);
+    } else {
+      checkChatInputIsDisabled();
+    }
+  }, [isNewTicket]);
 
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>

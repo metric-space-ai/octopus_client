@@ -12,6 +12,7 @@ import {
   IGpus,
   IDocument,
   TNextCluodDoc,
+  IChatMessage,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -66,6 +67,13 @@ export const startPluginInstallationApi = (plugin_id: string) => {
 
 export const addPluginConfigurationApi = (plugin_id: string, payload: {device_map: IDeviceMap; type: string}) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, payload);
+};
+
+export const putPluginConfigurationColorApi = ({
+  id,
+  ...payload
+}: Pick<IPlugin, 'id' | 'color' | 'device_map' | 'type'>) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${id}/configuration`, payload);
 };
 
 export const uploadNewPluginApi = (payload: FormData) => {
@@ -230,8 +238,18 @@ export const deleteWaspAppByIdApi = (wasp_id: string) => {
   return apiHub.delete<IWaspApp>(`api/v1/wasp-apps/${wasp_id}`);
 };
 
-export const getWaspAppSourceDocByChatIdAndWaspIdApi = (wasp_id: string, chat_message_id: string) => {
-  return apiHub.get<string>(`api/v1/wasp-apps/${wasp_id}/${chat_message_id}/proxy-frontend`);
+export const getWaspAppSourceDocByChatIdAndWaspIdApi = ({
+  wasp_app_id,
+  id,
+}: Pick<IChatMessage, 'wasp_app_id' | 'id'>) => {
+  return apiHub.get<string>(`api/v1/wasp-apps/${wasp_app_id}/${id}/proxy-frontend`);
+};
+
+export const getWaspAppLogsSourceDocByChatIdAndWaspIdApi = ({
+  wasp_app_id,
+  id,
+}: Pick<IChatMessage, 'wasp_app_id' | 'id'>) => {
+  return apiHub.get<string>(`api/v1/wasp-apps/${wasp_app_id}/${id}/logs`);
 };
 
 export const getAppVersionApi = () => {
