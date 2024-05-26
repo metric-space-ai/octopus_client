@@ -17,6 +17,8 @@ import PluginsBadge from './badge';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {PLUGINSTATUS, WASPAPPTEMPLATECOLOR} from '@/constant';
 import ServiceFunctions from './ServiceFunctions';
+import {Spinner} from '@/components/spinner';
+import useDebounce from '@/hooks/useDebounce';
 
 type Props = {
   plugin: IPlugin;
@@ -28,7 +30,7 @@ type Props = {
   handleOpenPluginLogsModal: (plugin: IPlugin) => void;
   handleOpenDeletePluginModal: (plugin: IPlugin) => void;
   handleChangeserviceColor: ({id, device_map, color, type}: IPlugin) => Promise<void>;
-  changeColorIsLoading: string;
+  changeColorIsLoading: boolean;
 };
 
 const ServiceDetailRow = ({
@@ -45,23 +47,31 @@ const ServiceDetailRow = ({
 }: Props) => {
   const [currentColor, setCurrentColor] = useState<string | null>(plugin.color);
   const [customColor, setCustomColor] = useState(plugin.color);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const debouncedCustomColor = useDebounce(customColor, 3000);
+
   const handleChangeCustomColor = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setCustomColor(e.target.value);
   };
   useEffect(() => {
-    if (currentColor !== plugin.color && changeColorIsLoading !== plugin.id) {
-      console.log('changeColor running', {currentColor, pColor: plugin.color});
+    if (currentColor !== plugin.color) {
+      setIsLoading(true);
       handleChangeserviceColor({...plugin, color: currentColor});
     }
   }, [currentColor]);
   useEffect(() => {
-    console.log(customColor);
-    if (customColor !== plugin.color && customColor !== currentColor) {
-      console.log('change current color ...');
-      setCurrentColor(customColor);
+    if (debouncedCustomColor !== plugin.color && debouncedCustomColor !== currentColor) {
+      setCurrentColor(debouncedCustomColor);
     }
-  }, [customColor]);
+  }, [debouncedCustomColor]);
+
+  useEffect(() => {
+    if (changeColorIsLoading) {
+      setIsLoading(false);
+    }
+  }, [changeColorIsLoading]);
 
   return (
     <Disclosure key={plugin.id}>
@@ -95,7 +105,7 @@ const ServiceDetailRow = ({
               ) : (
                 allUsers && (
                   <Listbox onChange={(value: IUser[] | []) => handleChangeUserAiAccess(plugin.id, value)} multiple>
-                    <div className='mt-1 relative'>
+                    <div className='mt-1'>
                       <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
                         <span
                           className='block text-xs text-content-grey-900 w-full h-4 leading-4 truncate ...'
@@ -136,33 +146,36 @@ const ServiceDetailRow = ({
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <Listbox.Options className='absolute bottom-0 mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-content-primary z-10 shadow-md'>
-                          {allUsers.map((user) => (
-                            <Listbox.Option
-                              key={user.id}
-                              className={({active}) =>
-                                `relative select-none py-2 pl-10 pr-4 cursor-pointer ${
-                                  active || plugin.allowed_user_ids?.includes(user.id)
-                                    ? 'bg-content-grey-400/30'
-                                    : 'text-gray-900'
-                                } `
-                              }
-                              value={user}
-                            >
-                              {({selected}) => (
-                                <>
-                                  <span className='block truncate' title={user.profile?.name}>
-                                    {user.profile?.name}
-                                  </span>
-                                  {(selected || plugin.allowed_user_ids?.includes(user.id)) && (
-                                    <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-content-primary'>
-                                      <CheckIcon className='h-5 w-5' aria-hidden='true' />
+                        <Listbox.Options className='absolute bottom-0 mt-1 max-h-60 rounded-md bg-white py-1 pr-2 text-content-primary z-10 shadow-md'>
+                          <div className='w-ful flex flex-col custom-scrollbar-thumb max-h-58 relative -mr-1'>
+                            {allUsers.map((user) => (
+                              <Listbox.Option
+                                key={user.id}
+                                className={({active}) =>
+                                  classNames(
+                                    `relative select-none py-2 pl-10 pr-4 cursor-pointer rounded-2xl transition-colors`,
+                                    active || plugin.allowed_user_ids?.includes(user.id)
+                                      ? 'bg-content-grey-400/30'
+                                      : 'text-gray-900',
+                                  )
+                                }
+                                value={user}
+                              >
+                                {({selected}) => (
+                                  <>
+                                    <span className='block truncate' title={user.profile?.name}>
+                                      {user.profile?.name}
                                     </span>
-                                  )}
-                                </>
-                              )}
-                            </Listbox.Option>
-                          ))}
+                                    {(selected || plugin.allowed_user_ids?.includes(user.id)) && (
+                                      <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-content-primary'>
+                                        <CheckIcon className='h-5 w-5' aria-hidden='true' />
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                          </div>
                         </Listbox.Options>
                       </Transition>
                     </div>
@@ -187,20 +200,21 @@ const ServiceDetailRow = ({
               }
             >
               <div className='mt-1'>
-                <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white p-2 pr-10 text-left text-content-primary'>
-                  <span
-                    className='items-center w-4 h-4 rounded-full block'
-                    style={{backgroundColor: currentColor ?? WASPAPPTEMPLATECOLOR[0].value}}
-                  >
-                    {/* {selected.name === 'Public' ? (
-                      <UserGroupIcon className='w-4 h-4 text-content-grey-900' />
-                    ) : (
-                      <LockClosedIcon className='w-4 h-4 text-content-grey-900' />
-                    )} */}
-                    {/* <span className='text-base text-content-grey-900'>{selected.name}</span> */}
-                  </span>
-                  <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
-                    <ChevronDownIcon className='h-4 w-4 text-gray-400' aria-hidden='true' />
+                <Listbox.Button
+                  className={classNames(
+                    ' flex gap-2 w-full items-center cursor-default rounded-[48px] bg-white p-0.5 text-left text-content-primary',
+                  )}
+                >
+                  <div className='relative'>
+                    {isLoading && <Spinner size='small' className='absolute left-0 block' />}
+                    <span
+                      className='items-center w-4 h-4 rounded-full block shadow-[0px_10px_20px_0px] shadow-content-black/5'
+                      style={{backgroundColor: currentColor ?? WASPAPPTEMPLATECOLOR[0].value}}
+                    />
+                  </div>
+
+                  <span className='pointer-events-none inset-y-0 flex items-center'>
+                    <ChevronDownIcon className='h-4 w-4 text-content-grey-900' aria-hidden='true' />
                   </span>
                 </Listbox.Button>
                 <Transition
@@ -241,7 +255,7 @@ const ServiceDetailRow = ({
                       ))}
                       <label
                         className={classNames(
-                          `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                          `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] transition-colors text-content-black flex cursor-pointer hover:bg-content-grey-100`,
                         )}
                       >
                         <div
@@ -262,7 +276,7 @@ const ServiceDetailRow = ({
                             onChange={(e) => handleChangeCustomColor(e)}
                           />
                         </div>
-                        <p className='block text-sm leading-normal font-semibold'>{customColor ?? 'not Selected'}</p>
+                        <p className='block text-sm leading-normal font-semibold'>{'Custom'}</p>
                       </label>
                     </div>
                   </Listbox.Options>

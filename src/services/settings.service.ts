@@ -13,6 +13,8 @@ import {
   IDocument,
   TNextCluodDoc,
   IChatMessage,
+  TOllamaModel,
+  IModel,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -65,15 +67,12 @@ export const startPluginInstallationApi = (plugin_id: string) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
 };
 
-export const addPluginConfigurationApi = (plugin_id: string, payload: {device_map: IDeviceMap; type: string}) => {
-  return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/configuration`, payload);
+export const addPluginConfigurationApi = ({id, ...payload}: Pick<IPlugin, 'id' | 'type' | 'device_map' | 'color'>) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${id}/configuration`, payload);
 };
 
-export const putPluginConfigurationColorApi = ({
-  id,
-  ...payload
-}: Pick<IPlugin, 'id' | 'color' | 'device_map' | 'type'>) => {
-  return apiHub.put<IPlugin>(`api/v1/ai-services/${id}/configuration`, payload);
+export const putPluginConfigurationColorApi = ({id, color}: Pick<IPlugin, 'id' | 'color'>) => {
+  return apiHub.put<IPlugin>(`api/v1/ai-services/${id}/color`, {color});
 };
 
 export const uploadNewPluginApi = (payload: FormData) => {
@@ -190,6 +189,23 @@ export const deleteSimpleAppByIdApi = (parameter_id: string) => {
 
 export const getSimpleAppsNameApi = () => {
   return apiHub.get<string[]>(`api/v1/simple-apps/names`);
+};
+
+//Models Api
+export const getOllamaModelsApi = () => {
+  return apiHub.get<TOllamaModel[]>(`api/v1/ollama-models/models`);
+};
+export const getAllModelsApi = () => {
+  return apiHub.get<IModel[]>(`api/v1/ollama-models`);
+};
+export const CreateNewModelApi = (name: string) => {
+  return apiHub.post<IModel>(`api/v1/ollama-models`, {name});
+};
+export const UpdateModelByIdApi = ({id, name}: Pick<IModel, 'id' | 'name'>) => {
+  return apiHub.put<IModel>(`api/v1/ollama-models/${id}`, {name});
+};
+export const deleteModelByIdApi = (id:string) => {
+  return apiHub.delete<null>(`api/v1/ollama-models/${id}`);
 };
 
 //Wasp Apps Api

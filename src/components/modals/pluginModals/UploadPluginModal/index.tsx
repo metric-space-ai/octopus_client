@@ -71,6 +71,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [activatedCPU, setActivatedCPU] = useState<(keyof IDeviceMap)[] | []>([]);
   const [pluginType, setPluginType] = useState('Normal');
   const [bypassCodeCheck, setBypassCodeCheck] = useState(false);
+  const [color, setColor] = useState('');
 
   const inputFileRef = useRef<HTMLInputElement>(null);
 
@@ -87,9 +88,11 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
       // const gpus = resources.gpus.filter((gpu) => activatedGPU.includes(gpu.id));
 
       try {
-        const {status, data} = await addPluginConfigurationApi(selectedPlugin.id, {
+        const {status, data} = await addPluginConfigurationApi({
+          id: selectedPlugin.id,
           device_map,
-          type: pluginType,
+          type: pluginType === 'Normal' ? 'Normal' : 'System',
+          color,
         });
         if (status === 200) {
           dispatch(handleChangeSelectedPlugin(data));
@@ -113,7 +116,6 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     const formData = new FormData();
     formData.append('bypass_code_check', `${bypassCodeCheck}`);
     if (selectedPlugin) {
-
       if (updateWithTextEditor) {
         const blob = new Blob([code], {type: 'text/plain'});
         formData.append('file', blob, selectedPlugin.original_file_name);
@@ -313,7 +315,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
 
     if (selectedPlugin && selectedPlugin.status === PLUGINSTATUS.ParsingStarted) {
-      toast.success('The installation process is underway');
+      toast.loading('The installation process is underway', {duration: 5000});
     }
   }, [selectedPlugin]);
 
@@ -521,6 +523,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                         setActivatedCPU={setActivatedCPU}
                         pluginType={pluginType}
                         setPluginType={setPluginType}
+                        setColor={setColor}
+                        selectedColor={color}
                       />
                     )}
                     {selectedPlugin &&

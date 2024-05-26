@@ -22,6 +22,7 @@ import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
 import {ShieldExclamationIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {IconButton} from '@/components/buttons';
 import {paths} from '@/config/path';
+import Models from './models';
 
 export default function SettingPage() {
   const searchParams = useSearchParams();
@@ -59,6 +60,7 @@ export default function SettingPage() {
             <>
               {menu === 'team-members' && <TeamMembers />}
               {menu === 'sectors' && <Sectors />}
+              {menu === 'models' && <Models />}
               {menu === 'plugins' && <Plugins />}
             </>
           ) : (

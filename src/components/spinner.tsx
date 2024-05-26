@@ -2,12 +2,13 @@ import classNames from 'classnames';
 
 type SpinnerProps = {
   size?: 'medium' | 'small';
+  className?: string;
 };
 
-export const Spinner = ({size = 'small'}: SpinnerProps) => {
+export const Spinner = ({size = 'small', className = ''}: SpinnerProps) => {
   const classSize = size === 'medium' ? 'w-8 h-8' : 'w-4 h-4';
   return (
-    <div role='status'>
+    <div role='status' className={classNames(className)}>
       <svg
         aria-hidden='true'
         role='status'

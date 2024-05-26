@@ -1,18 +1,25 @@
-import {Fragment} from 'react';
+import {Fragment, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-import {XMarkIcon} from '@heroicons/react/24/outline';
+import {ExclamationCircleIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
 import {IconButton} from '../buttons';
+import classNames from 'classnames';
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   src: string;
   bgColor: string;
+  description?: string;
 }
 
-export const IframeWithSrcDialog = ({open, onClose, src, bgColor}: ModalProps) => {
+export const IframeWithSrcDialog = ({open, onClose, src, bgColor, description = ''}: ModalProps) => {
+  const [openTooltip, setOpenTooltip] = useState(false);
+
+  const handleToggleTooltip = () => {
+    setOpenTooltip((prev) => !prev);
+  };
   return (
     <>
       <Transition appear show={open} as={Fragment}>
@@ -50,15 +57,32 @@ export const IframeWithSrcDialog = ({open, onClose, src, bgColor}: ModalProps) =
                   <IconButton className='absolute top-4 right-4' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5 text-content-primary' />
                   </IconButton>
-                  <iframe
-                    style={{
-                      height: 'calc(100vh - 108px)',
-                      width: 'calc(100vw - 108px)',
-                      backgroundColor: bgColor ?? '',
-                    }}
-                    className={`w-full h-full [&_body]:m-0 flex-1`}
-                    src={src}
-                  ></iframe>
+                  <div className='relative'>
+                    {description && (
+                      <ExclamationCircleIcon
+                        className='w-5 h-5 absolute -left-6 top-0 cursor-pointer text-content-grey-900 hover:text-content-accent'
+                        onClick={handleToggleTooltip}
+                      />
+                    )}
+                    <div
+                      className={classNames(
+                        'shadow-[0px_10px_20px_0px] shadow-content-black/5 rounded-20 pl-5 pr-6 py-4 bg-content-white absolute -left-6 top-8',
+                        openTooltip && 'block',
+                        !openTooltip && 'hidden',
+                      )}
+                    >
+                      <p className='text-content-black text-sm font-normal '>{description}</p>
+                    </div>
+                    <iframe
+                      style={{
+                        height: 'calc(100vh - 108px)',
+                        width: 'calc(100vw - 108px)',
+                        backgroundColor: bgColor ?? '',
+                      }}
+                      className={`w-full h-full [&_body]:m-0 flex-1`}
+                      src={src}
+                    ></iframe>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -28,7 +28,7 @@ import {
   updateContentSafetyApi,
 } from '@/services/chat.service';
 import {useChatStore} from '@/store';
-import {IAiFunctionErrorParsed, IChatMessage, ValidationErrors} from '@/types';
+import {IAiFunctionErrorParsed, IChatMessage, IWaspApp, ValidationErrors} from '@/types';
 
 import {Button, IconButton} from './buttons';
 import {FileMarkdownContent} from './file-markdown';
@@ -43,7 +43,8 @@ import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
 import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
-import {getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
+import {getWaspAppByIdApi, getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
+import classNames from 'classnames';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -87,6 +88,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
+  const [waspAppDetails, setWaspAppDetails] = useState<IWaspApp>();
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
   const [aiFunctionErrorMessage, setAiFunctionErrorMessage] = useState('');
 
@@ -227,7 +229,18 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     //   }
     // }
   };
-
+  const handleGetWaspAppDetailById = async (id: string) => {
+    try {
+      const {status,data} = await getWaspAppByIdApi(id);
+      if (status === 200) {
+        setWaspAppDetails(data)
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    }
+  };
   useEffect(() => {
     if (item.response) setResponse(item.response);
     if (item.status === 'Asked') {
@@ -252,6 +265,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
 
       if (item.wasp_app_id) {
         const {id, wasp_app_id} = item;
+        handleGetWaspAppDetailById(wasp_app_id);
         setHasWaspApp(true);
         // handleCheckWaspAppError();
       } else {
@@ -391,10 +405,10 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
             src={`http://localhost:3000/?messageId=${item.id}`}
           /> */}
           <div
-            className={`flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none flex flex-col ${
-              // applicationInnerHTML ? `min-h-[${iframeheight}]` :
-              ''
-            }`}
+            className={classNames(
+              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col `,
+              hasWaspApp ? 'bg-content-grey-100 border' : 'bg-content-black',
+            )}
             style={{backgroundColor: item.color ?? ''}}
           >
             {hasWaspApp && (
@@ -402,6 +416,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                 src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
                 loadingTitle='the app is loading'
                 bgColor={item.color ?? '#F5F5F5'}
+                waspInfo={waspAppDetails}
               />
             )}
 

@@ -53,7 +53,7 @@ export type TPluginStatus =
 
 export interface IPlugin {
   id: string;
-  device_map: string | null;
+  device_map: IDeviceMap | null;
   health_check_execution_time: number;
   health_check_status: 'Ok' | 'NotWorking';
   is_enabled: boolean;

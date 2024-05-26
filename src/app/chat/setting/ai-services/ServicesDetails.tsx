@@ -34,7 +34,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
 
   const {entities: allUsers, isLoading: usersIsLoading} = useSelector(selectTeamMembers);
 
-  const [changeColorIsLoading, setChangeColorIsLoading] = useState('');
+  const [changeColorIsLoading, setChangeColorIsLoading] = useState(false);
 
   const handleOpenEditPluginDialog = (plugin: IPlugin) => {
     dispatch(handleChangeOpenPluginLogsDialog(true));
@@ -62,10 +62,10 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
     dispatch(changePluginActivitiesByPluginId({plugin_id, payload}));
   };
 
-  const handleChangeserviceColor = async ({id, device_map, color, type}: IPlugin) => {
-    setChangeColorIsLoading(id);
+  const handleChangeserviceColor = async (payload: Pick<IPlugin, 'id' | 'color'>) => {
+    setChangeColorIsLoading(true);
     try {
-      const {status, data} = await putPluginConfigurationColorApi({id, device_map, color, type});
+      const {status, data} = await putPluginConfigurationColorApi(payload);
       if (status === 200) {
         toast.success('service Background color changed.');
         // dispatch(handleChangeSelectedPlugin(data));
@@ -75,7 +75,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
         toast.error(err?.response?.data.error);
       }
     } finally {
-      setChangeColorIsLoading((prevValue) => (prevValue === id ? '' : prevValue));
+      setChangeColorIsLoading(false);
     }
   };
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
       <div className='w-full relative'>
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2 gap-1'>
-            <div className='w-36'>
+            <div className='w-36 ml-7'>
               <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
             </div>
             {/* <div className='w-28'>
@@ -108,7 +108,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
             </div>
           </div>
 
-          <div className='h-[280px] min-w-[570px] custom-scrollbar-thumb'>
+          <div className='h-full max-h-[280px] min-w-[570px] custom-scrollbar-thumb'>
             {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2

@@ -2,9 +2,10 @@ import React, {Fragment, useState} from 'react';
 import CustomCheckbox from '@/components/custom-checkbox';
 import {CheckIcon, ChevronDownIcon, ClipboardDocumentIcon} from '@heroicons/react/24/outline';
 import {bytesCalculator} from '@/helpers';
-import {IResources} from '@/types';
+import {IResources, TWaspAppBgColor} from '@/types';
 import classNames from 'classnames';
 import {Listbox, Transition} from '@headlessui/react';
+import {WASPAPPTEMPLATECOLOR} from '@/constant';
 
 type Props = {
   setActivatedCPU: React.Dispatch<React.SetStateAction<[] | (string | number)[]>>;
@@ -14,6 +15,8 @@ type Props = {
   activatedCPU: [] | (string | number)[];
   setPluginType: React.Dispatch<React.SetStateAction<string>>;
   pluginType: string;
+  selectedColor: string;
+  setColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ConfigType = ['Normal', 'System'];
@@ -25,7 +28,19 @@ const ConfigurationSection = ({
   activatedCPU,
   pluginType,
   setPluginType,
+  selectedColor,
+  setColor,
 }: Props) => {
+  const [customColor, setCustomColor] = useState('#ffffff');
+
+  const handleChangeCustomColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const {value} = e.target;
+
+    setCustomColor(value);
+    setColor(value);
+  };
+
   const handleChangeCpuActivation = (check: boolean, cpu_key: string) => {
     if (check) {
       setActivatedCPU((prevValues) => [...prevValues, cpu_key]);
@@ -95,7 +110,9 @@ const ConfigurationSection = ({
                     <Listbox.Option
                       key={type}
                       className={({active}) =>
-                        `relative select-none py-2 pl-10 pr-4 cursor-pointer ${active ? 'bg-content-grey-100' : 'text-gray-900'}`
+                        `relative select-none py-2 pl-10 pr-4 cursor-pointer ${
+                          active ? 'bg-content-grey-100' : 'text-gray-900'
+                        }`
                       }
                       value={type}
                     >
@@ -114,6 +131,96 @@ const ConfigurationSection = ({
                 </Listbox.Options>
               </Transition>
             </div>
+          </Listbox>
+        </div>
+        <div className='flex flex-col gap-3 mb-3 relative'>
+          <Listbox
+            onChange={(color: TWaspAppBgColor | string) =>
+              setColor(typeof color === 'string' ? color : color.value)
+            }
+          >
+             <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary h-11'>
+                <div className='flex gap-1 items-center'>
+                  <span className='text-base text-content-grey-900'>{`Color:`}</span>
+              <span
+                className='items-center w-5 h-5 rounded-full block shadow-[0px_10px_20px_0px] shadow-content-black/5'
+                style={{backgroundColor: selectedColor ?? WASPAPPTEMPLATECOLOR[0].value}}
+              />
+                </div>
+
+                <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
+                  <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+                </span>
+              </Listbox.Button>
+              {/* <Listbox.Button className='flex gap-2 w-full items-center cursor-default rounded-[48px] bg-white p-0.5 text-left text-content-primary'>
+                <span className='pointer-events-none inset-y-0 flex items-center'>
+                  <ChevronDownIcon className='h-4 w-4 text-content-grey-900' aria-hidden='true' />
+                </span>
+              </Listbox.Button> */}
+              <Transition
+                as={Fragment}
+                leave='transition ease-in duration-100'
+                leaveFrom='opacity-100'
+                leaveTo='opacity-0'
+              >
+                <Listbox.Options
+                  className='absolute top-11 w-full rounded-20 bg-white 
+                        text-content-primary z-[1] p-1 pr-2 shadow-[0px_10px_20px_0px] shadow-content-black/60'
+                >
+                  <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
+                    {WASPAPPTEMPLATECOLOR.map((color) => (
+                      <Listbox.Option
+                        key={color.id}
+                        className={({active}) =>
+                          classNames(
+                            `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                            active && 'bg-content-grey-100',
+                          )
+                        }
+                        value={color.value}
+                      >
+                        <div
+                          className='w-7 h-7 rounded-full flex justify-center items-center'
+                          style={{backgroundColor: color.value}}
+                        >
+                          {selectedColor === color.value && (
+                            <CheckIcon
+                              className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
+                              aria-hidden='true'
+                            />
+                          )}
+                        </div>
+                        {color.label && <p className='block text-sm leading-normal font-semibold'>{color.label}</p>}
+                      </Listbox.Option>
+                    ))}
+                    <label
+                      className={classNames(
+                        `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                      )}
+                    >
+                      <div
+                        className='flex w-7 h-7 relative justify-center items-center rounded-full'
+                        style={{backgroundColor: customColor ?? ''}}
+                      >
+                        {selectedColor === customColor && (
+                          <CheckIcon
+                            className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
+                            aria-hidden='true'
+                          />
+                        )}
+
+                        <input
+                          type='color'
+                          className='w-0 h-0 opacity-0 '
+                          value={customColor ?? ''}
+                          onChange={(e) => handleChangeCustomColor(e)}
+                        />
+                      </div>
+                      <p className='block text-sm leading-normal font-semibold'>{"Custom"}</p>
+                    </label>
+                  </div>
+                </Listbox.Options>
+              </Transition>
           </Listbox>
         </div>
         <div className='flex flex-col gap-3 mb-3 max-h-60 relative -mr-4 pr-4 custom-scrollbar-thumb'>

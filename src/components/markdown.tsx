@@ -10,6 +10,7 @@ import RemarkBreaks from 'remark-breaks';
 import RemarkGfm from 'remark-gfm';
 import RemarkMath from 'remark-math';
 import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
+import {visit} from 'unist-util-visit';
 
 import {copyToClipboard} from '../helpers';
 
@@ -112,13 +113,10 @@ const isLongTextWithoutSpaces = (text: string): boolean => {
 };
 
 const CustomParagraph = ({node, ...props}: any) => {
-  
   const textContent = node.children.map((child: any) => child.value).join(' ');
   const isLongWithoutSpaces = isLongTextWithoutSpaces(textContent);
 
-  const className = isLongWithoutSpaces
-    ? 'break-all'
-    : 'break-words';
+  const className = isLongWithoutSpaces ? 'break-all' : 'break-words';
 
   return (
     <p className={className} {...props}>
@@ -127,11 +125,25 @@ const CustomParagraph = ({node, ...props}: any) => {
   );
 };
 
+// Custom Remark plugin to handle [n]: URL format
+const RemarkCustomLink = () => {
+  return (tree: any) => {
+    visit(tree, 'definition', (node: any) => {
+      if (node && node.type === 'definition') {
+        const value = `[${node.title ?? node.label ?? ''}] - ${node.title ? '' : node.url}`;
+
+        node.type = 'link';
+        node.children = [{type: 'text', value}];
+      }
+    });
+  };
+};
+
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
       className='flex flex-col text-white gap-2'
-      remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
+      remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks, RemarkCustomLink]}
       rehypePlugins={[
         RehypeKatex,
         [
@@ -144,15 +156,27 @@ function _MarkDownContent(props: {content: string}) {
       ]}
       components={{
         pre: PreCode,
-        a: (aProps) => {
+        // a: (aProps) => {
+        //   const href = aProps.href || '';
+        //   const isInternal = /^\/#/i.test(href);
+        //   const target = isInternal ? '_self' : aProps.target ?? '_blank';
+        //   return (
+        //     <>
+        //       <LinkIcon className='w-3 h-3 inline-block mr-1' />
+        //       <a {...aProps} target={target} className='underline' />
+        //     </>
+        //   );
+        // },
+        a: ({node, ...aProps}) => {
           const href = aProps.href || '';
+
           const isInternal = /^\/#/i.test(href);
           const target = isInternal ? '_self' : aProps.target ?? '_blank';
           return (
-            <>
+            <a {...aProps} target={target} className='underline'>
               <LinkIcon className='w-3 h-3 inline-block mr-1' />
-              <a {...aProps} target={target} className='underline' />
-            </>
+              {aProps.children ?? href}
+            </a>
           );
         },
         p: CustomParagraph,

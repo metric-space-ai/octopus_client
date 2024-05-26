@@ -10,6 +10,7 @@ import {
   DocumentDuplicateIcon,
   CodeBracketIcon,
   AdjustmentsHorizontalIcon,
+  CpuChipIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
@@ -78,6 +79,13 @@ const SIDEBAR: {
     permission: ROLE_COMPANY_ADMIN_USER,
   },
   {
+    id: 'tab_models',
+    tab_name: 'models',
+    title: 'Models',
+    icon: CpuChipIcon    ,
+    permission: ROLE_COMPANY_ADMIN_USER,
+  },
+  {
     id: 'tab_plugins',
     tab_name: 'plugins',
     title: 'Plugins',
@@ -134,7 +142,7 @@ export const SettingsMenu = () => {
   }, []);
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col pl-3'>
       <h1 className='text-32 font-semibold font-poppins-semibold'>Settings</h1>
       <div className='w-[240px] mt-9 px-6 py-4 gap-3 bg-content-white flex flex-col rounded-[20px]'>
         {SIDEBAR.map(
