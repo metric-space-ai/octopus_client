@@ -6,6 +6,7 @@ import {useSettingsContext} from '@/contexts/settingsContext';
 import {CreateNewTabModal, DeleteTabModal} from '@/components/modals';
 import {IWorkspace} from '@/types';
 import {useChatStore} from '@/store';
+import {useAuthContext} from '@/contexts/authContext';
 
 type Props = {};
 
@@ -14,7 +15,8 @@ const Sectors = (props: Props) => {
   const [deleteSectorsModal, setDeleteSectorsModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState<IWorkspace | null>(null);
   const {settingIsLoading} = useSettingsContext();
-  const {workspaces, getWorkspaces,deleteWorkspace} = useChatStore();
+  const {workspaces, getWorkspaces, deleteWorkspace} = useChatStore();
+  const {user} = useAuthContext();
 
   const handleCloseWorkspaceDialog = () => {
     setSelectedWorkspace(null);
@@ -24,7 +26,7 @@ const Sectors = (props: Props) => {
     setSelectedWorkspace(workspace);
     setAddSectorsModal(true);
   };
-  
+
   const handleOpenDeleteWorkspaceDialog = (workspace: IWorkspace) => {
     setSelectedWorkspace(workspace);
     setDeleteSectorsModal(true);
@@ -33,7 +35,6 @@ const Sectors = (props: Props) => {
     setSelectedWorkspace(null);
     setDeleteSectorsModal(false);
   };
-
 
   useEffect(() => {
     getWorkspaces();
@@ -62,7 +63,14 @@ const Sectors = (props: Props) => {
         </div>
       </div>
       {/* <AddSectorModal open={addSectorsModal} onClose={() => setAddSectorsModal(false)} /> */}
-      <CreateNewTabModal tab={selectedWorkspace} open={addSectorsModal} onClose={handleCloseWorkspaceDialog} />
+      {user && (
+        <CreateNewTabModal
+          roles={user.roles}
+          tab={selectedWorkspace}
+          open={addSectorsModal}
+          onClose={handleCloseWorkspaceDialog}
+        />
+      )}
       <DeleteTabModal tab={selectedWorkspace} open={deleteSectorsModal} onClose={handleCloseDeleteWorkspaceDialog} />
     </>
   );

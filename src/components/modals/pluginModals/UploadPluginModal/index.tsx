@@ -4,6 +4,7 @@ import {Dialog, Transition} from '@headlessui/react';
 import {AxiosError} from 'axios';
 
 import {
+  ArrowDownTrayIcon,
   ArrowUpTrayIcon,
   CheckIcon,
   ClipboardDocumentIcon,
@@ -17,11 +18,13 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import {Button, IconButton} from '../../../buttons';
 import toast from 'react-hot-toast';
-import {bytesCalculator} from '@/helpers';
+import {bytesCalculator, downloadAs} from '@/helpers';
 
 import {PLUGINSTATUS} from '@/constant';
 import {
   addPluginConfigurationApi,
+  downloadOriginalFunctionBodyApi,
+  downloadProcessedFunctionBodyApi,
   getPluginByIdApi,
   getServerResourcesApi,
   startPluginInstallationApi,
@@ -56,6 +59,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [code, setCode] = useState(``);
   const [updateWithTextEditor, setUpdateWithTextEditor] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [downloadIsLoading, setDownloadIsLoading] = useState(false);
   const [uploadStarted, setUploadStarted] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [file, setFile] = useState<File>();
@@ -342,6 +346,40 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     }
   }, [uploadStarted, uploadPercentage]);
 
+  const handleDownloadOriginalFunctionBody = async () => {
+    if (!selectedPlugin) return;
+    setDownloadIsLoading(true);
+    try {
+      const {status, data} = await downloadOriginalFunctionBodyApi(selectedPlugin.id);
+      if (status === 200) {
+        downloadAs(data, `original-function-body-${selectedPlugin.original_file_name}`);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setDownloadIsLoading(false);
+    }
+  };
+
+  const handleDownloadProcessedFunctionBody = async () => {
+    if (!selectedPlugin) return;
+    setDownloadIsLoading(true);
+    try {
+      const {status, data} = await downloadProcessedFunctionBodyApi(selectedPlugin.id);
+      if (status === 200) {
+        downloadAs(data, `processed-function-body-${selectedPlugin.original_file_name}`);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+    } finally {
+      setDownloadIsLoading(false);
+    }
+  };
+
   return (
     <>
       <Transition appear show={open} as={Fragment}>
@@ -385,31 +423,62 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       <>
                         {selectedPlugin && updateWithTextEditor ? (
                           <>
-                            <div className='h-[360px] max-h-full custom-scrollbar-thumb'>
-                              <CodeEditor
-                                value={code}
-                                language='python'
-                                placeholder='Please enter Python code.'
-                                onChange={(evn) => setCode(evn.target.value)}
-                                padding={16}
-                                style={{
-                                  backgroundColor: '#f5f5f5',
-                                  fontFamily:
-                                    'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                                }}
-                              />
+                            <div className='flex-1'>
+                              <div className='custom-scrollbar-thumb max-h-[330px]'>
+                                <CodeEditor
+                                  value={code}
+                                  language='python'
+                                  placeholder='Please enter Python code.'
+                                  onChange={(evn) => setCode(evn.target.value)}
+                                  padding={16}
+                                  style={{
+                                    backgroundColor: '#f5f5f5',
+                                    fontFamily:
+                                      'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                                  }}
+                                />
+                              </div>
                             </div>
-                            <div className='flex h-10 gap-6 items-center'>
-                              <IconButton className='' onClick={() => setUpdateWithTextEditor(false)} variant='primary'>
-                                <DocumentIcon className='w-6 h-6 text-content-white' />
-                              </IconButton>
+                            <div className='flex gap-4 flex-col mb-4'>
+                              <div className='flex h-10 gap-6 items-center'>
+                                <IconButton
+                                  className=''
+                                  onClick={() => setUpdateWithTextEditor(false)}
+                                  variant='primary'
+                                >
+                                  <DocumentIcon className='w-6 h-6 text-content-white' />
+                                </IconButton>
 
-                              <CustomCheckbox
-                                active={bypassCodeCheck}
-                                onChange={setBypassCodeCheck}
-                                title={'Bypass Code Check'}
-                              />
-                              {/* <Button type='button' variant='primary' title='switch to uploader' /> */}
+                                <CustomCheckbox
+                                  active={bypassCodeCheck}
+                                  onChange={setBypassCodeCheck}
+                                  title={'Bypass Code Check'}
+                                />
+                                {/* <Button type='button' variant='primary' title='switch to uploader' /> */}
+                              </div>
+                              <div className='flex flex-wrap gap-6'>
+                                {/* <div
+                                  className='flex items-center text-sm bg-content-grey-900/60 text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-1 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
+                                  onClick={handleDownloadOriginalFunctionBody}
+                                >
+                                  <ArrowDownTrayIcon className='w-6 h-6 p-1 bg-content-grey-900/80 rounded-lg text-white' />
+                                  original function body
+                                </div> */}
+                                <div
+                                  className='flex items-center text-sm bg-content-accent hover:accent-content-accent-hover text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-2 rounded-3xl transition-all duration-150 gap-2 cursor-pointer'
+                                  onClick={handleDownloadOriginalFunctionBody}
+                                >
+                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-white' />
+                                  original function body
+                                </div>
+                                <div
+                                  className='flex items-center text-sm bg-content-accent hover:accent-content-accent-hover text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-2 rounded-3xl transition-all duration-150 gap-2 cursor-pointer'
+                                  onClick={handleDownloadProcessedFunctionBody}
+                                >
+                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-white' />
+                                  processed function body
+                                </div>
+                              </div>
                             </div>
                           </>
                         ) : (

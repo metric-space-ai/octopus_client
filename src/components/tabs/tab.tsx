@@ -75,7 +75,7 @@ export const Tab = ({
   // const beforeClass = 'before:absolute before:bottom-0 before:w-[10px] before:h-[10px] before:-left-[10px]';
 
   return (
-    <div className='cursor-pointer max-w-[220px]' id={tabId} onClick={onClick}>
+    <div className='cursor-pointer max-w-[220px] ' onClick={onClick}>
       <div
         className={classNames(
           'relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-[20px] text-sm font-semibold',

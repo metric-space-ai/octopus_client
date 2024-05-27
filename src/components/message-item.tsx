@@ -231,9 +231,9 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   };
   const handleGetWaspAppDetailById = async (id: string) => {
     try {
-      const {status,data} = await getWaspAppByIdApi(id);
+      const {status, data} = await getWaspAppByIdApi(id);
       if (status === 200) {
-        setWaspAppDetails(data)
+        setWaspAppDetails(data);
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -242,6 +242,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
     }
   };
   useEffect(() => {
+    if (item.message) setMessageText(item.message);
     if (item.response) setResponse(item.response);
     if (item.status === 'Asked') {
       setLoading(true);
@@ -400,13 +401,21 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
           {/* <div className='flex flex-col'> */}
           {/* <WaspAppGenerator /> */}
           {/* <Research /> */}
-          {/* <iframe
-            className='w-full custom-scrollbar-thumb h-[650px]'
-            src={`http://localhost:3000/?messageId=${item.id}`}
-          /> */}
+          {/* <div
+            className={classNames(
+              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col`,
+              hasWaspApp ? 'bg-content-grey-100 border' : 'bg-content-black',
+            )}
+            style={{backgroundColor: item.color ?? ''}}
+          >
+            <iframe
+              className='w-full custom-scrollbar-thumb h-[650px]'
+              src={`http://localhost:3000`}
+            />
+          </div> */}
           <div
             className={classNames(
-              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col `,
+              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col`,
               hasWaspApp ? 'bg-content-grey-100 border' : 'bg-content-black',
             )}
             style={{backgroundColor: item.color ?? ''}}

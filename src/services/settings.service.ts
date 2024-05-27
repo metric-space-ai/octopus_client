@@ -67,6 +67,14 @@ export const startPluginInstallationApi = (plugin_id: string) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${plugin_id}/installation`);
 };
 
+export const downloadOriginalFunctionBodyApi = (plugin_id: string) => {
+  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/download-original-function-body`);
+};
+
+export const downloadProcessedFunctionBodyApi = (plugin_id: string) => {
+  return apiHub.get<string>(`api/v1/ai-services/${plugin_id}/download-processed-function-body`);
+};
+
 export const addPluginConfigurationApi = ({id, ...payload}: Pick<IPlugin, 'id' | 'type' | 'device_map' | 'color'>) => {
   return apiHub.put<IPlugin>(`api/v1/ai-services/${id}/configuration`, payload);
 };

@@ -1,12 +1,8 @@
-import {Fragment, useState, useEffect} from 'react';
+import {Fragment, useState, useEffect, FormEventHandler} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {Dialog, Transition, Listbox} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
-import {useForm} from 'react-hook-form';
-
-// import {ROLEOPTIONS} from '@/constant';
-import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';
 
@@ -18,7 +14,6 @@ import {Spinner} from '../spinner';
 import classNames from 'classnames';
 import {IModel} from '@/types';
 import toast from 'react-hot-toast';
-// import {InvitationSent} from './SendInvitation';
 
 interface ModalProps {
   open: boolean;
@@ -26,36 +21,28 @@ interface ModalProps {
   selectedModel: IModel | null;
 }
 
-interface IFormInputs {
-  name: string;
-}
-
 export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const {ollamaModels, ollamaIsLoading, createModelIsLoading, CreateHasError, errorMessage} = useSelector(selectModels);
-  const {setValue, watch, handleSubmit} = useForm<IFormInputs>();
 
-  const onSubmit = async (data: IFormInputs) => {
-    const {name} = data;
+  const [name, setName] = useState('');
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     setLoading(true);
     if (selectedModel) {
+      if (selectedModel.name === name) return toast.error('nothing has changed');
       dispatch(UpdateModelById({id: selectedModel.id, name}));
     } else {
       dispatch(createNewModel(name));
     }
   };
 
-  // useEffect(() => {
-  //   if (sectorData?.id) {
-  //     setValue('id', sectorData.id);
-  //     setValue('name', sectorData.name);
-  //   }
-  // }, [existed, sectorData]);
-
   useEffect(() => {
     if (ollamaModels && ollamaModels.length > 0 && !selectedModel) {
-      setValue('name', ollamaModels[0]);
+      setName(ollamaModels[0]);
     }
   }, [ollamaModels]);
 
@@ -64,7 +51,7 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
       dispatch(getOllamaModels());
     }
     if (selectedModel) {
-      setValue('name', selectedModel.name);
+      setName(selectedModel.name);
     }
   }, [open]);
 
@@ -79,9 +66,10 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
       setLoading(false);
     }
   }, [createModelIsLoading, CreateHasError, errorMessage]);
+
   const handleClose = () => {
-    setLoading(false);
     onClose();
+    setLoading(false);
   };
   return (
     <>
@@ -121,8 +109,8 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                       <XMarkIcon className='w-5 h-5 text-content-primary' />
                     </IconButton>
                   </div>
-                  <form className='flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
-                    <Listbox value={watch('name')} onChange={(value) => setValue('name', value)}>
+                  <form className='flex flex-col gap-5' onSubmit={onSubmit}>
+                    <Listbox value={name} onChange={(value) => setName(value)}>
                       <div className='relative mt-1'>
                         <Listbox.Button
                           className={({open}) =>
@@ -135,9 +123,7 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                         >
                           <div className='flex items-center gap-2'>
                             {ollamaIsLoading && <Spinner className='h-6 flex items-center' />}
-                            <span className='w-ful truncate ... text-base text-content-grey-900'>{`Name: ${watch(
-                              'name',
-                            )}`}</span>
+                            <span className='w-ful truncate ... text-base text-content-grey-900'>{`Name: ${name}`}</span>
                           </div>
                           <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                             <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -186,13 +172,14 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                         title={`Cancel`}
                         disabled={loading}
                         onClick={handleClose}
+                        type='button'
                       />
                       <Button
                         className='w-1/2 !h-10'
                         variant='primary'
                         title={!loading ? (selectedModel ? `Update Model` : `Add a new Model`) : ''}
                         loading={loading}
-                        disabled={loading}
+                        disabled={loading || selectedModel?.name === name}
                         type='submit'
                       />
                     </div>

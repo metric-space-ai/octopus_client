@@ -108,6 +108,7 @@ export const Header = () => {
   const [fitNumberOfItems, setFitNumberOfItems] = useState(0);
   const [modalTab, setModalTab] = useState<IWorkspace | null>(null);
   const isAdmin = user?.roles.includes('ROLE_COMPANY_ADMIN_USER');
+  const hasAccessToCreateWokspace = user?.roles.includes('ROLE_PRIVATE_USER');
 
   const handleTab = (idx: string) => {
     if (pathname === paths.setting) {
@@ -177,12 +178,7 @@ export const Header = () => {
           })}
         </Tabs>
         {fitNumberOfItems < workspaces.length && fitNumberOfItems > 0 && (
-          <MoreTabs
-            selectedId={currentWorkspaceId}
-            onChange={handleTab}
-            tabs={workspaces}
-            itemsFrom={fitNumberOfItems}
-          >
+          <MoreTabs selectedId={currentWorkspaceId} onChange={handleTab} tabs={workspaces} itemsFrom={fitNumberOfItems}>
             {workspaces?.map((tab, index) => {
               if (index >= fitNumberOfItems)
                 return (
@@ -220,14 +216,21 @@ export const Header = () => {
             })}
           </MoreTabs>
         )}
-        {isAdmin && (
+        {(isAdmin || hasAccessToCreateWokspace) && (
           <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
             <PlusIcon className='w-4 h-4 text-content-white' />
           </IconButton>
         )}
       </div>
       <MenuItem />
-      <CreateNewTabModal tab={modalTab} open={showCreateNewTabModal} onClose={() => setShowCreateNewTabModal(false)} />
+      {user && (
+        <CreateNewTabModal
+          tab={modalTab}
+          open={showCreateNewTabModal}
+          roles={user.roles}
+          onClose={() => setShowCreateNewTabModal(false)}
+        />
+      )}
       <DeleteTabModal tab={modalTab} open={showDeleteabModal} onClose={() => setShowDeleteTabModal(false)} />
     </div>
   );

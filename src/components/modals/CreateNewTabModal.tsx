@@ -7,25 +7,29 @@ import {useForm} from 'react-hook-form';
 import {TabModes} from '@/constant';
 import {authValidator} from '@/helpers/validators';
 import {useChatStore} from '@/store';
-import {IWorkspace} from '@/types';
+import {IWorkspace, TRole} from '@/types';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
+import classNames from 'classnames';
 
 interface ModalProps {
   tab: IWorkspace | null;
   open: boolean;
   onClose: () => void;
+  roles: TRole[];
 }
 
 interface IFormInputs {
   name: string;
 }
 
-export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
+export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
   const {createNewWorkspace, updateWorkspace} = useChatStore();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(TabModes[0]);
+  const isAdmin = roles.includes('ROLE_COMPANY_ADMIN_USER');
+  const isJustPrivateUser = !isAdmin && roles.includes('ROLE_PRIVATE_USER');
 
   const {
     register,
@@ -35,6 +39,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
   } = useForm<IFormInputs>();
 
   const onSubmit = (data: IFormInputs) => {
+    if (!isJustPrivateUser && !isAdmin) return;
     const {name} = data;
     setLoading(true);
     try {
@@ -56,6 +61,12 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
     setSelected({name: tab?.type ?? 'Public'});
     setValue('name', tab?.name ?? '');
   }, [setValue, tab]);
+
+  useEffect(() => {
+    if (!tab && isJustPrivateUser) {
+      setSelected(TabModes[0]);
+    }
+  }, [open]);
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -96,7 +107,7 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                     rules={register('name', authValidator.username)}
                   />
                   <Listbox value={selected} onChange={setSelected}>
-                    <div className='relative mt-1'>
+                    <div className={classNames('relative mt-1', isJustPrivateUser && 'pointer-events-none')}>
                       <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
                         <div className='flex gap-1 items-center'>
                           {selected.name === 'Public' ? (
@@ -106,7 +117,12 @@ export const CreateNewTabModal = ({tab, open, onClose}: ModalProps) => {
                           )}
                           <span className='text-base text-content-grey-900'>{selected.name}</span>
                         </div>
-                        <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
+                        <span
+                          className={classNames(
+                            'absolute inset-y-0 right-0 flex items-center pr-4',
+                            isJustPrivateUser && 'hidden',
+                          )}
+                        >
                           <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
                         </span>
                       </Listbox.Button>

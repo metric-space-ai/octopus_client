@@ -19,7 +19,16 @@ interface ModalProps {
   setSelectedLanguage: Dispatch<SetStateAction<string>>;
 }
 
-export const TranslatorModal = ({open, onClose, text, setText, selected, setSelected, setShowOriginal,setSelectedLanguage}: ModalProps) => (
+export const TranslatorModal = ({
+  open,
+  onClose,
+  text,
+  setText,
+  selected,
+  setSelected,
+  setShowOriginal,
+  setSelectedLanguage,
+}: ModalProps) => (
   <Transition appear show={open} as={Fragment}>
     <Dialog className='relative z-10' as='div' onClose={onClose}>
       <Transition.Child

@@ -22,7 +22,7 @@ type Props = {
 
 const UploadPluginModalHeaderSection = ({currentStep, ADDPLUGINSTEPS, pluginStatus, handleCloseModal}: Props) => {
   return (
-    <div className='flex justify-between items-start mb-16 relative'>
+    <div className='flex justify-between items-start mb-10 relative'>
       <Dialog.Title
         as='h3'
         className='text-2xl font-semibold text-content-black font-poppins-semibold text-left absolute left-0 top 0'

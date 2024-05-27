@@ -203,12 +203,12 @@ export const Consultant = ({}: IConsult) => {
   return (
     <>
       <div className={`flex flex-col bg-white pt-4 pb-5 px-5 w-full h-full min-h-[600px] rounded-20 relative `}>
-        <div className='flex justify-between mb-4'>
+        {/* <div className='flex justify-between mb-4'>
           <h1 className='text-content-black font-semibold text-xl leading-7'>Law consultant</h1>
           <IconButton className='ml-auto !p-1'>
             <XMarkIcon className='w-5 h-5 text-content-black' />
           </IconButton>
-        </div>
+        </div> */}
         {canNotHelp && response && step === QUESTION_STEPS.ANSWER && (
           <div className='w-full px-9 pt-6 md:pt-9 lg:pt-[51px] text-center flex-1'>
             <div className='p-5 md:p-8 lg:p-12 xl:p-[60px] bg-content-grey-100 rounded-20 mx-auto max-w-[691px]'>
