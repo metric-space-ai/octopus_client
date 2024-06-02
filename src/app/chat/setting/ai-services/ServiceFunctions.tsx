@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import CustomCheckbox from '@/components/custom-checkbox';
 import {Spinner} from '@/components/spinner';
 import {IAIFunctions} from '@/types';
-import {TrashIcon} from '@heroicons/react/24/outline';
+import {ExclamationCircleIcon, InformationCircleIcon, TrashIcon} from '@heroicons/react/24/outline';
 import {
   deletetAiFunctionsById,
   getAiFunctionsByPluginId,
@@ -13,6 +13,7 @@ import {IconButton} from '@/components/buttons';
 import {AppDispatch} from '@/app/lib/store';
 import {useSelector} from 'react-redux';
 import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
+import {Popover} from '@headlessui/react';
 
 type Props = {
   serviceId: string;
@@ -62,28 +63,44 @@ const ServiceFunctions = ({ai_functions, serviceId}: Props) => {
     <div className='flex flex-col gap-3 pl-9 w-full'>
       {ai_functions?.map((func, funcIndex) => (
         <div key={func.id} className='flex w-full items-center justify-between'>
-          <CustomCheckbox
-            active={func.is_enabled}
-            onChange={(check: boolean) =>
-              !updateAiFunctionIsLoading && !updateIsLoading
-                ? handleChangeAiFunctionActivation(funcIndex, func, check)
-                : {}
-            }
-            disabled={updateAiFunctionIsLoading && updateIsLoading}
-            title={func.formatted_name}
-            description={func.description}
-            bodyClassName='flex-col !items-start'
-          />
-          <IconButton
-            className='top-4 right-4 mr-5 bg-content-red-600/20 hover:bg-content-red-600/40'
-            onClick={() => handleDeleteServiceAiFunction(func)}
-          >
-            {deleteFunctionsIsLoading && deleteIsLoading ? (
-              <Spinner />
-            ) : (
-              <TrashIcon className='w-4 h-4 text-content-primary' />
-            )}
-          </IconButton>
+          <div className='flex flex-wrap gap-3 items-start'>
+            <CustomCheckbox
+              active={func.is_enabled}
+              onChange={(check: boolean) =>
+                !updateAiFunctionIsLoading && !updateIsLoading
+                  ? handleChangeAiFunctionActivation(funcIndex, func, check)
+                  : {}
+              }
+              disabled={updateAiFunctionIsLoading && updateIsLoading}
+              title={func.formatted_name}
+              description={func.description}
+              bodyClassName='flex-col !items-start'
+            />
+          </div>
+          <div className='flex gap-6'>
+            <Popover className={'relative flex items-center'}>
+              <Popover.Button>
+                <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-black cursor-pointer transition-colors duration-150' />
+              </Popover.Button>
+              <Popover.Panel
+                className={
+                  'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-80 max-w-[80vw] -right-8 top-3 z-10'
+                }
+              >
+                <p className='text-content-white text-sm font-poppins-light'>{func.generated_description}</p>
+              </Popover.Panel>
+            </Popover>
+            <IconButton
+              className='top-4 right-4 mr-5 bg-content-red-600/20 hover:bg-content-red-600/40'
+              onClick={() => handleDeleteServiceAiFunction(func)}
+            >
+              {deleteFunctionsIsLoading && deleteIsLoading ? (
+                <Spinner />
+              ) : (
+                <TrashIcon className='w-4 h-4 text-content-primary' />
+              )}
+            </IconButton>
+          </div>
         </div>
       ))}
       {aiFunctionsIsLoading && (

@@ -27,6 +27,7 @@ export interface IAIFunctions {
   created_at: string;
   deleted_at: string | null;
   updated_at: string | null;
+  generated_description: string | null;
 }
 
 export type TRecordPluginStatus = Record<TPluginStatus, TPluginStatus>;

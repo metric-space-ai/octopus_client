@@ -104,6 +104,10 @@ export default function ChatPage() {
     }
   };
 
+  const handleRegenerateResponse = (value: string) => {
+    doSubmit(value);
+  };
+
   useEffect(() => {
     checkChatInputIsDisabled();
   }, [inputIsDesabled, messages]);
@@ -166,7 +170,13 @@ export default function ChatPage() {
                   item.is_marked_as_not_sensitive ||
                   item.is_anonymized ||
                   !item.is_sensitive) && (
-                  <MessageItem key={item.id} item={item} changeSafety={setShowWarningSnackBarWhenSafetyDisabled} />
+                  <MessageItem
+                    key={item.id}
+                    item={item}
+                    changeSafety={setShowWarningSnackBarWhenSafetyDisabled}
+                    regenerateResponse={handleRegenerateResponse}
+                    regenerateIsDisabled={inputIsDisabled}
+                  />
                 ),
             )
           )}

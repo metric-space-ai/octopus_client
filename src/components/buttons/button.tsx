@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import {Spinner} from '../spinner';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'transparent' | 'outline' | 'dangerous' | 'disabled';
+  variant?: 'primary' | 'secondary' | 'transparent' | 'outline' | 'dangerous' | 'disabled' | 'outline-dark';
   size?: 'default' | 'large' | 'medium' | 'small';
   loading?: boolean;
   iconBefore?: React.ReactNode;
@@ -12,6 +12,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   fontWeight?: 'default' | 'light' | 'normal';
   onClick?: () => void;
+  ariaTitle?: string;
 }
 
 const ButtonStyle = {
@@ -20,6 +21,7 @@ const ButtonStyle = {
   transparent: 'bg-transparent',
   dangerous: 'bg-content-red-600',
   outline: 'bg-transparent border border-content-black',
+  'outline-dark': 'bg-transparent border border-content-white',
   disabled: 'bg-content-disabled',
 };
 
@@ -29,6 +31,7 @@ const ButtonHoverStyle = {
   transparent: 'hover:bg-transparent',
   dangerous: 'hover:bg-content-red-400',
   outline: 'hover:bg-transparent',
+  'outline-dark': 'hover:bg-transparent',
   disabled: 'hover:bg-content-disabled',
 };
 
@@ -38,6 +41,7 @@ const TextStyle = {
   transparent: 'text-content-black',
   dangerous: 'text-content-white',
   outline: 'text-content-black',
+  'outline-dark': 'text-content-white',
   disabled: 'text-content-white',
 };
 
@@ -65,6 +69,7 @@ export const Button = ({
   iconAfter,
   title,
   onClick,
+  ariaTitle = '',
   ...props
 }: ButtonProps) => {
   const style = ButtonStyle[disabled ? 'disabled' : variant];
@@ -82,6 +87,7 @@ export const Button = ({
         hoverStyle,
         className,
       )}
+      title={ariaTitle}
       {...props}
       onClick={onClick}
     >

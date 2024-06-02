@@ -126,3 +126,7 @@ body {
     font-weight: normal;
     font-style: normal;
 }
+
+iframe html {
+  font-size: 18px !important;
+}

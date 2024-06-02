@@ -409,7 +409,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
                 transform border border-content-primary bg-content-grey-100 custom-scrollbar-thumb
-                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
+                 pb-6 pt-7 px-8 md:pb-7 md:pt-9 md:px-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
                 >
                   <UploadPluginModalHeaderSection
                     ADDPLUGINSTEPS={ADDPLUGINSTEPS}
@@ -586,7 +586,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                     {currentStep === ADDPLUGINSTEPS.Setup && selectedPlugin && (
                       <ConfigurationSection
                         activatedCPU={activatedCPU}
-                        file_name={selectedPlugin.original_file_name}
+                        plugin={selectedPlugin}
                         resources={resources}
                         fileSize={file?.size}
                         setActivatedCPU={setActivatedCPU}

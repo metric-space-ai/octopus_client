@@ -62,9 +62,16 @@ const aiServicesSlice = createSlice({
       {payload}: PayloadAction<{service_functions: IAIFunctions[]; service_id: string}>,
     ) => {
       if (state.entities) {
-        state.entities = [...state.entities].flatMap((plugin) =>
+        // state.entities = [...state.entities].flatMap((plugin) =>
+        //   plugin.id === payload.service_id ? {...plugin, ai_functions: payload.service_functions ?? null} : plugin,
+        // );
+        const plugins = [...state.entities].flatMap((plugin) =>
           plugin.id === payload.service_id ? {...plugin, ai_functions: payload.service_functions ?? null} : plugin,
         );
+        state.entities = plugins;
+        const selectedPlugin = plugins.find((plugin) => plugin.id === payload.service_id);
+        console.log({plugins, selectedPlugin, entities: state.entities, payload});
+        if (selectedPlugin) state.selectedPlugin = selectedPlugin;
       }
     },
     handleChangeSelectedPlugin: (state, {payload}: PayloadAction<IPlugin | null>) => {

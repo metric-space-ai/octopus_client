@@ -4,7 +4,10 @@ import {Popover} from '@headlessui/react';
 import {toast} from 'react-hot-toast';
 
 import {
+  ArrowPathIcon,
   ArrowsPointingOutIcon,
+  CheckIcon,
+  ClipboardIcon,
   ExclamationTriangleIcon,
   HandThumbDownIcon,
   InformationCircleIcon,
@@ -45,13 +48,17 @@ import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
 import {getWaspAppByIdApi, getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
 import classNames from 'classnames';
+import {useDebouncedCallback} from 'use-debounce';
+import {autoGrowTextArea} from '@/helpers';
 
 interface IMessageItem {
   item: IChatMessage;
   changeSafety?: React.Dispatch<React.SetStateAction<boolean>>;
+  regenerateResponse: (value: string) => void;
+  regenerateIsDisabled: boolean;
 }
 
-export const MessageItem = ({item, changeSafety}: IMessageItem) => {
+export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateIsDisabled}: IMessageItem) => {
   const {
     editMessage,
     updateMessage,
@@ -66,6 +73,10 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
   const {user} = useAuthContext();
   const timeoutRef = useRef(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  // auto grow input
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [inputRows, setInputRows] = useState(2);
+
   const [iframeheight, setIframeheight] = useState('0px');
   const [isEditMode, setIsEditMode] = useState(false);
   const [response, setResponse] = useState(item.response ?? '');
@@ -94,6 +105,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
 
   const [applicationInnerHTML, setApplicationInnerHTML] = useState('');
   const [hasWaspApp, setHasWaspApp] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const prevMessage = item.response ?? '';
 
@@ -241,6 +253,38 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
       }
     }
   };
+
+  // auto grow input
+  const measure = useDebouncedCallback(
+    () => {
+      const rows = inputRef.current ? autoGrowTextArea(inputRef.current) : 1;
+      const inputRows = Math.min(20, Math.max(1, rows));
+      setInputRows(inputRows);
+    },
+    100,
+    {
+      leading: true,
+      trailing: true,
+    },
+  );
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(response);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000); // Revert icon back after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (isEditMode) measure();
+  }, [messageText]);
+
   useEffect(() => {
     if (item.message) setMessageText(item.message);
     if (item.response) setResponse(item.response);
@@ -338,7 +382,7 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
             )}
           </div>
           <div className='flex-1 mt-1'>
-            <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative'>
+            <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative items-start'>
               {item.profile?.name && (
                 <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
                   {item.profile.name}
@@ -346,9 +390,11 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
               )}
               {isEditMode ? (
                 <textarea
+                  ref={inputRef}
                   className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
                   value={messageText}
                   onInput={(e) => setMessageText(e.currentTarget.value)}
+                  rows={inputRows}
                 />
               ) : (
                 <div className='flex flex-col gap-1'>
@@ -367,15 +413,38 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                   )}
                 </div>
               )}
-              {messageEditable && (
-                <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
-                  <PencilSquareIcon className='w-5 h-5' />
-                </IconButton>
+              {!isEditMode && (
+                <div className='flex flex-col lg:flex-row gap-4 ml-auto items-center'>
+                  {messageEditable && (
+                    <IconButton className='shrink-0 h-5 !p-0' onClick={onEditMessage}>
+                      <PencilSquareIcon className='w-5 h-5' />
+                    </IconButton>
+                  )}
+
+                  <Button
+                    variant='outline'
+                    title='Regenerate'
+                    ariaTitle='Regenerate Response'
+                    size='small'
+                    fontWeight='light'
+                    iconBefore={<ArrowPathIcon className='text-content-black w-4 h-4' />}
+                    onClick={() => regenerateResponse(item.message)}
+                    className='h-8 opacity-70 hover:opacity-100 transition-all duration-150 !px-2 w-28'
+                    disabled={regenerateIsDisabled}
+                  />
+                </div>
               )}
             </div>
             {isEditMode && (
               <div className='mt-3 flex gap-2 justify-center'>
-                <Button variant='outline' title='Cancel' onClick={() => setIsEditMode(false)} />
+                <Button
+                  variant='outline'
+                  title='Cancel'
+                  onClick={() => {
+                    setIsEditMode(false);
+                    setMessageText(item.message);
+                  }}
+                />
                 <Button title='Save changes' disabled={disableSaveButton} onClick={onSaveChangeMessage} />
               </div>
             )}
@@ -456,7 +525,39 @@ export const MessageItem = ({item, changeSafety}: IMessageItem) => {
                         )}
                       </div>
                     ) : (
-                      <MarkdownContent content={response ?? ''} />
+                      <div className='flex items-start gap-1'>
+                        <MarkdownContent content={response ?? ''} />
+                        {response && (
+                          <IconButton
+                            className='bg-transparent p-0.5 rounded-full hover:bg-content-grey-600 transition-all duration-200'
+                            disabled={isCopied}
+                            onClick={handleCopy}
+                            title='copy to clipboard'
+                          >
+                            <div className='relative w-4 h-4 flex items-center justify-center'>
+                              <CheckIcon
+                                className={classNames(
+                                  'absolute text-white transition-all duration-300',
+                                  !isCopied && ' w-0 h-0 opacity-0 scale-0',
+                                  isCopied && 'opacity-100 w-4 h-4 scale-100',
+                                )}
+                                width={16}
+                                height={16}
+                              />
+
+                              <ClipboardIcon
+                                className={classNames(
+                                  'absolute text-white transition-all duration-300 ',
+                                  isCopied && ' w-0 h-0 opacity-0 scale-0',
+                                  !isCopied && 'opacity-100 w-4 h-4 scale-100',
+                                )}
+                                width={16}
+                                height={16}
+                              />
+                            </div>
+                          </IconButton>
+                        )}
+                      </div>
                     )}
                     {isFileMessage && (
                       <FileMarkdownContent

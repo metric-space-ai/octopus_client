@@ -1,15 +1,19 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import CustomCheckbox from '@/components/custom-checkbox';
-import {CheckIcon, ChevronDownIcon, ClipboardDocumentIcon} from '@heroicons/react/24/outline';
+import {CheckIcon, ChevronDownIcon, ClipboardDocumentIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
 import {bytesCalculator} from '@/helpers';
-import {IResources, TWaspAppBgColor} from '@/types';
+import {IPlugin, IResources, TWaspAppBgColor} from '@/types';
 import classNames from 'classnames';
 import {Listbox, Transition} from '@headlessui/react';
 import {WASPAPPTEMPLATECOLOR} from '@/constant';
+import {Popover} from '@headlessui/react';
+import {AppDispatch} from '@/app/lib/store';
+import {useDispatch} from 'react-redux';
+import {getAiFunctionsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
 
 type Props = {
   setActivatedCPU: React.Dispatch<React.SetStateAction<[] | (string | number)[]>>;
-  file_name: string;
+  plugin: IPlugin;
   fileSize?: number;
   resources: IResources | undefined;
   activatedCPU: [] | (string | number)[];
@@ -22,7 +26,7 @@ type Props = {
 const ConfigType = ['Normal', 'System'];
 const ConfigurationSection = ({
   setActivatedCPU,
-  file_name,
+  plugin,
   fileSize,
   resources,
   activatedCPU,
@@ -32,6 +36,7 @@ const ConfigurationSection = ({
   setColor,
 }: Props) => {
   const [customColor, setCustomColor] = useState('#ffffff');
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleChangeCustomColor = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -49,8 +54,17 @@ const ConfigurationSection = ({
     }
   };
 
+  const getPluginAiFunctions = async () => {
+    dispatch(getAiFunctionsByPluginId(plugin.id));
+  };
+  useEffect(() => {
+    if (!plugin.ai_functions) {
+      getPluginAiFunctions();
+    }
+  }, []);
+
   return (
-    <div className='flex flex-col lg:flex-row gap-8 justify-between'>
+    <div className='flex flex-col flex-wrap lg:flex-row gap-8 justify-between'>
       <div className='flex flex-col w-5/12'>
         <div className='flex gap-3 mb-6'>
           <span className='w-11 h-11 rounded-full bg-content-accent-light-11 flex justify-center items-center'>
@@ -62,24 +76,32 @@ const ConfigurationSection = ({
               fileSize ? 'justify-between' : 'justify-center',
             )}
           >
-            <h5 className='font-poppins-semibold text-content-black text-sm truncate ...' title={file_name}>
-              {file_name}
+            <h5
+              className='font-poppins-semibold text-content-black text-sm truncate ...'
+              onClick={() => console.log({plugin})}
+              title={plugin.original_file_name}
+            >
+              {plugin.original_file_name}
             </h5>
             {fileSize && (
               <p className='text-content-grey-600 font-normal text-xs leading-5'>{bytesCalculator(fileSize)}</p>
             )}
           </div>
         </div>
-        <div className='flex'>
-          <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md'>
+        <div className='flex flex-col gap-4'>
+          {/* <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md'>
             Enhance your ChatGPT experience with ImageFlow Connect - a powerful plugin that seamlessly integrates image
             uploading capabilities into your conversations.
             <br />
             <br />
             With ImageFlow Connect, you can effortlessly share visual context by uploading images directly within the
             chat interface.
+          </p> */}
+          <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md max-h-[240px] custom-scrollbar-thumb'>
+            {plugin.parser_feedback}
           </p>
         </div>
+
       </div>
 
       <div className='flex flex-col w-full lg:w-7/12 max-w-[452px]'>
@@ -135,92 +157,90 @@ const ConfigurationSection = ({
         </div>
         <div className='flex flex-col gap-3 mb-3 relative'>
           <Listbox
-            onChange={(color: TWaspAppBgColor | string) =>
-              setColor(typeof color === 'string' ? color : color.value)
-            }
+            onChange={(color: TWaspAppBgColor | string) => setColor(typeof color === 'string' ? color : color.value)}
           >
-             <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary h-11'>
-                <div className='flex gap-1 items-center'>
-                  <span className='text-base text-content-grey-900'>{`Color:`}</span>
-              <span
-                className='items-center w-5 h-5 rounded-full block shadow-[0px_10px_20px_0px] shadow-content-black/5'
-                style={{backgroundColor: selectedColor ?? WASPAPPTEMPLATECOLOR[0].value}}
-              />
-                </div>
+            <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary h-11'>
+              <div className='flex gap-1 items-center'>
+                <span className='text-base text-content-grey-900'>{`Color:`}</span>
+                <span
+                  className='items-center w-1/3 h-5 rounded-4 block shadow-[0px_10px_20px_0px] shadow-content-black/5'
+                  style={{backgroundColor: selectedColor ?? WASPAPPTEMPLATECOLOR[0].value}}
+                />
+              </div>
 
-                <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
-                  <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
-                </span>
-              </Listbox.Button>
-              {/* <Listbox.Button className='flex gap-2 w-full items-center cursor-default rounded-[48px] bg-white p-0.5 text-left text-content-primary'>
+              <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
+                <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
+              </span>
+            </Listbox.Button>
+            {/* <Listbox.Button className='flex gap-2 w-full items-center cursor-default rounded-[48px] bg-white p-0.5 text-left text-content-primary'>
                 <span className='pointer-events-none inset-y-0 flex items-center'>
                   <ChevronDownIcon className='h-4 w-4 text-content-grey-900' aria-hidden='true' />
                 </span>
               </Listbox.Button> */}
-              <Transition
-                as={Fragment}
-                leave='transition ease-in duration-100'
-                leaveFrom='opacity-100'
-                leaveTo='opacity-0'
-              >
-                <Listbox.Options
-                  className='absolute top-11 w-full rounded-20 bg-white 
+            <Transition
+              as={Fragment}
+              leave='transition ease-in duration-100'
+              leaveFrom='opacity-100'
+              leaveTo='opacity-0'
+            >
+              <Listbox.Options
+                className='absolute top-11 w-full rounded-20 bg-white 
                         text-content-primary z-[1] p-1 pr-2 shadow-[0px_10px_20px_0px] shadow-content-black/60'
-                >
-                  <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
-                    {WASPAPPTEMPLATECOLOR.map((color) => (
-                      <Listbox.Option
-                        key={color.id}
-                        className={({active}) =>
-                          classNames(
-                            `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
-                            active && 'bg-content-grey-100',
-                          )
-                        }
-                        value={color.value}
-                      >
-                        <div
-                          className='w-7 h-7 rounded-full flex justify-center items-center'
-                          style={{backgroundColor: color.value}}
-                        >
-                          {selectedColor === color.value && (
-                            <CheckIcon
-                              className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
-                              aria-hidden='true'
-                            />
-                          )}
-                        </div>
-                        {color.label && <p className='block text-sm leading-normal font-semibold'>{color.label}</p>}
-                      </Listbox.Option>
-                    ))}
-                    <label
-                      className={classNames(
-                        `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
-                      )}
+              >
+                <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
+                  {WASPAPPTEMPLATECOLOR.map((color) => (
+                    <Listbox.Option
+                      key={color.id}
+                      className={({active}) =>
+                        classNames(
+                          `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                          active && 'bg-content-grey-100',
+                        )
+                      }
+                      value={color.value}
                     >
                       <div
-                        className='flex w-7 h-7 relative justify-center items-center rounded-full'
-                        style={{backgroundColor: customColor ?? ''}}
+                        className='w-7 h-7 rounded-full flex justify-center items-center'
+                        style={{backgroundColor: color.value}}
                       >
-                        {selectedColor === customColor && (
+                        {selectedColor === color.value && (
                           <CheckIcon
                             className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
                             aria-hidden='true'
                           />
                         )}
-
-                        <input
-                          type='color'
-                          className='w-0 h-0 opacity-0 '
-                          value={customColor ?? ''}
-                          onChange={(e) => handleChangeCustomColor(e)}
-                        />
                       </div>
-                      <p className='block text-sm leading-normal font-semibold'>{"Custom"}</p>
-                    </label>
-                  </div>
-                </Listbox.Options>
-              </Transition>
+                      {color.label && <p className='block text-sm leading-normal font-semibold'>{color.label}</p>}
+                    </Listbox.Option>
+                  ))}
+                  <label
+                    className={classNames(
+                      `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                    )}
+                  >
+                    <div
+                      className='flex w-7 h-7 relative justify-center items-center rounded-full'
+                      style={{backgroundColor: customColor ?? ''}}
+                    >
+                      {selectedColor === customColor && (
+                        <CheckIcon
+                          className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
+                          aria-hidden='true'
+                        />
+                      )}
+
+                      <input
+                        type='color'
+                        className='w-0 h-0 opacity-0 '
+                        value={customColor ?? ''}
+                        onChange={(e) => handleChangeCustomColor(e)}
+                      />
+                    </div>
+                    <p className='block text-sm leading-normal font-semibold'>{'Custom'}</p>
+                  </label>
+                </div>
+              </Listbox.Options>
+            </Transition>
           </Listbox>
         </div>
         <div className='flex flex-col gap-3 mb-3 max-h-60 relative -mr-4 pr-4 custom-scrollbar-thumb'>
@@ -277,6 +297,35 @@ const ConfigurationSection = ({
           ))} */}
         </div>
       </div>
+      
+      {plugin.ai_functions && (
+            <div className='flex flex-col w-full gap-3 max-h-[160px] custom-scrollbar-thumb'>
+              {plugin.ai_functions?.map((aiFunc, index) => (
+                <div
+                  key={aiFunc.id}
+                  className={classNames('flex flex-col gap-2 text-left pl- pt-3 border-t border-content-grey-300')}
+                >
+                  <div className='flex gap-3 text-xs'>
+                    {aiFunc.formatted_name}
+                    <Popover className={'relative flex items-center'}>
+                      <Popover.Button>
+                        <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-black cursor-pointer transition-colors duration-150' />
+                      </Popover.Button>
+                      <Popover.Panel
+                        className={
+                          'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-80 max-w-[80vw] left-4 top-4 z-10'
+                        }
+                      >
+                        <p className='text-content-white text-xs font-poppins-light'>{aiFunc.generated_description}</p>
+                      </Popover.Panel>
+                    </Popover>
+                  </div>
+
+                  <p className='pl-2 text-xs'>description: {aiFunc.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
     </div>
   );
 };
