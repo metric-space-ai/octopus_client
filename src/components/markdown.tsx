@@ -142,7 +142,7 @@ const RemarkCustomLink = () => {
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-col text-white gap-2'
+      className='flex flex-1 flex-col text-white gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks, RemarkCustomLink]}
       rehypePlugins={[
         RehypeKatex,
