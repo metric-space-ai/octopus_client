@@ -96,20 +96,20 @@ export function FileMarkdownContent({
                   alt={title ?? ''}
                   loading='lazy'
                   // onLoad={(e) => setLoaded(true)}
-                  className='rounded-4'
+                  className='rounded-2xs'
                   onClick={() => handleOpenMedaIndialog(media)}
                 />
                 {/* {!loaded && (
                   <div
-                    className={`mx-2 bg-gray-300 rounded-4 dark:bg-gray-600 absolute left-0 animate-pulse`}
+                    className={`mx-2 bg-gray-300 rounded-2xs dark:bg-gray-600 absolute left-0 animate-pulse`}
                     style={{width, height}}
                   ></div>
                 )} */}
                 <IconButton
-                  className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
+                  className='absolute -bottom-10 left-0 rounded-full hover:bg-grey-600'
                   onClick={() => handleOpenMedaIndialog(media)}
                 >
-                  <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
+                  <ArrowsPointingOutIcon className='w-5 h-5 text-grey-400' />
                 </IconButton>
               </div>
             )}
@@ -123,7 +123,7 @@ export function FileMarkdownContent({
 
             {media.media_type.includes('application/pdf') && (media.file_name || media.original_file_name) && (
               <div
-                className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer'
+                className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer'
                 onClick={() =>
                   handleDownloadTextFile(
                     media.original_file_name ?? `${media.file_name}.pdf`,
@@ -131,14 +131,14 @@ export function FileMarkdownContent({
                   )
                 }
               >
-                <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-[#DC0F4B] '>
-                  <PdfTypeIcon className='w-4 text-content-white' />
+                <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-[#DC0F4B] '>
+                  <PdfTypeIcon className='w-4 text-grey-0' />
                 </div>
                 <div className='flex flex-col'>
-                  <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                  <p className='text-grey-0 text-sm leading-relaxed font-semibold'>
                     {media.original_file_name ?? media.id}
                   </p>
-                  <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>PDF</span>
+                  <span className='block text-grey-100/60 text-xs leading-relaxed font-normal'>PDF</span>
                 </div>
               </div>
             )}
@@ -146,7 +146,7 @@ export function FileMarkdownContent({
               <div className='flex flex-col gap-4'>
                 <div
                   className={classNames(
-                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer',
+                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer',
                     'hidden',
                   )}
                   onClick={() =>
@@ -156,18 +156,18 @@ export function FileMarkdownContent({
                     )
                   }
                 >
-                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-content-accent '>
-                    <MusicalNoteIcon className='w-4 text-content-white' />
+                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-primary '>
+                    <MusicalNoteIcon className='w-4 text-grey-0' />
                   </div>
                   <div className='flex flex-col'>
-                    <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                    <p className='text-grey-0 text-sm leading-relaxed font-semibold'>
                       {media.original_file_name ?? media.id}
                     </p>
-                    <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>aac</span>
+                    <span className='block text-grey-100/60 text-xs leading-relaxed font-normal'>aac</span>
                   </div>
                 </div>
                 <figure>
-                  <figcaption className='text-content-white mb-2'>Listen to : {media.original_file_name}</figcaption>
+                  <figcaption className='text-grey-0 mb-2'>Listen to : {media.original_file_name}</figcaption>
                   <audio className='w-full' controls src={`${ImagesBaseUrl}${media.file_name}`}></audio>
                 </figure>
               </div>
@@ -177,27 +177,27 @@ export function FileMarkdownContent({
               <div className='flex flex-col gap-3'>
                 <div
                   className={classNames(
-                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] mr-auto bg-content-grey-900 rounded-20 gap-3 flex-wrap cursor-pointer',
+                    'flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] mr-auto bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer',
                   )}
                   onClick={() =>
                     handleDownloadTextFile(media.original_file_name ?? '', `${ImagesBaseUrl}${media.file_name}`)
                   }
                 >
-                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-[10px] bg-content-accent '>
-                    <DocumentTextIcon className='w-4 text-content-white' />
+                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-primary '>
+                    <DocumentTextIcon className='w-4 text-grey-0' />
                   </div>
                   <div className='flex flex-col'>
-                    <p className='text-content-white text-sm leading-relaxed font-poppins-semibold'>
+                    <p className='text-grey-0 text-sm leading-relaxed font-semibold'>
                       {media.original_file_name ?? media.id}
                     </p>
-                    <span className='block text-content-grey-100/60 text-xs leading-relaxed font-normal'>txt</span>
+                    <span className='block text-grey-100/60 text-xs leading-relaxed font-normal'>txt</span>
                   </div>
                 </div>
                 {textFileContent.length > 0 &&
                   textFileContent.map((file) => {
                     if (file.file_name !== media.file_name) return null;
                     return (
-                      <div key={`media-text-file-${file.file_name}`} className='flex flex-col text-content-white'>
+                      <div key={`media-text-file-${file.file_name}`} className='flex flex-col text-grey-0'>
                         {textFileContent &&
                           file.content.map((text) => (
                             <pre key={nanoid(6)} className='whitespace-pre-wrap leading-tight mb-1'>{`${text}`}</pre>

@@ -121,7 +121,7 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-12 text-center'>
@@ -135,13 +135,13 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                 leaveTo='opacity-0 scale-95'
               >
                 <Dialog.Panel
-                  className='w-full max-w-[720px] transform border border-content-primary flex flex-col bg-content-grey-100 px-10 py-10 gap-6 rounded-[20px]
+                  className='w-full max-w-[720px] transform border border-content-primary flex flex-col bg-grey-100 px-10 py-10 gap-6 rounded-xl
                      align-middle shadow-xl transition-all'
                 >
                   <div className='flex justify-between items-start mb-2'>
                     <Dialog.Title
                       as='h3'
-                      className='text-2xl font-semibold text-content-black font-poppins-semibold text-left'
+                      className='text-2xl font-semibold text-grey-900 text-left'
                     >
                       Hands-free mode
                     </Dialog.Title>
@@ -152,25 +152,25 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                   <div className='flex gap-7 items-center'>
                     <div
                       className={`w-12 h-12 rounded-full relative ${
-                        isListening && step === 1 ? 'animate-ring-3s ring-4 ring-content-accent/[0.11]' : ''
+                        isListening && step === 1 ? 'animate-ring-3s ring-4 ring-primary/[0.11]' : ''
                       }`}
                     >
                       {user?.photo_file_name?
                       <img
                         className={`rounded-full w-12 h-12 relative ${
-                          isListening && step === 1 ? 'ring-4 ring-content-accent/[0.15] animate-ring-5s' : ''
+                          isListening && step === 1 ? 'ring-4 ring-primary/[0.15] animate-ring-5s' : ''
                         }`}
                         src={`${ImagesBaseUrl}${user.photo_file_name}`}
                       />:
-                      <UserIcon className={`rounded-full w-12 h-12 relative text-content-grey-100 ${
-                        isListening && step === 1 ? 'ring-4 ring-content-accent/[0.15] animate-ring-5s' : ''
+                      <UserIcon className={`rounded-full w-12 h-12 relative text-grey-100 ${
+                        isListening && step === 1 ? 'ring-4 ring-primary/[0.15] animate-ring-5s' : ''
                       }`} />
 
                       }
                       <span
                         onClick={step === 1 ? (isListening ? stopListening : handleStartVoiceRecognition) : () => {}}
                         className={`${
-                          isListening && step === 1 ? 'bg-content-red-600' : 'bg-white'
+                          isListening && step === 1 ? 'bg-danger-500' : 'bg-grey-0'
                         } rounded-full w-5 h-5 flex items-center justify-center absolute bottom-0 right-0 ${
                           step === 1 ? 'cursor-pointer' : ''
                         }`}
@@ -178,11 +178,11 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                         <MicrophoneIcon
                           width={14}
                           height={14}
-                          className={isListening && step === 1 ? 'text-white' : 'text-content-black'}
+                          className={isListening && step === 1 ? 'text-grey-0' : 'text-grey-900'}
                         />
                       </span>
                     </div>
-                    <div className=' text-content-grey-600 flex items-center'>
+                    <div className=' text-grey-600 flex items-center'>
                       <p>{step === 1 ? (transcript ? transcript : 'Go a head. I’m listening...') : firstQuestion}</p>
                     </div>
                   </div>
@@ -190,25 +190,25 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                   {step > 1 && (
                     <div className='flex gap-7'>
                       <div
-                        className={`bg-content-black w-12 h-12 rounded-full relative flex items-center justify-center ${
-                          answerIsLoading ? 'animate-ring-3s ring-4 ring-content-accent/[0.11]' : ''
+                        className={`bg-grey-900 w-12 h-12 rounded-full relative flex items-center justify-center ${
+                          answerIsLoading ? 'animate-ring-3s ring-4 ring-primary/[0.11]' : ''
                         }`}
                       >
                         <LogoIcon width={28} height={28} color='#F5F5F5' />
 
                         <span
-                          className={`bg-white rounded-full w-5 h-5 flex items-center justify-center absolute bottom-0 right-0 ${
-                            answerIsLoading ? 'animate-ring-3s ring-4 ring-content-accent/[0.11]' : ''
+                          className={`bg-grey-0 rounded-full w-5 h-5 flex items-center justify-center absolute bottom-0 right-0 ${
+                            answerIsLoading ? 'animate-ring-3s ring-4 ring-primary/[0.11]' : ''
                           }`}
                         >
-                          <MicrophoneIcon width={14} height={14} className={'text-content-black'} />
+                          <MicrophoneIcon width={14} height={14} className={'text-grey-900'} />
                         </span>
                       </div>
-                      <div className=' flex items-center px-5 py-3 rounded-b-20 rounded-tr-20 bg-content-black my-auto'>
+                      <div className=' flex items-center px-5 py-3 rounded-b-xl rounded-tr-xl bg-grey-900 my-auto'>
                         {answerIsLoading ? (
                           <AnimateDots />
                         ) : (
-                          <p className='text-content-grey-100 text-left'>{GPTAnswer}</p>
+                          <p className='text-grey-100 text-left'>{GPTAnswer}</p>
                         )}
                       </div>
                     </div>
@@ -217,19 +217,19 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                     <div className='flex gap-7 items-center mb-6'>
                       <div
                         className={`w-12 h-12 rounded-full relative ${
-                          isListening && step === 3 ? 'animate-ring-3s ring-4 ring-content-accent/[0.11]' : ''
+                          isListening && step === 3 ? 'animate-ring-3s ring-4 ring-primary/[0.11]' : ''
                         }`}
                       >
                         <img
                           className={`rounded-full w-12 h-12 relative ${
-                            isListening && step === 3 ? 'ring-4 ring-content-accent/[0.15] animate-ring-5s' : ''
+                            isListening && step === 3 ? 'ring-4 ring-primary/[0.15] animate-ring-5s' : ''
                           }`}
                           src={`${ImagesBaseUrl}${user?.photo_file_name}`}
                         />
                         <span
                           onClick={step === 3 ? (isListening ? stopListening : handleStartVoiceRecognition) : () => {}}
                           className={`${
-                            isListening && step === 3 ? 'bg-content-red-600' : 'bg-white'
+                            isListening && step === 3 ? 'bg-danger-500' : 'bg-grey-0'
                           } rounded-full w-5 h-5 flex items-center justify-center absolute bottom-0 right-0 ${
                             step === 3 ? 'cursor-pointer' : ''
                           }`}
@@ -237,11 +237,11 @@ export const VoiceChatModal = ({open, onClose}: ModalProps) => {
                           <MicrophoneIcon
                             width={14}
                             height={14}
-                            className={isListening && step === 3 ? 'text-white' : 'text-content-black'}
+                            className={isListening && step === 3 ? 'text-grey-0' : 'text-grey-900'}
                           />
                         </span>
                       </div>
-                      <div className=' text-content-grey-600 flex items-center'>
+                      <div className=' text-grey-600 flex items-center'>
                         <p>{transcript ? transcript : 'Go a head. I’m listening...'}</p>
                       </div>
                     </div>

@@ -123,7 +123,7 @@ const SpecificationSection = ({
               {definitionTitleOnEditMode === clearWhitespaces(elem.title) ? (
                 <div className='flex items-center relative max-w-fit'>
                   <input
-                    className='text-xs text-content-black pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
+                    className='text-xs text-content-grey-900 pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
                     value={editKeywordsTitle}
                     name='definitionsTitle'
                     // defaultValue={editKeywordsTitle}
@@ -132,16 +132,16 @@ const SpecificationSection = ({
                   />
                   <span className='block absolute w-[1px] h-4 bg-content-grey-400 right-8' />
                   <IconButton className='!p-0 absolute right-2' onClick={clearKeywordTitleToEditMode}>
-                    <XMarkIcon className='w-4 h-4 text-content-black' />
+                    <XMarkIcon className='w-4 h-4 text-content-grey-900' />
                   </IconButton>
                 </div>
               ) : (
                 <div className='flex gap-2 items-center'>
-                  <h3 className='font-semibold text-xs leading-5 text-content-black'>{`${elemIndex + 1}. ${
+                  <h3 className='font-semibold text-xs leading-5 text-content-grey-900'>{`${elemIndex + 1}. ${
                     elem.title
                   }`}</h3>
                   <IconButton className='!p-0' onClick={() => addKeywordTitleToEditMode(elem.title)}>
-                    <PencilSquareIcon className='w-4 h-4 text-content-black' />
+                    <PencilSquareIcon className='w-4 h-4 text-content-grey-900' />
                   </IconButton>
                 </div>
               )}
@@ -154,7 +154,7 @@ const SpecificationSection = ({
                         {clearWhitespaces(definition) === openEditKeywordvalue ? (
                           <div className='flex items-center relative max-w-fit' key={clearWhitespaces(definition)}>
                             <input
-                              className='text-xs text-content-black pl-2 pr-8 py-1.5 border-r outline-content-accent rounded-4 bg-content-grey-100'
+                              className='text-xs text-content-grey-900 pl-2 pr-8 py-1.5 border-r outline-content-accent rounded-4 bg-content-grey-100'
                               value={editKeywordsValue}
                               name='definitionsTitle'
                               // defaultValue={editKeywordsTitle}
@@ -166,7 +166,7 @@ const SpecificationSection = ({
                             />
                             <span className='block absolute w-[1px] h-4 bg-content-grey-400 right-8' />
                             <IconButton className='!p-0 absolute right-2' onClick={handleCloseEditKeywordValue}>
-                              <XMarkIcon className='w-4 h-4 text-content-black' />
+                              <XMarkIcon className='w-4 h-4 text-content-grey-900' />
                             </IconButton>
                           </div>
                         ) : (
@@ -174,7 +174,7 @@ const SpecificationSection = ({
                             className='flex items-center px-2 py-1.5 gap-2 bg-content-grey-100 rounded-4'
                             key={clearWhitespaces(definition)}
                           >
-                            <span className='text-xs leading-5 text-content-black'>{definition}</span>
+                            <span className='text-xs leading-5 text-content-grey-900'>{definition}</span>
                             <IconButton className='!p-0' onClick={() => handleOpenEditKeywordValue(definition)}>
                               <PencilSquareIcon className='w-4 h-4 text-content-grey-600' />
                             </IconButton>
@@ -202,7 +202,7 @@ const SpecificationSection = ({
                         {clearWhitespaces(definition) === openEditKeywordvalue ? (
                           <div className='flex items-center relative max-w-fit' key={clearWhitespaces(definition)}>
                             <input
-                              className='text-xs text-content-black pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
+                              className='text-xs text-content-grey-900 pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
                               value={editKeywordsValue}
                               name='definitionsTitle'
                               // defaultValue={editKeywordsTitle}
@@ -214,7 +214,7 @@ const SpecificationSection = ({
                             />
                             <span className='block absolute w-[1px] h-4 bg-content-grey-400 right-8' />
                             <IconButton className='!p-0 absolute right-2' onClick={handleCloseEditKeywordValue}>
-                              <XMarkIcon className='w-4 h-4 text-content-black' />
+                              <XMarkIcon className='w-4 h-4 text-content-grey-900' />
                             </IconButton>
                           </div>
                         ) : (
@@ -222,7 +222,7 @@ const SpecificationSection = ({
                             className='flex items-center px-2 py-1 gap-2 bg-content-grey-100 rounded-4'
                             key={clearWhitespaces(definition)}
                           >
-                            <span className='text-xs leading-5 text-content-black'>{definition}</span>
+                            <span className='text-xs leading-5 text-content-grey-900'>{definition}</span>
                             <IconButton className='!p-0' onClick={() => handleOpenEditKeywordValue(definition)}>
                               <PencilSquareIcon className='w-4 h-4 text-content-grey-600' />
                             </IconButton>

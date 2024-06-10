@@ -78,7 +78,7 @@ export const AddParameterModal = ({open, onClose, parameter, onSubmitParameter}:
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -91,9 +91,9 @@ export const AddParameterModal = ({open, onClose, parameter, onSubmitParameter}:
                 leaveFrom='opacity-100 scale-100'
                 leaveTo='opacity-0 scale-95'
               >
-                <Dialog.Panel className='w-full max-w-[460px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
+                <Dialog.Panel className='w-full max-w-[460px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-center relative'>
-                    <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
+                    <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
                       {parameterIsExists ? 'Change parameter' : 'Add a new parameter'}
                     </Dialog.Title>
                     <IconButton onClick={closeDialog} type='button'>
@@ -114,9 +114,9 @@ export const AddParameterModal = ({open, onClose, parameter, onSubmitParameter}:
                     />
                     {/* <Listbox value={selectedOption} onChange={setSelectedOption}>
                       <div className='relative mt-1'>
-                        <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
+                        <Listbox.Button className='relative w-full cursor-default rounded-5xl bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary'>
                           <div className='flex gap-1 items-center'>
-                            <span className='text-base text-content-grey-900'>{selectedOption.label}</span>
+                            <span className='text-base text-grey-800'>{selectedOption.label}</span>
                           </div>
                           <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                             <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -128,13 +128,13 @@ export const AddParameterModal = ({open, onClose, parameter, onSubmitParameter}:
                           leaveFrom='opacity-100'
                           leaveTo='opacity-0'
                         >
-                          <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-content-primary'>
+                          <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-xs bg-grey-0 py-1 text-content-primary'>
                             {VALUEOPTIONS.map((option, tabIdx) => (
                               <Listbox.Option
                                 value={tabIdx}
                                 className={({active}) =>
                                   `relative select-none py-2 pl-10 pr-4 ${
-                                    active ? 'bg-content-grey-100' : 'text-gray-900'
+                                    active ? 'bg-grey-100' : 'text-gray-900'
                                   }`
                                 }
                                 value={option}

@@ -143,22 +143,22 @@ export const SettingsMenu = () => {
 
   return (
     <div className='flex flex-col pl-3'>
-      <h1 className='text-32 font-semibold font-poppins-semibold'>Settings</h1>
-      <div className='w-[240px] mt-9 px-6 py-4 gap-3 bg-content-white flex flex-col rounded-[20px]'>
+      <h1 className='text-32 font-semibold'>Settings</h1>
+      <div className='w-[240px] mt-9 px-6 py-4 gap-3 bg-grey-0 flex flex-col rounded-xl'>
         {SIDEBAR.map(
           (elem, index) =>
             (!elem.permission || user?.roles.includes(elem.permission || ROLE_ADMIN)) && (
               <Button
                 key={elem.id}
-                className='border border-transparent hover:border-black !pl-6 !justify-start !h-9 '
+                className='border border-transparent hover:border-grey-900 !pl-6 !justify-start !h-9 '
                 variant={menu === elem.tab_name || (menu === null && index === 0) ? 'secondary' : 'transparent'}
                 iconBefore={
                   <elem.icon
                     className={classNames(
                       'w-5 h-5',
                       menu === elem.tab_name || (menu === null && index === 0)
-                        ? 'text-content-white'
-                        : 'text-content-black',
+                        ? 'dark:text-grey-900 text-grey-0'
+                        : 'dark:text-grey-0 text-grey-900',
                     )}
                   />
                 }
@@ -167,7 +167,7 @@ export const SettingsMenu = () => {
               />
             ),
         )}
-        <span className='text-xxl font-semibold text-content-red-400'>
+        <span className='text-xxl font-semibold text-danger-300'>
           {versionIsLoading && !appVersion ? (
             <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-full h-8 '></div>
           ) : (

@@ -19,12 +19,12 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
   return (
     <div className='flex flex-col'>
       <h3
-        className='font-semibold text-xs leading-5 text-content-black mb-1.5'
+        className='font-semibold text-xs leading-5 text-content-grey-900 mb-1.5'
         onClick={() => console.log({result, text})}
       >
         {result.title}
       </h3>
-      {/* <p className='text-xs text-content-black mb-3.5'>{result.description}</p> */}
+      {/* <p className='text-xs text-content-grey-900 mb-3.5'>{result.description}</p> */}
       <TextAreaSection
         value={text}
         setValue={setText}
@@ -60,7 +60,7 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
                             </IconButton>
                           </div>
                           <div className='flex gap-2 items-start'>
-                            <div className='flex items-center justify-center w-8 h-8 bg-content-black mr-1 rounded-full'>
+                            <div className='flex items-center justify-center w-8 h-8 bg-content-grey-900 mr-1 rounded-full'>
                               <LogoIcon width={19} height={12} color='#F5F5F5' />
                             </div>
                             {question.status === 'answered' && (
@@ -73,13 +73,13 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
                             )}
                             {question.status === 'asking' && (
                               <div className='flex flex-col gap-4 flex-1'>
-                                <div className='flex items-center justify-center py-[11px] px-4 rounded-b-2xl rounded-tr-2xl bg-content-black w-16'>
+                                <div className='flex items-center justify-center py-[11px] px-4 rounded-b-2xl rounded-tr-2xl bg-content-grey-900 w-16'>
                                   <AnimateDots />
                                 </div>
 
                                 <div className='mx-auto'>
                                   <Button
-                                    className='bg-white h-9'
+                                    className='bg-content-grey-0 h-9'
                                     variant='transparent'
                                     size='small'
                                     iconBefore={<StopIcon className='w-4 h-4' />}
@@ -99,7 +99,7 @@ const FormulationRow = ({result, handleImproveWritingText, isLoading}: Props) =>
                         <div className='relative flex-1 flex items-center'>
                           <textarea
                             ref={inputRef}
-                            className={`text-sm w-full border py-[7px] pr-[96px] pl-5 rounded-3xl resize-none outline-none focus:border-content-black custom-scrollbar-thumb`}
+                            className={`text-sm w-full border py-[7px] pr-[96px] pl-5 rounded-3xl resize-none outline-none focus:border-content-grey-900 custom-scrollbar-thumb`}
                             placeholder='Ask anything'
                             onInput={(e) => onInput(e.currentTarget.value)}
                             value={userInput}

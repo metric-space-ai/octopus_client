@@ -38,7 +38,7 @@ export const AlertModal = ({
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -51,7 +51,7 @@ export const AlertModal = ({
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-xl transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-xl transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-4 h-4 text-content-primary' />
                 </IconButton>
@@ -59,7 +59,7 @@ export const AlertModal = ({
                   {headTitle}
                 </Dialog.Title>
                 <p className='text-xl font-semibold'>{title}</p>
-                <p className='text-base font-medium text-content-grey-600'>{description}</p>
+                <p className='text-base font-medium text-grey-600'>{description}</p>
                 <form className='flex mt-2 gap-2'>
                   <Button
                     type='button'

@@ -18,17 +18,17 @@ const CustomCheckbox = ({active, onChange, title, description, disabled = false,
       <span className='sr-only'>Use setting</span>
       <div
         className={classNames(
-          `relative inline-flex h-4 w-4 cursor-pointer rounded-4 border-[1.25px] border-content-black
-        transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`,
+          `relative inline-flex h-4 w-4 cursor-pointer rounded-2xs border-[1.25px] border-grey-900
+        transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-grey-0 focus-visible:ring-opacity-75`,
         )}
       >
-        {active && <CheckIcon width={14} height={14} className='text-content-accent stroke-4 m-auto' />}
+        {active && <CheckIcon width={14} height={14} className='text-primary stroke-4 m-auto' />}
       </div>
       {(title || description) && (
         <div className={classNames('ml-3 flex items-center text-left flex-1', bodyClassName)}>
-          {title && <p className='font-poppins-medium font-medium text-sm text-content-black'>{title}</p>}
+          {title && <p className='font-medium text-sm text-grey-900'>{title}</p>}
           {description && (
-            <span className='font-poppins-medium font-medium text-xs text-content-grey-600 ml-2'>{description}</span>
+            <span className='font-medium text-xs text-grey-600 ml-2'>{description}</span>
           )}
         </div>
       )}

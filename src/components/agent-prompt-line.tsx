@@ -51,7 +51,7 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
     <>
       <div className='flex gap-3 w-full text-left relative'>
         <div>
-          <div className='relative w-9 h-9 flex items-center justify-center bg-content-black rounded-full'>
+          <div className='relative w-9 h-9 flex items-center justify-center bg-grey-900 rounded-full'>
             <LogoIcon width={22} height={20} color='#F5F5F5' />
 
             <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
@@ -64,7 +64,7 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
           </div>
         </div>
 
-        <div className='flex-1 py-4 px-5 bg-content-black rounded-[20px] rounded-tl-none'>
+        <div className='flex-1 py-4 px-5 bg-grey-900 rounded-xl rounded-tl-none'>
           {/* {loading ? (
             <AnimateDots />
           ) : !isSensitive ? (
@@ -93,9 +93,9 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
           */}
           {showTextField && (
             <div className='flex items-center '>
-              <span className='text-content-grey-400'>{'> '}</span>
+              <span className='text-grey-400'>{'> '}</span>
               <Input
-                className='!text-white [&_>*]:!bg-transparent [&_>*]:!pl-1 [&_input]:!bg-transparent [&_input]:!placeholder-content-grey-400 [&_input]:!text-content-white px-0 w-full !py-0 mr-9'
+                className='!text-grey-0 [&_>*]:!bg-transparent [&_>*]:!pl-1 [&_input]:!bg-transparent [&_input]:!placeholder-grey-400 [&_input]:!text-grey-0 px-0 w-full !py-0 mr-9'
                 placeholder='Entering new AgentExecutor chain.'
               />
             </div>
@@ -103,14 +103,14 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
           <MarkdownContent content={desc} />
           {showTextField ? (
             <IconButton
-              className=' !bg-content-white absolute top-5 right-5'
+              className=' !bg-grey-0 absolute top-5 right-5'
               onClick={() => setShowTextField(!showTextField)}
             >
-              <XMarkIcon className='w-5 h-5 text-content-black' width={20} height={20} />
+              <XMarkIcon className='w-5 h-5 text-grey-900' width={20} height={20} />
             </IconButton>
           ) : (
-            <IconButton className=' ml-auto !bg-content-grey-900 ' onClick={() => setShowTextField(!showTextField)}>
-              <CommandLineIcon className='w-5 h-5 text-content-white' />
+            <IconButton className=' ml-auto !bg-grey-800 ' onClick={() => setShowTextField(!showTextField)}>
+              <CommandLineIcon className='w-5 h-5 text-grey-0' />
             </IconButton>
           )}
 
@@ -126,19 +126,19 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
                   desc.length > 0 ? null : handleOriginalOne();
                 }}
               >
-                <p className='text-content-grey-400'>View original</p>
+                <p className='text-grey-400'>View original</p>
               </div>
             )}
             <IconButton className='!p-0' onClick={() => setShowTranslatorModal(true)}>
-              <LanguageIcon className='w-5 h-5 text-content-grey-400' />
+              <LanguageIcon className='w-5 h-5 text-grey-400' />
             </IconButton>
-            <div className='w-[1px] h-5 bg-content-grey-600' />
+            <div className='w-[1px] h-5 bg-grey-600' />
             <IconButton className='!p-0'>
-              <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
+              <SpeakerWaveIcon className='w-5 h-5 text-grey-400' />
             </IconButton>
-            <div className='w-[1px] h-5 bg-content-grey-600' />
+            <div className='w-[1px] h-5 bg-grey-600' />
             <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
-              <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
+              <HandThumbDownIcon className='w-5 h-5 text-grey-400' />
             </IconButton>
           </div>
         </div>

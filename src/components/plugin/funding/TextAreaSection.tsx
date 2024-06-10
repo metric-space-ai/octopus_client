@@ -15,7 +15,7 @@ const TextAreaSection = ({setValue, value, className = '', textareaCustomClassNa
     <div className={classNames('flex relative items-center mb-5', className)}>
       <textarea
         className={classNames(
-          `w-full border py-2 px-4 pb-6 rounded-[18px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb bg-content-grey-100`,
+          `w-full border py-2 px-4 pb-6 rounded-[18px] resize-none outline-none focus:border-content-grey-900 custom-scrollbar-thumb bg-content-grey-100`,
           textareaCustomClassName,
         )}
         placeholder='Core-idea'

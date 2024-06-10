@@ -202,11 +202,11 @@ export const Consultant = ({}: IConsult) => {
 
   return (
     <>
-      <div className={`flex flex-col bg-white pt-4 pb-5 px-5 w-full h-full min-h-[600px] rounded-20 relative `}>
+      <div className={`flex flex-col bg-content-grey-0 pt-4 pb-5 px-5 w-full h-full min-h-[600px] rounded-20 relative `}>
         {/* <div className='flex justify-between mb-4'>
-          <h1 className='text-content-black font-semibold text-xl leading-7'>Law consultant</h1>
+          <h1 className='text-content-grey-900 font-semibold text-xl leading-7'>Law consultant</h1>
           <IconButton className='ml-auto !p-1'>
-            <XMarkIcon className='w-5 h-5 text-content-black' />
+            <XMarkIcon className='w-5 h-5 text-content-grey-900' />
           </IconButton>
         </div> */}
         {canNotHelp && response && step === QUESTION_STEPS.ANSWER && (
@@ -216,7 +216,7 @@ export const Consultant = ({}: IConsult) => {
                 <span className='text-content-accent-hover'>{`Unable to assist `}</span>
                 with this issue
               </h1>
-              <p className='text-sm leading-[22.5px] text-content-black font-poppins-medium max-w-[571px]'>
+              <p className='text-sm leading-[22.5px] text-content-grey-900 font-poppins-medium max-w-[571px]'>
                 {response.result}
               </p>
             </div>
@@ -236,7 +236,7 @@ export const Consultant = ({}: IConsult) => {
                   <h2 className='text-sm text-content-accent-hover font-semibold mb-1 '>Self-disclosure:</h2>
                   {step === QUESTION_STEPS.ASK || shouldUpdate.disclosure ? (
                     <label className='flex flex-col relative'>
-                      <span className='text-xs text-content-black font-poppins-regular mb-3'>
+                      <span className='text-xs text-content-grey-900 font-poppins-regular mb-3'>
                         Provide details of the problem you are experiencing in the chat ssss
                       </span>
                       <textarea
@@ -244,13 +244,13 @@ export const Consultant = ({}: IConsult) => {
                         maxLength={1000}
                         onInput={(e) => setDisclosure(e.currentTarget.value)}
                         value={disclosure}
-                        className='bg-content-grey-100 rounded-20 resize-none outline-none focus:border-content-black pt-2 pb-4 px-4'
+                        className='bg-content-grey-100 rounded-20 resize-none outline-none focus:border-content-grey-900 pt-2 pb-4 px-4'
                       />
                       <span className='text-content-grey-400 text-xs leading-5 absolute right-4 bottom-2'>{`${disclosure.length}/1000`}</span>
                     </label>
                   ) : (
                     <div className='flex justify-between gap-2'>
-                      <p className='text-xs leading-5 text-content-black'>{disclosure}</p>
+                      <p className='text-xs leading-5 text-content-grey-900'>{disclosure}</p>
                       {/* <IconButton className='shrink-0 h-5 !p-0' onClick={() => handleShowEditMode('disclosure')}>
                         <PencilSquareIcon className='w-5 h-5' />
                       </IconButton> */}
@@ -261,20 +261,20 @@ export const Consultant = ({}: IConsult) => {
                   <h2 className='text-sm text-content-accent-hover font-semibold mb-1 '>Core-questions:</h2>
                   {step === QUESTION_STEPS.ASK || shouldUpdate.question ? (
                     <label className='flex flex-col relative'>
-                      <span className='text-xs text-content-black font-poppins-regular mb-3'>
+                      <span className='text-xs text-content-grey-900 font-poppins-regular mb-3'>
                         Provide details on how I can help you?
                       </span>
                       <textarea
                         rows={6}
                         value={question}
                         onInput={(e) => setQuestion(e.currentTarget.value)}
-                        className='bg-content-grey-100 resize-none outline-none focus:border-content-black rounded-20 pt-2 pb-4 px-4'
+                        className='bg-content-grey-100 resize-none outline-none focus:border-content-grey-900 rounded-20 pt-2 pb-4 px-4'
                       />
                       <span className='text-content-grey-400 text-xs leading-5 absolute right-4 bottom-2'>{`${question.length}/1000`}</span>
                     </label>
                   ) : (
                     <div className='flex justify-between gap-2'>
-                      <p className='text-xs leading-5 text-content-black'>{question}</p>
+                      <p className='text-xs leading-5 text-content-grey-900'>{question}</p>
                       {/* <IconButton className='shrink-0 h-5 !p-0' onClick={() => handleShowEditMode('question')}>
                         <PencilSquareIcon className='w-5 h-5' />
                       </IconButton> */}
@@ -315,7 +315,7 @@ export const Consultant = ({}: IConsult) => {
             {step >= QUESTION_STEPS.FACTS && (
               <div
                 className={classNames(
-                  `flex flex-col flex-1 w-full max-w-md mx-auto md:mx-0 md:max-w-[260px] bg-content-grey-900 text-content-grey-100 px-4 py-3 rounded-20 custom-scrollbar-thumb`,
+                  `flex flex-col flex-1 w-full max-w-md mx-auto md:mx-0 md:max-w-[260px] bg-content-grey-800 text-content-grey-100 px-4 py-3 rounded-20 custom-scrollbar-thumb`,
                   {
                     'max-h-[282px]': step === QUESTION_STEPS.CONSULTATION,
                     'max-h-[430px]': step === QUESTION_STEPS.FACTS,
@@ -332,9 +332,9 @@ export const Consultant = ({}: IConsult) => {
           <div className=' bg-content-grey-100 rounded-20 relative py-4 px-5 mb-3 h-[170px] overflow-auto custom-scrollbar-thumb'>
             <div className='flex flex-col'>
               <h3 className='text-content-accent-hover text-sm font-semibold mb-2'>Initial consulting</h3>
-              <p className='text-content-black text-xs leading-5'>{response?.result}</p>
+              <p className='text-content-grey-900 text-xs leading-5'>{response?.result}</p>
             </div>
-            <span className='absolute w-full h-8 bottom-0 left-0 right-0 text-gradient-to-t from-content-white to-transparent ...' />
+            <span className='absolute w-full h-8 bottom-0 left-0 right-0 text-gradient-to-t from-content-grey-0 to-transparent ...' />
           </div>
         )}
         <div className='h-9'>
@@ -361,7 +361,7 @@ export const Consultant = ({}: IConsult) => {
                   disabled={checkUpdateButtonDisabled(shouldUpdate)}
                   onClick={handleUpdateInformation}
                   className='rounded-[40px] w-[220px] !h-9'
-                  iconBefore={<ArrowPathIcon className='w-5 h-5 text-white' />}
+                  iconBefore={<ArrowPathIcon className='w-5 h-5 text-content-grey-0' />}
                 />
               )} 
               
@@ -371,7 +371,7 @@ export const Consultant = ({}: IConsult) => {
                   disabled={checkUpdateButtonDisabled(shouldUpdate)}
                   // onClick={handleUpdateInformation}
                   className='rounded-[40px] w-[220px] !h-9 '
-                  iconBefore={<ArrowPathIcon className='w-5 h-5 text-white' />}
+                  iconBefore={<ArrowPathIcon className='w-5 h-5 text-content-grey-0' />}
                 />
               )} */}
             </>

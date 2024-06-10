@@ -22,7 +22,7 @@ export default function ChatLayout({children}: {children: React.ReactNode}) {
   }
 
   return (
-    <div className='py-4 px-3 h-screen flex bg-content-black gap-4'>
+    <div className='py-4 px-3 h-screen flex bg-grey-0 dark:bg-grey-900 gap-3'>
       {!hideSidebar && <SideBar className={classNames(hideSidebar && '!hidden')} />}
       <div className='flex flex-col w-full'>
         <Header />

@@ -195,8 +195,8 @@ const Research = (props: Props) => {
 
   return (
     <>
-      <div className='flex flex-col rounded-20 bg-content-white px-5 pb-5 pt-4 w-full flex-1'>
-        <h1 className='text-xl leading-7 font-semibold text-content-black mb-3'>Research application</h1>
+      <div className='flex flex-col rounded-20 bg-content-grey-0 px-5 pb-5 pt-4 w-full flex-1'>
+        <h1 className='text-xl leading-7 font-semibold text-content-grey-900 mb-3'>Research application</h1>
         <div className='flex flex-col'>
           <HeaderSection researchSteps={researchSteps} />
 
@@ -233,7 +233,7 @@ const Research = (props: Props) => {
             <div className='flex flex-col gap-7'>
               <div className='custom-scrollbar-thumb max-h-[402px] min-h-[243px] flex flex-col gap-4'>
                 <div className='flex gap-3 flex-col'>
-                  <h3 className='font-semibold text-xs leading-5 text-content-black '>
+                  <h3 className='font-semibold text-xs leading-5 text-content-grey-900 '>
                     Exemplary keywords for searches
                   </h3>
                   <div className='flex flex-wrap gap-2'>
@@ -269,7 +269,7 @@ const Research = (props: Props) => {
 
           {researchSteps === RESEARCHSTEPS.ResearchResults && (
             <div className='flex flex-col gap-5 overflow-hidden'>
-              <div className='w-full px-0.5 rounded-2xl bg-white custom-scrollbar-thumb max-h-[435px]'>
+              <div className='w-full px-0.5 rounded-2xl bg-content-grey-0 custom-scrollbar-thumb max-h-[435px]'>
                 <div className='flex flex-col min-w-[763px] max-w-[800px] '>
                   <div className='flex mb-2'>
                     <div className='w-36'>

@@ -8,7 +8,7 @@ function ClockLoadingIcon({className, ...props}: React.ComponentProps<'svg'>) {
       height='20'
       viewBox='0 0 20 20'
       fill='none'
-      className={classNames('text-content-grey-400', className)}
+      className={classNames('text-grey-400', className)}
       {...props}
     >
       <path

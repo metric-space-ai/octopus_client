@@ -393,7 +393,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -408,8 +408,8 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
               >
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
-                transform border border-content-primary bg-content-grey-100 custom-scrollbar-thumb
-                 pb-6 pt-7 px-8 md:pb-7 md:pt-9 md:px-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
+                transform border border-content-primary bg-grey-100 custom-scrollbar-thumb
+                 pb-6 pt-7 px-8 md:pb-7 md:pt-9 md:px-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <UploadPluginModalHeaderSection
                     ADDPLUGINSTEPS={ADDPLUGINSTEPS}
@@ -446,7 +446,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                   onClick={() => setUpdateWithTextEditor(false)}
                                   variant='primary'
                                 >
-                                  <DocumentIcon className='w-6 h-6 text-content-white' />
+                                  <DocumentIcon className='w-6 h-6 text-grey-0' />
                                 </IconButton>
 
                                 <CustomCheckbox
@@ -457,25 +457,18 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                 {/* <Button type='button' variant='primary' title='switch to uploader' /> */}
                               </div>
                               <div className='flex flex-wrap gap-6'>
-                                {/* <div
-                                  className='flex items-center text-sm bg-content-grey-900/60 text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-1 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
-                                  onClick={handleDownloadOriginalFunctionBody}
-                                >
-                                  <ArrowDownTrayIcon className='w-6 h-6 p-1 bg-content-grey-900/80 rounded-lg text-white' />
-                                  original function body
-                                </div> */}
                                 <div
-                                  className='flex items-center text-sm bg-content-accent hover:accent-content-accent-hover text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-2 rounded-3xl transition-all duration-150 gap-2 cursor-pointer'
+                                  className='flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
                                   onClick={handleDownloadOriginalFunctionBody}
                                 >
-                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-white' />
+                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-grey-0' />
                                   original function body
                                 </div>
                                 <div
-                                  className='flex items-center text-sm bg-content-accent hover:accent-content-accent-hover text-content-white shadow-sm hover:shadow-lg shadow-content-accent/50 px-3 py-2 rounded-3xl transition-all duration-150 gap-2 cursor-pointer'
+                                  className='flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
                                   onClick={handleDownloadProcessedFunctionBody}
                                 >
-                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-white' />
+                                  <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-grey-0' />
                                   processed function body
                                 </div>
                               </div>
@@ -491,21 +484,21 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                             <div
                               onDrop={(e) => handleDropFiles(e)}
                               onDragOver={handleDragFiles}
-                              className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-white border-2 border-content-accent border-dashed rounded-20 '
+                              className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-grey-0 border-2 border-primary border-dashed rounded-xl '
                             >
                               <IconButton
-                                className='top-4 right-4 block mx-auto bg-content-accent-light-15 mb-5'
+                                className='top-4 right-4 block mx-auto primary-soft/15 mb-5'
                                 onClick={(e) => {
                                   e.preventDefault();
                                   inputFileRef.current?.click();
                                 }}
                               >
-                                <ArrowUpTrayIcon className='text-content-accent-hover' width={20} height={20} />
+                                <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                               </IconButton>
-                              <h6 className='font-poppins-semibold text-sm text-content-grey-900 mb-3'>
+                              <h6 className='font-semibold text-sm text-grey-800 mb-3'>
                                 Drag & drop file to upload
                               </h6>
-                              <p className='text-xs text-content-grey-600 '>Files in .py file format only</p>
+                              <p className='text-xs text-grey-600 '>Files in .py file format only</p>
                               <input
                                 type='file'
                                 className='hidden'
@@ -515,32 +508,32 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                               />
                             </div>
                             {fileIsSelected && !!file ? (
-                              <div className='flex flex-wrap py-3 px-8 bg-content-white rounded-20 w-full items-center justify-between relative'>
+                              <div className='flex flex-wrap py-3 px-8 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
                                 <div className='flex gap-4 items-center max-w-full'>
                                   <div className='flex w-56 pr-2 items-center'>
                                     {fileUploaded ? (
-                                      <CheckIcon width={24} height={24} className='text-content-grey-600' />
+                                      <CheckIcon width={24} height={24} className='text-grey-600' />
                                     ) : (
-                                      <ClipboardDocumentIcon width={24} height={24} className='text-content-grey-600' />
+                                      <ClipboardDocumentIcon width={24} height={24} className='text-grey-600' />
                                     )}
-                                    <p className='font-semibold text-xs text-content-black ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
+                                    <p className='font-semibold text-xs text-grey-900 ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
                                       {file.name}
                                     </p>
                                   </div>
-                                  <span className='text-xs text-content-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
+                                  <span className='text-xs text-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
                                     {bytesCalculator(file.size)}
                                   </span>
                                 </div>
                                 <div className='flex justify-end items-center gap-6'>
                                   {(uploadStarted || fileUploaded) && (
                                     <div className='flex items-center gap-2 max-w-full'>
-                                      <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[170px] '>
+                                      <div className='h-1.5 bg-grey-100 dark:bg-neutral-600 w-[170px] '>
                                         <div
-                                          className='h-1.5 bg-content-accent transition-all'
+                                          className='h-1.5 bg-primary transition-all'
                                           style={{width: `${uploadPercentage}%`}}
                                         ></div>
                                       </div>
-                                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                      <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                                         {`${uploadPercentage} %`}
                                       </span>
                                     </div>
@@ -558,7 +551,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                                     onClick={() => setUpdateWithTextEditor(true)}
                                     variant='primary'
                                   >
-                                    <CodeBracketIcon className='w-6 h-6 text-content-white' />
+                                    <CodeBracketIcon className='w-6 h-6 text-grey-0' />
                                   </IconButton>
 
                                   <CustomCheckbox
@@ -602,12 +595,12 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                     {selectedPlugin && selectedPlugin.status === PLUGINSTATUS.Error && (
                       <div className='flex flex-col flex-auto'>
                         <div className='w-full pt-24 px-7'>
-                          <div className='flex flex-col items-center justify-center w-full max-h-96 bg-white rounded-20 p-5'>
-                            <ExclamationTriangleIcon className='text-red-500 mb-8' width={36} height={36} />
-                            <h1 className='font-poppins-semibold text-center text-xxl mb-6 text-content-red-600'>
+                          <div className='flex flex-col items-center justify-center w-full max-h-96 bg-grey-0 rounded-xl p-5'>
+                            <ExclamationTriangleIcon className='text-danger mb-8' width={36} height={36} />
+                            <h1 className='font-semibold text-center text-xxl mb-6 text-danger-500'>
                               The system has detected an error
                             </h1>
-                            <h2 className='font-poppins-semibold text-center text-xl mb-6 text-content-red-400'>
+                            <h2 className='font-semibold text-center text-xl mb-6 text-danger-300'>
                               {`Error: ${selectedPlugin.parser_feedback}`}
                             </h2>
                           </div>

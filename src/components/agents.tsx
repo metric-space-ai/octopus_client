@@ -74,7 +74,7 @@ export function Agents({className, expanded, setExpanded}: Props) {
     <>
       <div
         className={classNames(
-          'hidden sm:flex flex-col px-4 py-6 bg-white border-box rounded-r-[20px] shadow-agent-sidebar ',
+          'hidden sm:flex flex-col px-4 py-6 bg-grey-0 border-box rounded-r-xl shadow-agent-sidebar ',
           className,
         )}
         style={{width: expanded ? '282px' : '68px', minWidth: expanded ? '282px' : '68px'}}
@@ -85,9 +85,9 @@ export function Agents({className, expanded, setExpanded}: Props) {
           </IconButton>
           {expanded && (
             <>
-              <h2 className='text-lg font-poppins-semibold text-content-black ml-3 '>Agents</h2>
+              <h2 className='text-lg font-semibold text-grey-900 ml-3 '>Agents</h2>
               <IconButton variant='primary' className='ml-auto' onClick={() => setAddAgentModal(true)}>
-                <PlusIcon className='w-5 h-5 text-white' />
+                <PlusIcon className='w-5 h-5 text-grey-0' />
               </IconButton>
             </>
           )}
@@ -109,7 +109,7 @@ export function Agents({className, expanded, setExpanded}: Props) {
         {!expanded && (
           <div className='mt-auto flex items-center'>
             <IconButton variant='primary' onClick={() => setAddAgentModal(true)}>
-              <PlusIcon className='w-5 h-5 text-white' />
+              <PlusIcon className='w-5 h-5 text-grey-0' />
             </IconButton>
           </div>
         )}

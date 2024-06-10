@@ -77,7 +77,7 @@ export const DropdownTranslateChat = ({
       <Combobox value={selected} onChange={setSelected}>
         <div className='relative mt-1'>
           {!open ? (
-            <div className='relative w-full cursor-default overflow-hidden rounded-20 bg-white text-left shadow-md sm:text-sm'>
+            <div className='relative w-full cursor-default overflow-hidden rounded-xl bg-grey-0 text-left shadow-md sm:text-sm'>
               <Combobox.Input
                 className='w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none'
                 displayValue={(lang: any) => lang.name}
@@ -93,7 +93,7 @@ export const DropdownTranslateChat = ({
           ) : null}
           <Transition as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
             <Combobox.Options
-              className='relative mt-1 max-h-60 w-full overflow-auto rounded-20 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
+              className='relative mt-1 max-h-60 w-full overflow-auto rounded-xl bg-grey-0 py-1 text-base shadow-lg ring-1 ring-grey-900 ring-opacity-5 focus:outline-none sm:text-sm'
               onClick={() => setOpen(false)}
             >
               <div>
@@ -105,7 +105,7 @@ export const DropdownTranslateChat = ({
                       key={person.id}
                       className={({active}) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-purple-600 text-white' : 'text-gray-900'
+                          active ? 'bg-purple-600 text-grey-0' : 'text-gray-900'
                         }`
                       }
                       value={person}
@@ -118,7 +118,7 @@ export const DropdownTranslateChat = ({
                           {selected ? (
                             <span
                               className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-purple-600'
+                                active ? 'text-grey-0' : 'text-purple-600'
                               }`}
                             >
                               <CheckIcon className='h-5 w-5' aria-hidden='true' />
@@ -136,7 +136,7 @@ export const DropdownTranslateChat = ({
       </Combobox>
       <div className='flex justify-center space-x-2 mt-6'>
         <p
-          className={`bg-white text-black border border-black flex justify-center items-center w-36 rounded-full ${
+          className={`bg-grey-0 text-grey-900 border border-grey-900 flex justify-center items-center w-36 rounded-full ${
             loading ? 'cursor-not-allowed hover:bg-slate-100' : 'cursor-pointer'
           }`}
           onClick={() => {

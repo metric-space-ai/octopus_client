@@ -80,18 +80,18 @@ const ServiceFunctions = ({ai_functions, serviceId}: Props) => {
           <div className='flex gap-6'>
             <Popover className={'relative flex items-center'}>
               <Popover.Button>
-                <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-black cursor-pointer transition-colors duration-150' />
+                <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-900 cursor-pointer transition-colors duration-150' />
               </Popover.Button>
               <Popover.Panel
                 className={
-                  'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-80 max-w-[80vw] -right-8 top-3 z-10'
+                  'bg-grey-800 py-3 px-8 absolute shadow-md shadow-grey-900 rounded-xl w-80 max-w-[80vw] -right-8 top-3 z-10'
                 }
               >
-                <p className='text-content-white text-sm font-poppins-light'>{func.generated_description}</p>
+                <p className='text-grey-0 text-sm font-light'>{func.generated_description}</p>
               </Popover.Panel>
             </Popover>
             <IconButton
-              className='top-4 right-4 mr-5 bg-content-red-600/20 hover:bg-content-red-600/40'
+              className='top-4 right-4 mr-5 bg-danger-500/20 hover:bg-danger-500/40'
               onClick={() => handleDeleteServiceAiFunction(func)}
             >
               {deleteFunctionsIsLoading && deleteIsLoading ? (

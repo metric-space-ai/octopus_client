@@ -133,7 +133,7 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -148,13 +148,13 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
               >
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
-                transform border border-content-primary bg-content-grey-100
-                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
+                transform border border-content-primary bg-grey-100
+                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <div className='flex justify-between items-start mb-16 relative'>
                     <Dialog.Title
                       as='h3'
-                      className='text-2xl font-semibold text-content-black font-poppins-semibold text-left absolute left-0 top 0'
+                      className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
                     >
                       Upload document
                     </Dialog.Title>
@@ -168,33 +168,33 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                       <div className=' flex flex-col '>
                         {fileIsSelected && !!file ? (
                           <>
-                            <div className='flex flex-wrap py-3 px-8 bg-content-white rounded-20 w-full items-center justify-between relative'>
+                            <div className='flex flex-wrap py-3 px-8 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
                               <div className='flex gap-4 items-center max-w-full'>
                                 <div className='flex w-56 pr-2 items-center'>
                                   {fileUploaded && (
-                                    <span className='w-6 h-6 rounded-full flex justify-center items-center mr-6 bg-content-accent-light-11'>
-                                      <CheckIcon width={16} height={16} className='text-content-grey-600' />
+                                    <span className='w-6 h-6 rounded-full flex justify-center items-center mr-6 bg-primary-400/10'>
+                                      <CheckIcon width={16} height={16} className='text-grey-600' />
                                     </span>
                                   )}
-                                  <ClipboardDocumentIcon width={24} height={24} className='text-content-grey-600' />
-                                  <p className='font-semibold text-xs text-content-black ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
+                                  <ClipboardDocumentIcon width={24} height={24} className='text-grey-600' />
+                                  <p className='font-semibold text-xs text-grey-900 ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
                                     {file.name}
                                   </p>
                                 </div>
-                                <span className='text-xs text-content-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
+                                <span className='text-xs text-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
                                   {bytesCalculator(file.size)}
                                 </span>
                               </div>
                               <div className='flex justify-end items-center gap-6'>
                                 {(uploadStarted || fileUploaded) && (
                                   <div className='flex items-center gap-2 max-w-full'>
-                                    <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[170px] '>
+                                    <div className='h-1.5 bg-grey-100 dark:bg-neutral-600 w-[170px] '>
                                       <div
-                                        className='h-1.5 bg-content-accent transition-all'
+                                        className='h-1.5 bg-primary transition-all'
                                         style={{width: `${uploadPercentage}%`}}
                                       ></div>
                                     </div>
-                                    <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                    <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                                       {`${uploadPercentage} %`}
                                     </span>
                                   </div>
@@ -209,19 +209,19 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                           <div
                             onDrop={(e) => handleDropFiles(e)}
                             onDragOver={handleDragFiles}
-                            className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-white border-2 border-content-accent
-                             border-dashed rounded-20'
+                            className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-grey-0 border-2 border-primary
+                             border-dashed rounded-xl'
                           >
                             <IconButton
-                              className='top-4 right-4 block mx-auto bg-content-accent-light-15 mb-5'
+                              className='top-4 right-4 block mx-auto primary-soft/15 mb-5'
                               onClick={(e) => {
                                 e.preventDefault();
                                 inputFileRef.current?.click();
                               }}
                             >
-                              <ArrowUpTrayIcon className='text-content-accent-hover' width={20} height={20} />
+                              <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                             </IconButton>
-                            <h6 className='font-poppins-semibold text-sm text-content-grey-900 mb-3'>
+                            <h6 className='font-semibold text-sm text-grey-800 mb-3'>
                               Drag & drop file to upload
                             </h6>
                             <input
@@ -240,18 +240,18 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                       <div className='flex flex-col lg:flex-row gap-8 justify-between'>
                         <div className='flex flex-col w-5/12'>
                           <div className='flex gap-3 mb-6'>
-                            <span className='w-11 h-11 rounded-full bg-content-accent-light-11 flex justify-center items-center'>
-                              <ClipboardDocumentIcon className='text-content-blue-dark' width={20} height={20} />
+                            <span className='w-11 h-11 rounded-full bg-primary-400/10 flex justify-center items-center'>
+                              <ClipboardDocumentIcon className='text-secondary-700' width={20} height={20} />
                             </span>
                             <div className='flex flex-col justify-evenly text-left'>
-                              <h5 className='font-poppins-semibold text-content-black text-sm'>{file.name}</h5>
-                              <p className='text-content-grey-600 font-normal text-xs leading-5'>
+                              <h5 className='font-semibold text-grey-900 text-sm'>{file.name}</h5>
+                              <p className='text-grey-600 font-normal text-xs leading-5'>
                                 {bytesCalculator(file.size)}
                               </p>
                             </div>
                           </div>
-                          <p className='text-content-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
-                            <CheckIcon className='inline-block w-5 h-5 text-content-green mr-1' />
+                          <p className='text-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
+                            <CheckIcon className='inline-block w-5 h-5 text-secondary mr-1' />
                             File Is Uploaded
                           </p>
                         </div>

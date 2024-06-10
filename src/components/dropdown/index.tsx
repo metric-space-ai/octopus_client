@@ -22,12 +22,12 @@ export default function Dropdown() {
       <Menu as='div' className='relative inline-block text-left'>
         <div>
           <Menu.Button
-            className='inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-content-black bg-opacity-50 hover:bg-opacity-80 
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'
+            className='inline-flex w-full justify-center rounded-xs px-4 py-2 text-sm font-medium text-grey-900 bg-opacity-50 hover:bg-opacity-80 
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-grey-0 focus-visible:ring-opacity-75'
           >
             Public user
             <ChevronDownIcon
-              className='ml-2 -mr-1 h-5 w-5 text-content-grey-600 hover:text-content-grey-900'
+              className='ml-2 -mr-1 h-5 w-5 text-grey-600 hover:text-grey-800'
               aria-hidden='true'
             />
           </Menu.Button>
@@ -41,7 +41,7 @@ export default function Dropdown() {
           leaveFrom='transform opacity-100 scale-100'
           leaveTo='transform opacity-0 scale-95'
         >
-          <Menu.Items className='absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+          <Menu.Items className='absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-xs bg-grey-0 shadow-lg ring-1 ring-grey-900 ring-opacity-5 focus:outline-none'>
             <div className='px-1 py-1'>
               {Permissions.map((elem) => (
                 <Menu.Item>
@@ -50,8 +50,8 @@ export default function Dropdown() {
                       onClick={(e) => handleChangeValue}
                       key={elem.id}
                       className={`${
-                        active ? 'bg-content-accent text-white' : 'text-content-grey-600'
-                      } group flex w-full items-center rounded-md px-2 py-2 text-xs leading-5`}
+                        active ? 'bg-primary text-grey-0' : 'text-grey-600'
+                      } group flex w-full items-center rounded-xs px-2 py-2 text-xs leading-5`}
                     >
                       {elem.label}
                     </button>

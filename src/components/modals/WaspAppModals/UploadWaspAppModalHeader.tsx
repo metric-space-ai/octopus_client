@@ -18,17 +18,17 @@ const UploadWaspAppModalHeader = ({currentStep, handleCloseModal}: Props) => {
     <div className='flex justify-between items-start mb-16 relative'>
       <Dialog.Title
         as='h3'
-        className='text-2xl font-semibold text-content-black font-poppins-semibold text-left absolute left-0 top 0'
+        className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
       >
         Upload Wasp
       </Dialog.Title>
       <div className='flex mx-auto'>
         <div className='flex text-xs items-center'>
           <div
-            className={`flex items-center justify-center rounded-20 px-4 mx-1 h-7 ${
+            className={`flex items-center justify-center rounded-xl px-4 mx-1 h-7 ${
               currentStep >= UPLOADWASPAPPSTEPS.SelectFile
-                ? 'bg-content-accent-light-11 text-content-accent-hover font-poppins-semibold'
-                : 'text-content-grey-600 bg-content-white font-poppins-light'
+                ? 'bg-primary-400/10 text-primary-medium font-semibold'
+                : 'text-grey-600 bg-grey-0 font-light'
             }`}
           >
             <span className='flex gap-1'>
@@ -42,12 +42,12 @@ const UploadWaspAppModalHeader = ({currentStep, handleCloseModal}: Props) => {
               )}
             </span>
           </div>
-          <span className='w-6 h-1px bg-content-accent-100' />
+          <span className='w-6 h-1px bg-primary-150' />
           <div
-            className={`flex items-center justify-center rounded-20 px-4 mx-1 h-7 ${
+            className={`flex items-center justify-center rounded-xl px-4 mx-1 h-7 ${
               currentStep >= UPLOADWASPAPPSTEPS.Upload
-                ? 'bg-content-accent-light-11 text-content-accent-hover font-poppins-semibold'
-                : 'text-content-grey-600 bg-content-white font-poppins-light'
+                ? 'bg-primary-400/10 text-primary-medium font-semibold'
+                : 'text-grey-600 bg-grey-0 font-light'
             }`}
           >
             <span className='flex gap-1'>

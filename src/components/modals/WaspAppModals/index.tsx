@@ -145,7 +145,7 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -160,8 +160,8 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
               >
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
-                transform border border-content-primary bg-content-grey-100
-                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
+                transform border border-content-primary bg-grey-100
+                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <UploadWaspAppModalHeader currentStep={currentStep} handleCloseModal={handleCloseDialog} />
                   <div className='flex flex-col flex-auto justify-between '>

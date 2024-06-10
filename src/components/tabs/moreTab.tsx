@@ -69,13 +69,13 @@ export const MoreTab = ({
     setValue('name', title ? title : '');
   }, [setValue]);
 
-  const classSelected = isFocused ? 'bg-content-white before:bg-content-white' : 'bg-content-grey-';
+  const classSelected = isFocused ? 'bg-grey-0 before:bg-grey-0' : 'bg-grey-';
 
   return (
     <div className='cursor-pointer mb-2' id={tabId} onClick={onClick}>
       <div
         className={classNames(
-          'relative h-9 flex items-center justify-start py-1 px-4 text-sm font-semibold text-content-black ',
+          'relative h-9 flex items-center justify-start py-1 px-4 text-sm font-semibold text-grey-900 ',
           classSelected,
         )}
       >
@@ -91,12 +91,12 @@ export const MoreTab = ({
               />
 
               <IconButton
-                className='absolute rounded-full top-0 right-1 bg-content-accent z-10 w-5 h-5 !p-0'
+                className='absolute rounded-full top-0 right-1 bg-primary z-10 w-5 h-5 !p-0'
                 variant='primary'
                 loading={loading}
                 onClick={handleSubmit(onSubmit)}
               >
-                <CheckIcon className='w-3 h-3 text-content-white' width={16} height={16} />
+                <CheckIcon className='w-3 h-3 text-grey-0' width={16} height={16} />
               </IconButton>
             </form>
           ) : (

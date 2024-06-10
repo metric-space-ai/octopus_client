@@ -40,7 +40,7 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
             language
           </p>
 
-          <div className={`relative w-full cursor-default bg-white pl-5 pr-12 ${open ? 'rounded-t-20' : 'rounded-20'}`}>
+          <div className={`relative w-full cursor-default bg-grey-0 pl-5 pr-12 ${open ? 'rounded-t-xl' : 'rounded-xl'}`}>
             <Combobox.Input
               className={`w-full border-none h-10 text-sm leading-5 text-left sm:text-sm text-gray-900 focus:outline-none bg-transparent`}
               displayValue={(lang: any) => lang?.name}
@@ -57,7 +57,7 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
           </Combobox.Button> */}
           </div>
           <Transition as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-            <Combobox.Options className='max-h-60 w-full overflow-auto rounded-b-2xl bg-white py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+            <Combobox.Options className='max-h-60 w-full overflow-auto rounded-b-lg bg-grey-0 py-1 text-base ring-1 ring-grey-900 ring-opacity-5 focus:outline-none sm:text-sm'>
               <div>
                 {filteredLanguages.length === 0 && query !== '' ? (
                   <div className='relative cursor-default select-none py-2 px-4 text-gray-700'>Nothing found.</div>
@@ -67,7 +67,7 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
                       key={lang.id}
                       className={({active}) =>
                         `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-purple-600 text-white' : 'text-gray-900'
+                          active ? 'bg-purple-600 text-grey-0' : 'text-gray-900'
                         }`
                       }
                       value={lang}
@@ -80,7 +80,7 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
                           {selected ? (
                             <span
                               className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-purple-600'
+                                active ? 'text-grey-0' : 'text-purple-600'
                               }`}
                             >
                               <CheckIcon className='h-5 w-5' aria-hidden='true' />

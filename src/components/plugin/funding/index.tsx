@@ -264,9 +264,9 @@ const Funding = (props: Props) => {
 
   return (
     <>
-      <div className='flex flex-col rounded-20 bg-content-white px-5 pb-5 pt-4 flex-1'>
+      <div className='flex flex-col rounded-20 bg-content-grey-0 px-5 pb-5 pt-4 flex-1'>
         <h1
-          className='text-xl leading-7 font-semibold text-content-black mb-4'
+          className='text-xl leading-7 font-semibold text-content-grey-900 mb-4'
           onClick={() => console.log({bulletPoints})}
         >
           Application for funding

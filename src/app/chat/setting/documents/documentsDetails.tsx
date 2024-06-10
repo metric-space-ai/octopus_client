@@ -45,17 +45,17 @@ export default function DocumentsDetail() {
   return (
     <>
       <div className='w-full'>
-        <div className='mx-auto w-full max-w-[560px] rounded-2xl bg-white'>
+        <div className='mx-auto w-full max-w-[560px] rounded-lg bg-grey-0'>
           <div className='flex mb-2'>
             <div className='w-80 pl-7'>
               <span
-                className='font-poppins-medium text-xs leading-5 text-content-grey-600'
+                className='font-medium text-xs leading-5 text-grey-600'
               >
                 original name
               </span>
             </div>
             <div className='w-28 flex justify-center ml-3'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>type</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>type</span>
             </div>
           </div>
 
@@ -63,65 +63,65 @@ export default function DocumentsDetail() {
             {/* {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2
-                  className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                  className='uppercase text-primary cursor-pointer text-center py-6 hover:underline'
                   onClick={() => getAllPlugins()}
                 >
                   try again
                 </h2>
               </div>
             )} */}
-            {/* <div className='flex justify-center py-3 items-center border-t border-content-grey-100'></div> */}
+            {/* <div className='flex justify-center py-3 items-center border-t'></div> */}
 
             {!documents || documents?.length === 0
               ? !isLoading && (
-                  <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                    <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                  <div className='flex justify-center py-3 items-center border-t'>
+                    <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
               : documents?.map((document, index) => (
-                  <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                  <div className='flex justify-start py-3 items-center border-t'>
                     <div className='flex gap-3 w-80 items-center'>
                       {getFileType(document) === 'html' && (
-                        <GlobeAltIcon className='w-4 h-4 text-content-accent-hover' />
+                        <GlobeAltIcon className='w-4 h-4 text-primary-medium' />
                       )}
                       {getFileType(document) === 'txt' && (
-                        <DocumentTextIcon className='w-4 h-4 text-content-accent-hover' />
+                        <DocumentTextIcon className='w-4 h-4 text-primary-medium' />
                       )}
                       {(getFileType(document) === 'png' || getFileType(document) === 'jpg' || getFileType(document) === 'jpeg') && (
-                        <PhotoIcon className='w-4 h-4 text-content-accent-hover' />
+                        <PhotoIcon className='w-4 h-4 text-primary-medium' />
                       )}
-                      {getFileType(document) === 'pdf' && <PdfTypeIcon className='w-4 h-4 text-content-accent-hover' />}
+                      {getFileType(document) === 'pdf' && <PdfTypeIcon className='w-4 h-4 text-primary-medium' />}
                       {getFileType(document)?.includes('mp4') && (
-                        <FilmIcon className='w-4 h-4 text-content-accent-hover' />
+                        <FilmIcon className='w-4 h-4 text-primary-medium' />
                       )}
                       {getFileType(document)?.includes('mp3') && (
-                        <MusicalNoteIcon className='w-4 h-4 text-content-accent-hover' />
+                        <MusicalNoteIcon className='w-4 h-4 text-primary-medium' />
                       )}
                       <p
-                        className='text-xs leading-5 text-content-black font-poppins-semibold truncate ...'
+                        className='text-xs leading-5 text-grey-900 font-semibold truncate ...'
                         title={document}
                       >
                         {document}
                       </p>
                     </div>
                     {/* <p
-                      className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium pl-2 truncate ...'
+                      className='text-xxs leading-4 w-28 text-grey-800 font-medium pl-2 truncate ...'
                       title={document}
                     >
                       {document}
                     </p> */}
                     <p
-                      className='flex justify-center items-center w-28 text-xs leading-5 text-content-grey-900 font-poppins-semibold ml-3 truncate ...'
+                      className='flex justify-center items-center w-28 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
                       title={getFileType(document) ?? ''}
                     >
                       {getFileType(document) ?? ''}
                     </p>
                     {/* 
                     <span
-                      className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                      className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                       onClick={() => handleOpenDeleteDocumentDialog(document)}
                     >
-                      <TrashIcon width={16} height={16} className='text-content-grey-900 cursor-pointer' />
+                      <TrashIcon width={16} height={16} className='text-grey-800 cursor-pointer' />
                     </span> */}
                   </div>
                 ))}

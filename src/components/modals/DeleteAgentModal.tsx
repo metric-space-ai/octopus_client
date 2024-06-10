@@ -30,7 +30,7 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -43,17 +43,17 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2'>
-                  <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
+                  <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
                     {`Delete "${tab?.name}" Agent`}
                   </Dialog.Title>
                   <IconButton className='ml-auto' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5text-content-primary' />
                   </IconButton>
                 </div>
-                <p className='text-xl font-semibold mt-5 text-content-black'>Are you sure?</p>
-                <p className='text-base font-regular text-content-grey-900'>
+                <p className='text-xl font-semibold mt-5 text-grey-900'>Are you sure?</p>
+                <p className='text-base font-regular text-grey-800'>
                   This action is irreversible and will permanently remove the tab and all its associated data.{' '}
                 </p>
                 <form className='flex mt-2 gap-2'>

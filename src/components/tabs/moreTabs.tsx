@@ -20,15 +20,15 @@ export const MoreTabs = ({tabs, itemsFrom, className, selectedId, children, onCh
       {({open}) => (
         <>
           <Menu.Button
-            className={`w-[220px] relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-[20px] text-sm font-semibold ${
-              open ? 'text-content-grey-900 bg-content-white' : 'bg-content-grey-900 text-content-white'
+            className={`w-[220px] relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-xl text-sm font-semibold ${
+              open ? 'text-grey-100 bg-grey-0' : 'bg-grey-50 text-grey-900'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             <span
               className={`bg-red rounded-full mr-2
-              text-content-accent-hover text-xxs leading-2.5 font-poppins-bold w-7 h-7 flex justify-center items-center
-              ${open ? 'bg-content-accent-light-11' : 'bg-content-white'} 
+              text-primary-medium text-xxs leading-2.5 font-bold w-7 h-7 flex justify-center items-center
+              ${open ? 'bg-primary-400/10' : 'bg-grey-0'} 
               `}
             >{`+${tabs.length - itemsFrom}`}</span>
             Tabs
@@ -43,7 +43,7 @@ export const MoreTabs = ({tabs, itemsFrom, className, selectedId, children, onCh
             leaveTo='transform opacity-0 scale-95'
           >
             <Menu.Items
-              className='absolute w-[257px] -left-1.5 origin-top-right divide-y divide-gray-100 rounded-md bg-content-grey-100 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+              className='absolute w-[257px] -left-1.5 origin-top-right divide-y divide-gray-100 rounded-xs bg-grey-50 shadow-lg border focus:outline-none'
               onClick={(e) => e.stopPropagation()}
             >
               <div className='px-2 pt-2 pb-1'>

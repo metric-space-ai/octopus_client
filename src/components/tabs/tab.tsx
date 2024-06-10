@@ -69,21 +69,28 @@ export const Tab = ({
     setValue('name', title ? title : '');
   }, [setValue]);
 
-  const classSelected = isFocused
-    ? 'bg-content-grey-100 text-black before:bg-content-grey-100'
-    : 'bg-content-grey-900 text-content-white';
+  const classSelected = isFocused ? 'bg-grey-100 before:bg-grey-100 dark:bg-grey-100' : 'bg-grey-50 dark:bg-grey-900';
   // const beforeClass = 'before:absolute before:bottom-0 before:w-[10px] before:h-[10px] before:-left-[10px]';
 
   return (
     <div className='cursor-pointer max-w-[220px] ' onClick={onClick}>
       <div
         className={classNames(
-          'relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-[20px] text-sm font-semibold',
+          'relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-xl text-sm font-semibold text-grey-900 dark:text-grey-0',
           // beforeClass,
           classSelected,
         )}
       >
-        {icon && <div className='mr-2'>{icon}</div>}
+        {icon && (
+          <div
+            className={classNames(
+              'mr-2 rounded-full',
+              tab?.type === 'Public' ? 'bg-secondary-700/15' : 'bg-primary/15',
+            )}
+          >
+            {icon}
+          </div>
+        )}
         <div className=' max-w-[156px]'>
           {editMode ? (
             <form className='flex flex-col' onSubmit={handleSubmit(onSubmit)}>

@@ -59,7 +59,7 @@ const TopicSection = ({topic, setTopic, setSpecifications, setResearchSteps}: Pr
         <textarea
           //   ref={inputRef}
           className={`w-full border py-2 px-4 pb-6 rounded-[18px] resize-none outline-none 
-                            focus:border-content-black custom-scrollbar-thumb bg-content-grey-100`}
+                            focus:border-content-grey-900 custom-scrollbar-thumb bg-content-grey-100`}
           placeholder='Topic Description'
           onInput={(e) => setTopic(e.currentTarget.value)}
           value={topic}

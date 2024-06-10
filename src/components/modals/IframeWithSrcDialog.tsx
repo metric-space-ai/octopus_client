@@ -33,7 +33,7 @@ export const IframeWithSrcDialog = ({open, onClose, src, bgColor, description = 
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex items-center justify-center p-4 text-center'>
@@ -52,7 +52,7 @@ export const IframeWithSrcDialog = ({open, onClose, src, bgColor, description = 
                     minWidth: 'calc(100vw - 60px)',
                     backgroundColor: bgColor,
                   }}
-                  className='w-full h-full relative transform border border-content-primary bg-content-grey-100 p-6 rounded-[20px] align-middle shadow-xl transition-all'
+                  className='w-full h-full relative transform border border-content-primary bg-grey-100 p-6 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <IconButton className='absolute top-4 right-4' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5 text-content-primary' />
@@ -60,18 +60,18 @@ export const IframeWithSrcDialog = ({open, onClose, src, bgColor, description = 
                   <div className='relative'>
                     {description && (
                       <ExclamationCircleIcon
-                        className='w-5 h-5 absolute -left-6 top-0 cursor-pointer text-content-grey-900 hover:text-content-accent'
+                        className='w-5 h-5 absolute -left-6 top-0 cursor-pointer text-grey-800 hover:text-primary'
                         onClick={handleToggleTooltip}
                       />
                     )}
                     <div
                       className={classNames(
-                        'shadow-[0px_10px_20px_0px] shadow-content-black/5 rounded-20 pl-5 pr-6 py-4 bg-content-white absolute -left-6 top-8',
+                        'shadow-[0px_10px_20px_0px] shadow-grey-900/5 rounded-xl pl-5 pr-6 py-4 bg-grey-0 absolute -left-6 top-8',
                         openTooltip && 'block',
                         !openTooltip && 'hidden',
                       )}
                     >
-                      <p className='text-content-black text-sm font-normal '>{description}</p>
+                      <p className='text-grey-900 text-sm font-normal '>{description}</p>
                     </div>
                     <iframe
                       style={{

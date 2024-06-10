@@ -57,16 +57,16 @@ const QuestionAndAnswerRow = ({isLoading, chat, questionNumber, doSubmit}: Props
     <>
       <div className='flex gap-1'>
         <span className='block min-w-[72px] text-content-grey-600 font-semibold'>{`Question ${questionNumber}`}</span>
-        <span className='block text-content-black'>{chat.question}</span>
+        <span className='block text-content-grey-900'>{chat.question}</span>
       </div>
       {chat.answer ? (
         <div className='flex gap-2'>
           <div className='flex gap-1'>
             <span className='block min-w-[72px] text-content-grey-600 font-semibold'>{`Answer ${questionNumber}`}</span>
-            <span className='block text-content-black'>{chat.answer}</span>
+            <span className='block text-content-grey-900'>{chat.answer}</span>
             {/* <IconButton className='shrink-0 h-4 !p-0'>
                 <PencilSquareIcon
-                  className='w-4 h-4 text-content-black'
+                  className='w-4 h-4 text-content-grey-900'
                   onClick={() => handleEnableEditModeFor(response)}
                 />
               </IconButton> */}
@@ -78,7 +78,7 @@ const QuestionAndAnswerRow = ({isLoading, chat, questionNumber, doSubmit}: Props
             <textarea
               ref={inputRef}
               className={`w-full border py-[7px] pr-[60px] pl-5 rounded-[40px] resize-none outline-none 
-                focus:border-content-black custom-scrollbar-thumb`}
+                focus:border-content-grey-900 custom-scrollbar-thumb`}
               placeholder='Provide an answer here...'
               onInput={(e) => setAnswerInput(e.currentTarget.value)}
               value={answerInput}

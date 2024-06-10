@@ -59,23 +59,23 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
         <div className='flex mb-2'>
           <div className='w-[150px]'>
             <span
-              className='font-poppins-medium text-xs leading-5 text-content-grey-600'
+              className='font-medium text-xs leading-5 text-grey-600'
               onClick={() => console.log({waspApps})}
             >
               Name
             </span>
           </div>
           <div className='w-28'>
-            <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Description</span>
+            <span className='font-medium text-xs leading-5 text-grey-600 '>Description</span>
           </div>
           <div className='w-28'>
-            <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Formatted name</span>
+            <span className='font-medium text-xs leading-5 text-grey-600 '>Formatted name</span>
           </div>
           <div className='w-32'>
-            <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Users</span>
+            <span className='font-medium text-xs leading-5 text-grey-600 '>Users</span>
           </div>
           <div className='w-20 flex justify-center'>
-            <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>On/Off</span>
+            <span className='font-medium text-xs leading-5 text-grey-600 '>On/Off</span>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
           {reloadWaspAppIsAvailable && (
             <div className='w-full'>
               <h2
-                className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                className='uppercase text-primary cursor-pointer text-center py-6 hover:underline'
                 onClick={() => getAllWaspApps()}
               >
                 try again
@@ -92,19 +92,19 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
           )}
           {!waspApps || waspApps.length === 0
             ? !isLoading && (
-                <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                  <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                <div className='flex justify-center py-3 items-center border-t'>
+                  <h2 className='text-lg text-primary uppercase'>not found</h2>
                 </div>
               )
             : waspApps.map((app, index) => (
                 <Disclosure key={app.id}>
                   {({open}) => (
                     <>
-                      <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                      <div className='flex justify-start py-3 items-center border-t'>
                         <div className='flex gap-3 w-[150px] items-center'>
                           <div className={`flex items-center flex-1`}>
                             <p
-                              className='text-xs leading-5 h-5 text-content-black font-poppins-semibold w-36 truncate ...'
+                              className='text-xs leading-5 h-5 text-grey-900 font-semibold w-36 truncate ...'
                               title={app.name}
                             >
                               {app.name}
@@ -114,7 +114,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
 
                         <div className='flex w-28 pr-1.5'>
                           <p
-                            className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'
+                            className='text-xxs  leading-4 h-4 text-grey-800 font-medium truncate ...'
                             title={app.description}
                           >
                             {app.description}
@@ -123,7 +123,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
 
                         <div className='flex w-28 pr-1.5'>
                           <p
-                            className='text-xxs  leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'
+                            className='text-xxs  leading-4 h-4 text-grey-800 font-medium truncate ...'
                             title={app.formatted_name}
                           >
                             {app.formatted_name}
@@ -145,10 +145,10 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                                 <div className='mt-1'>
                                   <Listbox.Button
                                     id={app.created_at}
-                                    className=' w-[122px] relative cursor-pointer rounded-[48px] bg-white py-2 pl-3 pr-9 text-left text-content-primary border'
+                                    className=' w-[122px] relative cursor-pointer rounded-5xl bg-grey-0 py-2 pl-3 pr-9 text-left text-content-primary border'
                                   >
                                     <span
-                                      className='block text-xs text-content-grey-900 w-full h-4 leading-4 truncate ...'
+                                      className='block text-xs text-grey-800 w-full h-4 leading-4 truncate ...'
                                       title={
                                         !app.allowed_user_ids || app.allowed_user_ids.length === 0
                                           ? 'none'
@@ -189,8 +189,8 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                                     leaveTo='opacity-0'
                                   >
                                     <Listbox.Options
-                                      className='absolute bottom-0 mt-1 overflow-auto rounded-md bg-white py-1 text-content-primary 
-                                            z-10 shadow-[0px_10px_20px_0px] shadow-content-black/60'
+                                      className='absolute bottom-0 mt-1 overflow-auto rounded-xs bg-grey-0 py-1 text-content-primary 
+                                            z-10 shadow-[0px_10px_20px_0px] shadow-grey-900/60'
                                     >
                                       <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
                                         {allUsers.map((user) => (
@@ -199,7 +199,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                                             className={({active}) =>
                                               `relative select-none py-2 pl-10 pr-4 cursor-pointer ${
                                                 active || app.allowed_user_ids?.includes(user.id)
-                                                  ? 'bg-content-grey-400/30'
+                                                  ? 'bg-grey-400/30'
                                                   : 'text-gray-900'
                                               } `
                                             }
@@ -235,10 +235,10 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                         </div>
 
                         <span
-                          className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                          className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                           onClick={() => handleOpenDeleteWaspAppModal(app)}
                         >
-                          <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                          <TrashIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
                         </span>
                       </div>
                     </>

@@ -84,7 +84,7 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -97,11 +97,11 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                 leaveFrom='opacity-100 scale-100'
                 leaveTo='opacity-0 scale-95'
               >
-                <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
+                <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-start mb-6'>
                     <Dialog.Title
                       as='h3'
-                      className='text-2xl font-semibold text-content-black font-poppins-semibold text-left'
+                      className='text-2xl font-semibold text-grey-900 text-left'
                     >
                       {selectedModel ? 'Update model' : 'Add a new model'}
                     </Dialog.Title>
@@ -115,15 +115,15 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                         <Listbox.Button
                           className={({open}) =>
                             classNames(
-                              'relative w-full cursor-default bg-white py-2 pl-5 pr-10 text-left text-content-primary',
-                              !open && 'rounded-[48px]',
-                              open && 'rounded-t-20',
+                              'relative w-full cursor-default bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary',
+                              !open && 'rounded-5xl',
+                              open && 'rounded-t-xl',
                             )
                           }
                         >
                           <div className='flex items-center gap-2'>
                             {ollamaIsLoading && <Spinner className='h-6 flex items-center' />}
-                            <span className='w-ful truncate ... text-base text-content-grey-900'>{`Name: ${name}`}</span>
+                            <span className='w-ful truncate ... text-base text-grey-800'>{`Name: ${name}`}</span>
                           </div>
                           <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                             <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -135,14 +135,14 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                           leaveFrom='opacity-100'
                           leaveTo='opacity-0'
                         >
-                          <Listbox.Options className='absolute max-h-60 w-full rounded-b-3xl bg-white py-1 text-content-primary pr-2 overflow-hidden'>
+                          <Listbox.Options className='absolute max-h-60 w-full rounded-b-2xl bg-grey-0 py-1 text-content-primary pr-2 overflow-hidden'>
                             <div className='max-h-58 custom-scrollbar-thumb relative -mr-1'>
                               {ollamaModels?.map((model, tabIdx) => (
                                 <Listbox.Option
                                   key={nanoid(8)}
                                   className={({active}) =>
                                     `relative select-none py-2 pl-10 pr-4 text-left items-center ${
-                                      active ? 'bg-content-grey-100' : 'text-gray-900'
+                                      active ? 'bg-grey-100' : 'text-gray-900'
                                     }`
                                   }
                                   value={model}

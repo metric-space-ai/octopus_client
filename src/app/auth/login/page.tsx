@@ -14,6 +14,7 @@ import {useEffect} from 'react';
 
 import {paths} from '@/config/path';
 import {useRouter} from 'next/navigation';
+import {useThemeStore} from '@/store/themeData';
 
 interface IFormInputs {
   email: string;
@@ -22,7 +23,16 @@ interface IFormInputs {
 
 const LoginPage = () => {
   const router = useRouter();
-
+  const {themeData, handleSetColorVariable} = useThemeStore();
+  const {
+    cssVariables,
+    content: {head_logo, title},
+  } = themeData;
+  useEffect(() => {
+    if (cssVariables) {
+      handleSetColorVariable(cssVariables);
+    }
+  }, []);
   const {
     register,
     handleSubmit,
@@ -49,11 +59,21 @@ const LoginPage = () => {
 
   return (
     <div className='min-h-full grid sm:grid-cols-2 gap-3'>
-      <div className='flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
-        <Logo className='absolute left-10 top-10' withText />
-        <h1 className='text-32 font-semibold text-content-black text-center'>Welcome back to Octopus AI</h1>
+      <div className='flex flex-col items-center justify-center bg-grey-100 rounded-xl'>
+        {head_logo ? (
+          <img
+            className='absolute left-10 top-10'
+            src={head_logo.url}
+            alt={head_logo.alt}
+            width={head_logo.width}
+            height={head_logo.height}
+          />
+        ) : (
+          <Logo className='absolute left-10 top-10' withText />
+        )}
+        <h1 className='text-32 font-semibold text-grey-900 text-center'>Welcome back to {title ?? 'Octopus AI'}</h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
-          <p className='mt-2 text-base text-content-grey-600'>Please enter your details</p>
+          <p className='mt-2 text-base text-grey-600'>Please enter your details</p>
           <form className='w-full mt-10' onSubmit={handleSubmit(onSubmit)}>
             <Input
               type='email'
@@ -70,21 +90,21 @@ const LoginPage = () => {
             />
             <div className='mt-3 flex justify-end'>
               <Link href='forgot-password'>
-                <p className='text-xs text-content-grey-600'>Forgot password?</p>
+                <p className='text-xs text-grey-600'>Forgot password?</p>
               </Link>
             </div>
-            <Button className='mt-6 w-full !h-11 rounded-[40px]' loading={loading} title='Log In' />
+            <Button className='mt-6 w-full !h-11 rounded-4xl' loading={loading} title='Log In' />
           </form>
           <div className='mt-6 w-full flex items-center gap-2'>
-            <div className='flex-1 h-[1px] bg-content-black opacity-10' />
-            <p className='text-xs text-content-grey-600'>Or</p>
-            <div className='flex-1 h-[1px] bg-content-black opacity-10' />
+            <div className='flex-1 h-[1px] bg-grey-900 opacity-10' />
+            <p className='text-xs text-grey-600'>Or</p>
+            <div className='flex-1 h-[1px] bg-grey-900 opacity-10' />
           </div>
           <GoogleButton className='mt-6 w-full' title='Continue with Google' />
-          <span className='mt-10 text-xs text-content-grey-600'>
+          <span className='mt-10 text-xs text-grey-600'>
             Don’t have an account?{' '}
             <Link href='signup'>
-              <span className='text-sm text-content-accent underline'>Sign up</span>
+              <span className='text-sm text-primary underline'>Sign up</span>
             </Link>
           </span>
         </div>

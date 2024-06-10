@@ -63,9 +63,9 @@ const WaspAppGenerator = (props: Props) => {
   let dirCount = 0;
   return (
     <>
-      <div className='flex flex-col rounded-20 bg-content-black p-5 pr-4 gap-6 w-full max-h-[668px] max-w-[803px] custom-scrollbar-thumb'>
+      <div className='flex flex-col rounded-20 bg-content-grey-900 p-5 pr-4 gap-6 w-full max-h-[668px] max-w-[803px] custom-scrollbar-thumb'>
         <div className='flex flex-col gap-4'>
-          <div className='bg-content-white rounded-20 p-4 flex flex-col gap-3'>
+          <div className='bg-content-grey-0 rounded-20 p-4 flex flex-col gap-3'>
             {openHistory ? (
               <div className='flex flex-col relative -mr-2.5'>
                 <h5 className='text-sm mb-3 font-semibold text-content-accent-hover '>History:</h5>
@@ -75,19 +75,19 @@ const WaspAppGenerator = (props: Props) => {
                       key={`history-item-${index}`}
                       className='flex flex-wrap items-center justify-between px-4 py-[13px] rounded-[18px] bg-content-grey-100'
                     >
-                      <p className='text-xs font-semibold text-content-black '>{history}</p>
+                      <p className='text-xs font-semibold text-content-grey-900 '>{history}</p>
                       <div className='flex flex-wrap gap-4'>
                         <Button
                           title='Load this version'
                           variant='outline'
-                          className='rounded-20 w-[138px] !h-9 !bg-content-white border-content-grey-100'
+                          className='rounded-20 w-[138px] !h-9 !bg-content-grey-0 border-content-grey-100'
                           fontWeight='normal'
                           size='small'
                         />
                         <Button
                           title='Run this version'
                           variant='outline'
-                          className='rounded-20 w-[130px] !h-9 !bg-content-white border-content-grey-100'
+                          className='rounded-20 w-[130px] !h-9 !bg-content-grey-0 border-content-grey-100'
                           fontWeight='normal'
                           size='small'
                         />
@@ -100,7 +100,7 @@ const WaspAppGenerator = (props: Props) => {
                                       <Spinner />
                                     ) : (
                                         )} */}
-                          <TrashIcon className='w-4 h-4 text-content-black hover:text-content-red-600' />
+                          <TrashIcon className='w-4 h-4 text-content-grey-900 hover:text-content-red-600' />
                         </IconButton>
                       </div>
                     </div>
@@ -120,12 +120,12 @@ const WaspAppGenerator = (props: Props) => {
                             ) : (
                               <CheckIcon className='w-4 h-4 text-content-border-dark' />
                             )}
-                            <span className='block text-sm text-content-black'>{job}</span>
+                            <span className='block text-sm text-content-grey-900'>{job}</span>
                           </div>
                         ))}
                       </div>
                       <Button
-                        className='bg-white !text-[13px] !h-9 absolute right-5'
+                        className='bg-content-grey-0 !text-[13px] !h-9 absolute right-5'
                         variant='transparent'
                         size='small'
                         iconBefore={<StopIcon className='w-4 h-4' />}
@@ -136,7 +136,7 @@ const WaspAppGenerator = (props: Props) => {
                   )}
                 </div>
                 <div className='flex flex-col md:flex-row gap-3 min-h-[80px]'>
-                  <div className='flex w-full md:w-auto min-w-[233px] flex-col rounded-3xl bg-content-grey-900 pl-4 py-3 pr-1.5'>
+                  <div className='flex w-full md:w-auto min-w-[233px] flex-col rounded-3xl bg-content-grey-800 pl-4 py-3 pr-1.5'>
                     <div className='w-full h-full custom-scrollbar-thumb flex flex-col gap-2 max-h-[223px]'>
                       {steps === GENERATINGAPPSTEPS.Second &&
                         directories &&
@@ -179,7 +179,7 @@ const WaspAppGenerator = (props: Props) => {
                       {steps === GENERATINGAPPSTEPS.Second && (
                         <Highlight
                           innerHTML={false}
-                          // className='text-content-white [&_.hljs-name]:text-content-blue-light [&_.hljs-tag]:text-content-green [&_.hljs-keyword]:text-content-red-400
+                          // className='text-content-grey-0 [&_.hljs-name]:text-content-blue-light [&_.hljs-tag]:text-content-green [&_.hljs-keyword]:text-content-red-400
                           // [&_.hljs-meta]:text-content-grey-400 [&_.hljs-meta]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500
                           // [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                         >
@@ -195,22 +195,22 @@ const WaspAppGenerator = (props: Props) => {
           <div className='flex gap-4 justify-end '>
             {lockOpen ? (
               <LockOpenIcon
-                className='cursor-pointer w-5 h-5 text-content-grey-400 hover:text-content-white'
+                className='cursor-pointer w-5 h-5 text-content-grey-400 hover:text-content-grey-0'
                 onClick={() => setLockOpen((prev) => !prev)}
               />
             ) : (
               <LockClosedIcon
-                className='cursor-pointer w-5 h-5 text-content-grey-400 hover:text-content-white'
+                className='cursor-pointer w-5 h-5 text-content-grey-400 hover:text-content-grey-0'
                 onClick={() => setLockOpen((prev) => !prev)}
               />
             )}
-            <span className='block h-6 border-r border-content-grey-50' />
+            <span className='block h-6 border-r border-content-grey-600' />
             <ClockLoadingIcon
-              className='cursor-pointer w-5 h-5 stroke-content-white hover:stroke-content-white'
+              className='cursor-pointer w-5 h-5 stroke-content-grey-0 hover:stroke-content-grey-0'
               onClick={() => setOpenHistory((prev) => !prev)}
             />
-            <span className='block h-6 border-r border-content-grey-50' />
-            <ChatBubbleBottomCenterTextIcon className='cursor-pointer w-5 h-5 text-content-white' />
+            <span className='block h-6 border-r border-content-grey-600' />
+            <ChatBubbleBottomCenterTextIcon className='cursor-pointer w-5 h-5 text-content-grey-0' />
           </div>
         </div>
         <div className='flex flex-col gap-4'>
@@ -220,7 +220,7 @@ const WaspAppGenerator = (props: Props) => {
                 <div className='flex-1 min-w-[220px]'>
                   <Input
                     label='API access URL:'
-                    labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
+                    labelClassName={'mb-3 text-content-grey-0 !text-sm font-semibold'}
                     inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
                     inputClassName='!text-sm font-normal !bg-transparent border-0'
                     type='text'
@@ -230,7 +230,7 @@ const WaspAppGenerator = (props: Props) => {
                 <div className='flex-1 min-w-[220px]'>
                   <Input
                     label='Secret access token:'
-                    labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
+                    labelClassName={'mb-3 text-content-grey-0 !text-sm font-semibold'}
                     inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
                     inputClassName='!text-sm font-normal !bg-transparent border-0'
                     type='text'
@@ -241,7 +241,7 @@ const WaspAppGenerator = (props: Props) => {
               </div>
               <div className='flex flex-row flex-wrap gap-4'>
                 <div className='flex-1 flex flex-col gap-3 min-w-[220px]'>
-                  <span className='block text-content-white text-sm font-semibold'>Creativity level:</span>
+                  <span className='block text-content-grey-0 text-sm font-semibold'>Creativity level:</span>
                   <Listbox value={selectedCreativityLevel} onChange={setSelectedCreativityLevel}>
                     <div className='relative '>
                       <Listbox.Button
@@ -249,12 +249,12 @@ const WaspAppGenerator = (props: Props) => {
                           classNames(
                             'relative w-full cursor-default bg-content-grey-100 py-1.5 pl-5 pr-10 text-left text-content-primary h-9.5',
                             !open && 'rounded-[48px]',
-                            open && 'bg-content-white rounded-t-20',
+                            open && 'bg-content-grey-0 rounded-t-20',
                           )
                         }
                       >
                         <div className='flex gap-1 items-center'>
-                          <span className='text-sm text-content-grey-900'>{selectedAuthModel.label}</span>
+                          <span className='text-sm text-content-grey-800'>{selectedAuthModel.label}</span>
                         </div>
                         <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                           <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -266,13 +266,13 @@ const WaspAppGenerator = (props: Props) => {
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <Listbox.Options className='z-10 absolute max-h-60 w-full overflow-auto rounded-b-20 bg-content-white py-1 text-content-primary'>
+                        <Listbox.Options className='z-10 absolute max-h-60 w-full overflow-auto rounded-b-20 bg-content-grey-0 py-1 text-content-primary'>
                           {CreativityLevel.map((level, tabIdx) => (
                             <Listbox.Option
                               key={tabIdx}
                               className={({active}) =>
                                 `relative select-none py-2 px-5 border-b border-content-grey-100 h-9.5 ${
-                                  active ? 'bg-content-grey-100' : 'text-content-black'
+                                  active ? 'bg-content-grey-100' : 'text-content-grey-900'
                                 }`
                               }
                               value={level}
@@ -290,7 +290,7 @@ const WaspAppGenerator = (props: Props) => {
                   </Listbox>
                 </div>
                 <div className='flex-1 flex flex-col gap-3 min-w-[220px]'>
-                  <span className='block text-content-white text-sm font-semibold'>Auth method:</span>
+                  <span className='block text-content-grey-0 text-sm font-semibold'>Auth method:</span>
                   <Listbox value={selectedAuthModel} onChange={setSelectedAuthModel}>
                     <div className='relative '>
                       <Listbox.Button
@@ -298,12 +298,12 @@ const WaspAppGenerator = (props: Props) => {
                           classNames(
                             'relative w-full cursor-default bg-content-grey-100 py-1.5 pl-5 pr-10 text-left text-content-primary h-9.5',
                             !open && 'rounded-[48px]',
-                            open && 'bg-content-white rounded-t-20',
+                            open && 'bg-content-grey-0 rounded-t-20',
                           )
                         }
                       >
                         <div className='flex gap-1 items-center'>
-                          <span className='text-sm text-content-grey-900'>{selectedAuthModel.label}</span>
+                          <span className='text-sm text-content-grey-800'>{selectedAuthModel.label}</span>
                         </div>
                         <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
                           <ChevronDownIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
@@ -315,13 +315,13 @@ const WaspAppGenerator = (props: Props) => {
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <Listbox.Options className='z-10 absolute max-h-60 w-full overflow-auto rounded-b-20 bg-content-white py-1 text-content-primary'>
+                        <Listbox.Options className='z-10 absolute max-h-60 w-full overflow-auto rounded-b-20 bg-content-grey-0 py-1 text-content-primary'>
                           {AuthMethods.map((method, tabIdx) => (
                             <Listbox.Option
                               key={tabIdx}
                               className={({active}) =>
                                 `relative select-none py-2 px-5 border-b border-content-grey-100 h-9.5 ${
-                                  active ? 'bg-content-grey-100' : 'text-content-black'
+                                  active ? 'bg-content-grey-100' : 'text-content-grey-900'
                                 }`
                               }
                               value={method}
@@ -340,7 +340,7 @@ const WaspAppGenerator = (props: Props) => {
           <div className='flex-1 min-w-[220px]'>
             <Input
               label='App name:'
-              labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
+              labelClassName={'mb-3 text-content-grey-0 !text-sm font-semibold'}
               inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
               inputClassName='!text-sm font-normal !bg-transparent border-0'
               type='text'
@@ -348,13 +348,13 @@ const WaspAppGenerator = (props: Props) => {
             />
           </div>
           <div className='flex-1 min-w-[220px]'>
-            <label className='flex flex-col gap-3 text-content-white text-sm font-semibold'>
+            <label className='flex flex-col gap-3 text-content-grey-0 text-sm font-semibold'>
               Description:
               <textarea
-                className='px-4 py-2 custom-scrollbar-thumb resize-none h-21 text-sm font-normal bg-content-grey-100 rounded-[18px] text-content-black'
+                className='px-4 py-2 custom-scrollbar-thumb resize-none h-21 text-sm font-normal bg-content-grey-100 rounded-[18px] text-content-grey-900'
                 rows={3}
                 //   label='Description:'
-                //   labelClassName={'mb-3 text-content-white !text-sm font-semibold'}
+                //   labelClassName={'mb-3 text-content-grey-0 !text-sm font-semibold'}
                 //   inputCoverClassName={'px-4 h-9.5 !bg-content-grey-100 !py-0 '}
                 //   inputClassName='!text-sm font-normal !bg-transparent border-0'
                 //   type='text'

@@ -80,7 +80,7 @@ export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -93,11 +93,11 @@ export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
+              <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
-                <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
+                <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
                   {tab ? 'Rename tab' : 'Create a new tab'}
                 </Dialog.Title>
                 <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
@@ -108,14 +108,14 @@ export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
                   />
                   <Listbox value={selected} onChange={setSelected}>
                     <div className={classNames('relative mt-1', isJustPrivateUser && 'pointer-events-none')}>
-                      <Listbox.Button className='relative w-full cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary'>
+                      <Listbox.Button className='relative w-full cursor-default rounded-5xl bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary'>
                         <div className='flex gap-1 items-center'>
                           {selected.name === 'Public' ? (
-                            <UserGroupIcon className='w-4 h-4 text-content-grey-900' />
+                            <UserGroupIcon className='w-4 h-4 text-grey-800' />
                           ) : (
-                            <LockClosedIcon className='w-4 h-4 text-content-grey-900' />
+                            <LockClosedIcon className='w-4 h-4 text-grey-800' />
                           )}
-                          <span className='text-base text-content-grey-900'>{selected.name}</span>
+                          <span className='text-base text-grey-800'>{selected.name}</span>
                         </div>
                         <span
                           className={classNames(
@@ -132,13 +132,13 @@ export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-content-primary'>
+                        <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-xs bg-grey-0 py-1 text-content-primary'>
                           {TabModes.map((tab, tabIdx) => (
                             <Listbox.Option
                               key={tabIdx}
                               className={({active}) =>
                                 `relative select-none py-2 pl-10 pr-4 ${
-                                  active ? 'bg-content-grey-100' : 'text-gray-900'
+                                  active ? 'bg-grey-100' : 'text-gray-900'
                                 }`
                               }
                               value={tab}

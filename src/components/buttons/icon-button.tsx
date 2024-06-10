@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'primary' | 'secondary' | 'dark' | 'disabled' | 'grey';
+  variant?: 'default' | 'primary' | 'secondary' | 'dark' | 'disabled' | 'grey' | 'negative';
   loading?: boolean;
   disabled?: boolean;
   className?: string;
@@ -12,11 +12,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const ButtonStyle = {
   default: 'bg-transparent',
-  primary: 'bg-content-accent',
-  secondary: 'bg-content-grey-900',
-  dark: 'bg-content-black',
-  grey: 'bg-content-grey-100',
-  disabled: 'bg-content-disabled',
+  primary: 'bg-primary',
+  secondary: 'bg-grey-800',
+  dark: 'bg-grey-900',
+  negative: 'dark:bg-grey-900 bg-grey-0',
+  grey: 'bg-grey-100',
+  disabled: 'bg-grey-disabled',
 };
 export const IconButton = ({
   className,

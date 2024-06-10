@@ -89,7 +89,7 @@ export function PreCode(props: {children: any}) {
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
       <pre
-        className='relative text-xs p-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap word-break'
+        className='relative text-xs p-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap word-break'
         ref={ref}
       >
         <span
@@ -142,7 +142,7 @@ const RemarkCustomLink = () => {
 function _MarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-1 flex-col text-white gap-2'
+      className='flex flex-1 flex-col text-grey-900 dark:text-grey-0 gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks, RemarkCustomLink]}
       rehypePlugins={[
         RehypeKatex,

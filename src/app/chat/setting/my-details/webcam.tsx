@@ -48,14 +48,14 @@ export default function WebCamImageTaker({setTakeImageModal, handleUpload}: Prop
               audio={false}
               width={380}
               height={420}
-              className=' rounded-20'
+              className=' rounded-xl'
               ref={webcamRef}
               screenshotFormat='image/jpeg'
               videoConstraints={videoConstraints}
             />
           </div>
-          <div className='w-capture-button h-capture-button rounded-full ring-4 flex justify-center items-center ring-content-accent -bottom-10 absolute '>
-            <button className='bg-content-accent w-84 h-84 rounded-full relative' title='capture' onClick={capture} />
+          <div className='w-capture-button h-capture-button rounded-full ring-4 flex justify-center items-center ring-primary -bottom-10 absolute '>
+            <button className='bg-primary w-84 h-84 rounded-full relative' title='capture' onClick={capture} />
           </div>
         </div>
       )}
@@ -63,7 +63,7 @@ export default function WebCamImageTaker({setTakeImageModal, handleUpload}: Prop
         <div className='flex flex-col justify-center items-center'>
           <div className='w-full max-h-full'>
             <div className='mb-4'>
-              <img src={url} alt='Screenshot' className='rounded-20' />
+              <img src={url} alt='Screenshot' className='rounded-xl' />
             </div>
 
             <div className='flex flex-wrap w-full justify-between'>

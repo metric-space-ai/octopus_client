@@ -16,33 +16,33 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const ButtonStyle = {
-  primary: 'bg-content-accent',
-  secondary: 'bg-content-black',
+  primary: 'bg-primary',
+  secondary: 'bg-grey-900',
   transparent: 'bg-transparent',
-  dangerous: 'bg-content-red-600',
-  outline: 'bg-transparent border border-content-black',
-  'outline-dark': 'bg-transparent border border-content-white',
-  disabled: 'bg-content-disabled',
+  dangerous: 'bg-danger-500',
+  outline: 'bg-transparent border border-grey-900',
+  'outline-dark': 'bg-transparent border border-grey-0',
+  disabled: 'bg-grey-disabled',
 };
 
 const ButtonHoverStyle = {
-  primary: 'hover:bg-content-accent-hover',
-  secondary: 'hover:bg-content-grey-600',
+  primary: 'hover:bg-primary-medium',
+  secondary: 'hover:bg-grey-600',
   transparent: 'hover:bg-transparent',
-  dangerous: 'hover:bg-content-red-400',
+  dangerous: 'hover:bg-danger-300',
   outline: 'hover:bg-transparent',
   'outline-dark': 'hover:bg-transparent',
-  disabled: 'hover:bg-content-disabled',
+  disabled: 'hover:bg-grey-disabled',
 };
 
 const TextStyle = {
-  primary: 'text-content-white',
-  secondary: 'text-content-white',
-  transparent: 'text-content-black',
-  dangerous: 'text-content-white',
-  outline: 'text-content-black',
-  'outline-dark': 'text-content-white',
-  disabled: 'text-content-white',
+  primary: 'text-grey-0',
+  secondary: 'text-grey-0',
+  transparent: 'text-grey-900',
+  dangerous: 'text-grey-0',
+  outline: 'text-grey-900',
+  'outline-dark': 'text-grey-0',
+  disabled: 'text-grey-0',
 };
 
 const FontWeight = {
@@ -82,7 +82,7 @@ export const Button = ({
     <button
       disabled={disabled}
       className={classNames(
-        'h-11 flex items-center justify-center px-4 gap-1.5 rounded-[20px]',
+        'h-11 flex items-center justify-center px-4 gap-1.5 rounded-xl',
         style,
         hoverStyle,
         className,

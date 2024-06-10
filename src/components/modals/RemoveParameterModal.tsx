@@ -29,7 +29,7 @@ export const RemoveParameterModal = ({open, onClose, onDelete}: ModalProps) => {
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -42,11 +42,11 @@ export const RemoveParameterModal = ({open, onClose, onDelete}: ModalProps) => {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-lg transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-lg transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex justify-between gap-2 mb-5 items-start'>
                   <Dialog.Title
                     as='h3'
-                    className='text-2xl font-poppins-semibold text-content-black max-w-sm truncate ...'
+                    className='text-2xl font-semibold text-grey-900 max-w-sm truncate ...'
                     title={`Delete parameter`}
                   >
                     Delete
@@ -61,8 +61,8 @@ export const RemoveParameterModal = ({open, onClose, onDelete}: ModalProps) => {
                   </IconButton>
                 </div>
                 <>
-                  <p className='text-xl font-semibold text-content-grey-900'>Are you sure?</p>
-                  <p className='text-base font-poppins-regular text-content-grey-600'>
+                  <p className='text-xl font-semibold text-grey-800'>Are you sure?</p>
+                  <p className='text-base font-regular text-grey-600'>
                     This action is irreversible and will permanently remove parameter.
                   </p>
                   <form className='flex mt-2 gap-2'>

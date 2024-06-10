@@ -67,7 +67,7 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -80,11 +80,11 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-2xl transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-2xl transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2 mb-5 relative'>
                   <Dialog.Title
                     as='h3'
-                    className='text-2xl font-semibold text-content-black max-w-sm break-words'
+                    className='text-2xl font-semibold text-grey-900 max-w-sm break-words'
                     title={`Reset team member Password: “${member.email}” `}
                   >
                     {`Reset team member Password: “${member.email}”`}

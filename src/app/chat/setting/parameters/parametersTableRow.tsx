@@ -11,9 +11,9 @@ type Props = {
 
 export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter}: Props) => {
   return (
-    <div className='h-[51px] flex border-b-content-grey-100 border-b items-center py-[15px]'>
+    <div className='h-[51px] flex border-b-grey-100 border-b items-center py-[15px]'>
       <h6
-        className={`w-48 truncate ... font-normal text-xs leading-5 text-content-black font-poppins-semibold block mr-4`}
+        className={`w-48 truncate ... font-normal text-xs leading-5 text-grey-900 block mr-4`}
       >
         {parameter.name}
       </h6>
@@ -22,7 +22,7 @@ export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter
       <div className='flex justify-start items-center flex-1'>
         <span
           className={`w-28 truncate ... block items-center text-xs leading-5 
-            text-content-black`}
+            text-grey-900`}
         >
           {/* {parameter.value ? 'Active' : 'Deactive'} */}
           {parameter.value}
@@ -32,12 +32,12 @@ export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter
             width={16}
             height={16}
             onClick={() => onEditParameter(parameter)}
-            className='text-content-black cursor-pointer'
+            className='text-grey-900 cursor-pointer'
           />
           <TrashIcon
             width={16}
             height={16}
-            className='text-content-black cursor-pointer'
+            className='text-grey-900 cursor-pointer'
             onClick={() => onDeleteParameter(parameter)}
           />
         </div>

@@ -38,11 +38,11 @@ export const Input = ({
       {label && (
         <p className={classNames('mb-2 font-normal text-xs text-content-secondary', labelClassName)}>{label}</p>
       )}
-      <div className={classNames(`relative px-5 py-2 bg-content-white rounded-[48px]`, inputCoverClassName)}>
+      <div className={classNames(`relative px-5 py-2 bg-grey-0 rounded-5xl`, inputCoverClassName)}>
         <input
           {...rules}
           onBlur={onBlur}
-          className={classNames('w-full text-base text-content-black outline-none', inputClassName)}
+          className={classNames('w-full text-base text-grey-900 outline-none', inputClassName)}
           type={type === 'password' ? (hidePassword ? 'text' : 'password') : type}
           placeholder={placeholder}
           {...rest}
@@ -53,14 +53,14 @@ export const Input = ({
             onClick={() => setHidePassword((prev) => !prev)}
           >
             {!hidePassword ? (
-              <EyeSlashIcon className='w-5 h-5 text-content-grey-600' />
+              <EyeSlashIcon className='w-5 h-5 text-grey-600' />
             ) : (
-              <EyeIcon className='w-5 h-5 text-content-grey-600' />
+              <EyeIcon className='w-5 h-5 text-grey-600' />
             )}
           </div>
         )}
       </div>
-      {errors && <p className='mt-1 text-xs text-content-red-600'>{errors}</p>}
+      {errors && <p className='mt-1 text-xs text-danger-500'>{errors}</p>}
     </div>
   );
 };

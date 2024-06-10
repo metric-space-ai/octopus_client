@@ -65,7 +65,7 @@ const AdditionalInformations = ({chats, doSubmit, isLoading}: Props) => {
                       <textarea
                         ref={inputRef}
                         className={`w-full border py-[7px] pr-[60px] pl-5 rounded-[40px] resize-none outline-none 
-                            focus:border-content-black custom-scrollbar-thumb`}
+                            focus:border-content-grey-900 custom-scrollbar-thumb`}
                         placeholder='Provide an answer here...'
                         onInput={(e) => setAnswerInput(e.currentTarget.value)}
                         value={answerInput}
@@ -81,7 +81,7 @@ const AdditionalInformations = ({chats, doSubmit, isLoading}: Props) => {
                       disabled={!answerInput}
                       onClick={() => doSubmit(response, answerInput)}
                     >
-                      <PaperAirplaneIcon className='w-5 h-5 text-white' />
+                      <PaperAirplaneIcon className='w-5 h-5 text-content-grey-0' />
                     </IconButton>
                   </>
                 )}
@@ -91,7 +91,7 @@ const AdditionalInformations = ({chats, doSubmit, isLoading}: Props) => {
                       <textarea
                         ref={inputRef}
                         className={`w-full border py-[7px] pr-[60px] pl-5 rounded-[40px] resize-none outline-none 
-                            focus:border-content-black custom-scrollbar-thumb`}
+                            focus:border-content-grey-900 custom-scrollbar-thumb`}
                         placeholder='Provide an answer here...'
                         onInput={(e) => setAnswerInputUpdate(e.currentTarget.value)}
                         value={answerInputUpdate}
@@ -107,7 +107,7 @@ const AdditionalInformations = ({chats, doSubmit, isLoading}: Props) => {
                       disabled={!answerInputUpdate}
                       onClick={() => doSubmit(response, answerInputUpdate)}
                     >
-                      <PaperAirplaneIcon className='w-5 h-5 text-white' />
+                      <PaperAirplaneIcon className='w-5 h-5 text-content-grey-0' />
                     </IconButton>
                   </>
                 )}
@@ -118,10 +118,10 @@ const AdditionalInformations = ({chats, doSubmit, isLoading}: Props) => {
                   <span className='block min-w-[72px] text-content-grey-600 font-semibold'>{`Answer ${
                     index + 1
                   }`}</span>
-                  <span className='block text-content-black'>{response.answer}</span>
+                  <span className='block text-content-grey-900'>{response.answer}</span>
                   <IconButton className='shrink-0 h-4 !p-0'>
                     <PencilSquareIcon
-                      className='w-4 h-4 text-content-black'
+                      className='w-4 h-4 text-content-grey-900'
                       onClick={() => handleEnableEditModeFor(response)}
                     />
                   </IconButton>

@@ -84,7 +84,7 @@ export function PreCode(props: {children: any}) {
   return (
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
-      <pre className='relative text-xs px-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words' ref={ref}>
+      <pre className='relative text-xs px-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words' ref={ref}>
         <span
           className="absolute right-2 top-2 cursor-pointer after:content-['Copy']"
           onClick={() => {
@@ -104,7 +104,7 @@ export function PreCode(props: {children: any}) {
 function _WarningMarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-col text-white gap-2'
+      className='flex flex-col text-grey-0 gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[
         RehypeKatex,

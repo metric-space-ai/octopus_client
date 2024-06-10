@@ -105,11 +105,11 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
             <a
               href={researchItem.sourceLink}
               target='_blank'
-              className='w-36 ml-1 text-xxs leading-4 text-content-grey-900 truncate ...'
+              className='w-36 ml-1 text-xxs leading-4 text-content-grey-800 truncate ...'
             >
               {researchItem.sourceLink}
             </a>
-            <span className='w-24 ml-1 text-xxs leading-4 text-content-grey-900 truncate ... text-center'>
+            <span className='w-24 ml-1 text-xxs leading-4 text-content-grey-800 truncate ... text-center'>
               {researchItem.occurrences}
             </span>
             <div className='w-[200px] ml-[5px] flex gap-3'>
@@ -121,7 +121,7 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
                   <ArrowTopRightOnSquareIcon className='h-4 w-4 text-purple-500 transition-all ' />
                 </IconButton>
               )}
-              <span className=' text-xxs leading-4 text-content-grey-900 truncate ...'>
+              <span className=' text-xxs leading-4 text-content-grey-800 truncate ...'>
                 {`${researchItem.containedInformation.slice(0, 20)}...`}
               </span>
             </div>
@@ -129,7 +129,7 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
             <div className='h-7'>
               <Disclosure.Button
                 className={classNames(
-                  'h-7 px-3 text-xs font-semibold text-content-white text-center rounded-[40px] bg-content-accent',
+                  'h-7 px-3 text-xs font-semibold text-content-grey-0 text-center rounded-[40px] bg-content-accent',
                   {
                     hidden: !!open,
                   },
@@ -162,7 +162,7 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
                 </IconButton>
               ) : (
                 <Disclosure.Button className={'w-5 h-5'}>
-                  <XMarkIcon className='w-5 h-5 text-content-black' />
+                  <XMarkIcon className='w-5 h-5 text-content-grey-900' />
                 </Disclosure.Button>
               )}
             </div>
@@ -184,7 +184,7 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
                       )}
                       {question.role === 'system' && (
                         <div className='flex gap-2 items-start'>
-                          <div className='flex items-center justify-center w-8 h-8 bg-content-black mr-1 rounded-full'>
+                          <div className='flex items-center justify-center w-8 h-8 bg-content-grey-900 mr-1 rounded-full'>
                             <LogoIcon width={19} height={12} color='#F5F5F5' />
                           </div>
                           <p className='text-sm flex-1 self-center'>{question.content}</p>
@@ -209,17 +209,17 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
                 {questionIsLoading && (
                   <div className='flex flex-col gap-4 flex-1'>
                     <div className='flex gap-2 items-start'>
-                      <div className='flex items-center justify-center w-8 h-8 bg-content-black mr-1 rounded-full'>
+                      <div className='flex items-center justify-center w-8 h-8 bg-content-grey-900 mr-1 rounded-full'>
                         <LogoIcon width={19} height={12} color='#F5F5F5' />
                       </div>
-                      <div className='flex items-center justify-center py-[11px] px-4 rounded-b-2xl rounded-tr-2xl bg-content-black w-16'>
+                      <div className='flex items-center justify-center py-[11px] px-4 rounded-b-2xl rounded-tr-2xl bg-content-grey-900 w-16'>
                         <AnimateDots />
                       </div>
                     </div>
 
                     <div className='mx-auto hidden'>
                       <Button
-                        className='bg-white h-9'
+                        className='bg-content-grey-0 h-9'
                         variant='transparent'
                         size='small'
                         iconBefore={<StopIcon className='w-4 h-4' />}
@@ -236,7 +236,7 @@ const ResearchItemRow = ({researchItem, handleShowContainedInformation, submitCh
                   <div className='relative flex-1 flex items-center'>
                     <textarea
                       ref={inputRef}
-                      className={`text-sm w-full border py-[7px] pr-[96px] pl-5 rounded-3xl resize-none outline-none focus:border-content-black custom-scrollbar-thumb`}
+                      className={`text-sm w-full border py-[7px] pr-[96px] pl-5 rounded-3xl resize-none outline-none focus:border-content-grey-900 custom-scrollbar-thumb`}
                       placeholder='Ask anything'
                       onInput={(e) => onInput(e.currentTarget.value)}
                       value={userInput}

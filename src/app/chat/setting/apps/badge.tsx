@@ -12,14 +12,14 @@ type Props = {
 const AppsBadge = ({variant = 'Running', label = '', setupStatus}: Props) => {
   return (
     <span
-      className={`h-6 px-1 w-24 rounded-20 flex items-center ${
+      className={`h-6 px-1 w-24 rounded-xl flex items-center ${
         variant === 'Error'
-          ? 'bg-content-red-600/10 text-content-red-600'
+          ? 'bg-danger-500/10 text-danger-500'
           : variant === 'Stopped' || variant === APPSTATUS.InstallationFinished
-          ? 'bg-content-red-400/10 text-content-red-400'
+          ? 'bg-danger-300/10 text-danger-300'
           : variant === 'Setup'
-          ? 'bg-content-blue-dark/10 text-content-blue-dark'
-          : 'bg-content-accent-hover/10 text-content-accent-hover'
+          ? 'bg-secondary-700/10 text-secondary-700'
+          : 'bg-primary-medium/10 text-primary-medium'
       } `}
     >
       <span title={spaceBeforeCapitalLetters(label)} className='flex items-center justify-center gap-1 w-[88px] overflow-hidden truncate ... text-center'>

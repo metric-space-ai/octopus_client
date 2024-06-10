@@ -100,7 +100,7 @@ const MyDetailPage = () => {
               <UserIcon className='m-auto' width={45} height={45} />
             )}
           </div>
-          <span className=' text-red-600 hover:cursor-pointer hover:underline' onClick={() => setTakeImageModal(true)}>
+          <span className=' text-danger-500 hover:cursor-pointer hover:underline' onClick={() => setTakeImageModal(true)}>
             Retake photo
           </span>
         </div>
@@ -154,10 +154,10 @@ const MyDetailPage = () => {
 
       {takeImageModal && (
         <div className='fixed w-full h-full outline-none left-0 top-0 flex justify-center items-center'>
-          <div className='bg-black opacity-50 w-full h-full absolute'></div>
+          <div className='bg-grey-900 opacity-50 w-full h-full absolute'></div>
 
-          <div className='min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto rounded-xl border-none bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600 z-50 w-[460px] h-[580px] max-h-[80vh] max-w-full flex flex-col items-center justify-center p-10 bg-white relative'>
-            <div className='flex w-full font-semibold flex-shrink-0 items-center justify-between rounded-t-md dark:border-opacity-50 mb-4'>
+          <div className='min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto rounded-md border-none bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600 z-50 w-[460px] h-[580px] max-h-[80vh] max-w-full flex flex-col items-center justify-center p-10 bg-grey-0 relative'>
+            <div className='flex w-full font-semibold flex-shrink-0 items-center justify-between rounded-t-xs dark:border-opacity-50 mb-4'>
               <h3
                 className='text-2xl font-medium leading-normal text-neutral-800 dark:text-neutral-200'
                 id='exampleModalLabel'

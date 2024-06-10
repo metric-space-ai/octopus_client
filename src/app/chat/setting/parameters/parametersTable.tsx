@@ -23,9 +23,9 @@ const parametersTable = ({parameters, handleOpenDeleteDialog, handleOpenEditDial
     <>
       <div className='table-auto flex flex-col w-[608px] max-w-full'>
         <div className='h-7 flex items-centers'>
-          <span className='w-52 text-content-grey-600 text-xs font-normal text-left'>Name</span>
+          <span className='w-52 text-grey-600 text-xs font-normal text-left'>Name</span>
 
-          <span className='w-28 text-content-grey-600 text-xs font-normal text-left'>Value</span>
+          <span className='w-28 text-grey-600 text-xs font-normal text-left'>Value</span>
         </div>
         <div className='flex flex-col max-h-[420px] custom-scrollbar-thumb relative -mr-4 pr-4'>
           {parametersIsLoading ? (
@@ -39,8 +39,8 @@ const parametersTable = ({parameters, handleOpenDeleteDialog, handleOpenEditDial
             </>
           ) : !parameters || parameters.length === 0 ? (
             !parametersIsLoading && (
-              <div className='px-[2.5px] h-68-px border-b-content-grey-100 border-b'>
-                <h2 className='text-lg text-content-accent uppercase w-full text-center'>not found</h2>
+              <div className='px-[2.5px] h-68-px border-b-grey-100 border-b'>
+                <h2 className='text-lg text-primary uppercase w-full text-center'>not found</h2>
               </div>
             )
           ) : (

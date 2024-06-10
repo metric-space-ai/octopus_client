@@ -64,13 +64,13 @@ const InstallationPage = () => {
 
   return (
     <div className='min-h-full flex flex-col items-center justify-center'>
-      <div className='w-full md:w-[940px] py-[64px] flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
+      <div className='w-full md:w-[940px] py-[64px] flex flex-col items-center justify-center bg-grey-100 rounded-xl'>
         <div className='flex flex-col items-center px-4 w-full sm:w-[640px]'>
           <div className='flex gap-4'>
-            <h1 className='text-32 font-semibold text-content-black'>Welcome to Octopus AI</h1>
+            <h1 className='text-32 font-semibold text-grey-900'>Welcome to Octopus AI</h1>
             <Logo />
           </div>
-          <p className='mt-4 text-sm text-content-grey-600 text-center'>
+          <p className='mt-4 text-sm text-grey-600 text-center'>
             Welcome to Octopus AI Installation! Simply enter the information below to start using reliable personalized
             AI language model.
           </p>
@@ -105,17 +105,17 @@ const InstallationPage = () => {
                 },
               })}
             />
-            <span className='text-xxs text-center text-content-grey-600'>
+            <span className='text-xxs text-center text-grey-600'>
               Important: Please keep this password as you will need it for login.
             </span>
             <Button
-              className='mt-4 w-full !h-11 rounded-[40px]'
+              className='mt-4 w-full !h-11 rounded-4xl'
               disabled={!setupRequired}
               loading={loading}
               title='Install Octopus AI'
             />
           </form>
-          <span className='mt-2 text-xs text-content-grey-600'>
+          <span className='mt-2 text-xs text-grey-600'>
             Please double-check your information before proceeding.
           </span>
         </div>

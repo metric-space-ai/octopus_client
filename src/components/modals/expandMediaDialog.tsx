@@ -33,7 +33,7 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex items-center justify-center p-4 text-center'>
@@ -51,7 +51,7 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
                     minHeight: 'calc(100vh - 60px)',
                     minWidth: 'calc(100vw - 60px)',
                   }}
-                  className='w-full h-full flex items-center relative transform border border-content-primary bg-content-grey-100 p-6 rounded-[20px] align-middle shadow-xl transition-all'
+                  className='w-full h-full flex items-center relative transform border border-content-primary bg-grey-100 p-6 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <IconButton className='absolute top-4 right-4' onClick={onClose}>
                     <XMarkIcon className='w-8 h-8 text-content-primary' />
@@ -66,11 +66,11 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
                         // onLoad={(e) => setLoaded(true)}
                         width={width}
                         height={height}
-                        className='rounded-4 w-full h-full'
+                        className='rounded-2xs w-full h-full'
                       />
                       {/* {!loaded && (
                         <div
-                          className={`mx-2 bg-gray-300 rounded-4 dark:bg-gray-600 absolute left-0 animate-pulse`}
+                          className={`mx-2 bg-gray-300 rounded-2xs dark:bg-gray-600 absolute left-0 animate-pulse`}
                           style={{width, height}}
                         ></div>
                       )} */}

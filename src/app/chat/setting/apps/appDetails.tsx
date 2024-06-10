@@ -179,19 +179,19 @@ export default function AppsDetails() {
   return (
     <>
       <div className='w-full'>
-        <div className='mx-auto w-full max-w-[560px] rounded-2xl bg-white'>
+        <div className='mx-auto w-full max-w-[560px] rounded-lg bg-grey-0'>
           <div className='flex mb-2'>
             <div className='w-52'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Name</span>
             </div>
             <div className='w-28'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Size</span>
             </div>
             <div className='w-24 flex justify-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Status</span>
+              <span className='font-medium text-xs leading-5 text-grey-600 '>Status</span>
             </div>
             <div className='w-20 flex justify-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>On/Off</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>On/Off</span>
             </div>
           </div>
 
@@ -199,7 +199,7 @@ export default function AppsDetails() {
             {/* {reloadAppAvailable && (
               <div className='w-full'>
                 <h2
-                  className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                  className='uppercase text-primary cursor-pointer text-center py-6 hover:underline'
                   onClick={() => getAllApps()}
                 >
                   try again
@@ -212,16 +212,16 @@ export default function AppsDetails() {
               <Disclosure>
                 {({open}) => (
                   <>
-                    <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                    <div className='flex justify-start py-3 items-center border-t'>
                       <div className='flex gap-3 w-52 items-center'>
                         <Disclosure.Button className='flex items-center'>
                           <ChevronUpIcon className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`} />
                         </Disclosure.Button>
                         <div className='flex items-center '>
-                          <p className='text-xs leading-5 text-content-black font-poppins-semibold ml-3'>App name 1</p>
+                          <p className='text-xs leading-5 text-grey-900 font-semibold ml-3'>App name 1</p>
                         </div>
                       </div>
-                      <p className='text-xxs leading-4 w-28 text-content-grey-900 font-poppins-medium'>
+                      <p className='text-xxs leading-4 w-28 text-grey-800 font-medium'>
                         0.7 / 24GB on GPU2
                       </p>
                       <div className='w-24 text-xs flex justify-center'>
@@ -239,14 +239,14 @@ export default function AppsDetails() {
                       </div>
 
                       <span
-                        className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                        className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                         onClick={() => handleOpenDeleteAppModal(app)}
                       >
-                        <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                        <TrashIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
                       </span>
                     </div>
                     <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 py-3'>
-                      <p className='w-full text-xs leading-5 text-content-grey-900 font-poppins-medium ml-3'>
+                      <p className='w-full text-xs leading-5 text-grey-800 font-medium ml-3'>
                         Enhance your ChatGPT experience with ImageFlow Connect – a powerful app that seamlessly
                         integrates image uploading capabilities into your conversations. With ImageFlow Connect, you can
                         effortlessly share visual context by uploading images directly within the chat interface.

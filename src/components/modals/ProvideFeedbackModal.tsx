@@ -26,7 +26,7 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -39,27 +39,27 @@ export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-[720px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-[720px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <IconButton className='absolute top-4 right-4' onClick={onClose}>
                   <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
                 <div className='flex items-center gap-4'>
-                  <div className='flex items-center justify-center w-10 h-10 rounded-full bg-white'>
-                    <HandThumbDownIcon className='w-5 h-5 text-content-red-600' />
+                  <div className='flex items-center justify-center w-10 h-10 rounded-full bg-grey-0'>
+                    <HandThumbDownIcon className='w-5 h-5 text-danger-500' />
                   </div>
-                  <Dialog.Title as='h3' className='text-2xl font-semibold text-content-black'>
+                  <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
                     Provide additional feedback
                   </Dialog.Title>
                 </div>
                 <form className='flex flex-col mt-2 gap-5'>
                   <textarea
-                    className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
+                    className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-sm resize-none outline-none focus:border-grey-900'
                     placeholder='What was the issue with the response?'
                   />
                   <div className='flex gap-4'>
-                    <Checkbox className='text-sm font-medium text-content-grey-600' title='This is harmful' />
-                    <Checkbox className='text-sm font-medium text-content-grey-600' title={`This isn't true`} />
-                    <Checkbox className='text-sm font-medium text-content-grey-600' title={`This isn't helpful`} />
+                    <Checkbox className='text-sm font-medium text-grey-600' title='This is harmful' />
+                    <Checkbox className='text-sm font-medium text-grey-600' title={`This isn't true`} />
+                    <Checkbox className='text-sm font-medium text-grey-600' title={`This isn't helpful`} />
                   </div>
                   <Button type='button' className='!h-11' variant='primary' title='Submit feedback' loading={loading} />
                 </form>

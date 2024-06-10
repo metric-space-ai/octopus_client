@@ -9,7 +9,7 @@ const HeaderSection = ({currentStep}: Props) => {
       {currentStep === FUNDSTEPS.CoreIdea && (
         <>
           <h2 className='font-semibold text-sm leading-5 mb-1 text-content-accent-hover'>Core-idea:</h2>
-          <p className='text-xs leading-5 text-content-black mb-3'>Provide details about your idea.</p>
+          <p className='text-xs leading-5 text-content-grey-900 mb-3'>Provide details about your idea.</p>
         </>
       )}
       {currentStep === FUNDSTEPS.Application && (
@@ -17,7 +17,7 @@ const HeaderSection = ({currentStep}: Props) => {
           <h2 className='font-semibold text-sm leading-5 mb-1 text-content-accent-hover'>
             Keywords generated based on your core-idea
           </h2>
-          <p className='text-xs leading-5 text-content-black mb-3'>Check your keywords and edit them if necessary.</p>
+          <p className='text-xs leading-5 text-content-grey-900 mb-3'>Check your keywords and edit them if necessary.</p>
         </>
       )}
       {currentStep === FUNDSTEPS.Formulation && (

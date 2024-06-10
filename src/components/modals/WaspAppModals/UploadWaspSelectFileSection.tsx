@@ -56,19 +56,19 @@ const UploadWaspSelectFileSection = ({setFile, fileIsSelected, file, uploadPerce
         onDrop={(e) => handleDropFiles(e)}
         onDragOver={handleDragFiles}
         className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6
-                        bg-white border-2 border-content-accent border-dashed rounded-20 '
+                        bg-grey-0 border-2 border-primary border-dashed rounded-xl '
       >
         <IconButton
-          className='top-4 right-4 block mx-auto bg-content-accent-light-15 mb-5'
+          className='top-4 right-4 block mx-auto primary-soft/15 mb-5'
           onClick={(e) => {
             e.preventDefault();
             inputFileRef.current?.click();
           }}
         >
-          <ArrowUpTrayIcon className='text-content-accent-hover' width={20} height={20} />
+          <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
         </IconButton>
-        <h6 className='font-poppins-semibold text-sm text-content-grey-900 mb-3'>Drag & drop file to upload</h6>
-        <p className='text-xs text-content-grey-600 '>Files in .zip file format only</p>
+        <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
+        <p className='text-xs text-grey-600 '>Files in .zip file format only</p>
         <input
           type='file'
           className='hidden'
@@ -79,24 +79,24 @@ const UploadWaspSelectFileSection = ({setFile, fileIsSelected, file, uploadPerce
         />
       </div>
       {fileIsSelected && !!file && (
-        <div className='flex flex-wrap py-3 px-6 bg-content-white rounded-20 w-full items-center justify-between relative'>
+        <div className='flex flex-wrap py-3 px-6 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
           <div className='flex gap-4 items-center max-w-full'>
             <div className='flex w-56 pr-2 items-center'>
-              <p className='font-semibold text-xs text-content-black truncate ... max-w-[calc(100%-36px)]'>
+              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>
                 {file.name}
               </p>
             </div>
-            <span className='text-xs text-content-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
+            <span className='text-xs text-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
               {bytesCalculator(file.size)}
             </span>
           </div>
           <div className='flex justify-end items-center gap-6'>
             {initialFileStarted && (
               <div className='flex items-center gap-2 max-w-full'>
-                <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[140px] '>
-                  <div className='h-1.5 bg-content-accent transition-all' style={{width: `${uploadPercentage}%`}}></div>
+                <div className='h-1.5 bg-grey-100 dark:bg-neutral-600 w-[140px] '>
+                  <div className='h-1.5 bg-primary transition-all' style={{width: `${uploadPercentage}%`}}></div>
                 </div>
-                <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                   {`${uploadPercentage} %`}
                 </span>
               </div>

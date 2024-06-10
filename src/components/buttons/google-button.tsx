@@ -9,15 +9,15 @@ type ButtonProps = {
 };
 
 export const GoogleButton = ({className, title, onClick, ...props}: ButtonProps) => {
-  const buttonStyle = 'bg-content-white';
+  const buttonStyle = 'bg-grey-0';
   return (
     <button
-      className={classNames('h-11 flex items-center justify-center px-4 gap-4 rounded-[20px]', buttonStyle, className)}
+      className={classNames('h-11 flex items-center justify-center px-4 gap-4 rounded-xl', buttonStyle, className)}
       {...props}
       onClick={onClick}
     >
       <GoogleIcon />
-      <p className={classNames('text-sm font-semibold text-content-black leading-4')}>{title}</p>
+      <p className={classNames('text-sm font-semibold text-grey-900 leading-4')}>{title}</p>
     </button>
   );
 };

@@ -20,11 +20,11 @@ const TeamMembers = (props: Props) => {
   return (
     <>
        <div className='w-full pt-[84px] flex md:gap-4 lg:gap-6 px-6'>
-        <div className='flex flex-col w-full max-w-[689px] px-6 py-4 rounded-20 bg-white'>
+        <div className='flex flex-col w-full max-w-[689px] px-6 py-4 rounded-xl bg-grey-0'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
-            <h1 className='text-lg leading-7 text-content-black font-semibold'>team members</h1>
+            <h1 className='text-lg leading-7 text-grey-900 font-semibold'>team members</h1>
             <Button
-              className='!px-6 font-poppins-semibold text-sm !h-34-px'
+              className='!px-6 font-semibold text-sm !h-34-px'
               variant='primary'
               title='Add member'
               onClick={() => setAddNewUserModal(true)}
@@ -37,8 +37,8 @@ const TeamMembers = (props: Props) => {
         <div className='hidden lg:flex flex-col gap-6 w-44 pr-1'>
           {DESCRIPTIONS.map((desc) => (
             <div key={desc.key} className='flex flex-col gap-1'>
-              <h2 className='text-content-grey-900 font-poppins-semibold text-sm leading-5'>{desc.title}</h2>
-              <p className='text-content-grey-600 text-xs leading-5 font-poppins-regular '>{desc.content}</p>
+              <h2 className='text-grey-800 font-semibold text-sm leading-5'>{desc.title}</h2>
+              <p className='text-grey-600 text-xs leading-5 font-regular '>{desc.content}</p>
             </div>
           ))}
         </div>

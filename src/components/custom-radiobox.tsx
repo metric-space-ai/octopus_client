@@ -16,18 +16,18 @@ const CustomRadiobox = ({active, onChange, title, description, disabled = false}
   let [plan, setPlan] = useState('startup');
   return (
     <RadioGroup value={plan} onChange={setPlan} className={'flex flex-col text-left'}>
-      <RadioGroup.Label className='text-left font-poppins-semibold text-xs uppercase text-content-grey-900 mb-3'>
+      <RadioGroup.Label className='text-left font-semibold text-xs uppercase text-grey-800 mb-3'>
         Document accessibility
       </RadioGroup.Label>
       <RadioGroup.Option value='startup'>
         {({checked}) => (
-          <div className='flex gap-2 mb-2 items-center text-xs text-content-black'>
+          <div className='flex gap-2 mb-2 items-center text-xs text-grey-900'>
             <span
               className={classNames(
-                `w-4 h-4 border border-content-black rounded-full relative transition-all  
+                `w-4 h-4 border border-grey-900 rounded-full relative transition-all  
                   before:w-3 before:h-3 before:block before:absolute before:left-[1px] before:top-[1px] before:rounded-full`,
                 {
-                  'before:opacity-100 before:bg-content-accent': checked,
+                  'before:opacity-100 before:bg-primary': checked,
                   'before:opacity-0 before:bg-transparent': !checked,
                 },
               )}
@@ -38,13 +38,13 @@ const CustomRadiobox = ({active, onChange, title, description, disabled = false}
       </RadioGroup.Option>
       <RadioGroup.Option value='business'>
         {({checked}) => (
-          <div className='flex gap-2 mb-2 items-center text-xs text-content-black'>
+          <div className='flex gap-2 mb-2 items-center text-xs text-grey-900'>
             <span
               className={classNames(
-                `w-4 h-4 border border-content-black rounded-full relative transition-all  
+                `w-4 h-4 border border-grey-900 rounded-full relative transition-all  
                   before:w-3 before:h-3 before:block before:absolute before:left-[1px] before:top-[1px] before:rounded-full`,
                 {
-                  'before:opacity-100 before:bg-content-accent': checked,
+                  'before:opacity-100 before:bg-primary': checked,
                   'before:opacity-0 before:bg-transparent': !checked,
                 },
               )}

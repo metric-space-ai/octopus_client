@@ -77,19 +77,19 @@ const ServiceDetailRow = ({
     <Disclosure key={plugin.id}>
       {({open}) => (
         <Fragment>
-          <div className='flex justify-start py-3 items-center border-t border-content-grey-100 gap-1'>
+          <div className='flex justify-start py-3 items-center border-t gap-1'>
             <div className='flex gap-3 w-52 items-center truncate overflow-hidden'>
               <Disclosure.Button className='flex items-center'>
                 <ChevronUpIcon className={`${!open ? 'rotate-180 transform' : ''} h-5 w-5 text-purple-500`} />
               </Disclosure.Button>
               {/* {plugin.status === PLUGINSTATUS.Configuration && (
               <span className='flex h-2 w-2 '>
-                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-content-accent-hover opacity-75'></span>
-                <span className='relative inline-flex rounded-full h-1 w-1 bg-content-accent-hover'></span>
+                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-medium opacity-75'></span>
+                <span className='relative inline-flex rounded-full h-1 w-1 bg-primary-medium'></span>
               </span>
             )} */}
               <p
-                className={classNames('text-xs leading-5 text-content-black font-poppins-semibold truncate ... ')}
+                className={classNames('text-xs leading-5 text-grey-900 font-semibold truncate ... ')}
                 title={plugin.original_file_name}
               >
                 {plugin.original_file_name}
@@ -100,15 +100,15 @@ const ServiceDetailRow = ({
               {usersIsLoading && !allUsers ? (
                 <div className='flex justify-start items-center animate-pulse'>
                   <div className=' bg-gray-300 rounded-full dark:bg-gray-600 w-[122px] h-8'></div>
-                  <div className=' bg-gray-300 rounded- allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
+                  <div className=' bg-gray-300 allowedUSers dark:bgllowedUSersray-600 w-stringh-10'></div>
                 </div>
               ) : (
                 allUsers && (
                   <Listbox onChange={(value: IUser[] | []) => handleChangeUserAiAccess(plugin.id, value)} multiple>
                     <div className='mt-1'>
-                      <Listbox.Button className=' w-[122px] relative cursor-default rounded-[48px] bg-white py-2 pl-3 pr-10 text-left text-content-primary border'>
+                      <Listbox.Button className=' w-[122px] relative cursor-default rounded-5xl bg-grey-0 py-2 pl-3 pr-10 text-left text-content-primary border'>
                         <span
-                          className='block text-xs text-content-grey-900 w-full h-4 leading-4 truncate ...'
+                          className='block text-xs text-grey-800 w-full h-4 leading-4 truncate ...'
                           title={
                             !plugin.allowed_user_ids || plugin.allowed_user_ids.length === 0
                               ? 'none'
@@ -146,16 +146,16 @@ const ServiceDetailRow = ({
                         leaveFrom='opacity-100'
                         leaveTo='opacity-0'
                       >
-                        <Listbox.Options className='absolute bottom-0 mt-1 max-h-60 rounded-md bg-white py-1 pr-2 text-content-primary z-10 shadow-md'>
+                        <Listbox.Options className='absolute bottom-0 mt-1 max-h-60 rounded-xs bg-grey-0 py-1 pr-2 text-content-primary z-10 shadow-md'>
                           <div className='w-ful flex flex-col custom-scrollbar-thumb max-h-58 relative -mr-1'>
                             {allUsers.map((user) => (
                               <Listbox.Option
                                 key={user.id}
                                 className={({active}) =>
                                   classNames(
-                                    `relative select-none py-2 pl-10 pr-4 cursor-pointer rounded-2xl transition-colors`,
+                                    `relative select-none py-2 pl-10 pr-4 cursor-pointer rounded-lg transition-colors`,
                                     active || plugin.allowed_user_ids?.includes(user.id)
-                                      ? 'bg-content-grey-400/30'
+                                      ? 'bg-grey-400/30'
                                       : 'text-gray-900',
                                   )
                                 }
@@ -202,19 +202,19 @@ const ServiceDetailRow = ({
               <div className='mt-1'>
                 <Listbox.Button
                   className={classNames(
-                    ' flex gap-2 w-full items-center cursor-default rounded-[48px] bg-white p-0.5 text-left text-content-primary',
+                    ' flex gap-2 w-full items-center cursor-default rounded-5xl bg-grey-0 p-0.5 text-left text-content-primary',
                   )}
                 >
                   <div className='relative'>
                     {isLoading && <Spinner size='small' className='absolute left-0 block' />}
                     <span
-                      className='items-center w-4 h-4 rounded-full block shadow-[0px_10px_20px_0px] shadow-content-black/5'
+                      className='items-center w-4 h-4 rounded-full block shadow-[0px_10px_20px_0px] shadow-grey-900/5'
                       style={{backgroundColor: currentColor ?? WASPAPPTEMPLATECOLOR[0].value}}
                     />
                   </div>
 
                   <span className='pointer-events-none inset-y-0 flex items-center'>
-                    <ChevronDownIcon className='h-4 w-4 text-content-grey-900' aria-hidden='true' />
+                    <ChevronDownIcon className='h-4 w-4 text-grey-800' aria-hidden='true' />
                   </span>
                 </Listbox.Button>
                 <Transition
@@ -224,8 +224,8 @@ const ServiceDetailRow = ({
                   leaveTo='opacity-0'
                 >
                   <Listbox.Options
-                    className='absolute bottom-0 w-full max-w-[256px] rounded-20 bg-white 
-                        text-content-primary z-[1] p-1 pr-2 shadow-[0px_10px_20px_0px] shadow-content-black/60'
+                    className='absolute bottom-0 w-full max-w-[256px] rounded-xl bg-grey-0 
+                        text-content-primary z-[1] p-1 pr-2 shadow-[0px_10px_20px_0px] shadow-grey-900/60'
                   >
                     <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
                       {WASPAPPTEMPLATECOLOR.map((color, tabIdx) => (
@@ -233,8 +233,8 @@ const ServiceDetailRow = ({
                           key={color.id}
                           className={({active}) =>
                             classNames(
-                              `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] text-content-black flex cursor-pointer hover:bg-content-grey-100`,
-                              active && 'bg-content-grey-100',
+                              `relative select-none py-1 px-4 gap-2 items-center rounded-4xl text-grey-900 flex cursor-pointer hover:bg-grey-100`,
+                              active && 'bg-grey-100',
                             )
                           }
                           value={color.value}
@@ -245,7 +245,7 @@ const ServiceDetailRow = ({
                           >
                             {currentColor === color.value && (
                               <CheckIcon
-                                className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
+                                className='h-4 w-4 text-grey-800 invert mix-blend-difference'
                                 aria-hidden='true'
                               />
                             )}
@@ -255,7 +255,7 @@ const ServiceDetailRow = ({
                       ))}
                       <label
                         className={classNames(
-                          `relative select-none py-1 px-4 gap-2 items-center rounded-[40px] transition-colors text-content-black flex cursor-pointer hover:bg-content-grey-100`,
+                          `relative select-none py-1 px-4 gap-2 items-center rounded-4xl transition-colors text-grey-900 flex cursor-pointer hover:bg-grey-100`,
                         )}
                       >
                         <div
@@ -264,7 +264,7 @@ const ServiceDetailRow = ({
                         >
                           {currentColor === customColor && (
                             <CheckIcon
-                              className='h-4 w-4 text-content-grey-900 invert mix-blend-difference'
+                              className='h-4 w-4 text-grey-800 invert mix-blend-difference'
                               aria-hidden='true'
                             />
                           )}
@@ -284,22 +284,22 @@ const ServiceDetailRow = ({
               </div>
             </Listbox>
             <span
-              className='ml-auto p-1 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+              className='ml-auto p-1 mr-1 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
               onClick={() => handleOpenExistedPluginModal(plugin)}
             >
-              <PencilSquareIcon width={16} height={16} className='text-content-black cursor-pointer' />
+              <PencilSquareIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
             </span>
             <span
-              className='ml-auto p-1 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+              className='ml-auto p-1 mr-1 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
               onClick={() => handleOpenPluginLogsModal(plugin)}
             >
-              <DocumentTextIcon width={16} height={16} className='text-content-black cursor-pointer' />
+              <DocumentTextIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
             </span>
             <span
-              className='ml-auto p-1 mr-1 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+              className='ml-auto p-1 mr-1 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
               onClick={() => handleOpenDeletePluginModal(plugin)}
             >
-              <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
+              <TrashIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
             </span>
           </div>
           <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>

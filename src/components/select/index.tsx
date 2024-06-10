@@ -44,7 +44,7 @@ const CustomSelect: React.FC<Props> = (props) => {
 
   return (
     <Select
-      className='!border-0 font-poppins-medium text-xs '
+      className='!border-0 font-medium text-xs '
       styles={{
         control: (base, props) => ({
           ...base,

@@ -43,11 +43,11 @@ const WaspAppDialogFormInputs = ({
         {!!file && (
           <div className='flex gap-4 items-center max-w-full mb-8'>
             <div className='flex w-full pr-2 items-center'>
-              <p className='font-semibold text-xs text-content-black truncate ... max-w-[calc(100%-36px)]'>
+              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>
                 {file.name}
               </p>
             </div>
-            <span className='text-xs text-content-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
+            <span className='text-xs text-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
               {bytesCalculator(file.size)}
             </span>
           </div>
@@ -66,9 +66,9 @@ const WaspAppDialogFormInputs = ({
           <span className='font-normal text-xs text-content-secondary w-28 text-left'>instance_type:</span>
           <Listbox value={instance_type} onChange={setInstance_type}>
             <div className='relative mt-1 flex-1'>
-              <Listbox.Button className='relative cursor-default rounded-[48px] bg-white py-2 pl-5 pr-10 text-left text-content-primary w-full'>
+              <Listbox.Button className='relative cursor-default rounded-5xl bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary w-full'>
                 <div className='flex gap-1 items-center'>
-                  <span className='text-base text-content-grey-900'>{instance_type}</span>
+                  <span className='text-base text-grey-800'>{instance_type}</span>
                 </div>
 
                 <span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4'>
@@ -82,13 +82,13 @@ const WaspAppDialogFormInputs = ({
                 leaveFrom='opacity-100'
                 leaveTo='opacity-0'
               >
-                <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-content-primary z-10'>
+                <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-xs bg-grey-0 py-1 text-content-primary z-10'>
                   {INSTANCETYPES.map((type) => (
                     <Listbox.Option
                       key={type}
                       className={({active}) =>
                         `relative select-none py-2 pl-10 pr-4 cursor-pointer ${
-                          active ? 'bg-content-grey-100' : 'text-gray-900'
+                          active ? 'bg-grey-100' : 'text-gray-900'
                         }`
                       }
                       value={type}
@@ -117,7 +117,7 @@ const WaspAppDialogFormInputs = ({
           </label>
           <div className='flex-1'>
             <textarea
-              className='w-full text-base text-content-black outline-none relative px-5 py-2 bg-content-white rounded-20 resize-none custom-scrollbar-thumb'
+              className='w-full text-base text-grey-900 outline-none relative px-5 py-2 bg-grey-0 rounded-xl resize-none custom-scrollbar-thumb'
               // value={answerInput}
               rows={3}
               autoFocus={true}

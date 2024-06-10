@@ -22,18 +22,19 @@ import {IconButton} from './buttons';
 import {CreateNewTabModal, DeleteTabModal} from './modals';
 import {ImagesBaseUrl} from '@/constant';
 
+
 const MenuItem = () => {
   const {onLogout, user} = useAuthContext();
 
   return (
     <Menu as='div' className='z-10 relative inline-block text-left'>
       <div>
-        <Menu.Button className='inline-flex w-full justify-center rounded-md border-none'>
-          <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-content-white'>
+        <Menu.Button className='inline-flex w-full justify-center rounded-xs border-none'>
+          <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-grey-0'>
             {user?.photo_file_name ? (
               <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt='user avatar' />
             ) : (
-              <UserIcon className='w-6 h-6 text-content-black' />
+              <UserIcon className='w-6 h-6 text-grey-900' />
             )}
           </div>
         </Menu.Button>
@@ -47,11 +48,11 @@ const MenuItem = () => {
         leaveFrom='transform opacity-100 scale-100'
         leaveTo='transform opacity-0 scale-95'
       >
-        <Menu.Items className='absolute right-0 w-profile-drawer origin-top-right divide-y divide-gray-100 rounded-20 bg-content-grey-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+        <Menu.Items className='absolute right-0 w-profile-drawer origin-top-right divide-y divide-gray-100 rounded-xl bg-grey-100 dar:bg-grey-800 shadow-lg border border-border/50 focus:outline-none'>
           <div className='px-2 py-2 gap-2 flex flex-col'>
             <Menu.Item as='div'>
-              <div className={`rounded-2xl bg-background-dark flex py-3 px-4`}>
-                <div className='min-w-[36px] w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-lime-200 '>
+              <div className={`rounded-lg bg-grey-0 flex py-3 px-4`}>
+                <div className='min-w-[36px] w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-grey-150 '>
                   {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
                   {user?.photo_file_name ? (
                     <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} />
@@ -59,8 +60,8 @@ const MenuItem = () => {
                     <UserIcon className='m-auto' width={32} height={32} />
                   )}
                 </div>
-                <div className='flex flex-col text-white truncate overflow-hidden'>
-                  <h6 className='text-xs leading-5 font-poppins-semibold'>{user?.name}</h6>
+                <div className='flex flex-col text-grey-800 dark:text-grey-0 truncate overflow-hidden'>
+                  <h6 className='text-xs leading-5 font-semibold'>{user?.name}</h6>
                   <span className='text-xxs leading-4 font-normal'>{user?.job_title}</span>
                 </div>
               </div>
@@ -69,8 +70,8 @@ const MenuItem = () => {
               {({active}) => (
                 <button
                   className={`${
-                    active ? 'bg-content-black text-white' : 'text-white'
-                  } group flex w-full items-center rounded-md pr-2 pl-5 py-2 text-sm`}
+                    active ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0' : 'text-grey-800 dark:text-grey-0'
+                  } group flex w-full items-center rounded-xs pr-2 pl-5 py-2 text-sm`}
                 >
                   <Cog8ToothIcon className='mr-2 h-5 w-5' aria-hidden='true' />
                   Settings
@@ -81,8 +82,8 @@ const MenuItem = () => {
               {({active}) => (
                 <button
                   className={`${
-                    active ? 'bg-content-black text-white' : 'text-white'
-                  } group flex w-full items-center rounded-md pr-2 pl-5 py-2 text-sm`}
+                    active ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0' : 'text-grey-800 dark:text-grey-0'
+                  } group flex w-full items-center rounded-xs pr-2 pl-5 py-2 text-sm`}
                   onClick={onLogout}
                 >
                   <ArrowRightOnRectangleIcon className='mr-2 h-5 w-5' aria-hidden='true' />
@@ -150,12 +151,12 @@ export const Header = () => {
                   title={tab.name}
                   icon={
                     tab.type === 'Public' ? (
-                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-400/10'>
-                        <UserGroupIcon className='w-4 h-4 text-content-accent-400' />
+                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-primary-400/10'>
+                        <UserGroupIcon className='w-4 h-4 text-primary-400' />
                       </div>
                     ) : (
-                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-light/10'>
-                        <LockClosedIcon className='w-4 h-4 text-content-blue-light' />
+                      <div className='flex items-center justify-center w-7 h-7 rounded-full bg-secondary-600/10'>
+                        <LockClosedIcon className='w-4 h-4 text-secondary-600' />
                       </div>
                     )
                   }
@@ -188,12 +189,12 @@ export const Header = () => {
                     title={tab.name}
                     icon={
                       tab.type === 'Public' ? (
-                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-accent-light-11'>
-                          <UserGroupIcon className='w-4 h-4 text-content-accent-hover' />
+                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-primary-400/10'>
+                          <UserGroupIcon className='w-4 h-4 text-primary-medium' />
                         </div>
                       ) : (
-                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-content-blue-dark-11'>
-                          <LockClosedIcon className='w-4 h-4 text-content-blue-dark' />
+                        <div className='flex items-center justify-center w-7 h-7 rounded-full bg-secondary-700/15'>
+                          <LockClosedIcon className='w-4 h-4 text-secondary-700' />
                         </div>
                       )
                     }
@@ -217,8 +218,8 @@ export const Header = () => {
           </MoreTabs>
         )}
         {(isAdmin || hasAccessToCreateWokspace) && (
-          <IconButton className='w-9 h-9 ml-2 !bg-content-grey-900' onClick={handleAddNewTab}>
-            <PlusIcon className='w-4 h-4 text-content-white' />
+          <IconButton className='w-9 h-9 ml-2 !bg-grey-50' onClick={handleAddNewTab}>
+            <PlusIcon className='w-4 h-4 text-grey-900' />
           </IconButton>
         )}
       </div>

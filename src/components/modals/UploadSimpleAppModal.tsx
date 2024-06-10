@@ -119,7 +119,7 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -134,23 +134,23 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
               >
                 <Dialog.Panel
                   className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
-                transform border border-content-primary bg-content-grey-100
-                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-[20px] align-middle shadow-xl transition-all'
+                transform border border-content-primary bg-grey-100
+                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
                 >
                   <div className='flex justify-between items-start mb-16 relative'>
                     <Dialog.Title
                       as='h3'
-                      className='text-2xl font-semibold text-content-black font-poppins-semibold text-left absolute left-0 top 0'
+                      className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
                     >
                       Install
                     </Dialog.Title>
                     <div className='flex mx-auto'>
                       <div className='flex text-xs items-center'>
                         <div
-                          className={`flex items-center justify-center rounded-20 px-4 mx-1 h-7 ${
+                          className={`flex items-center justify-center rounded-xl px-4 mx-1 h-7 ${
                             currentStep >= UPLOADSIMPLEAPPSTEPS.Prepare
-                              ? 'bg-content-accent-light-11 text-content-accent-hover font-poppins-semibold'
-                              : 'text-content-grey-600 bg-content-white font-poppins-light'
+                              ? 'bg-primary-400/10 text-primary-medium font-semibold'
+                              : 'text-grey-600 bg-grey-0 font-light'
                           }`}
                         >
                           <span className='flex gap-1'>
@@ -164,12 +164,12 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
                             )}
                           </span>
                         </div>
-                        {/* <span className='w-6 h-1px bg-content-accent-100' />
+                        {/* <span className='w-6 h-1px bg-primary-150' />
                         <div
-                          className={`flex items-center justify-center rounded-20 px-4 mx-1 h-7 ${
+                          className={`flex items-center justify-center rounded-xl px-4 mx-1 h-7 ${
                             currentStep >= UPLOADSIMPLEAPPSTEPS.Upload
-                              ? 'bg-content-accent-light-11 text-content-accent-hover font-poppins-semibold'
-                              : 'text-content-grey-600 bg-content-white font-poppins-light'
+                              ? 'bg-primary-400/10 text-primary-medium font-semibold'
+                              : 'text-grey-600 bg-grey-0 font-light'
                           }`}
                         >
                           <span className='flex gap-1'>
@@ -197,21 +197,21 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
                           onDrop={(e) => handleDropFiles(e)}
                           onDragOver={handleDragFiles}
                           className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6
-                        bg-white border-2 border-content-accent border-dashed rounded-20 '
+                        bg-grey-0 border-2 border-primary border-dashed rounded-xl '
                         >
                           <IconButton
-                            className='top-4 right-4 block mx-auto bg-content-accent-light-15 mb-5'
+                            className='top-4 right-4 block mx-auto primary-soft/15 mb-5'
                             onClick={(e) => {
                               e.preventDefault();
                               inputFileRef.current?.click();
                             }}
                           >
-                            <ArrowUpTrayIcon className='text-content-accent-hover' width={20} height={20} />
+                            <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                           </IconButton>
-                          <h6 className='font-poppins-semibold text-sm text-content-grey-900 mb-3'>
+                          <h6 className='font-semibold text-sm text-grey-800 mb-3'>
                             Drag & drop file to upload
                           </h6>
-                          <p className='text-xs text-content-grey-600 '>Files in .html file format only</p>
+                          <p className='text-xs text-grey-600 '>Files in .html file format only</p>
                           <input
                             type='file'
                             className='hidden'
@@ -222,27 +222,27 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
                           />
                         </div>
                         {fileIsSelected && !!file && (
-                          <div className='flex flex-wrap py-3 px-6 bg-content-white rounded-20 w-full items-center justify-between relative'>
+                          <div className='flex flex-wrap py-3 px-6 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
                             <div className='flex gap-4 items-center max-w-full'>
                               <div className='flex w-56 pr-2 items-center'>
-                                <p className='font-semibold text-xs text-content-black truncate ... max-w-[calc(100%-36px)]'>
+                                <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>
                                   {file.name}
                                 </p>
                               </div>
-                              <span className='text-xs text-content-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
+                              <span className='text-xs text-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
                                 {bytesCalculator(file.size)}
                               </span>
                             </div>
                             <div className='flex justify-end items-center gap-6'>
                               {initialFileStarted && (
                                 <div className='flex items-center gap-2 max-w-full'>
-                                  <div className='h-1.5 bg-content-grey-100 dark:bg-neutral-600 w-[170px] '>
+                                  <div className='h-1.5 bg-grey-100 dark:bg-neutral-600 w-[170px] '>
                                     <div
-                                      className='h-1.5 bg-content-accent transition-all'
+                                      className='h-1.5 bg-primary transition-all'
                                       style={{width: `${uploadPercentage}%`}}
                                     ></div>
                                   </div>
-                                  <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                                  <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                                     {`${uploadPercentage} %`}
                                   </span>
                                 </div>

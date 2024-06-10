@@ -38,7 +38,7 @@ const SelectBaseFontSize = ({currentSize, onUpdateProfile, user}: Props) => {
   return (
     <label className='flex flex-col w-full'>
       <p className='mb-2 text-xs'>Text size</p>
-      <div className={`bg-white rounded-20 px-6 ${openSizeSelector ? 'pb-6' : ''}`}>
+      <div className={`bg-grey-0 rounded-xl px-6 ${openSizeSelector ? 'pb-6' : ''}`}>
         <div className={`flex items-center w-full h-10 ${openSizeSelector ? 'mb-4' : ''}`}>
           <div
             className={`flex justify-between items-center w-full `}
@@ -72,12 +72,12 @@ const SelectBaseFontSize = ({currentSize, onUpdateProfile, user}: Props) => {
             </div>
             <div className='w-full relative mb-6'>
               <span className='flex justify-between w-full relative px-3'>
-                <span className='absolute bottom-1 w-[calc(100%-24px)] z-0 before:block before:absolute before:w-full before:h-0.5 before:top-1 before:bg-content-grey-400'></span>
-                <span className='h-2 w-0.5 bg-content-grey-400 rounded-sm z-0 relative top-1.5'></span>
-                <span className='h-2 w-0.5 bg-content-grey-400 rounded-sm z-0 relative top-1.5'></span>
-                <span className='h-2 w-0.5 bg-content-grey-400 rounded-sm z-0 relative top-1.5'></span>
-                <span className='h-2 w-0.5 bg-content-grey-400 rounded-sm z-0 relative top-1.5'></span>
-                <span className='h-2 w-0.5 bg-content-grey-400 rounded-sm z-0 relative top-1.5'></span>
+                <span className='absolute bottom-1 w-[calc(100%-24px)] z-0 before:block before:absolute before:w-full before:h-0.5 before:top-1 before:bg-grey-400'></span>
+                <span className='h-2 w-0.5 bg-grey-400 rounded-3xs z-0 relative top-1.5'></span>
+                <span className='h-2 w-0.5 bg-grey-400 rounded-3xs z-0 relative top-1.5'></span>
+                <span className='h-2 w-0.5 bg-grey-400 rounded-3xs z-0 relative top-1.5'></span>
+                <span className='h-2 w-0.5 bg-grey-400 rounded-3xs z-0 relative top-1.5'></span>
+                <span className='h-2 w-0.5 bg-grey-400 rounded-3xs z-0 relative top-1.5'></span>
               </span>
               <input
                 type='range'

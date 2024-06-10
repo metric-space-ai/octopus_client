@@ -93,15 +93,15 @@ export function SideBar(props: {className?: string}) {
   return (
     <div
       className={classNames(
-        'hidden sm:flex flex-col px-4 py-6 bg-content-grey-900 border-box rounded-[20px]',
+        'hidden sm:flex flex-col px-4 py-6 bg-grey-50 dark:bg-grey-800 border-box rounded-xl',
         expanded && 'w-[320px]',
         props.className,
       )}
     >
       <div className='flex items-center justify-between'>
-        {expanded && <h2 className='text-lg font-semibold text-content-white'>Chats</h2>}
-        <IconButton variant='dark' onClick={() => setExpanded((prev) => !prev)}>
-          <IconSideBar />
+        {expanded && <h2 className='text-lg font-semibold text-grey-900 dark:text-grey-0'>Chats</h2>}
+        <IconButton variant='negative' onClick={() => setExpanded((prev) => !prev)}>
+          <IconSideBar className='stroke-grey-900 dark:stroke-grey-0' />
         </IconButton>
       </div>
       <div className='mt-6'>
@@ -109,7 +109,7 @@ export function SideBar(props: {className?: string}) {
           <SearchBar />
         ) : (
           <IconButton variant='dark' onClick={() => setExpanded((prev) => !prev)}>
-            <MagnifyingGlassIcon className='w-5 h-5 text-white' />
+            <MagnifyingGlassIcon className='w-5 h-5 text-grey-0' />
           </IconButton>
         )}
       </div>
@@ -120,8 +120,8 @@ export function SideBar(props: {className?: string}) {
         <div className='flex flex-col mt-4 gap-2'>
           <div className='flex justify-between items-center'>
             <div className='flex items-center gap-1'>
-              <ShieldCheckIcon className='w-5 h-5 text-content-accent-400' />
-              <p className='text-xs text-content-grey-100 font-semibold'>Data Protection</p>
+              <ShieldCheckIcon className='w-5 h-5 text-primary-400' />
+              <p className='text-xs dark:text-grey-100 text-grey-900 font-semibold'>Data Protection</p>
             </div>
             {user && (
               <Switch
@@ -135,8 +135,8 @@ export function SideBar(props: {className?: string}) {
                 }}
                 className={classNames(
                   `${
-                    chatStore.enabledContentSafety ? 'bg-content-accent' : 'bg-content-disabled'
-                  } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`,
+                    chatStore.enabledContentSafety ? 'bg-primary' : 'bg-grey-disabled'
+                  } relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-grey-0 focus-visible:ring-opacity-75`,
                 )}
               >
                 <span className='sr-only'>Use setting</span>
@@ -145,31 +145,32 @@ export function SideBar(props: {className?: string}) {
                   className={classNames(
                     `${
                       chatStore.enabledContentSafety ? 'translate-x-6' : 'translate-x-0'
-                    } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`,
+                    } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-grey-0 shadow-lg ring-0 transition duration-200 ease-in-out`,
                   )}
                 />
               </Switch>
             )}
           </div>
           {chatStore.enabledContentSafety && (
-            <p className='text-xxs text-content-grey-400'>
-              Your input is checked for compliance before further processing
-            </p>
+            <p className='text-xxs text-grey-400'>Your input is checked for compliance before further processing</p>
           )}
           {!chatStore.enabledContentSafety && (
-            <p className='text-xxs text-content-red-400'>{`Compliance Filter is disabled ${timeDifference}`}</p>
+            <p className='text-xxs text-danger-300'>{`Compliance Filter is disabled ${timeDifference}`}</p>
           )}
         </div>
       )}
       <div className='mt-6 flex items-center'>
-        <IconButton
-          variant='primary'
-          onClick={() => {
-            chatStore.changeNewTicketToggle();
-          }}
-        >
-          <PlusIcon className='w-5 h-5 text-white' />
-        </IconButton>
+        {!expanded && (
+          <IconButton
+            variant='primary'
+            className='rounded-xl'
+            onClick={() => {
+              chatStore.changeNewTicketToggle();
+            }}
+          >
+            <PlusIcon className='w-5 h-5 text-grey-0' />
+          </IconButton>
+        )}
         {expanded && (
           <Button
             className='w-full'

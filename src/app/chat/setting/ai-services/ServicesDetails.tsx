@@ -89,22 +89,22 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2 gap-1'>
             <div className='w-36 ml-7'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Name</span>
             </div>
             {/* <div className='w-28'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Size</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Size</span>
             </div> */}
             <div className='w-[122px] text-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Users</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Users</span>
             </div>
             <div className='w-24 flex justify-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 '>Status</span>
+              <span className='font-medium text-xs leading-5 text-grey-600 '>Status</span>
             </div>
             <div className='w-[55px] flex justify-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>On/Off</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>On/Off</span>
             </div>
             <div className='w-[55px] flex justify-start'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Color</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Color</span>
             </div>
           </div>
 
@@ -112,7 +112,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
             {reloadPluginIsAvailable && (
               <div className='w-full'>
                 <h2
-                  className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                  className='uppercase text-primary cursor-pointer text-center py-6 hover:underline'
                   onClick={() => getAllPlugins()}
                 >
                   try again
@@ -121,8 +121,8 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
             )}
             {!plugins || plugins.length === 0
               ? !isLoading && (
-                  <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                    <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                  <div className='flex justify-center py-3 items-center border-t'>
+                    <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
               : plugins.map((plugin, index) => (

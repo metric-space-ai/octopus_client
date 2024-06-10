@@ -40,7 +40,7 @@ export const TranslatorModal = ({
         leaveFrom='opacity-100'
         leaveTo='opacity-0'
       >
-        <div className='fixed inset-0 bg-black/50 transition-opacity' />
+        <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
       </Transition.Child>
       <div className='fixed inset-0 overflow-y-auto'>
         <div className='flex min-h-full items-center justify-center p-4'>
@@ -53,9 +53,9 @@ export const TranslatorModal = ({
             leaveFrom='opacity-100 scale-100'
             leaveTo='opacity-0 scale-95'
           >
-            <Dialog.Panel className='w-1/2 lg:w-1/3 flex flex-col transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+            <Dialog.Panel className='w-1/2 lg:w-1/3 flex flex-col transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
               <div className='flex justify-between items-center'>
-                <Dialog.Title className='text-[24px] font-semibold text-content-black'>
+                <Dialog.Title className='text-[24px] font-semibold text-grey-900'>
                   Translation Language
                 </Dialog.Title>
                 <IconButton className='absolute right-4' onClick={onClose}>
@@ -63,7 +63,7 @@ export const TranslatorModal = ({
                 </IconButton>
               </div>
               <div>
-                <p className='text-base text-content-grey-50'>Specify your preferred language for translations. </p>
+                <p className='text-base text-grey-50'>Specify your preferred language for translations. </p>
                 <div className='space-y-2 mt-2'>
                   <p className='text-xs text-grey-900'>language</p>
                   <div>

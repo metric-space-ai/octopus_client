@@ -50,10 +50,10 @@ const SignupPage = () => {
     }
   }, [setupInfo]);
   return (
-    <div className='min-h-full flex flex-col items-center justify-center bg-content-grey-100 rounded-[20px]'>
+    <div className='min-h-full flex flex-col items-center justify-center bg-grey-100 rounded-xl'>
       <Logo className='absolute left-10 top-10' withText />
       <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
-        <h1 className='text-5.5xl font-semibold text-content-black'>Sign Up</h1>
+        <h1 className='text-5.5xl font-semibold text-grey-900'>Sign Up</h1>
         <form className='w-full mt-10 flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
           <Input
             placeholder='Username'
@@ -89,18 +89,18 @@ const SignupPage = () => {
               },
             })}
           />
-          <Button className='mt-1 w-full !h-11 rounded-[40px]' loading={loading} title='Sign Up' />
+          <Button className='mt-1 w-full !h-11 rounded-4xl' loading={loading} title='Sign Up' />
         </form>
         <div className='mt-6 w-full flex items-center gap-2'>
-          <div className='flex-1 h-[1px] bg-content-black opacity-10' />
-          <p className='text-xs text-content-grey-600'>Or</p>
-          <div className='flex-1 h-[1px] bg-content-black opacity-10' />
+          <div className='flex-1 h-[1px] bg-grey-900 opacity-10' />
+          <p className='text-xs text-grey-600'>Or</p>
+          <div className='flex-1 h-[1px] bg-grey-900 opacity-10' />
         </div>
         <GoogleButton className='mt-6 w-full' title='Sign up with Google' />
-        <span className='mt-10 text-xs text-content-grey-600'>
+        <span className='mt-10 text-xs text-grey-600'>
           Already have an account?{' '}
           <Link href='login'>
-            <span className='text-sm text-content-accent underline'>Log In</span>
+            <span className='text-sm text-primary underline'>Log In</span>
           </Link>
         </span>
       </div>

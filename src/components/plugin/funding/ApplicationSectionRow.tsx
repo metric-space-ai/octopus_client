@@ -112,7 +112,7 @@ const ApplicationSectionRow = ({
       {keywordTitleOnEditMode.key === clearWhitespaces(bulletPoint.title) ? (
         <div className='flex items-center relative max-w-fit'>
           <input
-            className='text-xs text-content-black pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
+            className='text-xs text-content-grey-900 pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
             value={editKeywordsTitle}
             name='keywordsTitle'
             // defaultValue={editKeywordsTitle}
@@ -121,17 +121,17 @@ const ApplicationSectionRow = ({
           />
           <span className='block absolute w-[1px] h-4 bg-content-grey-400 right-8' />
           <IconButton className='!p-0 absolute right-2' onClick={clearKeywordTitleToEditMode}>
-            <XMarkIcon className='w-4 h-4 text-content-black' />
+            <XMarkIcon className='w-4 h-4 text-content-grey-900' />
           </IconButton>
         </div>
       ) : (
         <div className='flex gap-2 items-center'>
-          <h3 className='font-semibold text-xs leading-5 text-content-black'>{`${rowNumber}. ${bulletPoint.title}`}</h3>
+          <h3 className='font-semibold text-xs leading-5 text-content-grey-900'>{`${rowNumber}. ${bulletPoint.title}`}</h3>
           <IconButton className='!p-0' onClick={() => addKeywordTitleToEditMode(bulletPoint.title)}>
-            <PencilSquareIcon className='w-4 h-4 text-content-black' />
+            <PencilSquareIcon className='w-4 h-4 text-content-grey-900' />
           </IconButton>
           {/* <IconButton className='!p-0' onClick={() => handleRemoveBulletPoint(bulletPoint.title)}>
-            <TrashIcon className='w-4 h-4 text-content-black' />
+            <TrashIcon className='w-4 h-4 text-content-grey-900' />
           </IconButton> */}
         </div>
       )}
@@ -142,7 +142,7 @@ const ApplicationSectionRow = ({
           clearWhitespaces(bulletPoint.title) === openEditKeywordvalue.parentKey ? (
             <div className='flex items-center relative max-w-fit' key={clearWhitespaces(phrase)}>
               <input
-                className='text-xs text-content-black pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
+                className='text-xs text-content-grey-900 pl-2 pr-8 py-1 border-r outline-content-accent rounded-4 bg-content-grey-100'
                 value={editKeywordsValue}
                 name='keywordsTitle'
                 // defaultValue={editKeywordsTitle}
@@ -151,7 +151,7 @@ const ApplicationSectionRow = ({
               />
               <span className='block absolute w-[1px] h-4 bg-content-grey-400 right-8' />
               <IconButton className='!p-0 absolute right-2' onClick={handleCloseEditKeywordValue}>
-                <XMarkIcon className='w-4 h-4 text-content-black' />
+                <XMarkIcon className='w-4 h-4 text-content-grey-900' />
               </IconButton>
             </div>
           ) : clearWhitespaces(phrase).length > 0 ? (
@@ -159,7 +159,7 @@ const ApplicationSectionRow = ({
               className='flex items-center px-2 py-1 gap-2 bg-content-grey-100 rounded-4'
               key={clearWhitespaces(phrase)}
             >
-              <span className='text-xs leading-5 text-content-black'>{phrase}</span>
+              <span className='text-xs leading-5 text-content-grey-900'>{phrase}</span>
               <IconButton className='!p-0' onClick={() => handleOpenEditKeywordValue(phrase, bulletPoint.title)}>
                 <PencilSquareIcon className='w-4 h-4 text-content-grey-600 hover:text-content-accent' />
               </IconButton>

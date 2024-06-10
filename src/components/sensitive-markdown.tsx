@@ -85,7 +85,7 @@ export function PreCode(props: {children: any}) {
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
       <pre
-        className='relative text-xs my-2.5 p-2.5 py-4 bg-content-grey-900 rounded-[6px] overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words break-word-break'
+        className='relative text-xs my-2.5 p-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words break-word-break'
         ref={ref}
       >
         <span
@@ -106,7 +106,7 @@ export function PreCode(props: {children: any}) {
 function _SensitiveMarkDownContent(props: {content: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-col text-white gap-2'
+      className='flex flex-col text-grey-0 gap-2'
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
       rehypePlugins={[
         RehypeKatex,

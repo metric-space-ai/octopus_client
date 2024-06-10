@@ -50,6 +50,7 @@ import {getWaspAppByIdApi, getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/
 import classNames from 'classnames';
 import {useDebouncedCallback} from 'use-debounce';
 import {autoGrowTextArea} from '@/helpers';
+import {useThemeStore} from '@/store/themeData';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -107,6 +108,11 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
   const [hasWaspApp, setHasWaspApp] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
+  const {
+    themeData: {
+      content: {chat_logo},
+    },
+  } = useThemeStore();
   const prevMessage = item.response ?? '';
 
   const checkMessageResponse = useCallback(
@@ -204,7 +210,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
       return (
         <>
           {responseSlices[0]}
-          <span className='text-content-red-600'>{response}</span>
+          <span className='text-danger-500'>{response}</span>
           {responseSlices[1]}
         </>
       );
@@ -349,32 +355,32 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
     <>
       <div className='mt-5 text-between_sm_base'>
         <div className='flex gap-3'>
-          <div className='shrink-0 w-12 h-12 flex items-center justify-center bg-content-black rounded-full relative'>
+          <div className='shrink-0 w-12 h-12 flex items-center justify-center bg-grey-900 rounded-full relative'>
             {item.profile?.photo_file_name ? (
               <img
                 src={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
                 alt={item.profile.name}
-                className='rounded-full w-12 h-12 bg-content-grey-100 cursor-pointer'
+                className='rounded-full w-12 h-12 bg-grey-100 cursor-pointer'
                 onClick={() => setShowUserImageModal(true)}
                 title={item.profile.name}
               />
             ) : (
-              <UserIcon className='w-9 h-9 text-content-grey-100' />
+              <UserIcon className='w-9 h-9 text-grey-100' />
             )}
             {user?.user_id === item.user_id && (
               <>
                 {item.is_anonymized ? (
-                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                    <SparklesIcon width={14} height={14} className='text-content-accent' />
+                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-grey-0 rounded-full'>
+                    <SparklesIcon width={14} height={14} className='text-primary' />
                   </div>
                 ) : item.is_marked_as_not_sensitive ? (
-                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                    <ExclamationTriangleIcon width={14} height={14} className='text-red-600' />
+                  <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-grey-0 rounded-full'>
+                    <ExclamationTriangleIcon width={14} height={14} className='text-danger-500' />
                   </div>
                 ) : (
                   isSensitive && (
-                    <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                      <ShieldCheckIcon width={14} height={14} className='text-content-accent' />
+                    <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-grey-0 rounded-full'>
+                      <ShieldCheckIcon width={14} height={14} className='text-primary' />
                     </div>
                   )
                 )}
@@ -384,30 +390,30 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           <div className='flex-1 mt-1'>
             <div className='flex gap-1 [&_.user-profile-name]:opacity-0 [&:hover_.user-profile-name]:opacity-100 relative items-start'>
               {item.profile?.name && (
-                <p className='text-xs font-poppins-semibold p-2 pl-0 rounded-20 user-profile-name absolute -top-6 transition-opacity text-content-grey-900'>
+                <p className='text-xs font-semibold p-2 pl-0 rounded-xl user-profile-name absolute -top-6 transition-opacity text-grey-800'>
                   {item.profile.name}
                 </p>
               )}
               {isEditMode ? (
                 <textarea
                   ref={inputRef}
-                  className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-[10px] resize-none outline-none focus:border-content-black'
+                  className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-sm resize-none outline-none focus:border-grey-900'
                   value={messageText}
                   onInput={(e) => setMessageText(e.currentTarget.value)}
                   rows={inputRows}
                 />
               ) : (
                 <div className='flex flex-col gap-1'>
-                  <span className='whitespace-pre-wrap text-base leading-6 text-content-black break-word-break'>
+                  <span className='whitespace-pre-wrap text-base leading-6 text-grey-900 break-word-break'>
                     {prepareIfResponseIncludesMessage()}
                   </span>
                   {user?.user_id === item.user_id && (
                     <>
                       {item.is_anonymized && (
-                        <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* Sensitive data  has been replaced by anonymized data`}</span>
+                        <span className='whitespace-pre-wrap text-xxs text-primary-medium '>{`* Sensitive data  has been replaced by anonymized data`}</span>
                       )}
                       {item.is_marked_as_not_sensitive && (
-                        <span className='whitespace-pre-wrap text-xxs text-content-accent-hover '>{`* marked  as Not Sensitive`}</span>
+                        <span className='whitespace-pre-wrap text-xxs text-primary-medium '>{`* marked  as Not Sensitive`}</span>
                       )}
                     </>
                   )}
@@ -427,7 +433,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     ariaTitle='Regenerate Response'
                     size='small'
                     fontWeight='light'
-                    iconBefore={<ArrowPathIcon className='text-content-black w-4 h-4' />}
+                    iconBefore={<ArrowPathIcon className='text-grey-900 w-4 h-4' />}
                     onClick={() => regenerateResponse(item.message)}
                     className='h-8 opacity-70 hover:opacity-100 transition-all duration-150 !px-2 w-28'
                     disabled={regenerateIsDisabled}
@@ -454,17 +460,22 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           <div>
             <div
               className={`relative w-12 h-12 flex items-center justify-center rounded-full ${
-                isSensitive && !item.is_marked_as_not_sensitive ? 'bg-content-red-600/10' : 'bg-content-black'
+                isSensitive && !item.is_marked_as_not_sensitive ? 'bg-danger-500/10' : 'bg-grey-0 dark:bg-grey-900'
               }`}
             >
-              {isSensitive && !item.is_marked_as_not_sensitive && !item.is_anonymized ? (
-                <ShieldCheckIcon width={20} height={20} className='text-red-600' />
-              ) : (
-                <LogoIcon width={28} height={18} color='#F5F5F5' />
-                // <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-content-white rounded-full'>
-                //   <ShieldCheckIcon width={14} height={14} className='text-red-600' />
+              {
+                isSensitive && !item.is_marked_as_not_sensitive && !item.is_anonymized ? (
+                  <ShieldCheckIcon width={20} height={20} className='text-danger-500' />
+                ) : chat_logo ? (
+                  <img width={chat_logo.width} height={chat_logo.width} src={chat_logo.url} alt={chat_logo.alt ?? ''} />
+                ) : (
+                  <LogoIcon width={28} height={18} color='#F5F5F5' />
+                )
+
+                // <div className='w-5 h-5 absolute flex items-center justify-center right-0 bottom-0 bg-grey-0 rounded-full'>
+                //   <ShieldCheckIcon width={14} height={14} className='text-danger-500' />
                 // </div>
-              )}
+              }
             </div>
           </div>
           {/* <div className='flex flex-col'> */}
@@ -472,8 +483,8 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           {/* <Research /> */}
           {/* <div
             className={classNames(
-              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col`,
-              hasWaspApp ? 'bg-content-grey-100 border' : 'bg-content-black',
+              `flex-1 py-4 px-5 rounded-xl rounded-tl-none flex flex-col`,
+              hasWaspApp ? 'bg-grey-100 border' : 'bg-grey-900',
             )}
             style={{backgroundColor: item.color ?? ''}}
           >
@@ -484,8 +495,8 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           </div> */}
           <div
             className={classNames(
-              `flex-1 py-4 px-5 rounded-[20px] rounded-tl-none flex flex-col`,
-              hasWaspApp ? 'bg-content-grey-100 border' : 'bg-content-black',
+              `flex-1 py-4 px-5 rounded-xl rounded-tl-none flex flex-col`,
+              hasWaspApp ? 'bg-grey-100 border' : 'bg-grey-0 dark:bg-grey-900',
             )}
             style={{backgroundColor: item.color ?? ''}}
           >
@@ -510,16 +521,16 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                             <iframe
                               ref={iframeRef}
                               style={{height: iframeheight, minHeight: 360}}
-                              className={`w-full bg-red text-content-white [&_body]:m-0 flex-1`}
+                              className={`w-full bg-red text-grey-0 [&_body]:m-0 flex-1`}
                               srcDoc={applicationInnerHTML}
                               // height={iframeheight}
                               onLoad={onLoadPrepareIframe}
                             ></iframe>
                             <IconButton
-                              className='absolute -bottom-10 left-0 rounded-full hover:bg-content-grey-50'
+                              className='absolute -bottom-10 left-0 rounded-full hover:bg-grey-50'
                               onClick={() => setIframeWithSrcModal(true)}
                             >
-                              <ArrowsPointingOutIcon className='w-5 h-5 text-content-grey-400' />
+                              <ArrowsPointingOutIcon className='w-5 h-5 text-grey-400' />
                             </IconButton>
                           </>
                         )}
@@ -529,7 +540,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                         <MarkdownContent content={response ?? ''} />
                         {response && (
                           <IconButton
-                            className='bg-transparent p-0.5 rounded-full hover:bg-content-grey-600 transition-all duration-200'
+                            className='bg-transparent p-0.5 rounded-full hover:bg-grey-600 transition-all duration-200'
                             disabled={isCopied}
                             onClick={handleCopy}
                             title='copy to clipboard'
@@ -537,7 +548,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                             <div className='relative w-4 h-4 flex items-center justify-center'>
                               <CheckIcon
                                 className={classNames(
-                                  'absolute text-white transition-all duration-300',
+                                  'absolute text-grey-0 transition-all duration-300',
                                   !isCopied && ' w-0 h-0 opacity-0 scale-0',
                                   isCopied && 'opacity-100 w-4 h-4 scale-100',
                                 )}
@@ -547,7 +558,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
 
                               <ClipboardIcon
                                 className={classNames(
-                                  'absolute text-white transition-all duration-300 ',
+                                  'absolute text-grey-0 transition-all duration-300 ',
                                   isCopied && ' w-0 h-0 opacity-0 scale-0',
                                   !isCopied && 'opacity-100 w-4 h-4 scale-100',
                                 )}
@@ -570,20 +581,20 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                 ) : (
                   <div className='flex-1'>
                     <div className=' flex justify-between'>
-                      <div className='text-red-400 text-sm mb-3'>
+                      <div className='text-danger-300 text-sm mb-3'>
                         Sensitive content is detected. Chat temporarily blocked for safety.
                       </div>
                       <div>
                         <Popover className={'relative'}>
                           <Popover.Button>
-                            <InformationCircleIcon className='w-4 h-4 text-content-grey-400 hover:text-content-white cursor-pointer' />
+                            <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-0 cursor-pointer' />
                           </Popover.Button>
                           <Popover.Panel
                             className={
-                              'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[280px] -right-8 top-3'
+                              'bg-grey-800 py-3 px-8 absolute shadow-md shadow-grey-900 rounded-xl w-[280px] -right-8 top-3'
                             }
                           >
-                            <p className='text-content-white text-xxs font-poppins-light'>
+                            <p className='text-grey-0 text-xxs font-light'>
                               Content Safety found sensitive information in the message, which included a password.
                             </p>
                           </Popover.Panel>
@@ -593,7 +604,9 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     <SensitiveMarkdownContent content={item.response ?? ''} />
                   </div>
                 )}
-                {aiFunctionErrorMessage && <div className='text-red-400 text-base mb-3'>{aiFunctionErrorMessage}</div>}
+                {aiFunctionErrorMessage && (
+                  <div className='text-danger-300 text-base mb-3'>{aiFunctionErrorMessage}</div>
+                )}
               </>
             )}
             {!loading &&
@@ -605,24 +618,24 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     >
                       <Popover className={'relative'}>
                         <Popover.Button>
-                          <p className='text-content-blue-light'>View original</p>
+                          <p className='text-secondary-600'>View original</p>
                         </Popover.Button>
                         <Popover.Panel
                           className={
-                            'bg-content-grey-900 py-3 px-8 absolute shadow-md shadow-content-black rounded-20 w-[260px] -right-8 top-3 flex flex-col gap-3 z-20'
+                            'bg-grey-800 py-3 px-8 absolute shadow-md shadow-grey-900 rounded-xl w-[260px] -right-8 top-3 flex flex-col gap-3 z-20'
                           }
                         >
                           <div className='flex justify-between items-center'>
                             <div className='flex gap-1 items-center'>
-                              <LanguageIcon width={18} height={18} className='text-content-white' />
-                              <p className='font-semibold text-content-grey-100 text-xs'>Translation on</p>
+                              <LanguageIcon width={18} height={18} className='text-grey-0' />
+                              <p className='font-semibold text-grey-100 text-xs'>Translation on</p>
                             </div>
                             <CustomSwitch active={showOriginal} onChange={(check: boolean) => handleOriginalOne()} />
                           </div>
                           <div className='flex justify-between items-center'>
-                            <span className='text-content-grey-400 text-xs'>Translation language</span>
+                            <span className='text-grey-400 text-xs'>Translation language</span>
                             <p
-                              className='text-content-grey-100 hover:text-content-white underline text-xs cursor-pointer'
+                              className='text-grey-100 hover:text-grey-0 underline text-xs cursor-pointer'
                               onClick={() => setShowTranslatorModal(true)}
                             >
                               {selectedLanguage}
@@ -637,15 +650,15 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     onClick={() => setShowTranslatorModal(true)}
                     disabled={item.response ? false : true}
                   >
-                    <LanguageIcon className='w-5 h-5 text-content-grey-400' />
+                    <LanguageIcon className='w-5 h-5 text-grey-400' />
                   </IconButton>
-                  <div className='w-[1px] h-5 bg-content-grey-600' />
+                  <div className='w-[1px] h-5 bg-grey-600' />
                   <IconButton className='!p-0'>
-                    <SpeakerWaveIcon className='w-5 h-5 text-content-grey-400' />
+                    <SpeakerWaveIcon className='w-5 h-5 text-grey-400' />
                   </IconButton>
-                  <div className='w-[1px] h-5 bg-content-grey-600' />
+                  <div className='w-[1px] h-5 bg-grey-600' />
                   <IconButton className='!p-0' onClick={() => setShowProvideFeedbackModal(true)}>
-                    <HandThumbDownIcon className='w-5 h-5 text-content-grey-400' />
+                    <HandThumbDownIcon className='w-5 h-5 text-grey-400' />
                   </IconButton>
                 </div>
               ) : (
@@ -654,38 +667,38 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     <IconButton
                       variant='secondary'
                       onClick={handleNoSensitiveData}
-                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
+                      className='bg-grey-800 rounded-full py-2 px-4 flex items-center'
                       loading={sensitiveLoading}
                       disabled={sensitiveLoading}
                     >
-                      <NoSymbolIcon className='w-4 h-4 text-content-white' />
-                      <span className='text-[13px] leading-4 text-center text-content-white'>No Sensitive Data</span>
+                      <NoSymbolIcon className='w-4 h-4 text-grey-0' />
+                      <span className='text-[13px] leading-4 text-center text-grey-0'>No Sensitive Data</span>
                     </IconButton>
 
                     <IconButton
                       variant='secondary'
-                      className='bg-content-grey-900 rounded-full py-2 px-4 flex items-center'
+                      className='bg-grey-800 rounded-full py-2 px-4 flex items-center'
                       onClick={handleDeleteSensData}
                       loading={deleteLoading}
                       disabled={deleteLoading}
                     >
-                      <TrashIcon className='w-4 h-4 text-content-white' />
-                      <span className='text-[13px] leading-4 text-center text-content-white'>Remove Data</span>
+                      <TrashIcon className='w-4 h-4 text-grey-0' />
+                      <span className='text-[13px] leading-4 text-center text-grey-0'>Remove Data</span>
                     </IconButton>
 
                     <IconButton
                       variant='secondary'
-                      className={`bg-content-grey-900 rounded-full py-2 px-4 flex items-center ${
+                      className={`bg-grey-800 rounded-full py-2 px-4 flex items-center ${
                         item.is_anonymized ? '!cursor-default' : ''
                       }`}
                       onClick={handleAnonymizedData}
                       loading={anonymizedLoading}
                       disabled={anonymizedLoading || item.is_anonymized}
                     >
-                      <SparklesIcon className='w-4 h-4 text-content-white' />
+                      <SparklesIcon className='w-4 h-4 text-grey-0' />
                       <span
                         className={`text-[13px] leading-4 text-center ${
-                          item.is_anonymized ? 'text-content-grey-400 ' : 'text-content-white'
+                          item.is_anonymized ? 'text-grey-400 ' : 'text-grey-0'
                         }`}
                       >
                         Replace with anonymized data
@@ -694,17 +707,17 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
 
                     <IconButton
                       variant='secondary'
-                      className={`bg-content-grey-900 rounded-full py-2 px-4 flex items-center ${
+                      className={`bg-grey-800 rounded-full py-2 px-4 flex items-center ${
                         !enabledContentSafety ? '!cursor-default' : ''
                       }`}
                       onClick={() => setShowDeactivateConfirmationModal(true)}
                       loading={disableLoading}
                       disabled={disableLoading || !enabledContentSafety}
                     >
-                      <ExclamationTriangleIcon className='w-4 h-4 text-content-white' />
+                      <ExclamationTriangleIcon className='w-4 h-4 text-grey-0' />
                       <span
                         className={`text-[13px] leading-4 text-center ${
-                          !enabledContentSafety ? 'text-content-grey-400 ' : 'text-content-white'
+                          !enabledContentSafety ? 'text-grey-400 ' : 'text-grey-0'
                         }`}
                       >
                         Stop inspection (30 min)
@@ -719,7 +732,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
         {isCurrentUser && loading && (
           <div className='mt-4 flex justify-center'>
             <Button
-              className='bg-white'
+              className='bg-grey-0'
               variant='transparent'
               size='small'
               iconBefore={<StopIcon className='w-4 h-4' />}

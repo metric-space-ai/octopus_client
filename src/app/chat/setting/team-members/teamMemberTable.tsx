@@ -65,16 +65,16 @@ const TeamMebersTable = (props: Props) => {
     <>
       <div className='table-auto w-[638px] max-w-full'>
         <div className='h-8 flex items-centers'>
-          <span className='w-[224px] text-content-grey-600 text-xs font-normal text-left self-center'>Name</span>
+          <span className='w-[224px] text-grey-600 text-xs font-normal text-left self-center'>Name</span>
 
           <div
-            className='w-[133px] text-content-grey-600 text-xs font-normal px-3 flex items-center cursor-pointer hover:text-content-grey-900'
+            className='w-[133px] text-grey-600 text-xs font-normal px-3 flex items-center cursor-pointer hover:text-grey-800'
             onClick={() => console.log('sort it dude :)')}
           >
             Date added
-            <ArrowsUpDownIcon width={9} height={9} className='text-content-grey-600 ml-1.5' />
+            <ArrowsUpDownIcon width={9} height={9} className='text-grey-600 ml-1.5' />
           </div>
-          <span className='w-[122px] text-content-grey-600 text-xs font-normal text-left self-center'>User role</span>
+          <span className='w-[122px] text-grey-600 text-xs font-normal text-left self-center'>User role</span>
         </div>
         <div className='flex flex-col'>
           {isLoading ? (
@@ -88,8 +88,8 @@ const TeamMebersTable = (props: Props) => {
             </>
           ) : !entities || entities.length === 0 ? (
             !isLoading && (
-              <div className='px-[2.5px] py-3 h-68-px border-b-content-grey-100 border-b'>
-                <p className='text-lg text-content-accent uppercase'>not found</p>
+              <div className='px-[2.5px] py-3 h-68-px border-b-grey-100 border-b'>
+                <p className='text-lg text-primary uppercase'>not found</p>
               </div>
             )
           ) : (

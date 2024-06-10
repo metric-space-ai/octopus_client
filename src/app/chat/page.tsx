@@ -137,20 +137,20 @@ export default function ChatPage() {
   }, [isNewTicket]);
 
   return (
-    <div className='relative flex h-chat-screen-height rounded-bl-20 w-full'>
+    <div className='relative flex h-chat-screen-height rounded-bl-xl w-full'>
       <div
-        className={`flex flex-col bg-content-grey-100 w-full ${
+        className={`flex flex-col bg-grey-100 w-full ${
           expandedAgents ? 'w-[calc(100%-282px)]' : 'w-[calc(100%-68px)]'
         }`}
       >
         {showWarningSnackBarWhenSafetyDisabled && (
           <div
             style={{width: `calc(100% - ${expandedAgents ? '298px' : '84px'})`}}
-            className='flex top-2 left-2 bg-content-white text-content-black px-8 py-4 absolute gap-3 rounded-20 shadow-lg z-10'
+            className='flex top-2 left-2 bg-grey-0 text-grey-900 px-8 py-4 absolute gap-3 rounded-xl shadow-lg z-10'
             role='alert'
             onClick={() => setShowWarningSnackBarWhenSafetyDisabled(false)}
           >
-            <ShieldCheckIcon width={20} height={20} className='text-content-red-600' />
+            <ShieldCheckIcon width={20} height={20} className='text-danger-500' />
             <span className='block sm:inline'>
               Content security is currently disabled. Activate Content Safety to resume protection and ensure
               data privacy.
@@ -158,7 +158,7 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className='flex-1 p-5 pb-2 relative overflow-auto scroll-smooth' ref={scrollRef}>
+        <div className='flex-1 p-5 pb-2 relative overflow-auto scroll-smooth rounded-r-3xl rounded-bl-lg' ref={scrollRef}>
           {loading ? (
             <Loading />
           ) : showChatPrompt ? (
@@ -184,12 +184,12 @@ export default function ChatPage() {
         <div className='relative w-full p-5 border-box flex flex-col'>
           <div className='relative flex-1 flex'>
             <IconButton className='absolute left-3 top-[calc(50%-20px)] ' onClick={() => setOpenVoiceChatModal(true)}>
-              <MicrophoneIcon className='w-5 h-5 text-content-black' width={20} height={20} />
+              <MicrophoneIcon className='w-5 h-5 text-grey-900' width={20} height={20} />
             </IconButton>
             <textarea
               ref={inputRef}
-              // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-content-black'
-              className={`w-full border py-4 pr-[90px] pl-14 rounded-[40px] resize-none outline-none focus:border-content-black custom-scrollbar-thumb ${
+              // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-grey-900'
+              className={`w-full border py-4 pr-[90px] pl-14 rounded-4xl resize-none outline-none focus:border-grey-900 custom-scrollbar-thumb ${
                 inputIsDisabled ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
@@ -207,7 +207,7 @@ export default function ChatPage() {
               disabled={inputIsDisabled}
               onClick={() => (inputIsDisabled ? undefined : doSubmit(userInput))}
             >
-              <PaperAirplaneIcon className='w-6 h-6 text-content-grey-600' />
+              <PaperAirplaneIcon className='w-6 h-6 text-grey-600' />
             </IconButton>
           </div>
         </div>

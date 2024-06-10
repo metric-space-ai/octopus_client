@@ -24,7 +24,7 @@ export const ContainedInformationDialog = ({open, onClose, containedInformation}
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -39,7 +39,7 @@ export const ContainedInformationDialog = ({open, onClose, containedInformation}
             >
               <Dialog.Panel className='w-full max-w-6xl transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] align-middle shadow-xl transition-all'>
                 <div className='flex justify-between items-center mb-3'>
-                  <Dialog.Title as='h3' className='text-left text-2xl font-semibold text-content-black'>
+                  <Dialog.Title as='h3' className='text-left text-2xl font-semibold text-content-grey-900'>
                     {'Contained Information'}
                   </Dialog.Title>
                   <IconButton className='' onClick={onClose}>

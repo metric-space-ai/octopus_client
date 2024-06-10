@@ -39,9 +39,9 @@ const WaspApps = (props: Props) => {
     <>
       <div className='flex flex-col w-full px-4 py-4'>
         <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
-          <h1 className='text-lg leading-7 text-content-black font-poppins-semibold'>Wasp Apps</h1>
+          <h1 className='text-lg leading-7 text-grey-900 font-semibold'>Wasp Apps</h1>
           <Button
-            className='!px-6 font-poppins-semibold text-sm !h-34-px'
+            className='!px-6 font-semibold text-sm !h-34-px'
             variant='primary'
             title='Upload Wasp'
             onClick={handleOpenUploadNewWaspApp}

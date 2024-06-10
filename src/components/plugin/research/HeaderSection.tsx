@@ -9,19 +9,19 @@ const HeaderSection = ({researchSteps}: Props) => {
       {researchSteps === RESEARCHSTEPS.startTopic && (
         <>
           <h2 className='font-semibold text-sm leading-5 mb-1 text-content-accent-hover'>Research Topic:</h2>
-          <p className='text-xs leading-5 text-content-black mb-3'>Provide details about your Reasearch.</p>
+          <p className='text-xs leading-5 text-content-grey-900 mb-3'>Provide details about your Reasearch.</p>
         </>
       )}
       {researchSteps === RESEARCHSTEPS.Specification && (
         <>
           <h2 className='font-semibold text-sm leading-5 mb-1 text-content-accent-hover'>Proposed specification</h2>
-          <p className='text-xs leading-5 text-content-black mb-4'>Check and edit proposed specification of the AI</p>
+          <p className='text-xs leading-5 text-content-grey-900 mb-4'>Check and edit proposed specification of the AI</p>
         </>
       )}
       {researchSteps === RESEARCHSTEPS.Examples && (
         <>
           <h2 className='font-semibold text-sm leading-5 mb-1 text-content-accent-hover'>Search examples</h2>
-          <p className='text-xs leading-5 text-content-black mb-3'>Check Search Examples</p>
+          <p className='text-xs leading-5 text-content-grey-900 mb-3'>Check Search Examples</p>
         </>
       )}
 

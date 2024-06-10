@@ -36,15 +36,15 @@ export default function SettingPage() {
   };
   return (
     <SettingsProvider>
-      <div className='h-screen py-[64px] bg-content-grey-100 rounded-b-[20px]'>
+      <div className='h-screen py-[64px] bg-grey-100 rounded-b-xl'>
         <div
           onClick={handleExitSettings}
           className={
-            'ml-auto mr-9 flex flex-col gap-1 items-center hover:underline [&>button]:hover:bg-content-accent/30 transition-all w-12 cursor-pointer'
+            'ml-auto mr-9 flex flex-col gap-1 items-center hover:underline [&>button]:hover:bg-primary/30 transition-all w-12 cursor-pointer'
           }
         >
-          <IconButton className={'bg-content-accent/10'}>
-            <XMarkIcon className={'w-5 h-5 text-content-black'} />
+          <IconButton className={'bg-primary/10'}>
+            <XMarkIcon className={'w-5 h-5 text-grey-900'} />
           </IconButton>
           <span>Back</span>
         </div>
@@ -66,19 +66,19 @@ export default function SettingPage() {
           ) : (
             (menu === 'team-members' || menu === 'sectors' || menu === 'plugins') && (
               <div className='w-full pt-24 px-7'>
-                <div className='flex flex-col items-center justify-center w-full max-h-96 bg-white rounded-20 p-5'>
+                <div className='flex flex-col items-center justify-center w-full max-h-96 bg-grey-0 rounded-xl p-5'>
                   {authLoading ? (
                     <div className='flex gap-4 items-center'>
                       <Spinner size='medium' />
-                      <h1 className='font-poppins-bold text-center text-xxl text-content-accent-hover'>Please Wait</h1>
+                      <h1 className='font-bold text-center text-xxl text-primary-medium'>Please Wait</h1>
                     </div>
                   ) : (
                     <>
-                      <ShieldExclamationIcon className='text-red-500 mb-8' width={36} height={36} />
-                      <h1 className='font-poppins-semibold text-center text-xxl mb-6 text-content-accent-hover'>
+                      <ShieldExclamationIcon className='text-danger mb-8' width={36} height={36} />
+                      <h1 className='font-semibold text-center text-xxl mb-6 text-primary-medium'>
                         Access Dinied
                       </h1>
-                      <h2 className='font-poppins-semibold text-center text-xl mb-6 text-content-accent-400'>
+                      <h2 className='font-semibold text-center text-xl mb-6 text-primary-400'>
                         Sorry, You Don't have Prmission
                       </h2>
                     </>

@@ -11,12 +11,12 @@ const plugin = (props: Props) => {
   return (
     <div className='flex flex-col mt-[76px] px-6 w-full max-w-[700px]'>
       <Tab.Group>
-        <Tab.List className='flex rounded-t-xl'>
+        <Tab.List className='flex rounded-t-md'>
           <Tab
             className={({selected}) =>
               classNames(
-                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none',
-                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+                'w-[196px] rounded-t-xl py-2.5 h-10 text-sm font-semibold leading-5 text-grey-900 focus:outline-none',
+                selected ? 'bg-grey-0' : 'hover:bg-grey-150/50 bg-grey-150',
               )
             }
           >
@@ -25,8 +25,8 @@ const plugin = (props: Props) => {
           <Tab
             className={({selected}) =>
               classNames(
-                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none',
-                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+                'w-[196px] rounded-t-xl py-2.5 h-10 text-sm font-semibold leading-5 text-grey-900 focus:outline-none',
+                selected ? 'bg-grey-0' : 'hover:bg-grey-150/50 bg-grey-150',
               )
             }
           >
@@ -35,22 +35,22 @@ const plugin = (props: Props) => {
           <Tab
             className={({selected}) =>
               classNames(
-                'w-[196px] rounded-t-20 py-2.5 h-10 text-sm font-semibold leading-5 text-content-black focus:outline-none ',
-                selected ? 'bg-white' : 'hover:bg-content-grey-tab/50 bg-content-grey-tab',
+                'w-[196px] rounded-t-xl py-2.5 h-10 text-sm font-semibold leading-5 text-grey-900 focus:outline-none ',
+                selected ? 'bg-grey-0' : 'hover:bg-grey-150/50 bg-grey-150',
               )
             }
           >
             WASP
           </Tab>
         </Tab.List>
-        <Tab.Panels className='h-[420px] max-h-[420px] flex flex-col w-full py-[18px] px-6 rounded-r-20 rounded-bl-20 bg-white'>
-          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+        <Tab.Panels className='h-[420px] max-h-[420px] flex flex-col w-full py-[18px] px-6 rounded-r-xl rounded-bl-xl bg-grey-0'>
+          <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
             <AiServices />
           </Tab.Panel>
-          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+          <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
             <SimpleApps />
           </Tab.Panel>
-          <Tab.Panel className={classNames('rounded-xl bg-white relative -mx-4', 'focus:outline-none')}>
+          <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
             <WaspApps />
           </Tab.Panel>
         </Tab.Panels>

@@ -66,16 +66,16 @@ export default function SimpleAppsDetails() {
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2'>
             <div className='w-52'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600'>Name</span>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Name</span>
             </div>
             <div className='w-32'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 pl-1.5'>Description</span>
+              <span className='font-medium text-xs leading-5 text-grey-600 pl-1.5'>Description</span>
             </div>
             <div className='w-32'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 pl-1.5'>Formatted name</span>
+              <span className='font-medium text-xs leading-5 text-grey-600 pl-1.5'>Formatted name</span>
             </div>
             <div className='w-20 flex justify-center'>
-              <span className='font-poppins-medium text-xs leading-5 text-content-grey-600 pl-1.5'>On/Off</span>
+              <span className='font-medium text-xs leading-5 text-grey-600 pl-1.5'>On/Off</span>
             </div>
           </div>
 
@@ -83,7 +83,7 @@ export default function SimpleAppsDetails() {
             {reloadSimpleAppIsAvailable && (
               <div className='w-full'>
                 <h2
-                  className='uppercase text-content-accent cursor-pointer text-center py-6 hover:underline'
+                  className='uppercase text-primary cursor-pointer text-center py-6 hover:underline'
                   onClick={() => getAllSimpleApps()}
                 >
                   try again
@@ -92,15 +92,15 @@ export default function SimpleAppsDetails() {
             )}
             {!simpleApps || simpleApps.length === 0
               ? !isLoading && (
-                  <div className='flex justify-center py-3 items-center border-t border-content-grey-100'>
-                    <h2 className='text-lg text-content-accent uppercase'>not found</h2>
+                  <div className='flex justify-center py-3 items-center border-t'>
+                    <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
               : simpleApps.map((app, index) => (
                   <Disclosure key={app.id}>
                     {({open}) => (
                       <>
-                        <div className='flex justify-start py-3 items-center border-t border-content-grey-100'>
+                        <div className='flex justify-start py-3 items-center border-t'>
                           <div className='flex gap-3 w-52 items-center'>
                             <Disclosure.Button className='flex items-center'>
                               <ChevronUpIcon
@@ -109,17 +109,17 @@ export default function SimpleAppsDetails() {
                             </Disclosure.Button>
                             <div className={`flex items-center flex-1 ${app.code ? '' : 'pl-8'}`}>
                               <p
-                                className='text-xs leading-5 h-5 text-content-black font-poppins-semibold ml-3 w-36 truncate ...'
+                                className='text-xs leading-5 h-5 text-grey-900 font-semibold ml-3 w-36 truncate ...'
                                 title={app.name}
                               >
                                 {app.name}
                               </p>
                             </div>
                           </div>
-                          <p className='text-xxs w-32 pl-1.5 leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'>
+                          <p className='text-xxs w-32 pl-1.5 leading-4 h-4 text-grey-800 font-medium truncate ...'>
                             {app.description}
                           </p>
-                          <p className='text-xxs w-32 pl-1.5 leading-4 h-4 text-content-grey-900 font-poppins-medium truncate ...'>
+                          <p className='text-xxs w-32 pl-1.5 leading-4 h-4 text-grey-800 font-medium truncate ...'>
                             {app.formatted_name}
                           </p>
 
@@ -131,10 +131,10 @@ export default function SimpleAppsDetails() {
                           </div>
 
                           <span
-                            className='ml-auto p-1.5 hover:bg-content-red-600/10 cursor-pointer transition rounded-full'
+                            className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                             onClick={() => handleOpenDeleteSimpleAppModal(app)}
                           >
-                            <TrashIcon width={16} height={16} className='text-content-black cursor-pointer' />
+                            <TrashIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
                           </span>
                         </div>
                         <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 '>
@@ -144,12 +144,12 @@ export default function SimpleAppsDetails() {
                             leaveFrom='opacity-100'
                             leaveTo='opacity-0'
                           >
-                            <div className='custom-scrollbar-thumb h-40 w-full bg-content-black'>
+                            <div className='custom-scrollbar-thumb h-40 w-full bg-background'>
                               {/* <MarkdownContent content={app.code} /> */}
                               <Highlight
                                 innerHTML={false}
-                                // className='text-content-white [&_.hljs-name]:text-content-blue-light [&_.hljs-tag]:text-content-green [&_.hljs-keyword]:text-content-red-400
-                                // [&_.hljs-meta]:text-content-grey-400 [&_.hljs-meta]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500
+                                // className='text-grey-0 [&_.hljs-name]:text-secondary-600 [&_.hljs-tag]:text-secondary [&_.hljs-keyword]:text-danger-300
+                                // [&_.hljs-meta]:text-grey-400 [&_.hljs-meta]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500
                                 // [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                               >
                                 {app.code}

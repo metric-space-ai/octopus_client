@@ -69,7 +69,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black/50 transition-opacity' />
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
           </Transition.Child>
           <div className='fixed inset-0 overflow-y-auto'>
             <div className='flex min-h-full items-center justify-center p-4 text-center'>
@@ -82,13 +82,13 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                 leaveFrom='opacity-100 scale-100'
                 leaveTo='opacity-0 scale-95'
               >
-                <Dialog.Panel className='w-full max-w-[1000px] transform border border-content-primary bg-content-grey-100 px-10 pt-10 pb-2.5 rounded-[20px] align-middle shadow-xl transition-all'>
+                <Dialog.Panel className='w-full max-w-[1000px] transform border border-content-primary bg-grey-100 px-10 pt-10 pb-2.5 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-start mb-6'>
                     <div className='flex gap-4 items-center'>
                       <CustomSwitch active={true} onChange={(check: boolean) => handleActiveAgentPrompt(check)} />
                       <Dialog.Title
                         as='h3'
-                        className='text-2xl font-semibold text-content-black font-poppins-semibold text-left truncate overflow-hidden max-w-lg h-6'
+                        className='text-2xl font-semibold text-grey-900 text-left truncate overflow-hidden max-w-lg h-6'
                       >
                         {selected.title}
                       </Dialog.Title>
@@ -123,7 +123,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>
@@ -132,7 +132,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>
@@ -141,7 +141,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>
@@ -150,7 +150,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>
@@ -159,7 +159,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>
@@ -168,7 +168,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                           desc={'I checked the vibration level of the blade, everything is ok.'}
                           when={'19 mins ago'}
                         />
-                        <span className='font-poppins-medium text-xxs text-content-black min-w-max text-right block'>
+                        <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
                         </span>
                       </div>

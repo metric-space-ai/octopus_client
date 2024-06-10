@@ -51,7 +51,7 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='fixed inset-0 bg-black/50 transition-opacity' />
+          <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
         </Transition.Child>
         <div className='fixed inset-0 overflow-y-auto'>
           <div className='flex min-h-full items-center justify-center p-4'>
@@ -64,11 +64,11 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-content-grey-100 px-10 py-10 rounded-[20px] shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2 mb-5'>
                   <Dialog.Title
                     as='h3'
-                    className='text-2xl font-semibold text-content-black max-w-sm truncate overflow-hidden'
+                    className='text-2xl font-semibold text-grey-900 max-w-sm truncate overflow-hidden'
                   >
                     {deleteStarted
                       ? `“${document.original_file_name}” removing`
@@ -91,36 +91,36 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
                 {deleteStarted ? (
                   <div className='flex flex-col'>
                     <div className='flex justify-between mb-5'>
-                      <p className='text-content-grey-900 text-sm '>The document is being removed, please wait</p>
-                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                      <p className='text-grey-800 text-sm '>The document is being removed, please wait</p>
+                      <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                         {`${percent} %`}
                       </span>
                     </div>
-                    <div className='h-1 w-full bg-content-white dark:bg-neutral-600'>
-                      <div className='h-1 bg-red-600 transition-all' style={{width: `${percent}%`}}></div>
+                    <div className='h-1 w-full bg-grey-0 dark:bg-neutral-600'>
+                      <div className='h-1 bg-danger-500 transition-all' style={{width: `${percent}%`}}></div>
                     </div>
                   </div>
                 ) : deleteConfirmed ? (
                   <div className='flex flex-col'>
                     <div className='flex justify-between mb-5'>
-                      <p className='text-content-grey-900 text-sm flex gap-3 items-center'>
-                        <span className='p-1.5 rounded-full bg-content-red-600/10'>
-                          <TrashIcon className='text-content-black' width={16} height={16} />
+                      <p className='text-grey-800 text-sm flex gap-3 items-center'>
+                        <span className='p-1.5 rounded-full bg-danger-500/10'>
+                          <TrashIcon className='text-grey-900' width={16} height={16} />
                         </span>
                         Document successfully removed
                       </p>
-                      <span className='text-content-black text-xs font-poppins-medium tracking-[-1px] flex items-center'>
+                      <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
                         {`${percent} %`}
                       </span>
                     </div>
-                    <div className='h-1 w-full bg-content-white dark:bg-neutral-600'>
-                      <div className='h-1 bg-red-600 transition-all' style={{width: `${percent}%`}}></div>
+                    <div className='h-1 w-full bg-grey-0 dark:bg-neutral-600'>
+                      <div className='h-1 bg-danger-500 transition-all' style={{width: `${percent}%`}}></div>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className='text-xl font-semibold text-content-grey-900'>Are you sure?</p>
-                    <p className='text-base font-poppins-regular text-content-grey-600'>
+                    <p className='text-xl font-semibold text-grey-800'>Are you sure?</p>
+                    <p className='text-base font-regular text-grey-600'>
                       This action cannot be undone.
                     </p>
                     <form className='flex mt-2 gap-2'>

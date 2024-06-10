@@ -57,38 +57,48 @@ export function ChatItem({
   return (
     <div
       className={classNames(
-        'flex justify-between relative px-3 py-[10px] rounded-full bg-content-black ',
+        'flex justify-between relative px-3 py-[10px] rounded-xl',
         !expanded && '!px-[10px]',
-        selected && 'bg-content-grey-100',
-        (!selected || isNewTicketOn) && 'cursor-pointer',
+        selected && 'bg-grey-100',
+        (!selected || isNewTicketOn) && 'cursor-pointer bg-grey-0 dark:bg-grey-900',
       )}
       onClick={!selected ? onClick : handleSwitchOffNewTicket}
     >
       <div className='flex items-center gap-2 w-full max-w-[210px]'>
-        {<ChatBubbleLeftRightIcon className={classNames('w-5 h-5 text-white', selected && '!text-content-black')} />}
+        {
+          <ChatBubbleLeftRightIcon
+            className={classNames(
+              'w-5 h-5 text-grey-900',
+              selected && 'text-primary',
+              (!selected || isNewTicketOn) && 'dark:text-grey-0',
+            )}
+          />
+        }
         {expanded &&
           (editable ? (
             <form onSubmit={handleSubmitForm} className='relative flex items-center flex-1 -my-1'>
               <input
-                className={`rounded-20 bg-transparent border border-content-accent px-2 text-xs w-full py-1 ${
-                  selected ? 'text-content-grey-900' : 'text-content-white'
-                }`}
+                className={classNames(
+                  `rounded-xl bg-transparent border border-primary px-2 text-xs w-full py-1 text-grey-800`,
+                  (!selected || isNewTicketOn) && 'dark:text-grey-0',
+                )}
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
               />
               <button
                 title='submit rename ticket'
-                className='bg-content-accent absolute right-1 !p-0 w-5 h-5 flex rounded-full items-center justify-center'
+                className='bg-primary absolute right-1 !p-0 w-5 h-5 flex rounded-full items-center justify-center'
                 type='submit'
               >
-                <CheckIcon className='w-4 h-4 text-content-white' />
+                <CheckIcon className='w-4 h-4 text-grey-0' />
               </button>
             </form>
           ) : (
             <div
               className={classNames(
-                'flex-1 text-sm text-white whitespace-nowrap text-ellipsis overflow-hidden',
-                selected ? '!text-content-black' : '',
+                'flex-1 text-sm whitespace-nowrap text-ellipsis overflow-hidden text-grey-900',
+                // selected ? '!text-grey-900' : '',
+                (!selected || isNewTicketOn) && 'dark:text-grey-0',
               )}
               title={title}
             >
@@ -97,28 +107,22 @@ export function ChatItem({
           ))}
       </div>
       {false && (
-        <div className='flex justify-between text-xs mt-2 text-content-white'>
+        <div className='flex justify-between text-xs mt-2 text-grey-0'>
           <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{time}</div>
         </div>
       )}
       {expanded && (
         <div className='flex gap-2 items-center'>
           {editable ? (
-            <div
-              className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer'
-              onClickCapture={() => setEditable(false)}
-            >
+            <div className='text-grey-600 hover:text-grey-800 cursor-pointer' onClickCapture={() => setEditable(false)}>
               <XMarkIcon className='w-4 h-4' />
             </div>
           ) : (
-            <div
-              className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer'
-              onClickCapture={() => setEditable(true)}
-            >
+            <div className='text-grey-600 hover:text-grey-800 cursor-pointer' onClickCapture={() => setEditable(true)}>
               <PencilSquareIcon className='w-4 h-4' />
             </div>
           )}
-          <div className='text-content-grey-600 hover:text-content-grey-900 cursor-pointer' onClickCapture={onDelete}>
+          <div className='text-grey-600 hover:text-grey-800 cursor-pointer' onClickCapture={onDelete}>
             <TrashIcon className='w-4 h-4' />
           </div>
         </div>
@@ -138,7 +142,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
       <div className={classNames('flex flex-col gap-3', expanded && 'min-w-[280px]')}>
         {today && today.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Today</h6>
+            <h6 className='text-xs leading-5 font-semibold text-grey-600 dark:text-grey-100/50 pt-3'>Today</h6>
             {today?.map((ticket) => (
               <ChatItem
                 key={ticket.id}
@@ -165,7 +169,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
         )}
         {yesterday && yesterday.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>
+            <h6 className='text-xs leading-5 font-semibold text-grey-600 dark:text-grey-100/50 pt-3'>
               {expanded ? 'Yesterday' : 'Yest...'}
             </h6>
             {yesterday?.map((ticket) => (
@@ -193,7 +197,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
         )}
         {prev7Days && prev7Days.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>
+            <h6 className='text-xs leading-5 font-semibold text-grey-600 dark:text-grey-100/50 pt-3'>
               {expanded ? 'Previous 7 Days' : 'Pre 7...'}
             </h6>
             {prev7Days?.map((ticket) => (
@@ -219,7 +223,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
         )}
         {older && older.length > 0 && (
           <>
-            <h6 className='text-xs leading-5 font-poppins-semibold text-content-grey-100/50 pt-3'>Older</h6>
+            <h6 className='text-xs leading-5 font-semibold text-grey-600 dark:text-grey-100/50 pt-3'>Older</h6>
             {older?.map((ticket) => (
               <ChatItem
                 key={ticket.id}
