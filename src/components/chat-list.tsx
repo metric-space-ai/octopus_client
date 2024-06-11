@@ -69,8 +69,8 @@ export function ChatItem({
           <ChatBubbleLeftRightIcon
             className={classNames(
               'w-5 h-5 text-grey-900',
-              selected && 'text-primary',
               (!selected || isNewTicketOn) && 'dark:text-grey-0',
+              selected && 'text-primary dark:text-primary',
             )}
           />
         }

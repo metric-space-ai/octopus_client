@@ -157,8 +157,8 @@ export const SettingsMenu = () => {
                     className={classNames(
                       'w-5 h-5',
                       menu === elem.tab_name || (menu === null && index === 0)
-                        ? 'dark:text-grey-900 text-grey-0'
-                        : 'dark:text-grey-0 text-grey-900',
+                        ? 'dark:text-grey-0 text-grey-0'
+                        : 'dark:text-grey-900 text-grey-900',
                     )}
                   />
                 }

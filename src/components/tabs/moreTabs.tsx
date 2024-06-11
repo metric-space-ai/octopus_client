@@ -21,7 +21,7 @@ export const MoreTabs = ({tabs, itemsFrom, className, selectedId, children, onCh
         <>
           <Menu.Button
             className={`w-[220px] relative h-10 flex items-center justify-start pl-4 pr-3 rounded-t-xl text-sm font-semibold ${
-              open ? 'text-grey-100 bg-grey-0' : 'bg-grey-50 text-grey-900'
+              open ? 'text-grey-100 bg-grey-0 dark:text-grey-900' : 'bg-grey-50 dark:bg-grey-800 dark:text-grey-50 text-grey-900'
             }`}
             onClick={(e) => e.stopPropagation()}
           >

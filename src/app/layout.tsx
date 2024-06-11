@@ -9,6 +9,7 @@ import StoreProvider from './StoreProvider';
 import classNames from 'classnames';
 import {metadata} from './metadata';
 import {useThemeStore} from '@/store/themeData';
+import { APPTHEMENAME } from '@/constant';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -47,7 +48,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <StrictMode>
       <html
         lang='en'
-        className={classNames(poppins.variable, sourceSansPro.variable, roboto.variable, openSans.variable)}
+        className={classNames(
+          poppins.variable,
+          sourceSansPro.variable,
+          roboto.variable,
+          openSans.variable,
+          APPTHEMENAME.includes(`dark`) && 'dark',
+        )}
         style={{fontSize: 16}}
       >
         <body className={classNames('bg-grey-900', `font-${themeData.font}`)} suppressHydrationWarning={true}>

@@ -16,7 +16,7 @@ const ButtonStyle = {
   secondary: 'bg-grey-800',
   dark: 'bg-grey-900',
   negative: 'dark:bg-grey-900 bg-grey-0',
-  grey: 'bg-grey-100',
+  grey: 'bg-grey-50 dark:bg-grey-800',
   disabled: 'bg-grey-disabled',
 };
 export const IconButton = ({

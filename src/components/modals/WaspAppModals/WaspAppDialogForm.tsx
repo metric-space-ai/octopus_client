@@ -19,8 +19,8 @@ type Props = {
   register: UseFormRegister<IWaspFormInputs>;
   setIs_enabled: React.Dispatch<React.SetStateAction<boolean>>;
   is_enabled: boolean;
-  setInstance_type: React.Dispatch<React.SetStateAction<'Shared' | 'Private'>>;
-  instance_type: 'Shared' | 'Private';
+  setInstance_type: React.Dispatch<React.SetStateAction<'Shared' | 'Private' | 'User'>>;
+  instance_type: 'Shared' | 'Private' | 'User';
   handleGoToPrevStep: () => void;
 };
 
@@ -43,9 +43,7 @@ const WaspAppDialogFormInputs = ({
         {!!file && (
           <div className='flex gap-4 items-center max-w-full mb-8'>
             <div className='flex w-full pr-2 items-center'>
-              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>
-                {file.name}
-              </p>
+              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>{file.name}</p>
             </div>
             <span className='text-xs text-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
               {bytesCalculator(file.size)}
@@ -63,7 +61,7 @@ const WaspAppDialogFormInputs = ({
         />
 
         <div className='relative flex w-full gap-4 items-center'>
-          <span className='font-normal text-xs text-content-secondary w-28 text-left'>instance_type:</span>
+          <span className='font-normal text-xs text-content-secondary w-28 text-left'>Instance type :</span>
           <Listbox value={instance_type} onChange={setInstance_type}>
             <div className='relative mt-1 flex-1'>
               <Listbox.Button className='relative cursor-default rounded-5xl bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary w-full'>
@@ -85,7 +83,7 @@ const WaspAppDialogFormInputs = ({
                 <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-xs bg-grey-0 py-1 text-content-primary z-10'>
                   {INSTANCETYPES.map((type) => (
                     <Listbox.Option
-                      key={type}
+                      key={`instance_type_${type}`}
                       className={({active}) =>
                         `relative select-none py-2 pl-10 pr-4 cursor-pointer ${
                           active ? 'bg-grey-100' : 'text-gray-900'

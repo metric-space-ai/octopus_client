@@ -48,10 +48,10 @@ const MenuItem = () => {
         leaveFrom='transform opacity-100 scale-100'
         leaveTo='transform opacity-0 scale-95'
       >
-        <Menu.Items className='absolute right-0 w-profile-drawer origin-top-right divide-y divide-gray-100 rounded-xl bg-grey-100 dar:bg-grey-800 shadow-lg border border-border/50 focus:outline-none'>
+        <Menu.Items className='absolute right-0 w-profile-drawer origin-top-right divide-y divide-gray-100 rounded-xl bg-grey-100 dark:bg-grey-800 shadow-lg border border-border/50 focus:outline-none'>
           <div className='px-2 py-2 gap-2 flex flex-col'>
             <Menu.Item as='div'>
-              <div className={`rounded-lg bg-grey-0 flex py-3 px-4`}>
+              <div className={`rounded-lg bg-grey-0 dark:bg-grey-900 flex py-3 px-4`}>
                 <div className='min-w-[36px] w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-grey-150 '>
                   {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
                   {user?.photo_file_name ? (
@@ -218,8 +218,8 @@ export const Header = () => {
           </MoreTabs>
         )}
         {(isAdmin || hasAccessToCreateWokspace) && (
-          <IconButton className='w-9 h-9 ml-2 !bg-grey-50' onClick={handleAddNewTab}>
-            <PlusIcon className='w-4 h-4 text-grey-900' />
+          <IconButton className='w-9 h-9 ml-2' variant='grey' onClick={handleAddNewTab}>
+            <PlusIcon className='w-4 h-4 text-grey-900 dark:text-grey-50' />
           </IconButton>
         )}
       </div>

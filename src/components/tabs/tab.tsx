@@ -69,7 +69,7 @@ export const Tab = ({
     setValue('name', title ? title : '');
   }, [setValue]);
 
-  const classSelected = isFocused ? 'bg-grey-100 before:bg-grey-100 dark:bg-grey-100' : 'bg-grey-50 dark:bg-grey-900';
+  const classSelected = isFocused ? 'bg-grey-100 before:bg-grey-100 dark:bg-grey-100 dark:text-grey-900' : 'bg-grey-50 dark:bg-grey-800';
   // const beforeClass = 'before:absolute before:bottom-0 before:w-[10px] before:h-[10px] before:-left-[10px]';
 
   return (

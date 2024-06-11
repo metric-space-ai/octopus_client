@@ -38,7 +38,7 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
   const [extractMetaIsLoading, setExtractMetaIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(UPLOADWASPAPPSTEPS.SelectFile);
 
-  const [instance_type, setInstance_type] = useState<'Shared' | 'Private'>('Shared');
+  const [instance_type, setInstance_type] = useState<'Shared' | 'Private' | 'User'>('User');
   const [is_enabled, setIs_enabled] = useState(true);
 
   const {

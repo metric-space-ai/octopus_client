@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {APPTHEME, TThemeName} from '@/constant';
+import {APPTHEMENAME, TThemeName} from '@/constant';
 
 type TImageDetails = {
   url: string;
@@ -19,6 +19,48 @@ interface IThemeData {
 
 const ALLTHEMES: Record<TThemeName, IThemeData> = {
   default: {
+    cssVariables: {
+      '--color-primary-default': '274 82% 44%',
+      '--color-primary-medium': '273 100% 35%',
+      '--color-primary-400': '274 83% 67%',
+      '--color-primary-150': '274 71% 87%',
+
+      '--color-secondary-default': '83 100% 33%',
+      '--color-secondary-600': '216 86% 65%',
+      '--color-secondary-700': '216 100% 35%',
+
+      '--color-background': '0 0% 12%',
+
+      '--color-border': '0 0% 96%',
+      '--color-border-primary': '213 79% 50%',
+
+      '--color-danger-300': '2, 76%, 66%',
+      '--color-danger-500': '2, 70%, 53%',
+
+      '--color-success': '83 100% 33%',
+      '--color-success-soft': '149 81% 94%',
+
+      '--color-grey-0': '0 0% 100%',
+      '--color-grey-50': '0 0% 96%',
+      '--color-grey-100': '0 0% 96%',
+      '--color-grey-150': '0 0% 88%',
+      '--color-grey-400': '0, 0%, 60%',
+      '--color-grey-600': '0 0% 36%',
+      '--color-grey-800': '0 0% 17%',
+      '--color-grey-900': '0 0% 12%',
+
+      '--color-grey-disabled': '0 0% 68%',
+
+      '--radius': '0.75rem',
+
+      '--bg-img-src': "url('/images/bg-default.jpg')",
+    },
+    content: {
+      title: 'Octopus',
+    },
+    font: 'poppins',
+  },
+  'default-dark': {
     cssVariables: {
       '--color-primary-default': '274 82% 44%',
       '--color-primary-medium': '273 100% 35%',
@@ -278,7 +320,7 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
   },
 };
 
-const initialsThemeData: IThemeData = ALLTHEMES[APPTHEME];
+const initialsThemeData: IThemeData = ALLTHEMES[APPTHEMENAME];
 
 interface IThemeStoreProps {
   themeData: IThemeData;
