@@ -478,13 +478,11 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
               }
             </div>
           </div>
-          {/* <div className='flex flex-col'> */}
-          {/* <WaspAppGenerator /> */}
-          {/* <Research /> */}
+
           {/* <div
             className={classNames(
               `flex-1 py-4 px-5 rounded-xl rounded-tl-none flex flex-col`,
-              hasWaspApp ? 'bg-grey-100 border' : 'bg-grey-900',
+              hasWaspApp ? 'bg-grey-100 border' : 'bg-grey-0 dark:bg-grey-900',
             )}
             style={{backgroundColor: item.color ?? ''}}
           >
@@ -502,7 +500,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           >
             {hasWaspApp && (
               <AppIframe
-                src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend`}
+                src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend/?messageId=${item.id}`}
                 loadingTitle='the app is loading'
                 bgColor={item.color ?? '#F5F5F5'}
                 waspInfo={waspAppDetails}
