@@ -3,14 +3,17 @@
 import {useEffect, useState} from 'react';
 import classNames from 'classnames';
 
+import {Disclosure, Transition} from '@headlessui/react';
+
 import {IChatMessageFile} from '@/types';
 import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
-import { IconButton} from './buttons';
+import {IconButton} from './buttons';
 import {ArrowDownTrayIcon, ArrowsPointingOutIcon, DocumentTextIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
 import {ExpandMediaDialog} from './modals/expandMediaDialog';
 import AppIframe from './app-iframe';
 import {nanoid} from '@reduxjs/toolkit';
 import {PdfTypeIcon} from './svgs';
+import {PdfViewerDialog} from './modals';
 
 interface FileMarkdownProps {
   messageId: string;
@@ -35,18 +38,37 @@ export function FileMarkdownContent({
   const [selectedMedia, setSelectedMedia] = useState<IChatMessageFile>();
   const [openExpandMediaDialog, setOpenExpandMediaDialog] = useState(false);
   const [textFileContent, setTextFileContent] = useState<TextFileContentType[]>([]);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [openPdfViewer, setOpenPdfViewer] = useState(false);
 
   const handleOpenMedaIndialog = (media: IChatMessageFile) => {
     setSelectedMedia(media);
     setOpenExpandMediaDialog(true);
   };
 
+  const handleOpenPdfViewer = async (media: IChatMessageFile) => {
+    const url = `${ImagesBaseUrl}${media.file_name}`;
+    console.log('handleOpenPdfViewer...', {url, media});
+    // const response = await fetch(url);
+    // const blob = await response.blob();
+    // const response = await fetch(url);
+    // console.log({URL, response});
+    // const blob = await response.blob();
+    // const href = window.URL.createObjectURL(blob);
+    setSelectedMedia(media);
+    setPdfUrl(url);
+    setOpenPdfViewer(true);
+  };
+  const handleClosePdfViewer = () => {
+    setSelectedMedia(undefined);
+    setPdfUrl('');
+    setOpenPdfViewer(false);
+  };
   const handleCloseExpandMediaDialog = () => {
     setSelectedMedia(undefined);
     setOpenExpandMediaDialog(false);
   };
   const handleGetTextFileContent = async () => {
-    
     if (mediaFiles.length === 0) return;
 
     for (const mediaFile of mediaFiles) {
@@ -122,24 +144,52 @@ export function FileMarkdownContent({
             )}
 
             {media.media_type.includes('application/pdf') && (media.file_name || media.original_file_name) && (
-              <div
-                className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer'
-                onClick={() =>
-                  handleDownloadTextFile(
-                    media.original_file_name ?? `${media.file_name}.pdf`,
-                    `${ImagesBaseUrl}${media.file_name}`,
-                  )
-                }
-              >
-                <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-[#DC0F4B] '>
-                  <PdfTypeIcon className='w-4 text-grey-0' />
+              <div className='flex flex-col gap-3 relative items-start w-full'>
+                <div className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer max-w-[298px]'>
+                  <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-[#DC0F4B] '>
+                    <PdfTypeIcon className='w-4 text-grey-0' />
+                  </div>
+                  <div className='flex gap-[25px] items-center'>
+                    <div className='flex flex-col'>
+                      <p className='text-grey-0 text-sm leading-relaxed font-semibold max-w-[152px] truncate ...'>
+                        {media.original_file_name ?? media.id}
+                      </p>
+                      <span
+                        className='block text-grey-100 text-xs leading-relaxed font-normal'
+                        onClick={() => handleOpenPdfViewer(media)}
+                      >
+                        View<b>{` PDF `}</b>here
+                      </span>
+                    </div>
+                    <ArrowDownTrayIcon
+                      className='flex items-center justify-center h-8 w-8 p-1.5 text-grey-0 bg-grey-900 rounded-4xl'
+                      onClick={() =>
+                        handleDownloadTextFile(
+                          media.original_file_name ?? `${media.file_name}.pdf`,
+                          `${ImagesBaseUrl}${media.file_name}`,
+                        )
+                      }
+                    />
+                  </div>
                 </div>
-                <div className='flex flex-col'>
-                  <p className='text-grey-0 text-sm leading-relaxed font-semibold'>
-                    {media.original_file_name ?? media.id}
-                  </p>
-                  <span className='block text-grey-100/60 text-xs leading-relaxed font-normal'>PDF</span>
-                </div>
+                <Disclosure>
+                  {({open}) => (
+                    <>
+                      <Disclosure.Panel className={"w-full"}>
+                        <embed
+                            src={`${ImagesBaseUrl}${media.file_name}`}
+                            className={classNames('w-full h-[480px] flex-1')}
+                            type='application/pdf'
+                            width='100%'
+                            height='100%'
+                          />
+                      </Disclosure.Panel>
+                      <Disclosure.Button>
+                        <span className='text-grey-100 text-sm font-semibold'>{open ? 'Collapse' : 'Expand'}</span>
+                      </Disclosure.Button>
+                    </>
+                  )}
+                </Disclosure>
               </div>
             )}
             {media.media_type.includes('audio/aa') && (media.file_name || media.original_file_name) && (
@@ -227,6 +277,7 @@ export function FileMarkdownContent({
           height={600}
         />
       )}
+      {pdfUrl && <PdfViewerDialog url={pdfUrl} open={openPdfViewer} onClose={handleClosePdfViewer} />}
     </>
   );
 }
