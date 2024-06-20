@@ -289,7 +289,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isEditMode) measure();
-  }, [messageText]);
+  }, [messageText, isEditMode]);
 
   useEffect(() => {
     if (item.message) setMessageText(item.message);

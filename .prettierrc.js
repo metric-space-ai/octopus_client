@@ -1,9 +1,10 @@
 module.exports = {
-	trailingComma: 'all',
-	singleQuote: true,
-	jsxSingleQuote: true,
-	bracketSpacing: false,
-	printWidth: 120,
-	parser: 'typescript',
-	endOfLine: 'auto'
+  trailingComma: 'all',
+  singleQuote: true,
+  jsxSingleQuote: true,
+  bracketSpacing: false,
+  printWidth: 120,
+  parser: 'typescript',
+  endOfLine: 'auto',
+  semi: true,
 };
