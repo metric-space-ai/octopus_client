@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from 'react';
 
-import {Disclosure, Listbox, Transition} from '@headlessui/react';
+import {Disclosure, Listbox, Transition, Popover} from '@headlessui/react';
 
 import {
   CheckIcon,
@@ -19,6 +19,7 @@ import {PLUGINSTATUS, WASPAPPTEMPLATECOLOR} from '@/constant';
 import ServiceFunctions from './ServiceFunctions';
 import {Spinner} from '@/components/spinner';
 import useDebounce from '@/hooks/useDebounce';
+import {HexColorPicker} from 'react-colorful';
 
 type Props = {
   plugin: IPlugin;
@@ -48,12 +49,12 @@ const ServiceDetailRow = ({
   const [currentColor, setCurrentColor] = useState<string | null>(plugin.color);
   const [customColor, setCustomColor] = useState(plugin.color);
   const [isLoading, setIsLoading] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   const debouncedCustomColor = useDebounce(customColor, 3000);
 
-  const handleChangeCustomColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setCustomColor(e.target.value);
+  const handleChangeCustomColor = (value: string) => {
+    setCustomColor(value);
   };
   useEffect(() => {
     if (currentColor !== plugin.color) {
@@ -258,23 +259,42 @@ const ServiceDetailRow = ({
                           `relative select-none py-1 px-4 gap-2 items-center rounded-4xl transition-colors text-grey-900 flex cursor-pointer hover:bg-grey-100`,
                         )}
                       >
-                        <div
-                          className='flex w-7 h-7 relative justify-center items-center rounded-full'
-                          style={{backgroundColor: customColor ?? ''}}
-                        >
-                          {currentColor === customColor && (
-                            <CheckIcon
-                              className='h-4 w-4 text-grey-800 invert mix-blend-difference'
-                              aria-hidden='true'
-                            />
-                          )}
-
-                          <input
-                            type='color'
-                            className='w-0 h-0 opacity-0 '
-                            value={customColor ?? ''}
-                            onChange={(e) => handleChangeCustomColor(e)}
-                          />
+                        <div>
+                          <Popover>
+                            {({open}) => (
+                              <>
+                                <Popover.Button
+                                  onClick={() => setPopoverOpen(!popoverOpen)}
+                                  className='flex w-7 h-7 relative justify-center items-center rounded-full'
+                                  style={{backgroundColor: customColor ?? ''}}
+                                >
+                                  {currentColor === customColor && (
+                                    <CheckIcon
+                                      className='h-4 w-4 text-grey-800 invert mix-blend-difference'
+                                      aria-hidden='true'
+                                    />
+                                  )}
+                                </Popover.Button>
+                                <Transition
+                                  enter='transition ease-out duration-200'
+                                  enterFrom='opacity-0 translate-y-1'
+                                  enterTo='opacity-100 translate-y-0'
+                                  leave='transition ease-in duration-150'
+                                  leaveFrom='opacity-100 translate-y-0'
+                                  leaveTo='opacity-0 translate-y-1'
+                                >
+                                  {popoverOpen && (
+                                    <Popover.Panel
+                                      static
+                                      className='absolute left-0 bottom-0 mt-3 transform px-4 sm:px-0 z-50'
+                                    >
+                                      <HexColorPicker color={customColor ?? ''} onChange={handleChangeCustomColor} />
+                                    </Popover.Panel>
+                                  )}
+                                </Transition>
+                              </>
+                            )}
+                          </Popover>
                         </div>
                         <p className='block text-sm leading-normal font-semibold'>{'Custom'}</p>
                       </label>

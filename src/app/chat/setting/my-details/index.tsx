@@ -30,7 +30,7 @@ const MyDetailPage = () => {
     formState: {errors},
   } = form;
 
-  const {user, singleUser, onUpdateProfile, loading, onUpdateProfilePicture, getSingleUser, onUpdateSingleUser} =
+  const {user, currentUser, onUpdateProfile, loading, onUpdateProfilePicture, getCurrentUser, onUpdateSingleUser} =
     useAuthContext();
 
   const [takeImageModal, setTakeImageModal] = useState(false);
@@ -50,12 +50,12 @@ const MyDetailPage = () => {
         job_title,
       });
     }
-    if (singleUser) {
-      if (singleUser.email == email) return;
+    if (currentUser) {
+      if (currentUser.email == email) return;
       onUpdateSingleUser({
         email,
-        roles: singleUser.roles,
-        is_enabled: singleUser.is_enabled,
+        roles: currentUser.roles,
+        is_enabled: currentUser.is_enabled,
       });
     }
     setActiveSaveButton(false);
@@ -79,13 +79,13 @@ const MyDetailPage = () => {
       //end
       form.setValue('job_title', user.job_title);
     }
-    if (singleUser) {
-      form.setValue('email', singleUser.email);
+    if (currentUser) {
+      form.setValue('email', currentUser.email);
     }
-  }, [user, singleUser]);
+  }, [user, currentUser]);
   useEffect(() => {
     setEmailIsLoading(true);
-    getSingleUser();
+    getCurrentUser();
     setEmailIsLoading(false);
   }, []);
 

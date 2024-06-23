@@ -22,9 +22,25 @@ import {IconButton} from './buttons';
 import {CreateNewTabModal, DeleteTabModal} from './modals';
 import {ImagesBaseUrl} from '@/constant';
 
-
 const MenuItem = () => {
-  const {onLogout, user} = useAuthContext();
+  const {onLogout, user, currentUser, getCurrentUser, getCurrentUserCompany, currentUserCompany} = useAuthContext();
+
+  useEffect(() => {
+    if (user && !currentUser) {
+      getCurrentUser();
+    }
+  }, [user]);
+  useEffect(() => {
+    if (currentUser) {
+      console.log({currentUser});
+      getCurrentUserCompany();
+    }
+  }, [currentUser]);
+  useEffect(() => {
+    if (currentUserCompany) {
+      console.log({currentUserCompany});
+    }
+  }, [currentUserCompany]);
 
   return (
     <Menu as='div' className='z-10 relative inline-block text-left'>
@@ -70,7 +86,9 @@ const MenuItem = () => {
               {({active}) => (
                 <button
                   className={`${
-                    active ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0' : 'text-grey-800 dark:text-grey-0'
+                    active
+                      ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0'
+                      : 'text-grey-800 dark:text-grey-0'
                   } group flex w-full items-center rounded-xs pr-2 pl-5 py-2 text-sm`}
                 >
                   <Cog8ToothIcon className='mr-2 h-5 w-5' aria-hidden='true' />
@@ -82,7 +100,9 @@ const MenuItem = () => {
               {({active}) => (
                 <button
                   className={`${
-                    active ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0' : 'text-grey-800 dark:text-grey-0'
+                    active
+                      ? 'bg-grey-0 dark:bg-grey-900 text-grey-800 dark:text-grey-0'
+                      : 'text-grey-800 dark:text-grey-0'
                   } group flex w-full items-center rounded-xs pr-2 pl-5 py-2 text-sm`}
                   onClick={onLogout}
                 >

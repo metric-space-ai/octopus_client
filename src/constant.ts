@@ -1,8 +1,7 @@
 import ISO6391 from 'iso-639-1';
-import {PartialTRoleLabel, TRecordPluginStatus, TRole, TWaspAppBgColor} from './types';
+import {PartialTRoleLabel, TRecordPluginStatus, TRole, TThemeName, TWaspAppBgColor} from './types';
 import {nanoid} from '@reduxjs/toolkit';
 
-export type TThemeName = 'default-dark' | 'default' | 'harting' | 'topwerk' | 'statista' | 'rotodecor';
 
 export const APPREQUESTBASEURL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 export const APPTHEMENAME: TThemeName = (process.env.NEXT_PUBLIC_THEME_NAME as TThemeName) ?? 'default-dark';

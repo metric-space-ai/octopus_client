@@ -46,7 +46,7 @@ export const MoreTabs = ({tabs, itemsFrom, className, selectedId, children, onCh
               className='absolute w-[257px] -left-1.5 origin-top-right divide-y divide-gray-100 rounded-xs bg-grey-50 shadow-lg border focus:outline-none'
               onClick={(e) => e.stopPropagation()}
             >
-              <div className='px-2 pt-2 pb-1'>
+              <div className='px-2 pt-2 pb-1 bg-grey-100'>
                 {React.Children.toArray(children)
                   .filter((child) => React.isValidElement(child))
                   .map((child) => {

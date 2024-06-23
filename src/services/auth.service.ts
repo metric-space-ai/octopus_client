@@ -1,4 +1,4 @@
-import {IUser, IUserProfile, IUserSetup} from '@/types';
+import {IUser, IUserProfile, IUserSetup, TCompany} from '@/types';
 import {
   IAuthData,
   ICompanyRegisterPayload,
@@ -51,6 +51,17 @@ export const updateSingleUserById = async (id: string, payload: IUpdateUserPaylo
 
 export const getProfile = async (id: string) => {
   return apiHub.get<IUserProfile>(`api/v1/profiles/${id}`);
+};
+
+export const getCompanyByIdApi = async (id: string) => {
+  return apiHub.get<TCompany>(`api/v1/companies/${id}`);
+};
+
+export const updateCompanyByIdApi = async ({
+  id,
+  ...payload
+}: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>) => {
+  return apiHub.put<TCompany>(`api/v1/companies/${id}`, payload);
 };
 
 export const updateUserProfile = async (id: string, payload: IUpdateUserProfilePayload) => {

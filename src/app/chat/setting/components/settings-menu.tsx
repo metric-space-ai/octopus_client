@@ -8,7 +8,7 @@ import {
   BuildingOfficeIcon,
   ClipboardDocumentListIcon,
   DocumentDuplicateIcon,
-  CodeBracketIcon,
+  BriefcaseIcon,
   AdjustmentsHorizontalIcon,
   CpuChipIcon,
 } from '@heroicons/react/24/outline';
@@ -58,6 +58,13 @@ const SIDEBAR: {
     permission: '',
   },
   {
+    id: 'tab_theme',
+    tab_name: 'theme',
+    title: 'Theme',
+    icon: BriefcaseIcon,
+    permission: ROLE_COMPANY_ADMIN_USER,
+  },
+  {
     id: 'tab_documents',
     tab_name: 'documents',
     title: 'Documents',
@@ -82,7 +89,7 @@ const SIDEBAR: {
     id: 'tab_models',
     tab_name: 'models',
     title: 'Models',
-    icon: CpuChipIcon    ,
+    icon: CpuChipIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
   },
   {
@@ -99,6 +106,7 @@ const SIDEBAR: {
     icon: AdjustmentsHorizontalIcon,
     permission: '',
   },
+
   // {
   //   id: 'tab_apps',
   //   tab_name: 'apps',

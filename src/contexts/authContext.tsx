@@ -12,10 +12,12 @@ import {IUser, IUserProfile, IUserSetup} from '@/types/user';
 
 import {
   checkSetupApi,
+  getCompanyByIdApi,
   getProfile,
   getSingleUserById,
   login,
   register,
+  updateCompanyByIdApi,
   updateSingleUserById,
   updateUserProfile,
   updateUserProfilePic,
@@ -23,12 +25,14 @@ import {
 import {AxiosError} from 'axios';
 import {IPlugin} from '@/types/plugin';
 import {paths} from '@/config/path';
+import {TCompany} from '@/types';
 
 interface IAuthContext {
   isAuthenticated: boolean;
   user: IUserProfile | null;
   setUser: (key: IUserProfile | null) => void;
-  singleUser: IUser | null;
+  currentUser: IUser | null;
+  currentUserCompany: TCompany | null;
   loading: boolean;
   authLoading: boolean;
   setupInfo: IUserSetup | undefined;
@@ -38,8 +42,11 @@ interface IAuthContext {
   onRegister: (payload: IRegisterPayload) => void;
   onUploadPlugin: (payload: FormData) => void;
   onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
+  companyIsLoading: boolean;
+  getCurrentUserCompany: () => void;
+  putCurrentUserCompany: (payload: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>) => void;
   onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
-  getSingleUser: () => void;
+  getCurrentUser: () => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
@@ -51,11 +58,13 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const {authData, setAuthData} = useAuthStore();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [user, setUser] = useState<IUserProfile | null>(null);
-  const [singleUser, setSingleUser] = useState<IUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const [currentUserCompany, setCurrentUserCompany] = useState<TCompany | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [setupInfo, setSetupInfo] = useState<IUserSetup>();
   const [setupInfoLoading, setSetupInfoLoading] = useState<boolean>(false);
+  const [companyIsLoading, setCompanyIsLoading] = useState<boolean>(false);
 
   const {setAxiosConfiguration} = useApiClient();
 
@@ -71,7 +80,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
 
     if (!authData) {
       setUser(null);
-      setSingleUser(null);
+      setCurrentUser(null);
       setAuthLoading(false);
     } else {
       setAxiosConfiguration();
@@ -179,14 +188,53 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         .finally(() => setLoading(false));
     }
   };
-  const handleGetSingleUserById = async () => {
+  const handleGetCurrentUserCompanyById = async () => {
+    if (currentUser && currentUser.company_id) {
+      setCompanyIsLoading(true);
+      try {
+        const companyData = await getCompanyByIdApi(currentUser.company_id);
+        const {status, data} = companyData;
+        if (status === 200) {
+          setCurrentUserCompany(data);
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally{
+        setCompanyIsLoading(false);
+      }
+    }
+  };
+  const handleUpdateCurrentUserCompanyById = async (
+    payload: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>,
+  ) => {
+    if (currentUser && currentUser.company_id) {
+      setCompanyIsLoading(true)
+      try {
+        const {status, data} = await updateCompanyByIdApi(payload);
+        if (status === 200) {
+          setCurrentUserCompany(data);
+          toast.success("The template has been successfully updated.")
+        }
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data.error);
+        }
+      } finally{
+        setCompanyIsLoading(false)
+      }
+    }
+  };
+
+  const handleGetCurrentUserById = async () => {
     setLoading(true);
     if (authData) {
       try {
         const singleUserData = await getSingleUserById(authData.user_id);
         const {status, data} = singleUserData;
         if (status === 200) {
-          setSingleUser(data);
+          setCurrentUser(data);
         }
       } catch (err) {
         if (err instanceof AxiosError) {
@@ -206,7 +254,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         const {status, data} = singleUserData;
         if (status === 200) {
           toast.success('email successfully updated');
-          setSingleUser(data);
+          setCurrentUser(data);
         }
       } catch (err) {
         if (err instanceof AxiosError) {
@@ -228,18 +276,22 @@ const AuthProvider = ({children}: PropsWithChildren) => {
     isAuthenticated,
     user,
     setUser,
-    singleUser,
+    currentUser,
+    currentUserCompany,
     loading,
     authLoading,
     setupInfo,
     setupInfoLoading,
+    companyIsLoading,
     onLogin: handleLogin,
     onCheckSetup: handleCheckSetup,
     onRegister: handleRegister,
     onUploadPlugin: handleUploadNewPlugin,
     onUpdateProfilePicture: handleUpdateUserProfilePicture,
     onUpdateProfile: handleUpdateUserProfile,
-    getSingleUser: handleGetSingleUserById,
+    getCurrentUserCompany: handleGetCurrentUserCompanyById,
+    putCurrentUserCompany: handleUpdateCurrentUserCompanyById,
+    getCurrentUser: handleGetCurrentUserById,
     onUpdateSingleUser: handleUpdateSingleUserById,
     onLogout: handleLogout,
   };

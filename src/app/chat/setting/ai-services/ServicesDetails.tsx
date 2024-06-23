@@ -88,7 +88,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
       <div className='w-full relative'>
         <div className='mx-auto custom-scrollbar-thumb'>
           <div className='flex mb-2 gap-1'>
-            <div className='w-36 ml-7'>
+            <div className='w-36 ml-3'>
               <span className='font-medium text-xs leading-5 text-grey-600'>Name</span>
             </div>
             {/* <div className='w-28'>

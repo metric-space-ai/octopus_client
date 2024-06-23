@@ -1,24 +1,13 @@
 import {create} from 'zustand';
-import {APPTHEMENAME, TThemeName} from '@/constant';
-
-type TImageDetails = {
-  url: string;
-  width?: number;
-  height?: number;
-  alt?: string;
-};
-interface IThemeData {
-  cssVariables: Record<string, string>;
-  content: {
-    title: string;
-    head_logo?: TImageDetails;
-    chat_logo?: TImageDetails;
-  };
-  font: string;
-}
+import {APPTHEMENAME} from '@/constant';
+import {IThemeData, TThemeName} from '@/types';
 
 const ALLTHEMES: Record<TThemeName, IThemeData> = {
   default: {
+    content: {
+      title: 'Octopus',
+    },
+    font: 'poppins',
     cssVariables: {
       '--color-primary-default': '274 82% 44%',
       '--color-primary-medium': '273 100% 35%',
@@ -55,12 +44,12 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--bg-img-src': "url('/images/bg-default.jpg')",
     },
-    content: {
-      title: 'Octopus',
-    },
-    font: 'poppins',
   },
   'default-dark': {
+    content: {
+      title: 'Octopus',
+    },
+    font: 'poppins',
     cssVariables: {
       '--color-primary-default': '274 82% 44%',
       '--color-primary-medium': '273 100% 35%',
@@ -97,12 +86,24 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--bg-img-src': "url('/images/bg-default.jpg')",
     },
-    content: {
-      title: 'Octopus',
-    },
-    font: 'poppins',
   },
   rotodecor: {
+    font: 'roboto',
+    content: {
+      title: 'Rotodecor',
+      head_logo: {
+        url: 'https://rotodecor.com/wp-content/uploads/2020/07/Logo_rotodecor_rot.svg',
+        width: 130,
+        height: 32,
+        alt: 'head-logo-rotodecor',
+      },
+      chat_logo: {
+        url: 'https://rotodecor.com/wp-content/uploads/2020/11/cropped-favicon-32x32.jpg',
+        width: 25,
+        height: 25,
+        alt: 'rotodecor-logo',
+      },
+    },
     cssVariables: {
       '--color-primary-default': '340 100% 35%',
       '--color-primary-medium': '347 66% 47%',
@@ -139,24 +140,24 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--bg-img-src': "url('/images/theme/bg-rotodecor.jpg')",
     },
-    font: 'roboto',
-    content: {
-      title: 'Rotodecor',
-      head_logo: {
-        url: 'https://rotodecor.com/wp-content/uploads/2020/07/Logo_rotodecor_rot.svg',
-        width: 130,
-        height: 32,
-        alt: 'head-logo-rotodecor',
-      },
-      chat_logo: {
-        url: 'https://rotodecor.com/wp-content/uploads/2020/11/cropped-favicon-32x32.jpg',
-        width: 25,
-        height: 25,
-        alt: 'rotodecor-logo',
-      },
-    },
   },
   topwerk: {
+    font: 'roboto',
+    content: {
+      title: 'Topwerk',
+      head_logo: {
+        url: 'https://www.topwerk.com/fileadmin/user_upload/topwerk_main_logo.png',
+        width: 130,
+        height: 32,
+        alt: 'head-logo-topwerk',
+      },
+      chat_logo: {
+        url: 'https://www.topwerk.com/fileadmin/user_upload/favicon-topwerk.png',
+        width: 24,
+        height: 24,
+        alt: 'topwerk-logo',
+      },
+    },
     cssVariables: {
       '--color-primary-default': '3 56% 36%',
       '--color-primary-medium': '5 46% 46%',
@@ -193,60 +194,8 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--bg-img-src': "url('/images/theme/bg-topwerk.jpg')",
     },
-    font: 'roboto',
-    content: {
-      title: 'Topwerk',
-      head_logo: {
-        url: 'https://www.topwerk.com/fileadmin/user_upload/topwerk_main_logo.png',
-        width: 130,
-        height: 32,
-        alt: 'head-logo-topwerk',
-      },
-      chat_logo: {
-        url: 'https://www.topwerk.com/fileadmin/user_upload/favicon-topwerk.png',
-        width: 24,
-        height: 24,
-        alt: 'topwerk-logo',
-      },
-    },
   },
   harting: {
-    cssVariables: {
-      '--color-primary-default': `45 90% 62%`,
-      '--color-primary-medium': `47 71% 69%`,
-      '--color-primary-400': `47 71% 69%`,
-      '--color-primary-150': `45 100% 87%`,
-
-      '--color-secondary-default': `250 90% 62%`,
-      '--color-secondary-600': `226 66% 74%`,
-      '--color-secondary-700': `229 59% 57%`,
-
-      '--color-background': `48 24% 96%`,
-
-      '--color-border': `0 0% 100%`,
-      '--color-border-primary': `45 100% 87%`,
-
-      '--color-danger-300': `0,100% 61%`,
-      '--color-danger-500': `0,100% 61%`,
-
-      '--color-success': `119 70% 46%`,
-      '--color-success-soft': `119 70% 46%`,
-
-      '--color-grey-0': `0 0% 100%`,
-      '--color-grey-50': `0,0% 98%`,
-      '--color-grey-100': `48 24% 96%`,
-      '--color-grey-150': `51 7% 80%`,
-      '--color-grey-400': `51 3% 50%`,
-      '--color-grey-600': `51 4% 38%`,
-      '--color-grey-800': `51 4% 38%`,
-      '--color-grey-900': `48 8% 12%`,
-
-      '--color-grey-disabled': `0 0% 68%`,
-
-      '--radius': `0.05rem`,
-
-      '--bg-img-src': `url('/images/theme/bg-harting.jpg')`,
-    },
     font: 'roboto',
     content: {
       title: 'Harting',
@@ -263,8 +212,60 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
         alt: 'harting-logo',
       },
     },
+    cssVariables: {
+      '--color-primary-default': `45 90% 62%`,
+      '--color-primary-medium': `47 71% 69%`,
+      '--color-primary-400': `47 71% 69%`,
+      '--color-primary-150': `45 100% 87%`,
+
+      '--color-secondary-default': `250 90% 62%`,
+      '--color-secondary-600': `226 66% 74%`,
+      '--color-secondary-700': `229 59% 57%`,
+
+      '--color-background': `48 24% 96%`,
+
+      '--color-border': `0 0% 100%`,
+      '--color-border-primary': `45 100% 87%`,
+
+      '--color-danger-300': `0 100% 61%`,
+      '--color-danger-500': `0 100% 61%`,
+
+      '--color-success': `119 70% 46%`,
+      '--color-success-soft': `119 70% 46%`,
+
+      '--color-grey-0': `0 0% 100%`,
+      '--color-grey-50': `0 0% 98%`,
+      '--color-grey-100': `48 24% 96%`,
+      '--color-grey-150': `51 7% 80%`,
+      '--color-grey-400': `51 3% 50%`,
+      '--color-grey-600': `51 4% 38%`,
+      '--color-grey-800': `51 4% 38%`,
+      '--color-grey-900': `48 8% 12%`,
+
+      '--color-grey-disabled': `0 0% 68%`,
+
+      '--radius': `0.05rem`,
+
+      '--bg-img-src': `url('/images/theme/bg-harting.jpg')`,
+    },
   },
   statista: {
+    font: 'roboto',
+    content: {
+      title: 'Statista',
+      head_logo: {
+        url: 'https://cdn.statcdn.com/static/img/Statista-Logo-Color-Primary.png',
+        width: 112,
+        height: 24,
+        alt: 'head-logo-Statista',
+      },
+      chat_logo: {
+        url: 'https://www.statista.com/favicon-48x48.png',
+        width: 25,
+        height: 25,
+        alt: 'statista-logo',
+      },
+    },
     cssVariables: {
       '--color-primary-default': '215 94% 46%',
       '--color-primary-medium': '215 98% 56%',
@@ -300,22 +301,6 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
       '--radius': '0.25rem',
 
       '--bg-img-src': "url('/images/theme/bg-statista.jpg')",
-    },
-    font: 'roboto',
-    content: {
-      title: 'Statista',
-      head_logo: {
-        url: 'https://cdn.statcdn.com/static/img/Statista-Logo-Color-Primary.png',
-        width: 112,
-        height: 24,
-        alt: 'head-logo-Statista',
-      },
-      chat_logo: {
-        url: 'https://www.statista.com/favicon-48x48.png',
-        width: 25,
-        height: 25,
-        alt: 'statista-logo',
-      },
     },
   },
 };

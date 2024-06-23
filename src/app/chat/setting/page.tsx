@@ -10,6 +10,7 @@ import GeneralSettings from './general-settings';
 import TeamMembers from './team-members';
 import Sectors from './sectors';
 import Plugins from './pluggins';
+import ThemeSettings from './theme-settings';
 import Documents from './documents';
 import Parameters from './parameters';
 import SettingsProvider from '@/contexts/settingsContext';
@@ -62,9 +63,10 @@ export default function SettingPage() {
               {menu === 'sectors' && <Sectors />}
               {menu === 'models' && <Models />}
               {menu === 'plugins' && <Plugins />}
+              {menu === 'theme' && <ThemeSettings />}
             </>
           ) : (
-            (menu === 'team-members' || menu === 'sectors' || menu === 'plugins') && (
+            ['team-members', 'sectors', 'plugins', 'theme'].includes(menu) && (
               <div className='w-full pt-24 px-7'>
                 <div className='flex flex-col items-center justify-center w-full max-h-96 bg-grey-0 rounded-xl p-5'>
                   {authLoading ? (
@@ -75,9 +77,7 @@ export default function SettingPage() {
                   ) : (
                     <>
                       <ShieldExclamationIcon className='text-danger mb-8' width={36} height={36} />
-                      <h1 className='font-semibold text-center text-xxl mb-6 text-primary-medium'>
-                        Access Dinied
-                      </h1>
+                      <h1 className='font-semibold text-center text-xxl mb-6 text-primary-medium'>Access Dinied</h1>
                       <h2 className='font-semibold text-center text-xl mb-6 text-primary-400'>
                         Sorry, You Don't have Prmission
                       </h2>

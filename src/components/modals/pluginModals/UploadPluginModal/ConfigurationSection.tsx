@@ -4,12 +4,12 @@ import {CheckIcon, ChevronDownIcon, ClipboardDocumentIcon, InformationCircleIcon
 import {bytesCalculator} from '@/helpers';
 import {IPlugin, IResources, TWaspAppBgColor} from '@/types';
 import classNames from 'classnames';
-import {Listbox, Transition} from '@headlessui/react';
+import {Disclosure, Listbox, Transition, Popover} from '@headlessui/react';
 import {WASPAPPTEMPLATECOLOR} from '@/constant';
-import {Popover} from '@headlessui/react';
 import {AppDispatch} from '@/app/lib/store';
 import {useDispatch} from 'react-redux';
 import {getAiFunctionsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {HexColorPicker} from 'react-colorful';
 
 type Props = {
   setActivatedCPU: React.Dispatch<React.SetStateAction<[] | (string | number)[]>>;
@@ -36,11 +36,12 @@ const ConfigurationSection = ({
   setColor,
 }: Props) => {
   const [customColor, setCustomColor] = useState('#ffffff');
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleChangeCustomColor = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const {value} = e.target;
+  const handleChangeCustomColor = (value: string) => {
+    // e.preventDefault();
+    // const {value} = e.target;
 
     setCustomColor(value);
     setColor(value);
@@ -83,9 +84,7 @@ const ConfigurationSection = ({
             >
               {plugin.original_file_name}
             </h5>
-            {fileSize && (
-              <p className='text-grey-600 font-normal text-xs leading-5'>{bytesCalculator(fileSize)}</p>
-            )}
+            {fileSize && <p className='text-grey-600 font-normal text-xs leading-5'>{bytesCalculator(fileSize)}</p>}
           </div>
         </div>
         <div className='flex flex-col gap-4'>
@@ -101,13 +100,10 @@ const ConfigurationSection = ({
             {plugin.parser_feedback}
           </p>
         </div>
-
       </div>
 
       <div className='flex flex-col w-full lg:w-7/12 max-w-[452px]'>
-        <h5 className='text-sm font-semibold text-grey-900 mb-8 text-left'>
-          Assign a plugin to computer resources
-        </h5>
+        <h5 className='text-sm font-semibold text-grey-900 mb-8 text-left'>Assign a plugin to computer resources</h5>
 
         <div className='flex flex-col gap-3 mb-3 relative'>
           <Listbox value={pluginType} onChange={setPluginType}>
@@ -204,10 +200,7 @@ const ConfigurationSection = ({
                         style={{backgroundColor: color.value}}
                       >
                         {selectedColor === color.value && (
-                          <CheckIcon
-                            className='h-4 w-4 text-grey-800 invert mix-blend-difference'
-                            aria-hidden='true'
-                          />
+                          <CheckIcon className='h-4 w-4 text-grey-800 invert mix-blend-difference' aria-hidden='true' />
                         )}
                       </div>
                       {color.label && <p className='block text-sm leading-normal font-semibold'>{color.label}</p>}
@@ -218,23 +211,48 @@ const ConfigurationSection = ({
                       `relative select-none py-1 px-4 gap-2 items-center rounded-4xl text-grey-900 flex cursor-pointer hover:bg-grey-100`,
                     )}
                   >
-                    <div
-                      className='flex w-7 h-7 relative justify-center items-center rounded-full'
-                      style={{backgroundColor: customColor ?? ''}}
-                    >
-                      {selectedColor === customColor && (
-                        <CheckIcon
-                          className='h-4 w-4 text-grey-800 invert mix-blend-difference'
-                          aria-hidden='true'
-                        />
-                      )}
-
-                      <input
+                    <div>
+                      <Popover>
+                        {({open}) => (
+                          <>
+                            <Popover.Button
+                              onClick={() => setPopoverOpen(!popoverOpen)}
+                              className='flex w-7 h-7 relative justify-center items-center rounded-full'
+                              style={{backgroundColor: customColor ?? ''}}
+                            >
+                              {selectedColor === customColor && (
+                                <CheckIcon
+                                  className='h-4 w-4 text-grey-800 invert mix-blend-difference'
+                                  aria-hidden='true'
+                                />
+                              )}
+                            </Popover.Button>
+                            <Transition
+                              enter='transition ease-out duration-200'
+                              enterFrom='opacity-0 translate-y-1'
+                              enterTo='opacity-100 translate-y-0'
+                              leave='transition ease-in duration-150'
+                              leaveFrom='opacity-100 translate-y-0'
+                              leaveTo='opacity-0 translate-y-1'
+                            >
+                              {popoverOpen && (
+                                <Popover.Panel
+                                  static
+                                  className='absolute left-0 bottom-0 mt-3 transform px-4 sm:px-0 z-50'
+                                >
+                                  <HexColorPicker color={customColor ?? ''} onChange={handleChangeCustomColor} />
+                                </Popover.Panel>
+                              )}
+                            </Transition>
+                          </>
+                        )}
+                      </Popover>
+                      {/* <input
                         type='color'
                         className='w-0 h-0 opacity-0 '
                         value={customColor ?? ''}
                         onChange={(e) => handleChangeCustomColor(e)}
-                      />
+                      /> */}
                     </div>
                     <p className='block text-sm leading-normal font-semibold'>{'Custom'}</p>
                   </label>
@@ -297,35 +315,35 @@ const ConfigurationSection = ({
           ))} */}
         </div>
       </div>
-      
-      {plugin.ai_functions && (
-            <div className='flex flex-col w-full gap-3 max-h-[160px] custom-scrollbar-thumb'>
-              {plugin.ai_functions?.map((aiFunc, index) => (
-                <div
-                  key={aiFunc.id}
-                  className={classNames('flex flex-col gap-2 text-left pl- pt-3 border-t border-grey-400')}
-                >
-                  <div className='flex gap-3 text-xs'>
-                    {aiFunc.formatted_name}
-                    <Popover className={'relative flex items-center'}>
-                      <Popover.Button>
-                        <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-900 cursor-pointer transition-colors duration-150' />
-                      </Popover.Button>
-                      <Popover.Panel
-                        className={
-                          'bg-grey-800 py-3 px-8 absolute shadow-md shadow-grey-900 rounded-xl w-80 max-w-[80vw] left-4 top-4 z-10'
-                        }
-                      >
-                        <p className='text-grey-0 text-xs font-light'>{aiFunc.generated_description}</p>
-                      </Popover.Panel>
-                    </Popover>
-                  </div>
 
-                  <p className='pl-2 text-xs'>description: {aiFunc.description}</p>
-                </div>
-              ))}
+      {plugin.ai_functions && (
+        <div className='flex flex-col w-full gap-3 max-h-[160px] custom-scrollbar-thumb'>
+          {plugin.ai_functions?.map((aiFunc, index) => (
+            <div
+              key={aiFunc.id}
+              className={classNames('flex flex-col gap-2 text-left pl- pt-3 border-t border-grey-400')}
+            >
+              <div className='flex gap-3 text-xs'>
+                {aiFunc.formatted_name}
+                <Popover className={'relative flex items-center'}>
+                  <Popover.Button>
+                    <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-900 cursor-pointer transition-colors duration-150' />
+                  </Popover.Button>
+                  <Popover.Panel
+                    className={
+                      'bg-grey-800 py-3 px-8 absolute shadow-md shadow-grey-900 rounded-xl w-80 max-w-[80vw] left-4 top-4 z-10'
+                    }
+                  >
+                    <p className='text-grey-0 text-xs font-light'>{aiFunc.generated_description}</p>
+                  </Popover.Panel>
+                </Popover>
+              </div>
+
+              <p className='pl-2 text-xs'>description: {aiFunc.description}</p>
             </div>
-          )}
+          ))}
+        </div>
+      )}
     </div>
   );
 };
