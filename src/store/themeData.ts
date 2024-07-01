@@ -43,9 +43,11 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
       '--radius': '0.75rem',
 
       '--bg-img-src': "url('/images/bg-default.jpg')",
+      mode: 'light',
     },
   },
   'default-dark': {
+    mode: 'light',
     content: {
       title: 'Octopus',
     },

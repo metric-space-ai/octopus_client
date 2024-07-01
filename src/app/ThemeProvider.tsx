@@ -28,7 +28,11 @@ export default function ThemeProvider({children}: {children: React.ReactNode}) {
         checkCustomStylesIsValid(currentUserCompany.custom_style)
       ) {
         const companyStyleparsedData: IThemeData = JSON.parse(currentUserCompany.custom_style);
-
+        if (companyStyleparsedData.mode === 'dark') {
+          if (!document.documentElement.classList.contains('dark')) document.documentElement.classList.add('dark');
+        } else {
+          if (document.documentElement.classList.contains('dark')) document.documentElement.classList.remove('dark');
+        }
         handleSetColorVariable(companyStyleparsedData.cssVariables);
         setThemeData(companyStyleparsedData);
       } else {
