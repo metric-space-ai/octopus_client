@@ -40,7 +40,7 @@
 
     /* --font-family: font-roboto; */
 
-    --bg-img-src: url('/images/bg-default.jpg');
+    --bg-img-src: url('/images/theme/bg-default.jpg');
   }
 /* 
   .statista {
@@ -240,6 +240,7 @@
 }
 .custom-scrollbar-thumb::-webkit-scrollbar {
   width: 12px;
+  height: 12px;
 }
 
 /* Track */

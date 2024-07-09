@@ -46,7 +46,7 @@ export const parameterValidator = {
   },
   value: {
     required: 'this field is required',
-    maxLength: 50,
+    maxLength: 2000,
   },
 };
 

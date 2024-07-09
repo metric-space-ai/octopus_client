@@ -74,7 +74,7 @@ const companies = (props: Props) => {
   }, [previewIsOn]);
 
   return (
-    <div className='flex gap-6 pt-[84px]'>
+    <div className='flex gap-6 pt-9'>
       <div className='w-full flex flex-col px-6'>
         <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-xl bg-grey-0'>
           <div className='flex justify-between items-center mb-8'>
@@ -127,7 +127,7 @@ const companies = (props: Props) => {
                 )}
 
                 <Button
-                  className='!px-6 font-semibold text-sm !h-34-px w-[150px]'
+                  className='!px-6 font-semibold text-sm !h-34-px w-[170px]'
                   variant={!contentIsChanged || !fileContent ? 'disabled' : 'primary'}
                   title={companyIsLoading ? '' : 'Submit changes'}
                   disabled={!contentIsChanged || !fileContent}

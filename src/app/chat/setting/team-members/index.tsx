@@ -19,7 +19,7 @@ const TeamMembers = (props: Props) => {
 
   return (
     <>
-       <div className='w-full pt-[84px] flex md:gap-4 lg:gap-6 px-6'>
+       <div className='w-full pt-9 flex md:gap-4 lg:gap-6 px-6'>
         <div className='flex flex-col w-full max-w-[689px] px-6 py-4 rounded-xl bg-grey-0'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
             <h1 className='text-lg leading-7 text-grey-900 font-semibold'>team members</h1>

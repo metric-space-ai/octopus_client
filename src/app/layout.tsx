@@ -1,13 +1,15 @@
+// app/layout.tsx
 import './globals.css';
-import {StrictMode} from 'react';
-import {Open_Sans, Poppins, Roboto, Source_Sans_3} from 'next/font/google';
-import {Toaster} from 'react-hot-toast';
-import {RedirectPathProvider} from '@/components/redirect-path';
+import { StrictMode } from 'react';
+import { Open_Sans, Poppins, Roboto, Source_Sans_3 } from 'next/font/google';
+import Head from 'next/head';
+import { Toaster } from 'react-hot-toast';
+import { RedirectPathProvider } from '@/components/redirect-path';
 import AuthProvider from '@/contexts/authContext';
 import StoreProvider from './StoreProvider';
 import classNames from 'classnames';
 
-import {APPTHEMENAME} from '@/constant';
+import { APPTHEMENAME } from '@/constant';
 import ThemeProvider from './ThemeProvider';
 
 export const metadata = {
@@ -25,8 +27,8 @@ export const metadata = {
     maximumScale: 1,
   },
   themeColor: [
-    {media: '(prefers-color-scheme: light)', color: '#fafafa'},
-    {media: '(prefers-color-scheme: dark)', color: '#151515'},
+    { media: '(prefers-color-scheme: light)', color: '#fafafa' },
+    { media: '(prefers-color-scheme: dark)', color: '#151515' },
   ],
   appleWebApp: {
     title: 'Octopus Web',
@@ -60,29 +62,34 @@ const openSans = Open_Sans({
   variable: '--font-open-sans',
 });
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <StrictMode>
-      <html
-        lang='en'
-        className={classNames(
-          poppins.variable,
-          sourceSansPro.variable,
-          roboto.variable,
-          openSans.variable,
-          APPTHEMENAME.includes(`dark`) && 'dark',
-        )}
-        style={{fontSize: 16}}
-      >
-        <StoreProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <RedirectPathProvider>{children}</RedirectPathProvider>
-              <Toaster position='top-right' />
-            </ThemeProvider>
-          </AuthProvider>
-        </StoreProvider>
-      </html>
-    </StrictMode>
+    <html
+      lang="en"
+      className={classNames(
+        poppins.variable,
+        sourceSansPro.variable,
+        roboto.variable,
+        openSans.variable,
+        APPTHEMENAME.includes('dark') && 'dark',
+      )}
+      style={{ fontSize: 16 }}
+    >
+      <Head>
+        <meta http-equiv="Permissions-Policy" content="clipboard-read=(self), clipboard-write=(self)" />
+      </Head>
+      <body>
+        <StrictMode>
+          <StoreProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <RedirectPathProvider>{children}</RedirectPathProvider>
+                <Toaster position="top-right" />
+              </ThemeProvider>
+            </AuthProvider>
+          </StoreProvider>
+        </StrictMode>
+      </body>
+    </html>
   );
 }

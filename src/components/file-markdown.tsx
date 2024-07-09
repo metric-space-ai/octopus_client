@@ -145,7 +145,10 @@ export function FileMarkdownContent({
 
             {media.media_type.includes('application/pdf') && (media.file_name || media.original_file_name) && (
               <div className='flex flex-col gap-3 relative items-start w-full'>
-                <div className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap cursor-pointer max-w-[298px]'>
+                <div
+                  className='flex pl-3 pt-2.5 pb-3 pr-6 min-w-[285px] bg-grey-800 rounded-xl gap-3 flex-wrap max-w-[298px] cursor-pointer'
+                  onClick={() => handleOpenPdfViewer(media)}
+                >
                   <div className='flex items-center justify-center w-10 h-10 p-1 rounded-sm bg-[#DC0F4B] '>
                     <PdfTypeIcon className='w-4 text-grey-0' />
                   </div>
@@ -154,38 +157,38 @@ export function FileMarkdownContent({
                       <p className='text-grey-0 text-sm leading-relaxed font-semibold max-w-[152px] truncate ...'>
                         {media.original_file_name ?? media.id}
                       </p>
-                      <span
-                        className='block text-grey-100 text-xs leading-relaxed font-normal'
-                        onClick={() => handleOpenPdfViewer(media)}
-                      >
+                      <span className='block text-grey-100 text-xs leading-relaxed font-normal'>
                         View<b>{` PDF `}</b>here
                       </span>
                     </div>
                     <ArrowDownTrayIcon
-                      className='flex items-center justify-center h-8 w-8 p-1.5 text-grey-0 bg-grey-900 rounded-4xl'
-                      onClick={() =>
+                      className='flex items-center justify-center h-8 w-8 p-1.5 text-grey-0 bg-grey-900 hover:bg-grey-600 transition-all rounded-4xl cursor-pointer'
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleDownloadTextFile(
                           media.original_file_name ?? `${media.file_name}.pdf`,
                           `${ImagesBaseUrl}${media.file_name}`,
-                        )
-                      }
+                        );
+                      }}
                     />
                   </div>
                 </div>
                 <Disclosure>
                   {({open}) => (
                     <>
-                      <Disclosure.Panel className={"w-full"}>
+                      <Disclosure.Panel className={'w-full'}>
                         <embed
-                            src={`${ImagesBaseUrl}${media.file_name}`}
-                            className={classNames('w-full h-[480px] flex-1')}
-                            type='application/pdf'
-                            width='100%'
-                            height='100%'
-                          />
+                          src={`${ImagesBaseUrl}${media.file_name}`}
+                          className={classNames('w-full h-[480px] flex-1')}
+                          type='application/pdf'
+                          width='100%'
+                          height='100%'
+                        />
                       </Disclosure.Panel>
                       <Disclosure.Button>
-                        <span className='text-grey-100 text-sm font-semibold'>{open ? 'Collapse' : 'Expand'}</span>
+                        <span className='dark:text-grey-100 text-grey-600 text-sm font-semibold'>
+                          {open ? 'Collapse' : 'Expand'}
+                        </span>
                       </Disclosure.Button>
                     </>
                   )}

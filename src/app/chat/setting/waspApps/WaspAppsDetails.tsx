@@ -1,7 +1,7 @@
 import {useEffect, Fragment} from 'react';
 import {Disclosure, Listbox, Transition} from '@headlessui/react';
 
-import {TrashIcon, ChevronDownIcon, CheckIcon} from '@heroicons/react/24/outline';
+import {TrashIcon, ChevronDownIcon, CheckIcon, PencilSquareIcon} from '@heroicons/react/24/outline';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {IWaspApp} from '@/types';
 import {useSelector, useDispatch} from 'react-redux';
@@ -14,7 +14,6 @@ import {
 } from '@/app/lib/features/waspApps/waspAppsSlice';
 
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
-import Highlight from 'react-highlight';
 
 import './../../../../assets/atelier-cave-dark.css';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
@@ -234,6 +233,12 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                           />
                         </div>
 
+                        <span
+                          className='ml-auto p-1.5 hover:bg-primary-150/50 cursor-pointer transition rounded-full'
+                          onClick={() => handleOpenExistedWaspAppModal(app)}
+                        >
+                          <PencilSquareIcon width={16} height={16} className='text-grey-900 cursor-pointer' />
+                        </span>
                         <span
                           className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                           onClick={() => handleOpenDeleteWaspAppModal(app)}

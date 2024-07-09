@@ -212,7 +212,7 @@ export const CreateNewModelApi = (name: string) => {
 export const UpdateModelByIdApi = ({id, name}: Pick<IModel, 'id' | 'name'>) => {
   return apiHub.put<IModel>(`api/v1/ollama-models/${id}`, {name});
 };
-export const deleteModelByIdApi = (id:string) => {
+export const deleteModelByIdApi = (id: string) => {
   return apiHub.delete<null>(`api/v1/ollama-models/${id}`);
 };
 
@@ -235,6 +235,14 @@ export const extractMetaUploadNewWaspAppApi = (payload: FormData) => {
 
 export const uploadNewWaspAppApi = (payload: FormData) => {
   return apiHub.post<IWaspApp>(`api/v1/wasp-apps`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const fullUpdateWaspAppApi = ({id, formData}: {formData: FormData; id: string}) => {
+  return apiHub.put<IWaspApp>(`api/v1/wasp-apps/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

@@ -42,7 +42,7 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--radius': '0.75rem',
 
-      '--bg-img-src': "url('/images/bg-default.jpg')",
+      '--bg-img-src': "url('/images/theme/bg-default.jpg')",
       mode: 'light',
     },
   },
@@ -86,7 +86,7 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
 
       '--radius': '0.75rem',
 
-      '--bg-img-src': "url('/images/bg-default.jpg')",
+      '--bg-img-src': "url('/images/theme/bg-default.jpg')",
     },
   },
   rotodecor: {

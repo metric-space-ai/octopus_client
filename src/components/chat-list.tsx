@@ -59,7 +59,7 @@ export function ChatItem({
       className={classNames(
         'flex justify-between relative px-3 py-[10px] rounded-xl',
         !expanded && '!px-[10px]',
-        selected && 'bg-grey-100',
+        selected && 'bg-grey-150',
         (!selected || isNewTicketOn) && 'cursor-pointer bg-grey-0 dark:bg-grey-900',
       )}
       onClick={!selected ? onClick : handleSwitchOffNewTicket}
@@ -97,7 +97,7 @@ export function ChatItem({
             <div
               className={classNames(
                 'flex-1 text-sm whitespace-nowrap text-ellipsis overflow-hidden text-grey-900',
-                // selected ? '!text-grey-900' : '',
+                selected ? ' cursor-default' : '',
                 (!selected || isNewTicketOn) && 'dark:text-grey-0',
               )}
               title={title}

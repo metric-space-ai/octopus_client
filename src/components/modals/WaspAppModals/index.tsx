@@ -6,7 +6,7 @@ import {Dialog, Transition} from '@headlessui/react';
 import {Button} from '../../buttons';
 
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
-import {setUploadSucceeded, uploadNewWaspApp} from '@/app/lib/features/waspApps/waspAppsSlice';
+import {fullUpdateWaspApp, setUploadSucceeded, uploadNewWaspApp} from '@/app/lib/features/waspApps/waspAppsSlice';
 import {useForm} from 'react-hook-form';
 import {AppDispatch} from '@/app/lib/store';
 
@@ -17,17 +17,19 @@ import WaspAppDialogFormInputs from './WaspAppDialogForm';
 import {extractMetaUploadNewWaspAppApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
 import toast from 'react-hot-toast';
+import {EWaspInstanceType, IWaspApp} from '@/types';
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
+  selectedWasp?: IWaspApp | null;
 }
 
 export interface IWaspFormInputs {
   name: string;
   description: string;
 }
-export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
+export const UploadWaspAppModal = ({open, onClose, selectedWasp}: ModalProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const {uploadIsLoading, uploadSucceeded} = useSelector(selectWaspApps);
 
@@ -38,7 +40,7 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
   const [extractMetaIsLoading, setExtractMetaIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(UPLOADWASPAPPSTEPS.SelectFile);
 
-  const [instance_type, setInstance_type] = useState<'Shared' | 'Private' | 'User'>('User');
+  const [instanceType, setInstanceType] = useState<EWaspInstanceType>(EWaspInstanceType.User);
   const [is_enabled, setIs_enabled] = useState(true);
 
   const {
@@ -46,6 +48,7 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
     setValue,
     handleSubmit,
     formState: {errors},
+    reset,
   } = useForm<IWaspFormInputs>();
 
   const handleSubmitFirstStep = async () => {
@@ -73,18 +76,22 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
   };
 
   const handleSubmitSecondStep = (data: IWaspFormInputs) => {
-    if (fileIsSelected && file && currentStep === UPLOADWASPAPPSTEPS.Upload) {
+    if (((fileIsSelected && file) || selectedWasp) && currentStep === UPLOADWASPAPPSTEPS.Upload) {
       const {name, description} = data;
       if (!name || !description) return;
       console.log('submit is running');
       const formData = new FormData();
-      formData.append('file', file);
+      if (file) formData.append('file', file);
       formData.append('name', name);
       formData.append('description', description);
       formData.append('is_enabled', `${is_enabled}`);
-      formData.append('instance_type', instance_type);
+      formData.append('instance_type', instanceType);
 
-      dispatch(uploadNewWaspApp(formData));
+      if (selectedWasp) {
+        dispatch(fullUpdateWaspApp({formData, id: selectedWasp.id}));
+      } else {
+        dispatch(uploadNewWaspApp(formData));
+      }
     }
   };
 
@@ -127,10 +134,24 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
   }, [initialFileStarted, uploadPercentage]);
 
   useEffect(() => {
+    console.log("check closing")
     if (currentStep === UPLOADWASPAPPSTEPS.Upload && uploadSucceeded) {
+      console.log("check closing... run")
       handleCloseDialog();
     }
   }, [uploadSucceeded]);
+  useEffect(() => {
+    if (open && selectedWasp) {
+      const {description = '', name = '', is_enabled, instance_type} = selectedWasp;
+      reset({
+        description,
+        name,
+      });
+      setIs_enabled(is_enabled);
+      setInstanceType(instance_type);
+      setCurrentStep(UPLOADWASPAPPSTEPS.Upload);
+    }
+  }, [open]);
 
   return (
     <>
@@ -163,7 +184,11 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
                 transform border border-content-primary bg-grey-100
                  pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
                 >
-                  <UploadWaspAppModalHeader currentStep={currentStep} handleCloseModal={handleCloseDialog} />
+                  <UploadWaspAppModalHeader
+                    currentStep={currentStep}
+                    handleCloseModal={handleCloseDialog}
+                    updateMode={!!selectedWasp}
+                  />
                   <div className='flex flex-col flex-auto justify-between '>
                     {currentStep === UPLOADWASPAPPSTEPS.SelectFile && (
                       <UploadWaspSelectFileSection
@@ -184,8 +209,8 @@ export const UploadWaspAppModal = ({open, onClose}: ModalProps) => {
                         register={register}
                         setIs_enabled={setIs_enabled}
                         is_enabled={is_enabled}
-                        setInstance_type={setInstance_type}
-                        instance_type={instance_type}
+                        setInstanceType={setInstanceType}
+                        instance_type={instanceType}
                         handleGoToPrevStep={handleGoToPrevStep}
                       />
                     )}

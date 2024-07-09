@@ -10,6 +10,7 @@ import {
   deleteWaspAppByIdApi,
   getWaspAppSourceDocByChatIdAndWaspIdApi,
   putAllowedUsersForWaspAppAccessApi,
+  fullUpdateWaspAppApi,
 } from '@/services/settings.service';
 import {IChatMessage, IWaspApp, ValidationErrors} from '@/types';
 
@@ -108,6 +109,29 @@ const waspAppsSlice = createSlice({
           state.entities = [payload];
         }
       })
+      .addCase(fullUpdateWaspApp.pending, (state) => {
+        state.uploadIsLoading = true;
+        state.hasError = false;
+        state.errorMessage = '';
+        state.uploadSucceeded = false;
+      })
+      .addCase(fullUpdateWaspApp.rejected, (state, action) => {
+        state.hasError = true;
+        state.uploadIsLoading = false;
+        state.errorMessage = action.error.message;
+      })
+      .addCase(fullUpdateWaspApp.fulfilled, (state, {payload}) => {
+        state.uploadIsLoading = false;
+        state.uploadSucceeded = true;
+        console.log('fullUpdateWaspApp... fullfiled');
+        if (payload) {
+          if (state.entities) {
+            state.entities = [...state.entities.flatMap((elem) => (elem.id === payload.id ? payload : elem))];
+          } else {
+            state.entities = [payload];
+          }
+        }
+      })
       .addCase(getWaspAppSourceDocByChatIdAndWaspId.pending, (state) => {
         state.hasError = false;
         state.errorMessage = '';
@@ -191,6 +215,30 @@ export const updateWaspApp = createAsyncThunk(
       const {status, data} = await updateWaspAppByIdApi(payload);
       if (status === 200) toast.success(`Successful update.`);
       return data;
+    } catch (err) {
+      let error = err as AxiosError<ValidationErrors, any>;
+
+      if (err instanceof AxiosError) {
+        toast.error(err?.response?.data.error);
+      }
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+export const fullUpdateWaspApp = createAsyncThunk(
+  '/waspApps/fullUpdateWaspApp',
+  async (payload: {formData: FormData; id: string}, {rejectWithValue, dispatch}) => {
+    try {
+      const {data, status} = await fullUpdateWaspAppApi(payload);
+      if (status === 200) {
+        toast.success(`wasp app successfully updated.`);
+        dispatch(getAllWaspApps());
+        return data;
+      }
     } catch (err) {
       let error = err as AxiosError<ValidationErrors, any>;
 

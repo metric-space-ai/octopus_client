@@ -37,17 +37,21 @@ export default function SettingPage() {
   };
   return (
     <SettingsProvider>
-      <div className='h-screen py-[64px] bg-grey-100 rounded-b-xl'>
-        <div
-          onClick={handleExitSettings}
-          className={
-            'ml-auto mr-9 flex flex-col gap-1 items-center hover:underline [&>button]:hover:bg-primary/30 transition-all w-12 cursor-pointer'
-          }
-        >
-          <IconButton className={'bg-primary/10'}>
-            <XMarkIcon className={'w-5 h-5 text-grey-900'} />
-          </IconButton>
-          <span>Back</span>
+      <div className='h-full py-[64px] bg-grey-100 rounded-b-xl custom-scrollbar-thumb'>
+        <div className='flex justify-between w-full items-center'>
+          <h1 className='text-32 font-semibold pl-6'>Settings</h1>
+
+          <div
+            onClick={handleExitSettings}
+            className={
+              'ml-auto mr-9 flex flex-col gap-1 items-center hover:underline [&>button]:hover:bg-primary/30 transition-all w-12 cursor-pointer'
+            }
+          >
+            <IconButton className={'bg-primary/10'}>
+              <XMarkIcon className={'w-5 h-5 text-grey-900'} />
+            </IconButton>
+            <span>Back</span>
+          </div>
         </div>
         <div className='max-w-[1200px] flex mx-auto'>
           <SettingsMenu />

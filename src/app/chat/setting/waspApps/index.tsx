@@ -31,6 +31,11 @@ const WaspApps = (props: Props) => {
     dispatch(handleChangeSelectedWaspApp(null));
   };
 
+  const handleCloseWaspAppModal = async () => {
+    dispatch(handleChangeSelectedWaspApp(null));
+
+    setOpenwaspAppModal(false);
+  };
   const handleConfirmDeleteWaspApp = async () => {
     if (!selectedWaspApp) return;
     dispatch(deleteWaspAppById(selectedWaspApp.id));
@@ -62,7 +67,7 @@ const WaspApps = (props: Props) => {
           }}
         />
       )}
-      <UploadWaspAppModal open={openwaspAppModal} onClose={() => setOpenwaspAppModal(false)} />
+      <UploadWaspAppModal open={openwaspAppModal} onClose={handleCloseWaspAppModal} selectedWasp={selectedWaspApp} />
     </>
   );
 };

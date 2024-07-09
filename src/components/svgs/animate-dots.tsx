@@ -1,11 +1,13 @@
+import classNames from 'classnames';
+
 type AnimateDotsProps = {
-  color?: string;
+  className?: string;
 };
 
-export const AnimateDots = ({color = '#fff'}: AnimateDotsProps) => {
+export const AnimateDots = ({className}: AnimateDotsProps) => {
   return (
-    <svg xmlns='http://www.w3.org/2000/svg' width='30' height='14' fill='#fff' viewBox='0 0 120 30'>
-      <circle cx='15' cy='15' r='15' fill={color}>
+    <svg xmlns='http://www.w3.org/2000/svg' width='30' height='14' fill='currentColor' viewBox='0 0 120 30'>
+      <circle cx='15' cy='15' r='15' className={classNames('fill-grey-0', className)}>
         <animate
           attributeName='r'
           begin='0s'
@@ -27,7 +29,7 @@ export const AnimateDots = ({color = '#fff'}: AnimateDotsProps) => {
           values='1;.5;1'
         />
       </circle>
-      <circle cx='60' cy='15' r='9' fill={color} fillOpacity='.3'>
+      <circle cx='60' cy='15' r='9' className={classNames('fill-grey-0', className)} fillOpacity='.3'>
         <animate
           attributeName='r'
           begin='0s'
@@ -49,7 +51,7 @@ export const AnimateDots = ({color = '#fff'}: AnimateDotsProps) => {
           values='.5;1;.5'
         />
       </circle>
-      <circle cx='105' cy='15' r='15' fill={color}>
+      <circle cx='105' cy='15' r='15' className={classNames('fill-grey-0', className)}>
         <animate
           attributeName='r'
           begin='0s'

@@ -15,6 +15,7 @@ import {useChatStore} from '@/store';
 import {Agents} from '@/components/agents';
 import {VoiceChatModal} from '@/components/modals/voiceChatModal';
 import {useAuthContext} from '@/contexts/authContext';
+import {IChatMessage} from '@/types';
 
 const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
 
@@ -35,6 +36,7 @@ export default function ChatPage() {
     refreshMessage,
     enabledContentSafety,
     inputIsDesabled,
+    deleteMessage,
   } = useChatStore();
   const {user} = useAuthContext();
 
@@ -104,8 +106,9 @@ export default function ChatPage() {
     }
   };
 
-  const handleRegenerateResponse = (value: string) => {
-    doSubmit(value);
+  const handleRegenerateResponse = (chatItem: IChatMessage) => {
+    doSubmit(chatItem.message);
+    deleteMessage(chatItem, false);
   };
 
   useEffect(() => {
@@ -158,7 +161,10 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className='flex-1 p-5 pb-2 relative overflow-auto scroll-smooth rounded-r-3xl rounded-bl-lg' ref={scrollRef}>
+        <div
+          className='flex-1 p-5 pb-2 relative overflow-auto scroll-smooth rounded-r-3xl rounded-bl-lg'
+          ref={scrollRef}
+        >
           {loading ? (
             <Loading />
           ) : showChatPrompt ? (
@@ -174,7 +180,7 @@ export default function ChatPage() {
                     key={item.id}
                     item={item}
                     changeSafety={setShowWarningSnackBarWhenSafetyDisabled}
-                    regenerateResponse={handleRegenerateResponse}
+                    regenerateResponse={() => handleRegenerateResponse(item)}
                     regenerateIsDisabled={inputIsDisabled}
                   />
                 ),

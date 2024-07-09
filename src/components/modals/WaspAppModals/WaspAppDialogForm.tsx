@@ -9,6 +9,7 @@ import {Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon} from '@heroicons/react/24/outline';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {INSTANCETYPES} from '@/constant';
+import { EWaspInstanceType } from '@/types';
 
 type Props = {
   uploadIsLoading: boolean;
@@ -19,8 +20,8 @@ type Props = {
   register: UseFormRegister<IWaspFormInputs>;
   setIs_enabled: React.Dispatch<React.SetStateAction<boolean>>;
   is_enabled: boolean;
-  setInstance_type: React.Dispatch<React.SetStateAction<'Shared' | 'Private' | 'User'>>;
-  instance_type: 'Shared' | 'Private' | 'User';
+  setInstanceType: React.Dispatch<React.SetStateAction<EWaspInstanceType>>;
+  instance_type: EWaspInstanceType;
   handleGoToPrevStep: () => void;
 };
 
@@ -33,7 +34,7 @@ const WaspAppDialogFormInputs = ({
   register,
   setIs_enabled,
   is_enabled,
-  setInstance_type,
+  setInstanceType,
   instance_type,
   handleGoToPrevStep,
 }: Props) => {
@@ -62,7 +63,7 @@ const WaspAppDialogFormInputs = ({
 
         <div className='relative flex w-full gap-4 items-center'>
           <span className='font-normal text-xs text-content-secondary w-28 text-left'>Instance type :</span>
-          <Listbox value={instance_type} onChange={setInstance_type}>
+          <Listbox value={instance_type} onChange={setInstanceType}>
             <div className='relative mt-1 flex-1'>
               <Listbox.Button className='relative cursor-default rounded-5xl bg-grey-0 py-2 pl-5 pr-10 text-left text-content-primary w-full'>
                 <div className='flex gap-1 items-center'>
@@ -109,7 +110,7 @@ const WaspAppDialogFormInputs = ({
           </Listbox>
         </div>
 
-        <div className='h-20 flex flex-row gap-4 items-center w-full '>
+        <div className='flex flex-row gap-4 items-center w-full '>
           <label className='font-normal text-xs text-content-secondary mb-0 w-28 text-left block'>
             App Descriptions:{' '}
           </label>
@@ -117,7 +118,7 @@ const WaspAppDialogFormInputs = ({
             <textarea
               className='w-full text-base text-grey-900 outline-none relative px-5 py-2 bg-grey-0 rounded-xl resize-none custom-scrollbar-thumb'
               // value={answerInput}
-              rows={3}
+              rows={5}
               autoFocus={true}
               placeholder='App Descriptions'
               {...register('description', waspAppFormValidator.description)}
@@ -125,10 +126,10 @@ const WaspAppDialogFormInputs = ({
           </div>
         </div>
 
-        <div className='flex gap-2 items-center'>
+        <label className='flex gap-2 items-center cursor-pointer'>
           <CustomSwitch active={is_enabled} onChange={(check: boolean) => setIs_enabled(check)} />
           <span>{is_enabled ? 'Enable' : 'Disable'}</span>
-        </div>
+        </label>
       </div>
       <div className='flex gap-4 px-4 md:px-8 lg:px-12 xl:px-20 mx-1 mt-auto'>
         <Button
@@ -142,7 +143,7 @@ const WaspAppDialogFormInputs = ({
           className='mt-2 w-1/2 !h-10'
           variant='primary'
           disabled={uploadIsLoading}
-          title={!uploadIsLoading ? 'Upload' : ''}
+          title={!uploadIsLoading ? 'Submit' : ''}
           loading={uploadIsLoading}
           type='submit'
         />

@@ -5,22 +5,19 @@ import {IconButton} from '@/components/buttons';
 
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
-import {TPluginStatus} from '@/types';
 import {UPLOADWASPAPPSTEPS} from '@/constant';
 
 type Props = {
   currentStep: number;
   handleCloseModal: () => void;
+  updateMode: boolean;
 };
 
-const UploadWaspAppModalHeader = ({currentStep, handleCloseModal}: Props) => {
+const UploadWaspAppModalHeader = ({currentStep, handleCloseModal, updateMode}: Props) => {
   return (
     <div className='flex justify-between items-start mb-16 relative'>
-      <Dialog.Title
-        as='h3'
-        className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
-      >
-        Upload Wasp
+      <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'>
+        {updateMode ? `Edit Wasp` : `Upload Wasp`}
       </Dialog.Title>
       <div className='flex mx-auto'>
         <div className='flex text-xs items-center'>

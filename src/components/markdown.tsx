@@ -16,6 +16,7 @@ import {copyToClipboard} from '../helpers';
 
 import './../assets/atelier-cave-dark.css';
 import {LinkIcon} from '@heroicons/react/24/outline';
+import { isLongTextWithoutSpaces } from '@/helpers/textHelper';
 
 export function Mermaid(props: {code: string}) {
   const ref = useRef<HTMLDivElement>(null);
@@ -107,10 +108,7 @@ export function PreCode(props: {children: any}) {
   );
 }
 
-const isLongTextWithoutSpaces = (text: string): boolean => {
-  const words = text.split(/\s+/);
-  return words.every((word) => word.length > 30);
-};
+
 
 const CustomParagraph = ({node, ...props}: any) => {
   const textContent = node.children.map((child: any) => child.value).join(' ');

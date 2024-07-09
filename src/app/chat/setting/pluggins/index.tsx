@@ -9,7 +9,7 @@ type Props = {};
 
 const plugin = (props: Props) => {
   return (
-    <div className='flex flex-col mt-[76px] px-6 w-full max-w-[700px]'>
+    <div className='flex flex-col pt-9 px-6 w-full max-w-[780px]'>
       <Tab.Group>
         <Tab.List className='flex rounded-t-md'>
           <Tab

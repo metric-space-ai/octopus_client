@@ -46,16 +46,17 @@ import {UserImageModal} from './modals/showUserImageModal';
 import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
 import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
-import {getWaspAppByIdApi, getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
+import {getWaspAppByIdApi} from '@/services/settings.service';
 import classNames from 'classnames';
 import {useDebouncedCallback} from 'use-debounce';
 import {autoGrowTextArea} from '@/helpers';
 import {useThemeStore} from '@/store/themeData';
+import {isLongTextWithoutSpaces} from '@/helpers/textHelper';
 
 interface IMessageItem {
   item: IChatMessage;
   changeSafety?: React.Dispatch<React.SetStateAction<boolean>>;
-  regenerateResponse: (value: string) => void;
+  regenerateResponse: () => void;
   regenerateIsDisabled: boolean;
 }
 
@@ -227,26 +228,6 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
     }
   };
 
-  const handleCheckWaspAppError = async () => {
-    // const {id} = item;
-    // const wasp_app = {
-    //   description: 'Octopus law-consultant wasp app',
-    //   formatted_name: 'law-consultant',
-    //   id: '20198ce8-d90f-4199-8569-c44aa8b90e6f',
-    // };
-    // try {
-    //   const {status, data} = await getWaspAppLogsSourceDocByChatIdAndWaspIdApi({wasp_app_id: wasp_app.id, id});
-    //   console.log({status, data, wasp_app});
-    // } catch (err) {
-    //   let error = err as AxiosError<ValidationErrors, any>;
-    //   if (err instanceof AxiosError) {
-    //     toast.error(err?.response?.data.error);
-    //   }
-    //   if (!error.response) {
-    //     throw error;
-    //   }
-    // }
-  };
   const handleGetWaspAppDetailById = async (id: string) => {
     try {
       const {status, data} = await getWaspAppByIdApi(id);
@@ -318,7 +299,6 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
         const {id, wasp_app_id} = item;
         handleGetWaspAppDetailById(wasp_app_id);
         setHasWaspApp(true);
-        // handleCheckWaspAppError();
       } else {
         setHasWaspApp(false);
       }
@@ -434,7 +414,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                     size='small'
                     fontWeight='light'
                     iconBefore={<ArrowPathIcon className='text-grey-900 w-4 h-4' />}
-                    onClick={() => regenerateResponse(item.message)}
+                    onClick={regenerateResponse}
                     className='h-8 opacity-70 hover:opacity-100 transition-all duration-150 !px-2 w-28'
                     disabled={regenerateIsDisabled}
                   />
@@ -488,7 +468,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           >
             <iframe
               className='w-full custom-scrollbar-thumb h-[650px]'
-              src={`http://localhost:3000`}
+              src={`http://localhost:3000/?messageId=${item.id}`}
             />
           </div> */}
           <div
@@ -498,16 +478,19 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
             )}
             style={{backgroundColor: item.color ?? ''}}
           >
-            {hasWaspApp && (
+            {hasWaspApp && item.wasp_app_id && (
               <AppIframe
                 src={`${APPREQUESTBASEURL}api/v1/wasp-apps/${item.wasp_app_id}/${item.id}/proxy-frontend/?messageId=${item.id}`}
                 loadingTitle='the app is loading'
                 bgColor={item.color ?? '#F5F5F5'}
                 waspInfo={waspAppDetails}
+                messageId={item.id}
+                waspAppId={item.wasp_app_id}
               />
             )}
 
-            {loading && <AnimateDots />}
+            {loading && <AnimateDots className='dark:fill-grey-0 fill-grey-600' />}
+
             {!loading && (
               <>
                 {!isSensitive || item.is_marked_as_not_sensitive || item.is_anonymized ? (
@@ -603,7 +586,14 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                   </div>
                 )}
                 {aiFunctionErrorMessage && (
-                  <div className='text-danger-300 text-base mb-3'>{aiFunctionErrorMessage}</div>
+                  <div
+                    className={classNames(
+                      'text-danger-300 text-base mb-3',
+                      isLongTextWithoutSpaces(aiFunctionErrorMessage, 50) && 'break-all',
+                    )}
+                  >
+                    {aiFunctionErrorMessage}
+                  </div>
                 )}
               </>
             )}

@@ -14,15 +14,15 @@ export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter
     <div className='h-[51px] flex border-b-grey-100 border-b items-center py-[15px]'>
       <h6
         className={`w-48 truncate ... font-normal text-xs leading-5 text-grey-900 block mr-4`}
+        title={parameter.name}
       >
         {parameter.name}
       </h6>
 
-
       <div className='flex justify-start items-center flex-1'>
         <span
-          className={`w-28 truncate ... block items-center text-xs leading-5 
-            text-grey-900`}
+          className={`w-36 truncate ... block items-center text-xs leading-5 text-grey-900`}
+          title={parameter.value}
         >
           {/* {parameter.value ? 'Active' : 'Deactive'} */}
           {parameter.value}

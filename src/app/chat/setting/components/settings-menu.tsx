@@ -151,7 +151,6 @@ export const SettingsMenu = () => {
 
   return (
     <div className='flex flex-col pl-3'>
-      <h1 className='text-32 font-semibold'>Settings</h1>
       <div className='w-[240px] mt-9 px-6 py-4 gap-3 bg-grey-0 flex flex-col rounded-xl'>
         {SIDEBAR.map(
           (elem, index) =>
