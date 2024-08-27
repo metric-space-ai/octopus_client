@@ -102,8 +102,9 @@ module.exports = {
         '5xl': 'calc(var(--radius) * 4)',
       },
       boxShadow: {
-        'agent-sidebar': 'box-shadow: 0px 3px 12px 0px hsl(var(--color-background)/ 0.06)',
-        'switch-active': 'box-shadow: 0px 0.833px 6.66px 0px hsl(var(--color-content-accent-hover)/ 0.5) inset',
+        'operation-selection': '0px 10px 20px 0px hsl(var(--color-background)/ 0.06)',
+        'agent-sidebar': '0px 3px 12px 0px hsl(var(--color-background)/ 0.06)',
+        'switch-active': '0px 0.833px 6.66px 0px hsl(var(--color-content-accent-hover)/ 0.5) inset',
         'switch-deactive': '0px 1px 8px 0px hsl(var(--color-content-accent)/ 0.45) inset',
         'switch-disable': '0px 1px 8px 0px rgba(0, 0, 0, 0.15) inset',
         'switch-circle-active': '0px 0px 1.17px 0px hsl(var(--color-danger)/ 0.2)',
@@ -114,6 +115,7 @@ module.exports = {
       },
       spacing: {
         '1px': '1px',
+        '4.5': '1.125rem',
         '58': '14rem',
         22: '5.5rem',
       },

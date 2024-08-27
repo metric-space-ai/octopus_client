@@ -1,4 +1,4 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {HandThumbDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
@@ -13,7 +13,11 @@ interface ModalProps {
 
 export const ProvideFeedbackModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
-
+  useEffect(() => {
+    if (open) {
+      setLoading(false);
+    }
+  }, [open]);
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog className='relative z-10' as='div' onClose={onClose}>

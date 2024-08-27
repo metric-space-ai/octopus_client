@@ -1,7 +1,8 @@
+import React from 'react';
+
 import {Spinner} from '@/components/spinner';
 import {AI_SERVICES_SETUP_STATUS, APPSTATUS} from '@/constant';
 import {spaceBeforeCapitalLetters} from '@/helpers';
-import React from 'react';
 
 type Props = {
   variant?: 'Setup' | 'Error' | 'Running' | 'Stopped' | string;
@@ -22,9 +23,12 @@ const AppsBadge = ({variant = 'Running', label = '', setupStatus}: Props) => {
           : 'bg-primary-medium/10 text-primary-medium'
       } `}
     >
-      <span title={spaceBeforeCapitalLetters(label)} className='flex items-center justify-center gap-1 w-[88px] overflow-hidden truncate ... text-center'>
-      {[APPSTATUS.InstallationFinished, APPSTATUS.Setup, APPSTATUS.InstallationStarted].includes(variant) &&
-        setupStatus === AI_SERVICES_SETUP_STATUS.NotPerformed && <Spinner size='small' />}
+      <span
+        title={spaceBeforeCapitalLetters(label)}
+        className='flex items-center justify-center gap-1 w-[88px] overflow-hidden truncate ... text-center'
+      >
+        {[APPSTATUS.InstallationFinished, APPSTATUS.Setup, APPSTATUS.InstallationStarted].includes(variant) &&
+          setupStatus === AI_SERVICES_SETUP_STATUS.NotPerformed && <Spinner size='small' />}
         {variant === APPSTATUS.InstallationFinished ? 'In Progress' : spaceBeforeCapitalLetters(label)}
       </span>
     </span>

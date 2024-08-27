@@ -1,9 +1,7 @@
-import {Fragment} from 'react';
+import {FormEvent, Fragment} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-import { XMarkIcon} from '@heroicons/react/24/outline';
-import {useForm} from 'react-hook-form';
-
+import {XMarkIcon} from '@heroicons/react/24/outline';
 
 import {Button, IconButton} from '../buttons';
 
@@ -12,16 +10,9 @@ interface ModalProps {
   onClose: () => void;
 }
 
-interface IFormInputs {
-}
-
 export const InvitationSent = ({open, onClose}: ModalProps) => {
-
-  const {
-    handleSubmit,
-  } = useForm<IFormInputs>();
-
-  const onSubmit = async (data: IFormInputs) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     onClose();
   };
 
@@ -55,19 +46,14 @@ export const InvitationSent = ({open, onClose}: ModalProps) => {
                   <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>
                 <Dialog.Title as='h3' className='text-left text-2xl font-semibold text-grey-900'>
-                Invitation Sent!
+                  Invitation Sent!
                 </Dialog.Title>
-                <form className='flex flex-col mt-5 gap-6' onSubmit={handleSubmit(onSubmit)}>
-                 <p className='text-grey-600 text-left'>
-                 Your invitation to join the team has been sent successfully.
-                 </p>
+                <form className='flex flex-col mt-5 gap-6' onSubmit={onSubmit}>
+                  <p className='text-grey-600 text-left'>
+                    Your invitation to join the team has been sent successfully.
+                  </p>
                   <div className='flex pt-0.5'>
-                    <Button
-                      className='mt-2 w-full !h-10'
-                      variant='primary'
-                      title={`close`}
-                      type='submit'
-                    />
+                    <Button className='mt-2 w-full !h-10' variant='primary' title={`close`} type='submit' />
                   </div>
                 </form>
               </Dialog.Panel>

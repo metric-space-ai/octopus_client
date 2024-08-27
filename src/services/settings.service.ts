@@ -1,20 +1,19 @@
 import {
-  IUser,
-  ICreateUser,
-  IPlugin,
-  IDeviceMap,
-  IPluginActivation,
   IAIFunctions,
-  IResources,
-  IParameter,
-  ISimpleApp,
-  IWaspApp,
-  IGpus,
-  IDocument,
-  TNextCluodDoc,
   IChatMessage,
-  TOllamaModel,
+  ICreateUser,
+  IDocument,
+  IFile,
   IModel,
+  IParameter,
+  IPlugin,
+  IPluginActivation,
+  IResources,
+  ISimpleApp,
+  IUser,
+  IWaspApp,
+  TNextCluodDoc,
+  TOllamaModel,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
@@ -197,6 +196,28 @@ export const deleteSimpleAppByIdApi = (parameter_id: string) => {
 
 export const getSimpleAppsNameApi = () => {
   return apiHub.get<string[]>(`api/v1/simple-apps/names`);
+};
+
+//Files Api
+export const getAllFilesApi = () => {
+  return apiHub.get<IFile[]>(`api/v1/files`);
+};
+export const CreateNewFileApi = (file: FormData) => {
+  return apiHub.post<IFile>(`api/v1/files`, file, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+export const UpdateFileByIdApi = ({id, file}: {id: string; file: FormData}) => {
+  return apiHub.put<IFile>(`api/v1/files/${id}`, file, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+export const deleteFileByIdApi = (id: string) => {
+  return apiHub.delete<null>(`api/v1/files/${id}`);
 };
 
 //Models Api

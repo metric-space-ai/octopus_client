@@ -1,8 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useCallback, useEffect, useRef, useState} from 'react';
+
 import {Popover} from '@headlessui/react';
-
-import {toast} from 'react-hot-toast';
-
 import {
   ArrowPathIcon,
   ArrowsPointingOutIcon,
@@ -21,37 +20,33 @@ import {
 } from '@heroicons/react/24/outline';
 import {ShieldCheckIcon} from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
+import {AxiosError} from 'axios';
+import classNames from 'classnames';
+import Image from 'next/image';
+import {toast} from 'react-hot-toast';
+import {useDebouncedCallback} from 'use-debounce';
 
 import {APPREQUESTBASEURL, ImagesBaseUrl, LANGUAGES} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
-import {
-  getChatMessageApplicationCodeApi,
-  getChatMessageApi,
-  updateChatMessageApi,
-  updateContentSafetyApi,
-} from '@/services/chat.service';
+import {autoGrowTextArea} from '@/helpers';
+import {isLongTextWithoutSpaces} from '@/helpers/textHelper';
+import {getChatMessageApi, getChatMessageApplicationCodeApi} from '@/services/chat.service';
+import {getWaspAppByIdApi} from '@/services/settings.service';
 import {useChatStore} from '@/store';
-import {IAiFunctionErrorParsed, IChatMessage, IWaspApp, ValidationErrors} from '@/types';
+import {useThemeStore} from '@/store/themeData';
+import {IAiFunctionErrorParsed, IChatMessage, IWaspApp} from '@/types';
 
+import AppIframe from './app-iframe';
 import {Button, IconButton} from './buttons';
 import {FileMarkdownContent} from './file-markdown';
 import {MarkdownContent} from './markdown';
 import {AlertModal, ProvideFeedbackModal} from './modals';
+import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
+import {UserImageModal} from './modals/showUserImageModal';
 import {TranslatorModal} from './modals/TranslatorModal';
 import {SensitiveMarkdownContent} from './sensitive-markdown';
 import {AnimateDots, LogoIcon} from './svgs';
-import {AxiosError} from 'axios';
-
-import {UserImageModal} from './modals/showUserImageModal';
-import {IframeWithSrcDocDialog} from './modals/IframeWithSrcDocDialog';
-import AppIframe from './app-iframe';
 import CustomSwitch from './switch/custom-switch';
-import {getWaspAppByIdApi} from '@/services/settings.service';
-import classNames from 'classnames';
-import {useDebouncedCallback} from 'use-debounce';
-import {autoGrowTextArea} from '@/helpers';
-import {useThemeStore} from '@/store/themeData';
-import {isLongTextWithoutSpaces} from '@/helpers/textHelper';
 
 interface IMessageItem {
   item: IChatMessage;
@@ -88,7 +83,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
   const [loading, setLoading] = useState(item.status === 'Asked');
   const [showTranslatorModal, setShowTranslatorModal] = useState(false);
   const isCurrentUser = item.user_id === user?.user_id;
-  const [messageEditable, setMessageEditable] = useState(!isEditMode && isCurrentUser);
+  const [messageEditable] = useState(!isEditMode && isCurrentUser);
   const disableSaveButton = messageText === item.message;
   const [isSensitive, setIsSensitive] = useState(false);
   const [isFileMessage, setIsFileMessage] = useState(false);
@@ -97,7 +92,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [anonymizedLoading, setAnonymizedLoading] = useState(false);
-  const [disableLoading, setDisableLoading] = useState(false);
+  const [disableLoading] = useState(false);
   const [sensitiveLoading, setSensitiveLoading] = useState(false);
   const [showUserImageModal, setShowUserImageModal] = useState(false);
   const [iframeWithSrcModal, setIframeWithSrcModal] = useState(false);
@@ -197,14 +192,14 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
     setSensitiveLoading(false);
   };
 
-  const handleDisableInspection = async () => {
-    if (!user) return;
-    setDisableLoading(true);
-    await updateChatMessageApi(item.chat_id, item.id, item.message, true);
-    // refreshMessage(item.chat_id);
-    setDisableLoading(false);
-    updateContentSafetyApi(30, user.user_id);
-  };
+  // const handleDisableInspection = async () => {
+  //   if (!user) return;
+  //   setDisableLoading(true);
+  //   await updateChatMessageApi(item.chat_id, item.id, item.message, true);
+  //   // refreshMessage(item.chat_id);
+  //   setDisableLoading(false);
+  //   updateContentSafetyApi(30, user.user_id);
+  // };
   const prepareIfResponseIncludesMessage = () => {
     if (isSensitive && response && messageText.includes(response)) {
       const responseSlices = messageText.split(response);
@@ -296,7 +291,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
       }
 
       if (item.wasp_app_id) {
-        const {id, wasp_app_id} = item;
+        const {wasp_app_id} = item;
         handleGetWaspAppDetailById(wasp_app_id);
         setHasWaspApp(true);
       } else {
@@ -309,8 +304,6 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
         clearTimeout(timeoutRef.current);
       }
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
   useEffect(() => {
@@ -337,7 +330,9 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
         <div className='flex gap-3'>
           <div className='shrink-0 w-12 h-12 flex items-center justify-center bg-grey-900 rounded-full relative'>
             {item.profile?.photo_file_name ? (
-              <img
+              <Image
+                width={48}
+                height={48}
                 src={`${ImagesBaseUrl}public/${item.profile.photo_file_name}`}
                 alt={item.profile.name}
                 className='rounded-full w-12 h-12 bg-grey-100 cursor-pointer'
@@ -447,6 +442,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                 isSensitive && !item.is_marked_as_not_sensitive && !item.is_anonymized ? (
                   <ShieldCheckIcon width={20} height={20} className='text-danger-500' />
                 ) : chat_logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img width={chat_logo.width} height={chat_logo.width} src={chat_logo.url} alt={chat_logo.alt ?? ''} />
                 ) : (
                   <LogoIcon width={28} height={18} color='#F5F5F5' />
@@ -506,6 +502,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                               srcDoc={applicationInnerHTML}
                               // height={iframeheight}
                               onLoad={onLoadPrepareIframe}
+                              allow='clipboard-read; clipboard-write'
                             ></iframe>
                             <IconButton
                               className='absolute -bottom-10 left-0 rounded-full hover:bg-grey-50'
@@ -568,7 +565,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                       <div>
                         <Popover className={'relative'}>
                           <Popover.Button>
-                            <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-0 cursor-pointer' />
+                            <InformationCircleIcon className='w-4 h-4 text-grey-400 hover:text-grey-800 transition-all cursor-pointer' />
                           </Popover.Button>
                           <Popover.Panel
                             className={
@@ -576,7 +573,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                             }
                           >
                             <p className='text-grey-0 text-xxs font-light'>
-                              Content Safety found sensitive information in the message, which included a password.
+                              Content Safety found sensitive information in the message, which included a password.
                             </p>
                           </Popover.Panel>
                         </Popover>
@@ -618,7 +615,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
                               <LanguageIcon width={18} height={18} className='text-grey-0' />
                               <p className='font-semibold text-grey-100 text-xs'>Translation on</p>
                             </div>
-                            <CustomSwitch active={showOriginal} onChange={(check: boolean) => handleOriginalOne()} />
+                            <CustomSwitch active={showOriginal} onChange={handleOriginalOne} />
                           </div>
                           <div className='flex justify-between items-center'>
                             <span className='text-grey-400 text-xs'>Translation language</span>
@@ -731,13 +728,12 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
         )}
         <AlertModal
           headTitle={'Disable Content Safety'}
-          title={'Are you sure you want to deactivate Content Safety?'}
+          title={'Are you sure you want to deactivate Content Safety?'}
           description={
             'With this feature disabled, your content will not be checked for sensitive information for the next 30 minutes.'
           }
           open={alertModalOpen}
           confirmTitle={'Deactivate Content Safety'}
-          onConfirm={() => {}}
           onClose={() => setAlertModalOpen(false)}
         />
         <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />

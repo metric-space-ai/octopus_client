@@ -1,8 +1,7 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
-import {IChatMessage, IModel, TOllamaModel, ValidationErrors} from '@/types';
 import {
   CreateNewModelApi,
   UpdateModelByIdApi,
@@ -10,6 +9,7 @@ import {
   getAllModelsApi,
   getOllamaModelsApi,
 } from '@/services/settings.service';
+import {IModel, TOllamaModel} from '@/types';
 
 interface ModelsStates {
   entities: IModel[] | null;
@@ -56,7 +56,7 @@ const initialState: ModelsStates = {
 };
 
 const modelsSlice = createSlice({
-  name: 'waspApps',
+  name: 'models',
   initialState,
   reducers: {
     setUploadIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -74,7 +74,7 @@ const modelsSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getAllModels.pending, (state, action) => {
+      .addCase(getAllModels.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -90,7 +90,7 @@ const modelsSlice = createSlice({
         state.reloadModelsIsAvailable = false;
         state.entities = action.payload;
       })
-      .addCase(getOllamaModels.pending, (state, action) => {
+      .addCase(getOllamaModels.pending, (state) => {
         state.ollamaIsLoading = true;
         state.ollamaHasError = false;
         state.errorMessage = '';
@@ -104,7 +104,7 @@ const modelsSlice = createSlice({
         state.ollamaIsLoading = false;
         state.ollamaModels = action.payload;
       })
-      .addCase(createNewModel.pending, (state, action) => {
+      .addCase(createNewModel.pending, (state) => {
         state.createModelIsLoading = true;
         state.CreateHasError = false;
         state.errorMessage = '';
@@ -122,7 +122,7 @@ const modelsSlice = createSlice({
           state.entities = [action.payload];
         }
       })
-      .addCase(UpdateModelById.pending, (state, action) => {
+      .addCase(UpdateModelById.pending, (state) => {
         state.createModelIsLoading = true;
         state.CreateHasError = false;
         state.errorMessage = '';
@@ -138,7 +138,7 @@ const modelsSlice = createSlice({
           state.entities = state.entities.flatMap((entity) => (entity.id === payload.id ? payload : entity));
         }
       })
-      .addCase(deleteModelById.pending, (state, action) => {
+      .addCase(deleteModelById.pending, (state) => {
         state.deleteModelIsLoading = true;
         state.deleteHasError = false;
         state.errorMessage = '';
@@ -148,7 +148,7 @@ const modelsSlice = createSlice({
         state.deleteModelIsLoading = false;
         state.errorMessage = action.error.message ?? 'something when wrong';
       })
-      .addCase(deleteModelById.fulfilled, (state, {payload}) => {
+      .addCase(deleteModelById.fulfilled, (state) => {
         state.deleteModelIsLoading = false;
       });
   },
@@ -167,7 +167,7 @@ export const getOllamaModels = createAsyncThunk('/models/getOllamaModels', async
 
 export const createNewModel = createAsyncThunk(
   '/models/createNewModel',
-  async (payload: TOllamaModel, {rejectWithValue, dispatch}) => {
+  async (payload: TOllamaModel, {rejectWithValue}) => {
     try {
       const {data, status} = await CreateNewModelApi(payload);
       if (status === 201) {
@@ -175,23 +175,22 @@ export const createNewModel = createAsyncThunk(
       }
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
 
 export const UpdateModelById = createAsyncThunk(
   '/models/UpdateModelById',
-  async (payload: Pick<IModel, 'id' | 'name'>, {rejectWithValue, dispatch}) => {
+  async (payload: Pick<IModel, 'id' | 'name'>, {rejectWithValue}) => {
     try {
       const {data, status} = await UpdateModelByIdApi(payload);
       if (status === 200) {
@@ -199,16 +198,15 @@ export const UpdateModelById = createAsyncThunk(
       }
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -222,16 +220,15 @@ export const deleteModelById = createAsyncThunk(
         dispatch(getAllModels());
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

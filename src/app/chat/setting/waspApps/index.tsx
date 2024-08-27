@@ -1,22 +1,22 @@
-import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import {UploadWaspAppModal} from '@/components/modals/WaspAppModals';
-import WaspAppsDetails from './WaspAppsDetails';
-import {IWaspApp} from '@/types';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '@/app/lib/store';
-import {useSelector} from 'react-redux';
+
+import {useDispatch, useSelector} from 'react-redux';
+
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import {
   deleteWaspAppById,
   handleChangeOpenRemoveWaspAppDialog,
   handleChangeSelectedWaspApp,
 } from '@/app/lib/features/waspApps/waspAppsSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {Button} from '@/components/buttons';
+import {UploadWaspAppModal} from '@/components/modals/WaspAppModals';
 import RemoveWaspAppModal from '@/components/modals/WaspAppModals/RemoveWaspAppModal';
+import {IWaspApp} from '@/types';
 
-type Props = {};
+import WaspAppsDetails from './WaspAppsDetails';
 
-const WaspApps = (props: Props) => {
+const WaspApps = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const {selectedWaspApp, openRemoveWaspAppDialog} = useSelector(selectWaspApps);

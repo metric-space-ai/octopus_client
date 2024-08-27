@@ -1,15 +1,12 @@
-import {useEffect, useState, Dispatch, SetStateAction} from 'react';
+import {Dispatch, SetStateAction, useState} from 'react';
 
-import {Switch} from '@headlessui/react';
-import {CodeBracketSquareIcon, MagnifyingGlassIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
+import {CodeBracketSquareIcon} from '@heroicons/react/24/outline';
 import {PlusIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import dynamic from 'next/dynamic';
 
-import {useChatStore} from '@/store';
-
-import {IconButton} from './buttons';
 import AgentItem from './agent-item';
+import {IconButton} from './buttons';
 import {AddPromptAgentModal} from './modals/AddPromptAgentModal';
 import {EditPromptAgentModal} from './modals/EditPromptAgentModal';
 
@@ -63,12 +60,11 @@ type Props = {
 };
 
 export function Agents({className, expanded, setExpanded}: Props) {
-  const chatStore = useChatStore();
+  // const chatStore = useChatStore();
   // const [enabled, setEnabled] = useState(true);
   const [addAgentModal, setAddAgentModal] = useState(false);
   const [existAgentModal, setExistAgentModal] = useState(false);
   const [selectedAgentPrompt, setSelectedAgentPrompt] = useState<TAgent>();
-
 
   return (
     <>

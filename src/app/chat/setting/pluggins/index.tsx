@@ -1,13 +1,28 @@
+import React from 'react';
+
 import {Tab} from '@headlessui/react';
 import classNames from 'classnames';
-import React from 'react';
-import AiServices from '../ai-services';
-import SimpleApps from '../simpleApps';
-import WaspApps from '../waspApps';
+import dynamic from 'next/dynamic';
 
-type Props = {};
+import {Spinner} from '@/components/spinner';
 
-const plugin = (props: Props) => {
+const DynamicAiServices = dynamic(async () => (await import('../ai-services')).default, {
+  loading: () => <ComponentLoading />,
+});
+const DynamicSimpleApps = dynamic(async () => (await import('../simpleApps')).default, {
+  loading: () => <ComponentLoading />,
+});
+const DynamicWaspApps = dynamic(async () => (await import('../waspApps')).default, {
+  loading: () => <ComponentLoading />,
+});
+
+const ComponentLoading = () => (
+  <div className='w-full flex items-center justify-center py-10 h-56'>
+    <Spinner size='medium' />
+  </div>
+);
+
+const Plugin = () => {
   return (
     <div className='flex flex-col pt-9 px-6 w-full max-w-[780px]'>
       <Tab.Group>
@@ -45,13 +60,13 @@ const plugin = (props: Props) => {
         </Tab.List>
         <Tab.Panels className='h-[420px] max-h-[420px] flex flex-col w-full py-[18px] px-6 rounded-r-xl rounded-bl-xl bg-grey-0'>
           <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
-            <AiServices />
+            <DynamicAiServices />
           </Tab.Panel>
           <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
-            <SimpleApps />
+            <DynamicSimpleApps />
           </Tab.Panel>
           <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
-            <WaspApps />
+            <DynamicWaspApps />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
@@ -59,4 +74,4 @@ const plugin = (props: Props) => {
   );
 };
 
-export default plugin;
+export default Plugin;

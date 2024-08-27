@@ -1,15 +1,14 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
-import {IDocument, TNextCluodDoc, ValidationErrors} from '@/types';
 import {
   createNewNextCloudDocumentsApi,
   deleteDocumentByIdApi,
-  getAllDocumentsApi,
   getAllNextCloudDocumentsApi,
   updateDocumentByIdApi,
 } from '@/services/settings.service';
+import {IDocument, TNextCluodDoc} from '@/types';
 
 type DocumentStates = {
   entities: TNextCluodDoc[] | null;
@@ -32,7 +31,7 @@ const documentsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getAllNextCloudDocuments.pending, (state, action) => {
+      .addCase(getAllNextCloudDocuments.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -47,32 +46,32 @@ const documentsSlice = createSlice({
         state.isLoading = false;
 
         state.entities = action.payload;
-      })
-      // .addCase(updateDocument.fulfilled, (state, {payload}) => {
-      //   console.log('updateDocument fulfilled');
-      //   state.isLoading = false;
-      //   if (state.entities) {
-      //     state.entities = [...state.entities].flatMap((document) =>
-      //       document.id === payload.id ? payload : document,
-      //     );
-      //   }
-      // })
-      // .addCase(deleteDocumentById.fulfilled, (state, {payload}) => {
-      //   console.log('deleteDocumentById fulfilled');
-      //   state.isLoading = false;
-      //   if (state.entities) {
-      //     // state.entities = [...state.entities].filter((document) => document.id !== payload);
-      //   }
-      // })
-      // .addCase(createNewDocument.fulfilled, (state, {payload}) => {
-      //   console.log('createNewDocument fulfilled');
-      //   state.isLoading = false;
-      //   // if (state.entities) {
-      //   //   state.entities = [...state.entities, payload];
-      //   // } else {
-      //   //   // state.entities = [payload];
-      //   // }
-      // });
+      });
+    // .addCase(updateDocument.fulfilled, (state, {payload}) => {
+    //   console.log('updateDocument fulfilled');
+    //   state.isLoading = false;
+    //   if (state.entities) {
+    //     state.entities = [...state.entities].flatMap((document) =>
+    //       document.id === payload.id ? payload : document,
+    //     );
+    //   }
+    // })
+    // .addCase(deleteDocumentById.fulfilled, (state, {payload}) => {
+    //   console.log('deleteDocumentById fulfilled');
+    //   state.isLoading = false;
+    //   if (state.entities) {
+    //     // state.entities = [...state.entities].filter((document) => document.id !== payload);
+    //   }
+    // })
+    // .addCase(createNewDocument.fulfilled, (state, {payload}) => {
+    //   console.log('createNewDocument fulfilled');
+    //   state.isLoading = false;
+    //   // if (state.entities) {
+    //   //   state.entities = [...state.entities, payload];
+    //   // } else {
+    //   //   // state.entities = [payload];
+    //   // }
+    // });
   },
 });
 
@@ -97,16 +96,15 @@ export const updateDocument = createAsyncThunk(
       if (status === 200) toast.success(`update Successful.`);
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -122,23 +120,22 @@ export const createNewDocument = createAsyncThunk(
       }
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
 
 export const deleteDocumentById = createAsyncThunk(
   '/documents/deleteDocumentById',
-  async (payload: string, {rejectWithValue, dispatch}) => {
+  async (payload: string, {rejectWithValue}) => {
     try {
       const {status} = await deleteDocumentByIdApi(payload);
       if (status === 204) {
@@ -146,16 +143,15 @@ export const deleteDocumentById = createAsyncThunk(
         // dispatch(getAllDocuments());
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

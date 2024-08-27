@@ -3,21 +3,17 @@ import {Fragment, useState} from 'react';
 import {Dialog, Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
+import {useDispatch} from 'react-redux';
 
+import {addNewTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
+import {AppDispatch} from '@/app/lib/store';
 import {ROLEOPTIONS} from '@/constant';
 import {authValidator} from '@/helpers/validators';
+import {ICreateUser, TRole} from '@/types';
 
+import {InvitationSent} from './SendInvitation';
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import {InvitationSent} from './SendInvitation';
-import {TRole, ICreateUser} from '@/types';
-import {useSettingsContext} from '@/contexts/settingsContext';
-import toast from 'react-hot-toast';
-import {createTeamMemberApi} from '@/services/settings.service';
-import {AxiosError} from 'axios';
-import {useDispatch} from 'react-redux';
-import {addNewTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
-import { AppDispatch } from '@/app/lib/store';
 
 interface ModalProps {
   open: boolean;
@@ -38,22 +34,23 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
   const [selected, setSelected] = useState([ROLEOPTIONS[2]]);
   const [invitationSentModal, setInvitationSentModal] = useState(false);
 
-  const {teamMembers, setTeamMembers} = useSettingsContext();
-
   const {
     register,
-    setValue,
     handleSubmit,
     formState: {errors},
+    reset,
+    watch,
   } = useForm<IFormInputs>();
 
   const closeDialog = () => {
-    setValue('email', '');
-    setValue('job_title', '');
-    setValue('name', '');
-    setValue('password', '');
-    setValue('repeat_password', '');
     onClose();
+    reset({
+      email: '',
+      job_title: '',
+      name: '',
+      password: '',
+      repeat_password: '',
+    });
   };
 
   const onSubmit = async (data: IFormInputs) => {
@@ -69,25 +66,18 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
       roles,
     };
     setLoading(true);
-    dispatch(addNewTeamMember(payload));
-    setLoading(false);
-    // try {
-    //   const {status, data} = await createTeamMemberApi(payload);
-    //   if (status === 201) {
-    //     if (teamMembers) {
-    //       setTeamMembers((prev) => (prev ? [...prev, data] : [data]));
-    //     }
-    //     toast.success(`(${payload.name}) has successfully been added as a new user.`);
-    //     closeDialog();
-    //   }
-    // } catch (err) {
-    //   if (err instanceof AxiosError) {
-    //     toast.error(err?.response?.data.error);
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
-    // setInvitationSentModal(true);
+    try {
+      const {
+        meta: {requestStatus},
+      } = await dispatch(addNewTeamMember(payload));
+      if (requestStatus === 'fulfilled') {
+        closeDialog();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,14 +114,14 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                     <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
                       Add a new member
                     </Dialog.Title>
-                    <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
+                    <form className='flex flex-col mt-5 gap-5 text-left' onSubmit={handleSubmit(onSubmit)}>
                       <Input
                         placeholder='Email'
                         errors={errors.email && errors.email.message}
                         rules={register('email', authValidator.email)}
                       />
                       <Input
-                        placeholder='job_title'
+                        placeholder='job title'
                         errors={errors.job_title && errors.job_title.message}
                         rules={register('job_title', authValidator.job_title)}
                       />
@@ -150,7 +140,14 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                         type='password'
                         placeholder='repeat password'
                         errors={errors.repeat_password && errors.repeat_password.message}
-                        rules={register('repeat_password', authValidator.password)}
+                        rules={register('repeat_password', {
+                          required: true,
+                          validate: (val: string) => {
+                            if (watch('password') !== val) {
+                              return 'Your password does not match.';
+                            }
+                          },
+                        })}
                       />
                       <Listbox value={selected} onChange={setSelected} multiple>
                         <div className='relative mt-1'>
@@ -176,9 +173,7 @@ export const AddNewMemberModal = ({open, onClose}: ModalProps) => {
                                 <Listbox.Option
                                   key={`${permission.value}_${idx}`}
                                   className={({active}) =>
-                                    `relative select-none py-2 pl-10 pr-4 ${
-                                      active ? 'bg-grey-100' : 'text-gray-900'
-                                    }`
+                                    `relative select-none py-2 pl-10 pr-4 ${active ? 'bg-grey-100' : 'text-gray-900'}`
                                   }
                                   value={permission}
                                 >

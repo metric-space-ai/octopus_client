@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {PartialLocaleType} from './index';
 
 const fa: PartialLocaleType = {
@@ -45,8 +46,7 @@ const fa: PartialLocaleType = {
     Send: 'ارسال حافظه',
     Copy: 'کپی حافظه',
     Reset: 'بازنشانی جلسه',
-    ResetConfirm:
-      'بازنشانی، تاریخچه گفتگوی فعلی و حافظه بلندمدت را پاک می‌کند. واقعا می‌خواهید بازنشانی کنید؟',
+    ResetConfirm: 'بازنشانی، تاریخچه گفتگوی فعلی و حافظه بلندمدت را پاک می‌کند. واقعا می‌خواهید بازنشانی کنید؟',
   },
   Home: {
     NewTicket: 'چت جدید',
@@ -159,8 +159,7 @@ const fa: PartialLocaleType = {
     BotHello: 'سلام! چطور می‌توانم به شما کمک کنم؟',
     Error: 'مشکلی پیش آمده است، لطفا بعدا دوباره تلاش کنید.',
     Prompt: {
-      History: (content: string) =>
-        'این خلاصه‌ای از تاریخچه چت بین هوش مصنوعی و کاربر است: ' + content,
+      History: (content: string) => 'این خلاصه‌ای از تاریخچه چت بین هوش مصنوعی و کاربر است: ' + content,
       Topic:
         'لطفا عنوانی چهار تا پنج کلمه‌ای ایجاد کنید که گفتگوی ما را خلاصه کند، بدون مقدمه، علائم نگارشی، نقل قول‌ها، نقطه‌ها، نمادها یا متن اضافی. نقل قول‌ها را حذف کنید.',
       Summarize:

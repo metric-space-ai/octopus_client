@@ -1,17 +1,17 @@
-import {Fragment, useState, useEffect} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-import { TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
 
 import {authValidator} from '@/helpers/validators';
 
+import {DeleteAgentModal} from './DeleteAgentModal';
+import AgentPromptLine from '../agent-prompt-line';
+import {TAgent} from '../agents';
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import {TAgent} from '../agents';
 import CustomSwitch from '../switch/custom-switch';
-import AgentPromptLine from '../agent-prompt-line';
-import { DeleteAgentModal } from './DeleteAgentModal';
 
 interface ModalProps {
   open: boolean;
@@ -31,7 +31,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
 
   const {
     register,
-    setValue,
+    reset,
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
@@ -52,8 +52,13 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
     onClose();
   };
   useEffect(() => {
-    setValue('name', selected.title);
-    setValue('desc', selected.when);
+    reset({
+      name: selected.title,
+      desc: selected.when,
+    });
+    // setValue('name', selected.title);
+    // setValue('desc', selected.when);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promptData]);
 
   return (
@@ -121,7 +126,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2 '>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
@@ -130,7 +135,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2'>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
@@ -139,7 +144,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2'>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
@@ -148,7 +153,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2'>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
@@ -157,7 +162,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2'>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago
@@ -166,7 +171,7 @@ export const EditPromptAgentModal = ({open, onClose, promptData}: ModalProps) =>
                       <div className='flex items-center gap-2'>
                         <AgentPromptLine
                           desc={'I checked the vibration level of the blade, everything is ok.'}
-                          when={'19 mins ago'}
+                          // when={'19 mins ago'}
                         />
                         <span className='font-medium text-xxs text-grey-900 min-w-max text-right block'>
                           19 mins ago

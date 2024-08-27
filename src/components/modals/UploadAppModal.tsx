@@ -1,7 +1,6 @@
-import React, {Fragment, useCallback, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
+import React, {ChangeEvent, DragEvent, Fragment, useEffect, useRef, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
 import {
   ArrowUpTrayIcon,
   CheckIcon,
@@ -9,12 +8,16 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
+
+import {APPSTATUS} from '@/constant';
+import {bytesCalculator} from '@/helpers';
+import {IApp} from '@/types';
 
 import {Button, IconButton} from '../buttons';
-import toast from 'react-hot-toast';
-import {bytesCalculator} from '@/helpers';
-import CustomCheckbox from '../custom-checkbox';
-import Highlight from 'react-highlight';
+import {Spinner} from '../spinner';
+
+// import Highlight from 'react-highlight';
 // import {
 //   addAppConfigurationApi,
 //   getAppByIdApi,
@@ -22,50 +25,17 @@ import Highlight from 'react-highlight';
 //   startAppInstallationApi,
 //   uploadNewAppApi,
 // } from '@/services/auth.service';
-import {AxiosError} from 'axios';
-import {IApp, IResources} from '@/types';
-import {useAuthContext} from '@/contexts/authContext';
-import {APPSTATUS} from '@/constant';
-import {Spinner} from '../spinner';
 
-const VALIDAPPFILE = {Format: '.py', Type: 'text/x-python'};
+const DynamicHighlight = dynamic(async () => (await import('react-highlight')).default, {
+  loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
+});
+
 const ADDAPPSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
 }
-
-interface IFormInputs {
-  name: string;
-  id: number;
-}
-
-// const Highlight = React.memo(_Highlight);
-
-const SetupEnvironment = [
-  {
-    id: 'setup_1',
-    title: 'CPU',
-    desc: 'Intel Core i7-13700K',
-    space: '8GB of 16GB',
-    active: false,
-  },
-  {
-    id: 'setup_2',
-    title: 'GPU (Discrete)',
-    desc: 'NVIDIA GeForce MX250',
-    space: '9GB of 11GB',
-    active: false,
-  },
-  {
-    id: 'setup_3',
-    title: 'GPU (Integrated)',
-    desc: 'Intel UHD Graphics',
-    space: '0.7GB of 2GB',
-    active: false,
-  },
-];
 
 export const UploadAppModal = ({open, onClose}: ModalProps) => {
   const [loading, setLoading] = useState(false);
@@ -75,23 +45,18 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
   const [fileIsSelected, setFileIsSelected] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
   const [currentStep, setCurrentStep] = useState(ADDAPPSTEPS.Upload);
-  const [fileText, setFileText] = useState('');
 
   const [selectedApp, setSelectedApp] = useState<IApp | null>(null);
 
-  const [active, setActive] = useState(false);
-  const [setupFormIsValid, setSetupFormIsValid] = useState(false);
-  const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
-  const [resources, setResources] = useState<IResources>();
-
-  const [deviceMapConfig, setDeviceMapConfig] = useState({cpu: false});
+  // const [setupEnv, setSetupEnv] = useState(SetupEnvironment);
+  // const [resources, setResources] = useState<IResources>();
+  // const [deviceMapConfig, setDeviceMapConfig] = useState({cpu: false});
 
   const [installStarted, setInstallStarted] = useState(false);
   const [installPercentage, setInstallPercentage] = useState(0);
   const [pluginInstalled, setAppInstalled] = useState(false);
 
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef(0);
 
   // const {getAllApps} = useAuthContext();
 
@@ -174,15 +139,15 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
   const handleDeleteFile = () => {
     setFile(undefined);
   };
-  const handleCheckFileIsValid = (file: File) => {
-    if (file.name.includes(VALIDAPPFILE.Format) && file.type.includes(VALIDAPPFILE.Type)) {
-      setFile(file);
-    } else {
-      toast.error(
-        `An incorrect file has been selected for the selected file. format:${file.name} _ type:${file.type} The expected format is "*.py" and valid type is "text/x-python"`,
-      );
-    }
-  };
+  // const handleCheckFileIsValid = (file: File) => {
+  //   if (file.name.includes(VALIDAPPFILE.Format) && file.type.includes(VALIDAPPFILE.Type)) {
+  //     setFile(file);
+  //   } else {
+  //     toast.error(
+  //       `An incorrect file has been selected for the selected file. format:${file.name} _ type:${file.type} The expected format is "*.py" and valid type is "text/x-python"`,
+  //     );
+  //   }
+  // };
 
   const handleCloseModal = () => {
     setUploadStarted(false);
@@ -191,9 +156,6 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
     setFileIsSelected(false);
     setFileUploaded(false);
     setCurrentStep(ADDAPPSTEPS.Upload);
-    setFileText('');
-    setActive(false);
-    setSetupFormIsValid(false);
     setInstallStarted(false);
     setInstallPercentage(0);
     setAppInstalled(false);
@@ -202,13 +164,13 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
     onClose();
   };
 
-  const handleChangeSetup = (check: boolean, inx: number) => {
-    const result = [...setupEnv];
-    result[inx].active = check;
+  // const handleChangeSetup = (check: boolean, inx: number) => {
+  //   const result = [...setupEnv];
+  //   result[inx].active = check;
 
-    // const setup = {...setupEnv[inx],active:check};
-    setSetupEnv(result);
-  };
+  //   // const setup = {...setupEnv[inx],active:check};
+  //   setSetupEnv(result);
+  // };
 
   useEffect(() => {
     if (file) {
@@ -453,9 +415,7 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
                           >
                             <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                           </IconButton>
-                          <h6 className='font-semibold text-sm text-grey-800 mb-3'>
-                            Drag & drop file to upload
-                          </h6>
+                          <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
                           <p className='text-xs text-grey-600 '>Files in .py file format only</p>
                           <input
                             type='file'
@@ -536,7 +496,7 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
                             Assign a plugin to computer resources
                           </h5>
 
-                          {resources && resources.device_map.cpu && (
+                          {/* {resources && resources.device_map.cpu && (
                             <div className='flex flex-col gap-3 mb-3'>
                               <div className='w-full flex bg-grey-0 rounded-4xl px-6 py-3 h-45-px items-center'>
                                 <CustomCheckbox
@@ -548,7 +508,7 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
                                 <span className='text-grey-600 text-xs ml-auto'>{`${resources.memory_free} of ${resources.memory_total}`}</span>
                               </div>
                             </div>
-                          )}
+                          )} */}
 
                           {/* {setupEnv.map((setup, inx) => (
                             <div key={setup.id} className='flex flex-col gap-3 mb-3'>
@@ -625,14 +585,14 @@ export const UploadAppModal = ({open, onClose}: ModalProps) => {
                           </div>
                         </div>
                         <div className='w-full flex-auto py-4 px-5 overflow-auto bg-grey-900 text-left rounded-xl max-h-[342px] custom-scrollbar-thumb'>
-                          <Highlight
+                          <DynamicHighlight
                             innerHTML={false}
                             className='text-grey-0 [&_.hljs-keyword]:text-secondary-600 [&_.hljs-string]:text-secondary [&_.hljs-selector-class]:text-danger-300
                            [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
                            [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                           >
                             {selectedApp.original_function_body}
-                          </Highlight>
+                          </DynamicHighlight>
                         </div>
                       </div>
                     )}

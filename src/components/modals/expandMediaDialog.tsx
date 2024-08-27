@@ -1,12 +1,13 @@
-import {Fragment, useState} from 'react';
+import {Fragment} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import Image from 'next/image';
+
+import {ImagesBaseUrl} from '@/constant';
+import {IChatMessageFile} from '@/types';
 
 import {IconButton} from '../buttons';
-import {IChatMessageFile} from '@/types';
-import {ImagesBaseUrl} from '@/constant';
-import Image from 'next/image';
 
 interface ModalProps {
   open: boolean;
@@ -59,7 +60,7 @@ export const ExpandMediaDialog = ({open, onClose, media, title, width = 400, hei
 
                   {media.media_type.includes('image') && (
                     <>
-                      <img
+                      <Image
                         src={`${ImagesBaseUrl}${media.file_name}`}
                         alt={title ?? ''}
                         loading='lazy'

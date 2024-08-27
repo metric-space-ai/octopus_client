@@ -1,7 +1,13 @@
-import {CheckIcon} from '@heroicons/react/24/outline';
 import React from 'react';
-import Highlight from 'react-highlight';
 
+import {CheckIcon} from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
+
+// import Highlight from 'react-highlight';
+
+const DynamicHighlight = dynamic(async () => (await import('react-highlight')).default, {
+  loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
+});
 type Props = {
   installPercentage: number;
   processed_function_body: string;
@@ -17,9 +23,7 @@ const InstallationPluginSection = ({installPercentage, processed_function_body}:
               <span className='w-7 h-7 rounded-full bg-secondary/[0.11] flex items-center justify-center'>
                 <CheckIcon width={16} height={16} className='text-secondary' />
               </span>
-              <p className='text-grey-900 font-semibold text-xs leading-5'>
-                The plugin is successfully installed
-              </p>
+              <p className='text-grey-900 font-semibold text-xs leading-5'>The plugin is successfully installed</p>
             </div>
           ) : (
             <>
@@ -40,14 +44,14 @@ const InstallationPluginSection = ({installPercentage, processed_function_body}:
         </div>
       </div>
       <div className='w-full flex-auto py-4 px-5 overflow-auto bg-grey-900 text-left rounded-xl max-h-[342px] custom-scrollbar-thumb'>
-        <Highlight
+        <DynamicHighlight
           innerHTML={false}
           className='text-grey-0 [&_.hljs-keyword]:text-secondary-600 [&_.hljs-string]:text-secondary [&_.hljs-selector-class]:text-danger-300
-                           [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
-                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
+                      [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
+                      [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
         >
           {processed_function_body}
-        </Highlight>
+        </DynamicHighlight>
       </div>
     </div>
   );

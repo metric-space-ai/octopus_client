@@ -37,7 +37,7 @@ const trk: PartialLocaleType = {
     Copy: 'Hepsini kopyala',
     Download: 'İndir',
     MessageFromYou: 'Sizin Mesajınız',
-    MessageFromChatGPT: 'ChatGPT\'den Mesaj',
+    MessageFromChatGPT: "ChatGPT'den Mesaj",
   },
   Memory: {
     Title: 'Hafıza İsteği',
@@ -86,7 +86,7 @@ const trk: PartialLocaleType = {
     TightBorder: 'Dar Kenarlık',
     SendPreviewBubble: {
       Title: 'Önizleme Baloncuğu Gönder',
-      SubTitle: 'Markdown\'u baloncukta önizle',
+      SubTitle: "Markdown'u baloncukta önizle",
     },
     Mask: {
       Title: 'Maske Başlangıç Ekranı',
@@ -124,7 +124,7 @@ const trk: PartialLocaleType = {
     },
     Usage: {
       Title: 'Hesap Durumu',
-      SubTitle(used: any, total: any) {
+      SubTitle(used: unknown, total: unknown) {
         return `Bu ay harcanan $${used}, Abonelik $${total}`;
       },
       IsChecking: 'Kontrol ediliyor...',
@@ -172,7 +172,7 @@ const trk: PartialLocaleType = {
     Failed: 'Kopyalama başarısız oldu, lütfen panoya erişim iznini verin',
   },
   Context: {
-    Toast: (x: any) => `${x} bağlam istemleri ile`,
+    Toast: (x: unknown) => `${x} bağlam istemleri ile`,
     Edit: 'Bağlam ve hafıza istemlerini düzenle',
     Add: 'Ekle',
   },

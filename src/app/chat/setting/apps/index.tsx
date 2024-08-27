@@ -1,11 +1,11 @@
-import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
+
+import {Button} from '@/components/buttons';
+import {UploadAppModal} from '@/components/modals/UploadAppModal';
+
 import AppsData from './appDetails';
-import { UploadAppModal } from '@/components/modals/UploadAppModal';
 
-type Props = {};
-
-const Applications = (props: Props) => {
+const Applications = () => {
   const [addAppsModal, setAddAppsModal] = useState(false);
   return (
     <>

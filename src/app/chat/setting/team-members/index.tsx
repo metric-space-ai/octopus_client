@@ -1,9 +1,9 @@
-import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import TeamMebersTable from './teamMemberTable';
+
+import {Button} from '@/components/buttons';
 import {AddNewMemberModal} from '@/components/modals/AddNewMemberModal';
 
-type Props = {};
+import TeamMebersTable from './teamMemberTable';
 
 const DESCRIPTIONS = [
   {
@@ -14,12 +14,12 @@ const DESCRIPTIONS = [
   {key: 'description-2', title: 'Private user', content: 'Access to public space and confidential workspace.'},
   {key: 'description-3', title: 'Public user', content: 'Access to public space only. '},
 ];
-const TeamMembers = (props: Props) => {
+const TeamMembers = () => {
   const [addNewUserModal, setAddNewUserModal] = useState(false);
 
   return (
     <>
-       <div className='w-full pt-9 flex md:gap-4 lg:gap-6 px-6'>
+      <div className='w-full pt-9 flex md:gap-4 lg:gap-6 px-6'>
         <div className='flex flex-col w-full max-w-[689px] px-6 py-4 rounded-xl bg-grey-0'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
             <h1 className='text-lg leading-7 text-grey-900 font-semibold'>team members</h1>
@@ -30,7 +30,7 @@ const TeamMembers = (props: Props) => {
               onClick={() => setAddNewUserModal(true)}
             />
           </div>
-          <div className='h-full max-h-[420px] overflow-auto relative -mx-4 px-4 custom-scrollbar-thumb'>
+          <div className='h-full max-h-[460px] overflow-auto relative -mx-4 px-4 custom-scrollbar-thumb'>
             <TeamMebersTable />
           </div>
         </div>

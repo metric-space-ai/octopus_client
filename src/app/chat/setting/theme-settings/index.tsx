@@ -1,19 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {ChangeEvent, useEffect, useState} from 'react';
+
+import classNames from 'classnames';
+import toast from 'react-hot-toast';
+
 import {Button} from '@/components/buttons';
 import {useAuthContext} from '@/contexts/authContext';
 import {useThemeStore} from '@/store/themeData';
-import {IThemeData, TCompany} from '@/types';
-import classNames from 'classnames';
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import toast from 'react-hot-toast';
+import {IThemeData} from '@/types';
 
-type Props = {};
-
-const companies = (props: Props) => {
+const ThemeSettings = () => {
   const {getCurrentUserCompany, currentUserCompany, putCurrentUserCompany, companyIsLoading} = useAuthContext();
   const {themeData, handleSetColorVariable} = useThemeStore();
 
-  // const [companyDetails, setCompanyDetails] = useState<TCompany>();
-  const [isLoading, setIsLoading] = useState(false);
   const [previewIsOn, setPreviewIsOn] = useState(false);
   const [contentIsChanged, setContentIsChanged] = useState(false);
 
@@ -74,21 +73,15 @@ const companies = (props: Props) => {
   }, [previewIsOn]);
 
   return (
-    <div className='flex gap-6 pt-9'>
-      <div className='w-full flex flex-col px-6'>
-        <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-xl bg-grey-0'>
-          <div className='flex justify-between items-center mb-8'>
-            <h1 className='text-lg leading-7 text-grey-900 font-semibold'>Theme</h1>
-          </div>
-          {isLoading && (
-            <div className='flex flex-col justify-start py-3 items-center animate-pulse gap-3'>
-              <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-80'></div>
-              <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-80'></div>
-            </div>
-          )}
-          {!isLoading && (
-            <div className={classNames('flex flex-col', companyIsLoading && 'pointer-events-none')}>
-              <label className='flex gap-4 text-sm mb-8 items-center'>
+    <>
+      <div className='flex justify-between items-center w-full'>
+        <h1 className='text-lg leading-7 text-grey-900 font-semibold'>Theme Settings</h1>
+      </div>
+      <div className='flex gap-6'>
+        <div className='w-full flex flex-col pt-4'>
+          <div className='flex flex-col w-full max-w-[570px] flex-1'>
+            <div className={classNames('flex flex-col flex-1', companyIsLoading && 'pointer-events-none')}>
+              <label className='flex flex-col gap-2 text-sm mb-8 items-start cursor-pointer'>
                 <b className='block'>Upload your Json file:</b>
                 <input type='file' accept='.json' onChange={handleFileChange} />
               </label>
@@ -96,7 +89,7 @@ const companies = (props: Props) => {
                 <div>
                   <h2>Edit:</h2>
                   <textarea
-                    className='w-full border border-primary-150'
+                    className='w-full border border-primary-150 resize-none'
                     rows={10}
                     value={fileContent ?? ''}
                     // onChange={({target}) => setFileContent(target.value)}
@@ -104,7 +97,7 @@ const companies = (props: Props) => {
                   ></textarea>
                 </div>
               </div>
-              <div className='flex justify-start gap-6'>
+              <div className='flex justify-start gap-6 mt-auto'>
                 {previewIsOn && (
                   <Button
                     className='!px-6 font-semibold text-sm !h-34-px'
@@ -136,49 +129,49 @@ const companies = (props: Props) => {
                 />
               </div>
             </div>
-          )}
+          </div>
+        </div>
+        <div className='flex flex-col p-4 gap-3 border text-sm w-[300px] max-h-[480px] h-full custom-scrollbar-thumb'>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>primary-default</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-primary' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>primary-medium</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-primary-medium' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>primary-regular</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-primary-400' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>secondary-default</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-secondary' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>secondary-deep</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-secondary-700' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>secondary-soft</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-secondary-soft' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>success</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-success' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>error</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-danger' />
+          </div>
+          <div className='flex gap-3 items-center justify-between'>
+            <b>background</b>
+            <span className='border shadow-md rounded-md block w-5 h-5 bg-background' />
+          </div>
         </div>
       </div>
-      <div className='flex flex-col p-4 gap-3 border text-sm w-[300px] max-h-[480px] h-full custom-scrollbar-thumb'>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>primary-default</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-primary' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>primary-medium</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-primary-medium' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>primary-regular</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-primary-400' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>secondary-default</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-secondary' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>secondary-deep</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-secondary-700' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>secondary-soft</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-secondary-soft' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>success</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-success' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>error</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-danger' />
-        </div>
-        <div className='flex gap-3 items-center justify-between'>
-          <b>background</b>
-          <span className='border shadow-md rounded-md block w-16 h-4 bg-background' />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
-export default companies;
+export default ThemeSettings;

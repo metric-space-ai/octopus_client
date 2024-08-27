@@ -1,11 +1,11 @@
-import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import DocumentsData from './documentsDetails';
+
+import {Button} from '@/components/buttons';
 import {UploadDocumentModal} from '@/components/modals/UploadDocumentModal';
 
-type Props = {};
+import DocumentsData from './documentsDetails';
 
-const Documents = (props: Props) => {
+const Documents = () => {
   const [addDocumentsModal, setAddDocumentsModal] = useState(false);
   return (
     <>

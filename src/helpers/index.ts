@@ -46,20 +46,50 @@ export function downloadAs(text: string, filename: string) {
   document.body.removeChild(element);
 }
 
-export function readFromFile() {
+// export function readFromFile() {
+//   return new Promise<string>((res, rej) => {
+//     const fileInput = document.createElement('input');
+//     fileInput.type = 'file';
+//     fileInput.accept = 'application/json';
+
+//     fileInput.onchange = (event: any) => {
+//       const file = event.target.files[0];
+//       const fileReader = new FileReader();
+//       fileReader.onload = (e: any) => {
+//         res(e.target.result);
+//       };
+//       fileReader.onerror = (e) => rej(e);
+//       fileReader.readAsText(file);
+//     };
+
+//     fileInput.click();
+//   });
+// }
+export function readFromFile(): Promise<string> {
   return new Promise<string>((res, rej) => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'application/json';
 
-    fileInput.onchange = (event: any) => {
-      const file = event.target.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = (e: any) => {
-        res(e.target.result);
-      };
-      fileReader.onerror = (e) => rej(e);
-      fileReader.readAsText(file);
+    fileInput.onchange = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+
+      if (file) {
+        const fileReader = new FileReader();
+
+        fileReader.onload = (e: ProgressEvent<FileReader>) => {
+          res(e.target?.result as string);
+        };
+
+        fileReader.onerror = (e: ProgressEvent<FileReader>) => {
+          rej(e);
+        };
+
+        fileReader.readAsText(file);
+      } else {
+        rej(new Error('No file selected'));
+      }
     };
 
     fileInput.click();
@@ -126,7 +156,7 @@ function getDomContentWidth(dom: HTMLElement) {
 }
 
 function getOrCreateMeasureDom(id: string, init?: (dom: HTMLElement) => void) {
-  let dom = document.getElementById(id);
+  let dom = document.getElementById(id) as HTMLElement | null;
 
   if (!dom) {
     dom = document.createElement('span');
@@ -141,7 +171,7 @@ function getOrCreateMeasureDom(id: string, init?: (dom: HTMLElement) => void) {
     init?.(dom);
   }
 
-  return dom!;
+  return dom as HTMLElement;
 }
 
 export function autoGrowTextArea(dom: HTMLTextAreaElement) {
@@ -182,6 +212,6 @@ export function bytesCalculator(size: number) {
   }
 }
 
-export const spaceBeforeCapitalLetters = (letters: String) => {
+export const spaceBeforeCapitalLetters = (letters: string) => {
   return letters.replace(/([A-Z])/g, ' $1').trim();
 };

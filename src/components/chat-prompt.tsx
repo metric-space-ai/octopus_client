@@ -1,3 +1,5 @@
+import React, {useState} from 'react';
+
 import {
   ArrowLongRightIcon,
   ArrowTrendingUpIcon,
@@ -7,7 +9,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 import {Logo} from './logo';
-import React, {useState} from 'react';
 
 // const EXAMPLES = [
 //   {id: 'sample-message-1', title: 'Plan an itinerary', content: 'for a fashion-focused exploration of Paris'},
@@ -120,9 +121,7 @@ export const ChatPrompt = ({handleInputChange}: IChatPrompt) => {
             <ArrowLongRightIcon className='w-4 h-4 text-grey-0' />
           </div>
           <p className='text-xs font-medium text-grey-0'>INSTRUCTION</p>
-          <p className='text-xl font-semibold text-grey-0 mt-2'>
-            Utilizing the Octopus for Factory Work Assistance
-          </p>
+          <p className='text-xl font-semibold text-grey-0 mt-2'>Utilizing the Octopus for Factory Work Assistance</p>
         </div>
       ),
     },
@@ -158,7 +157,7 @@ export const ChatPrompt = ({handleInputChange}: IChatPrompt) => {
         </div>
 
         <div className='flex gap-4 flex-wrap'>
-          {PROMPT_CARDS.map((card, index) => (
+          {PROMPT_CARDS.map((card) => (
             <React.Fragment key={card.id}>{card.content}</React.Fragment>
           ))}
         </div>

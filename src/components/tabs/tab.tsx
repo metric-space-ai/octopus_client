@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 
 import classNames from 'classnames';
+import {useForm} from 'react-hook-form';
+
+import {TabModes} from '@/constant';
+import {authValidator} from '@/helpers/validators';
+import {useChatStore} from '@/store';
+import {IWorkspace} from '@/types';
 
 import {TabMenu} from './menu';
-import {Input} from '../input';
-import {useForm} from 'react-hook-form';
-import {authValidator} from '@/helpers/validators';
-import {IWorkspace} from '@/types';
-import {TabModes} from '@/constant';
-import {useChatStore} from '@/store';
 import {Button} from '../buttons';
+import {Input} from '../input';
 
 interface IFormInputs {
   name: string;
@@ -40,6 +41,7 @@ export const Tab = ({
   onClick,
   onRename,
   onDelete,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onClearTab = () => {},
   isFocused,
 }: TabProps) => {
@@ -67,9 +69,12 @@ export const Tab = ({
   useEffect(() => {
     setSelected({name: tab?.type ?? 'Public'});
     setValue('name', title ? title : '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue]);
 
-  const classSelected = isFocused ? 'bg-grey-100 before:bg-grey-100 dark:bg-grey-100 dark:text-grey-900' : 'bg-grey-50 dark:bg-grey-800';
+  const classSelected = isFocused
+    ? 'bg-grey-100 before:bg-grey-100 dark:bg-grey-100 dark:text-grey-900'
+    : 'bg-grey-50 dark:bg-grey-800';
   // const beforeClass = 'before:absolute before:bottom-0 before:w-[10px] before:h-[10px] before:-left-[10px]';
 
   return (

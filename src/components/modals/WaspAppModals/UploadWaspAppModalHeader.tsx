@@ -1,10 +1,9 @@
 import React from 'react';
+
 import {Dialog} from '@headlessui/react';
-
-import {IconButton} from '@/components/buttons';
-
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
+import {IconButton} from '@/components/buttons';
 import {UPLOADWASPAPPSTEPS} from '@/constant';
 
 type Props = {

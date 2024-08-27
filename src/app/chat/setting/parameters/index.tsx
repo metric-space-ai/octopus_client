@@ -1,25 +1,26 @@
-import {Button} from '@/components/buttons';
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
-import TeamMebersTable from './parametersTable';
-import {AddParameterModal} from '@/components/modals/AddParameterModal';
-import {IParameter} from '@/types';
-import {RemoveParameterModal} from '@/components/modals/RemoveParameterModal';
-import {useDispatch, useSelector} from 'react-redux';
-import {selectParameters} from '@/app/lib/features/parameters/parametersSelector';
 
+import {useDispatch, useSelector} from 'react-redux';
+
+import {selectParameters} from '@/app/lib/features/parameters/parametersSelector';
 import {
   createNewParameter,
   deleteParameterById,
   getAllParameters,
   updateParameter,
 } from '@/app/lib/features/parameters/parametersSlice';
-import { AppDispatch } from '@/app/lib/store';
+import {AppDispatch} from '@/app/lib/store';
+import {Button} from '@/components/buttons';
+import {AddParameterModal} from '@/components/modals/AddParameterModal';
+import {RemoveParameterModal} from '@/components/modals/RemoveParameterModal';
+import {IParameter} from '@/types';
 
-type Props = {};
+import TeamMebersTable from './parametersTable';
 
-const Parameters = (props: Props) => {
+const Parameters = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {entities: parameters, isLoading, hasError} = useSelector(selectParameters);
+  const {entities: parameters, isLoading} = useSelector(selectParameters);
 
   const [openNewParameterModal, setOpenNewParameterModal] = useState(false);
   const [openDeleteParameterDialog, setOpenDeleteParameterDialog] = useState(false);
@@ -77,10 +78,7 @@ const Parameters = (props: Props) => {
       <div className='w-full pt-9 flex flex-col px-6 '>
         <div className='flex flex-col w-full max-w-[608px] px-6 py-4 rounded-xl bg-grey-0'>
           <div className='flex justify-between items-center gap-8 flex-wrap mb-5'>
-            <h1
-              className='text-lg leading-7 text-grey-900 font-semibold'
-              onClick={() => console.log({parameters})}
-            >
+            <h1 className='text-lg leading-7 text-grey-900 font-semibold' onClick={() => console.log({parameters})}>
               Parameter Section
             </h1>
             <Button

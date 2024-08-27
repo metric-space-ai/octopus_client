@@ -124,7 +124,7 @@ const hnd: PartialLocaleType = {
     },
     Usage: {
       Title: 'खाता शेष',
-      SubTitle(used: any, total: any) {
+      SubTitle(used: unknown, total: unknown) {
         return `इस महीने खर्च किया गया $${used}, सब्सक्रिप्शन $${total}`;
       },
       IsChecking: 'जाँच हो रही है...',
@@ -159,8 +159,7 @@ const hnd: PartialLocaleType = {
     BotHello: 'नमस्ते! आज मैं आपकी कैसे सहायता कर सकता हूँ?',
     Error: 'कुछ गलत हो गया, कृपया बाद में पुनः प्रयास करें।',
     Prompt: {
-      History: (content: string) =>
-        'यह AI और उपयोगकर्ता के बीच चैट इतिहास का एक सारांश है: ' + content,
+      History: (content: string) => 'यह AI और उपयोगकर्ता के बीच चैट इतिहास का एक सारांश है: ' + content,
       Topic:
         'कृपया हमारी बातचीत को संक्षेप में चार से पांच शब्दों का शीर्षक बनाएं, बिना परिचय, विराम चिह्न, उद्धरण चिह्न, बिंदु, प्रतीक या अतिरिक्त पाठ के। उद्धरण चिह्नों को हटा दें।',
       Summarize:
@@ -172,7 +171,7 @@ const hnd: PartialLocaleType = {
     Failed: 'कॉपी करने में विफल, कृपया क्लिपबोर्ड तक पहुँच की अनुमति दें',
   },
   Context: {
-    Toast: (x: any) => `${x} संदर्भ प्रॉम्प्ट के साथ`,
+    Toast: (x: unknown) => `${x} संदर्भ प्रॉम्प्ट के साथ`,
     Edit: 'संदर्भ और मेमोरी प्रॉम्प्ट संपादित करें',
     Add: 'जोड़ें',
   },

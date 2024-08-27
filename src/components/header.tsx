@@ -1,4 +1,4 @@
-import {Fragment, useEffect, useState, useRef} from 'react';
+import {Fragment, useEffect, useRef, useState} from 'react';
 
 import {Menu, Transition} from '@headlessui/react';
 import {
@@ -9,38 +9,40 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import {UserIcon} from '@heroicons/react/24/solid';
-
+import dynamic from 'next/dynamic';
 import {usePathname, useRouter} from 'next/navigation';
 
-import {Tab, Tabs, MoreTabs, MoreTab} from '@/components/tabs';
+import {MoreTabs, Tab, Tabs} from '@/components/tabs';
 import {paths} from '@/config/path';
+import {ImagesBaseUrl} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
 import {IWorkspace} from '@/types';
 
+import userIcon from './../../public/images/user_icon.png';
 import {IconButton} from './buttons';
 import {CreateNewTabModal, DeleteTabModal} from './modals';
-import {ImagesBaseUrl} from '@/constant';
+import Picture from './picture';
+
+const DynamicMoreTab = dynamic(async () => (await import('@/components/tabs')).MoreTab, {
+  loading: () => null,
+});
 
 const MenuItem = () => {
-  const {onLogout, user, currentUser, getCurrentUser, getCurrentUserCompany, currentUserCompany} = useAuthContext();
+  const {onLogout, user, currentUser, getCurrentUser, getCurrentUserCompany} = useAuthContext();
 
   useEffect(() => {
     if (user && !currentUser) {
       getCurrentUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   useEffect(() => {
     if (currentUser) {
-      console.log({currentUser});
       getCurrentUserCompany();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
-  useEffect(() => {
-    if (currentUserCompany) {
-      console.log({currentUserCompany});
-    }
-  }, [currentUserCompany]);
 
   return (
     <Menu as='div' className='z-10 relative inline-block text-left'>
@@ -48,7 +50,17 @@ const MenuItem = () => {
         <Menu.Button className='inline-flex w-full justify-center rounded-xs border-none'>
           <div className='w-8 h-8 rounded-full overflow-hidden flex justify-center items-center bg-grey-0'>
             {user?.photo_file_name ? (
-              <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt='user avatar' />
+              <Picture
+                width={32}
+                height={32}
+                loading='lazy'
+                className='w-8 h-8'
+                src={`${ImagesBaseUrl}${user.photo_file_name}`}
+                onErrorSrc={userIcon.src}
+                blurDataURL={userIcon.src}
+                alt='user avatar'
+                placeholder='blur'
+              />
             ) : (
               <UserIcon className='w-6 h-6 text-grey-900' />
             )}
@@ -71,7 +83,17 @@ const MenuItem = () => {
                 <div className='min-w-[36px] w-9 h-9 rounded-full overflow-hidden mr-2 flex justify-center items-center bg-grey-150 '>
                   {/* <h1 className='text-sky-600 text-lg text-center'>CN</h1> */}
                   {user?.photo_file_name ? (
-                    <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} />
+                    <Picture
+                      width={32}
+                      height={32}
+                      loading='lazy'
+                      className='w-8 h-8'
+                      src={`${ImagesBaseUrl}${user.photo_file_name}`}
+                      alt={user.name}
+                      onErrorSrc={userIcon.src}
+                      blurDataURL={userIcon.src}
+                      placeholder='blur'
+                    />
                   ) : (
                     <UserIcon className='m-auto' width={32} height={32} />
                   )}
@@ -203,7 +225,7 @@ export const Header = () => {
             {workspaces?.map((tab, index) => {
               if (index >= fitNumberOfItems)
                 return (
-                  <MoreTab
+                  <DynamicMoreTab
                     key={tab.id}
                     tabId={tab.id}
                     title={tab.name}

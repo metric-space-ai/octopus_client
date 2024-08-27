@@ -48,10 +48,15 @@ export const IframeWithSrcDocDialog = ({open, onClose, srcDoc}: ModalProps) => {
                   <IconButton className='absolute top-4 right-4' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5 text-content-primary' />
                   </IconButton>
-                  <iframe style={{
-                    height: 'calc(100vh - 108px)',
-                    width: 'calc(100vw - 108px)',
-                  }} className={`w-full h-full bg-red text-grey-0 [&_body]:m-0 flex-1`} srcDoc={srcDoc}></iframe>
+                  <iframe
+                    style={{
+                      height: 'calc(100vh - 108px)',
+                      width: 'calc(100vw - 108px)',
+                    }}
+                    className={`w-full h-full bg-red text-grey-0 [&_body]:m-0 flex-1`}
+                    srcDoc={srcDoc}
+                    allow='clipboard-read; clipboard-write'
+                  ></iframe>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

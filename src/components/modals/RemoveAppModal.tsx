@@ -1,20 +1,20 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
-import {useEffect, useRef} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
+import {IApp} from '@/types';
+
 import {Button, IconButton} from '../buttons';
-import { IApp } from '@/types';
 
 interface ModalProps {
   open: boolean;
   onDelete: () => void;
   onClose: () => void;
-  app:IApp
+  app: IApp;
 }
 
-export const RemoveAppModal = ({open, onClose, onDelete,app}: ModalProps) => {
+export const RemoveAppModal = ({open, onClose, onDelete, app}: ModalProps) => {
   const [loading, setLoading] = useState(false);
   const [deleteStarted, setDeleteStarted] = useState(false);
   const [deleteConfirmed, setDeleteConfirmed] = useState(false);
@@ -31,6 +31,7 @@ export const RemoveAppModal = ({open, onClose, onDelete,app}: ModalProps) => {
         if (percent >= 100) {
           setDeleteConfirmed(true);
           setDeleteStarted(false);
+          setLoading(false);
         } else {
           setPercent((percent) => ++percent);
         }
@@ -66,7 +67,10 @@ export const RemoveAppModal = ({open, onClose, onDelete,app}: ModalProps) => {
             >
               <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2 mb-5'>
-                  <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 max-w-sm truncate overflow-hidden'>
+                  <Dialog.Title
+                    as='h3'
+                    className='text-2xl font-semibold text-grey-900 max-w-sm truncate overflow-hidden'
+                  >
                     {deleteStarted
                       ? `“${app.original_file_name}” removing`
                       : deleteConfirmed

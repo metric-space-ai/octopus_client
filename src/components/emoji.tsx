@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EmojiPicker, {Emoji, EmojiStyle, Theme as EmojiTheme} from 'emoji-picker-react';
 
 import BlackBotIcon from '@/assets/icons/black-bot.svg';

@@ -37,4 +37,3 @@ export interface IApp {
   ai_functions: null | undefined;
   parser_feedback: string | null;
 }
-

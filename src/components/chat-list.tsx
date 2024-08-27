@@ -1,15 +1,12 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import {ChatBubbleLeftRightIcon, CheckIcon, PencilSquareIcon, TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
-import {XCircleIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 
+import {whenDidItHappened} from '@/helpers/whenDidItHappened';
 import {useChatStore} from '@/store';
 
 import Locale from '../locales';
-import {whenDidItHappened} from '@/helpers/whenDidItHappened';
-import {ITicket} from '@/types';
-import {Button, IconButton} from './buttons';
 
 export function ChatItem({
   onClick,
@@ -18,9 +15,9 @@ export function ChatItem({
   time,
   selected,
   expanded,
-  onRename = () => {},
+  onRename = (payload) => console.warn('onRename is not implemented', {payload}),
   isNewTicketOn = false,
-  newTicketToggler = () => {},
+  newTicketToggler = (payload) => console.warn('newTicketToggler is not implemented', {payload}),
 }: {
   onClick?: () => void;
   onDelete?: () => void;
@@ -59,7 +56,7 @@ export function ChatItem({
       className={classNames(
         'flex justify-between relative px-3 py-[10px] rounded-xl',
         !expanded && '!px-[10px]',
-        selected && 'bg-grey-150',
+        selected && 'bg-grey-100',
         (!selected || isNewTicketOn) && 'cursor-pointer bg-grey-0 dark:bg-grey-900',
       )}
       onClick={!selected ? onClick : handleSwitchOffNewTicket}
@@ -135,7 +132,7 @@ export function ChatList({expanded}: {expanded?: boolean}) {
   const {tickets, currentTicketId, selectTicketId, deleteTicket, renameTicket, isNewTicket, changeNewTicketToggle} =
     useChatStore();
 
-  const {defaultValue, today, yesterday, older, prev7Days} = whenDidItHappened(tickets, 'updated_at');
+  const {today, yesterday, older, prev7Days} = whenDidItHappened(tickets, 'updated_at');
 
   if (tickets)
     return (

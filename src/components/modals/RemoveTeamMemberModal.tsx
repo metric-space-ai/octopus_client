@@ -2,22 +2,42 @@ import {Fragment, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import {useDispatch} from 'react-redux';
+
+import {deleteTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {IUser} from '@/types';
 
 import {Button, IconButton} from '../buttons';
-import {IUser} from '@/types';
 
 interface ModalProps {
   open: boolean;
-  onDelete: () => void;
   onClose: () => void;
   member: IUser;
 }
 
-export const RemoveTeamMemberModal = ({open, onClose, onDelete, member}: ModalProps) => {
-  const [loading, setLoading] = useState(false);
-  const handleDeleteUser = () => {
-    setLoading(true);
-    onDelete();
+export const RemoveTeamMemberModal = ({open, onClose, member}: ModalProps) => {
+  const [isLoading, setisLoading] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleAcceptDeleteMember = async () => {
+    if (member) {
+      // deleteTeamMember(selectedUser.id);
+      setisLoading(true);
+      try {
+        const {
+          meta: {requestStatus},
+        } = await dispatch(deleteTeamMember(member.id));
+        if (requestStatus === 'fulfilled') {
+          onClose();
+        }
+      } catch (error) {
+        console.log('handleAcceptDeleteMember...', {error});
+      } finally {
+        setisLoading(false);
+      }
+    }
   };
   return (
     <Transition appear show={open} as={Fragment}>
@@ -73,16 +93,11 @@ export const RemoveTeamMemberModal = ({open, onClose, onDelete, member}: ModalPr
                       className='flex-1 !h-11'
                       variant='dangerous'
                       title='Remove member'
-                      loading={loading}
-                      onClick={onDelete}
+                      loading={isLoading}
+                      disabled={isLoading}
+                      onClick={handleAcceptDeleteMember}
                     />
-                    <Button
-                      type='button'
-                      className='flex-1 !h-11'
-                      variant='outline'
-                      title='Cancel'
-                      onClick={handleDeleteUser}
-                    />
+                    <Button type='button' className='flex-1 !h-11' variant='outline' title='Cancel' onClick={onClose} />
                   </form>
                 </>
               </Dialog.Panel>

@@ -8,7 +8,6 @@ import {authValidator} from '@/helpers/validators';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import {InvitationSent} from './SendInvitation';
 
 interface ModalProps {
   open: boolean;
@@ -26,7 +25,6 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
 
   const {
     register,
-    setValue,
     handleSubmit,
     formState: {errors},
   } = useForm<IFormInputs>();
@@ -34,6 +32,7 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
   const onSubmit = async (data: IFormInputs) => {
     const {name, id} = data;
     setLoading(true);
+    console.log('AddPromptAgentModal..onSubmit', {name, id, existed});
     setLoading(false);
   };
 
@@ -65,10 +64,7 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
               >
                 <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-start mb-6'>
-                    <Dialog.Title
-                      as='h3'
-                      className='text-2xl font-semibold text-grey-900 text-left'
-                    >
+                    <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 text-left'>
                       Add a new prompt agent
                     </Dialog.Title>
                     <IconButton className='top-4 right-4' onClick={onClose}>

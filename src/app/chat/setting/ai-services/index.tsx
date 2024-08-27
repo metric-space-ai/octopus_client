@@ -1,31 +1,46 @@
 import React, {useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
 
-import {AppDispatch} from '@/app/lib/store';
-import AiServicesDetails from './ServicesDetails';
+import dynamic from 'next/dynamic';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
-
 import {
   deletePluginById,
   handleChangeOpenPluginLogsDialog,
   handleChangeOpenRemovePluginDialog,
   handleChangeSelectedPlugin,
 } from '@/app/lib/features/aiServices/aiServicesSlice';
-
+import {AppDispatch} from '@/app/lib/store';
 import {Button} from '@/components/buttons';
-
-import {ShowPluginLogsModal, RemovePluginModal, UploadPluginModal} from '@/components/modals/pluginModals';
-
 import {IPlugin} from '@/types';
 
-type Props = {};
+import AiServicesDetails from './ServicesDetails';
 
-const AiServices = (props: Props) => {
+// import {ShowPluginLogsModal, RemovePluginModal, UploadPluginModal} from '@/components/modals/pluginModals';
+
+const DynamicRemovePluginModal = dynamic(
+  async () => (await import('@/components/modals/pluginModals')).RemovePluginModal,
+  {
+    loading: () => null,
+  },
+);
+const DynamicUploadPluginModal = dynamic(
+  async () => (await import('@/components/modals/pluginModals')).UploadPluginModal,
+  {
+    loading: () => null,
+  },
+);
+const DynamicShowPluginLogsModal = dynamic(
+  async () => (await import('@/components/modals/pluginModals')).ShowPluginLogsModal,
+  {
+    loading: () => null,
+  },
+);
+
+const AiServices = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const {selectedPlugin, openPluginLogsModal, openRemovePluginDialog, pluginLogIsLoading} =
-    useSelector(selectAiServicess);
+  const {selectedPlugin, openPluginLogsModal, openRemovePluginDialog} = useSelector(selectAiServicess);
 
   const [openAddPluginsModal, setOpenAddPluginsModal] = useState(false);
 
@@ -69,9 +84,11 @@ const AiServices = (props: Props) => {
           />
         </div>
       </div>
-      <UploadPluginModal open={openAddPluginsModal} onClose={() => setOpenAddPluginsModal(false)} />
+      {openAddPluginsModal && (
+        <DynamicUploadPluginModal open={openAddPluginsModal} onClose={() => setOpenAddPluginsModal(false)} />
+      )}
       {selectedPlugin && (
-        <RemovePluginModal
+        <DynamicRemovePluginModal
           onDelete={handleConfirmDeletePlugin}
           open={openRemovePluginDialog}
           plugin={selectedPlugin}
@@ -82,11 +99,10 @@ const AiServices = (props: Props) => {
         />
       )}
       {selectedPlugin && (
-        <ShowPluginLogsModal
+        <DynamicShowPluginLogsModal
           open={openPluginLogsModal}
           plugin={selectedPlugin}
           onClose={handleClosePluginLogsDialog}
-          isLoading={pluginLogIsLoading}
         />
       )}
     </>

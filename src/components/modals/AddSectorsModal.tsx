@@ -1,4 +1,5 @@
-import {Fragment, useState, useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
@@ -75,10 +76,7 @@ export const AddSectorModal = ({open, onClose, existed = false, sectorData}: Mod
               >
                 <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-start mb-6'>
-                    <Dialog.Title
-                      as='h3'
-                      className='text-2xl font-semibold text-grey-900 text-left'
-                    >
+                    <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 text-left'>
                       {existed ? 'Update sector' : 'Add a new sector'}
                     </Dialog.Title>
                     <IconButton className='top-4 right-4' onClick={onClose}>

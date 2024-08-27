@@ -93,7 +93,7 @@ export const Button = ({
     >
       {loading && <Spinner />}
       {iconBefore && iconBefore}
-      <p className={classNames('leading-4', textStyle, sizeStyle, fontWeightStyle)}>{title}</p>
+      <p className={classNames('leading-4 capitalize', textStyle, sizeStyle, fontWeightStyle)}>{title}</p>
       {iconAfter && iconAfter}
     </button>
   );

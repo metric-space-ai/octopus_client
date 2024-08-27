@@ -1,17 +1,16 @@
-import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {ChangeEvent, DragEvent, Fragment, useEffect, useRef, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
 import {ArrowUpTrayIcon, CheckIcon, XMarkIcon} from '@heroicons/react/24/outline';
-
-import {Button, IconButton} from '../buttons';
 import toast from 'react-hot-toast';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {selectSimpleApps} from '@/app/lib/features/simpleApps/simpleAppsSelector';
+import {setUploadSucceeded, uploadNewSimpleApp} from '@/app/lib/features/simpleApps/simpleAppsSlice';
+import {AppDispatch} from '@/app/lib/store';
 import {bytesCalculator} from '@/helpers';
 
-import {setUploadSucceeded, uploadNewSimpleApp} from '@/app/lib/features/simpleApps/simpleAppsSlice';
-import {selectSimpleApps} from '@/app/lib/features/simpleApps/simpleAppsSelector';
-import { AppDispatch } from '@/app/lib/store';
+import {Button, IconButton} from '../buttons';
 
 const VALIDPLUGINFILE = {Format: '.html', Type: 'text/html'};
 const UPLOADSIMPLEAPPSTEPS = {Prepare: 1, Upload: 2};
@@ -208,9 +207,7 @@ export const UploadSimpleAppModal = ({open, onClose}: ModalProps) => {
                           >
                             <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                           </IconButton>
-                          <h6 className='font-semibold text-sm text-grey-800 mb-3'>
-                            Drag & drop file to upload
-                          </h6>
+                          <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
                           <p className='text-xs text-grey-600 '>Files in .html file format only</p>
                           <input
                             type='file'

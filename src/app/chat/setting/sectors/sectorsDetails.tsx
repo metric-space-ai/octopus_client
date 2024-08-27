@@ -1,12 +1,12 @@
 import {Disclosure} from '@headlessui/react';
-
 import {
   BuildingOfficeIcon,
-  TrashIcon,
-  PencilSquareIcon,
-  UserGroupIcon,
   LockClosedIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  UserGroupIcon,
 } from '@heroicons/react/24/outline';
+
 import {WORKSPACETYPE} from '@/constant';
 import {IWorkspace} from '@/types';
 
@@ -35,9 +35,9 @@ export default function SectorsData({isLoading, workspaces, onEditWorkspace, onD
       )}
       {!isLoading && workspaces.length > 0 && (
         <div className='flex flex-col custom-scrollbar-thumb pr-2 max-h-[420px]'>
-          {workspaces.map((workspace, index) => (
+          {workspaces.map((workspace) => (
             <Disclosure key={workspace.id}>
-              {({open}) => (
+              {() => (
                 <>
                   <div className='flex justify-start py-3 items-center'>
                     <div className='flex gap-3 w-60 items-center'>
@@ -97,7 +97,7 @@ export default function SectorsData({isLoading, workspaces, onEditWorkspace, onD
       )}
       {isLoading && (
         <Disclosure>
-          {({open}) => (
+          {() => (
             <>
               <div className='flex justify-start py-3 items-center animate-pulse'>
                 <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-96'></div>

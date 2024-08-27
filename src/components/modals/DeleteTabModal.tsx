@@ -24,7 +24,6 @@ export const DeleteTabModal = ({tab, open, onClose}: ModalProps) => {
       if (tab) {
         deleteWorkspace(tab.id);
       }
-    } catch (e) {
     } finally {
       setLoading(false);
       onClose();

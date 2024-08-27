@@ -1,27 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
 
-import toast from 'react-hot-toast';
+import {Disclosure} from '@headlessui/react';
 import {AxiosError} from 'axios';
-
-import {IPlugin, IPluginActivation, IUser} from '@/types';
+import toast from 'react-hot-toast';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
 import {
-  getAllPlugins,
-  putAllowedUsersForAiAccess,
   changePluginActivitiesByPluginId,
-  handleChangeSelectedPlugin,
-  handleChangeOpenPluginLogsDialog,
+  getAllPlugins,
+  // handleChangeOpenPluginLogsDialog,
   handleChangeOpenRemovePluginDialog,
+  handleChangeSelectedPlugin,
+  putAllowedUsersForAiAccess,
 } from '@/app/lib/features/aiServices/aiServicesSlice';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
 import {AppDispatch} from '@/app/lib/store';
-
 import {putPluginConfigurationColorApi} from '@/services/settings.service';
+import {IPlugin, IPluginActivation, IUser} from '@/types';
+
 import ServiceDetailRow from './serviceDetailRow';
-import {Disclosure} from '@headlessui/react';
 
 type Props = {
   handleOpenExistedPluginModal: (plugin: IPlugin) => void;
@@ -36,10 +36,10 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
 
   const [changeColorIsLoading, setChangeColorIsLoading] = useState(false);
 
-  const handleOpenEditPluginDialog = (plugin: IPlugin) => {
-    dispatch(handleChangeOpenPluginLogsDialog(true));
-    dispatch(handleChangeSelectedPlugin(plugin));
-  };
+  // const handleOpenEditPluginDialog = (plugin: IPlugin) => {
+  //   dispatch(handleChangeOpenPluginLogsDialog(true));
+  //   dispatch(handleChangeSelectedPlugin(plugin));
+  // };
   const handleOpenDeletePluginModal = (plugin: IPlugin) => {
     dispatch(handleChangeSelectedPlugin(plugin));
     dispatch(handleChangeOpenRemovePluginDialog(true));
@@ -65,7 +65,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
   const handleChangeserviceColor = async (payload: Pick<IPlugin, 'id' | 'color'>) => {
     setChangeColorIsLoading(true);
     try {
-      const {status, data} = await putPluginConfigurationColorApi(payload);
+      const {status} = await putPluginConfigurationColorApi(payload);
       if (status === 200) {
         toast.success('service Background color changed.');
         // dispatch(handleChangeSelectedPlugin(data));
@@ -125,7 +125,7 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
                     <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
-              : plugins.map((plugin, index) => (
+              : plugins.map((plugin) => (
                   <ServiceDetailRow
                     key={plugin.id}
                     plugin={plugin}
@@ -140,24 +140,24 @@ export default function AiServicesDetails({handleOpenExistedPluginModal, handleO
                     changeColorIsLoading={changeColorIsLoading}
                   />
                 ))}
+            {isLoading && !plugins && (
+              <Disclosure>
+                {() => (
+                  <>
+                    <div className='flex justify-start py-3 items-center animate-pulse'>
+                      <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-52'></div>
+
+                      <div className='w-24 mx-2 h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
+                      <div className='w-24  h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
+                      <div className='w-16 mx-2 h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
+
+                      <div className='ml-auto h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-5 mx-1.5'></div>
+                    </div>
+                  </>
+                )}
+              </Disclosure>
+            )}
           </div>
-          {isLoading && (
-            <Disclosure>
-              {({open}) => (
-                <>
-                  <div className='flex justify-start py-3 items-center animate-pulse'>
-                    <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-52'></div>
-
-                    <div className='w-24 mx-2 h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
-                    <div className='w-24  h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
-                    <div className='w-16 mx-2 h-5 bg-gray-300 rounded-full dark:bg-gray-600'></div>
-
-                    <div className='ml-auto h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-5 mx-1.5'></div>
-                  </div>
-                </>
-              )}
-            </Disclosure>
-          )}
         </div>
       </div>
     </>

@@ -1,22 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {RefObject, useEffect, useRef, useState} from 'react';
 
 import {EllipsisHorizontalIcon} from '@heroicons/react/24/solid';
+import classNames from 'classnames';
 import mermaid from 'mermaid';
 import ReactMarkdown from 'react-markdown';
 import 'katex/dist/katex.min.css';
 import RehypeHighlight from 'rehype-highlight';
-import RehypeKatex from 'rehype-katex';
+// import RehypeKatex from 'rehype-katex';
 import RemarkBreaks from 'remark-breaks';
 import RemarkGfm from 'remark-gfm';
 import RemarkMath from 'remark-math';
-import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
 import {visit} from 'unist-util-visit';
+import {useDebouncedCallback, useThrottledCallback} from 'use-debounce';
+
+import {isLongTextWithoutSpaces} from '@/helpers/textHelper';
 
 import {copyToClipboard} from '../helpers';
 
+// eslint-disable-next-line import/order
+import LinkIcon from '@heroicons/react/24/outline/LinkIcon';
+
 import './../assets/atelier-cave-dark.css';
-import {LinkIcon} from '@heroicons/react/24/outline';
-import { isLongTextWithoutSpaces } from '@/helpers/textHelper';
 
 export function Mermaid(props: {code: string}) {
   const ref = useRef<HTMLDivElement>(null);
@@ -90,7 +95,7 @@ export function PreCode(props: {children: any}) {
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
       <pre
-        className='relative text-xs p-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap word-break'
+        className='relative text-xs p-2.5 py-4 bg-grey-800 text-grey-50 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap word-break'
         ref={ref}
       >
         <span
@@ -107,8 +112,6 @@ export function PreCode(props: {children: any}) {
     </>
   );
 }
-
-
 
 const CustomParagraph = ({node, ...props}: any) => {
   const textContent = node.children.map((child: any) => child.value).join(' ');
@@ -137,13 +140,13 @@ const RemarkCustomLink = () => {
   };
 };
 
-function _MarkDownContent(props: {content: string}) {
+function _MarkDownContent(props: {content: string; className?: string}) {
   return (
     <ReactMarkdown
-      className='flex flex-1 flex-col text-grey-900 dark:text-grey-0 gap-2'
+      className={classNames('flex flex-1 flex-col text-grey-900 dark:text-grey-0 gap-2', props.className)}
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks, RemarkCustomLink]}
       rehypePlugins={[
-        RehypeKatex,
+        // RehypeKatex,
         [
           RehypeHighlight,
           {
@@ -154,17 +157,7 @@ function _MarkDownContent(props: {content: string}) {
       ]}
       components={{
         pre: PreCode,
-        // a: (aProps) => {
-        //   const href = aProps.href || '';
-        //   const isInternal = /^\/#/i.test(href);
-        //   const target = isInternal ? '_self' : aProps.target ?? '_blank';
-        //   return (
-        //     <>
-        //       <LinkIcon className='w-3 h-3 inline-block mr-1' />
-        //       <a {...aProps} target={target} className='underline' />
-        //     </>
-        //   );
-        // },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         a: ({node, ...aProps}) => {
           const href = aProps.href || '';
 

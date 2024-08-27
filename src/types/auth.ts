@@ -1,4 +1,4 @@
-import { TRole } from "./user";
+import {TRole} from './user';
 
 export interface IAuthData {
   id: string;

@@ -1,4 +1,5 @@
 import {create} from 'zustand';
+
 import {APPTHEMENAME} from '@/constant';
 import {IThemeData, TThemeName} from '@/types';
 
@@ -316,7 +317,7 @@ interface IThemeStoreProps {
   allThemes: Record<TThemeName, IThemeData>;
 }
 
-export const useThemeStore = create<IThemeStoreProps>()((set, get) => ({
+export const useThemeStore = create<IThemeStoreProps>()((set) => ({
   themeData: initialsThemeData,
   allThemes: ALLTHEMES,
   setThemeData(themeData) {

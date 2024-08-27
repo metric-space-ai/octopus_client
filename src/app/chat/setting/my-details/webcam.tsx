@@ -1,7 +1,10 @@
+import {Dispatch, SetStateAction, useCallback, useRef, useState} from 'react';
+
+import Image from 'next/image';
+import Webcam from 'react-webcam';
+
 import {Button} from '@/components/buttons';
 import {urltoFile} from '@/helpers/urlToFile';
-import {useRef, useState, useCallback, SetStateAction, Dispatch} from 'react';
-import Webcam from 'react-webcam';
 
 const videoConstraints = {
   width: 380,
@@ -63,7 +66,7 @@ export default function WebCamImageTaker({setTakeImageModal, handleUpload}: Prop
         <div className='flex flex-col justify-center items-center'>
           <div className='w-full max-h-full'>
             <div className='mb-4'>
-              <img src={url} alt='Screenshot' className='rounded-xl' />
+              <Image width={380} height={420} src={url} alt='camera image' className='rounded-xl' />
             </div>
 
             <div className='flex flex-wrap w-full justify-between'>

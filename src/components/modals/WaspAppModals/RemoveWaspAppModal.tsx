@@ -1,11 +1,11 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
-import {useEffect, useRef} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
-import {Button, IconButton} from '../../buttons';
 import {IWaspApp} from '@/types';
+
+import {Button, IconButton} from '../../buttons';
 
 interface ModalProps {
   open: boolean;
@@ -31,6 +31,7 @@ const RemoveWaspAppModal = ({open, onClose, onDelete, waspApp}: ModalProps) => {
         if (percent >= 100) {
           setDeleteConfirmed(true);
           setDeleteStarted(false);
+          setLoading(false);
         } else {
           setPercent((percent) => ++percent);
         }

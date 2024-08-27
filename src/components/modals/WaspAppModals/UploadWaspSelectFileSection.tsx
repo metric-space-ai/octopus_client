@@ -1,13 +1,10 @@
-import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
-import {Dialog} from '@headlessui/react';
+import React, {ChangeEvent, DragEvent, useRef} from 'react';
+
+import {ArrowUpTrayIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 import {IconButton} from '@/components/buttons';
-
-import {ArrowUpTrayIcon, CheckIcon, XMarkIcon} from '@heroicons/react/24/outline';
-
-import {TPluginStatus} from '@/types';
-import {UPLOADWASPAPPSTEPS, VALIDWASPFILE} from '@/constant';
-import toast from 'react-hot-toast';
+import {VALIDWASPFILE} from '@/constant';
 import {bytesCalculator} from '@/helpers';
 
 type Props = {
@@ -82,9 +79,7 @@ const UploadWaspSelectFileSection = ({setFile, fileIsSelected, file, uploadPerce
         <div className='flex flex-wrap py-3 px-6 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
           <div className='flex gap-4 items-center max-w-full'>
             <div className='flex w-56 pr-2 items-center'>
-              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>
-                {file.name}
-              </p>
+              <p className='font-semibold text-xs text-grey-900 truncate ... max-w-[calc(100%-36px)]'>{file.name}</p>
             </div>
             <span className='text-xs text-grey-600 lg:w-24 ml-auto lg:ml-0 text-center'>
               {bytesCalculator(file.size)}

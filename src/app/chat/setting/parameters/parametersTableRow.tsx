@@ -1,7 +1,8 @@
 import React from 'react';
-import {IParameter} from '@/types';
 
 import {PencilSquareIcon, TrashIcon} from '@heroicons/react/24/outline';
+
+import {IParameter} from '@/types';
 
 type Props = {
   parameter: IParameter;
@@ -12,10 +13,7 @@ type Props = {
 export const ParameterTableRow = ({parameter, onDeleteParameter, onEditParameter}: Props) => {
   return (
     <div className='h-[51px] flex border-b-grey-100 border-b items-center py-[15px]'>
-      <h6
-        className={`w-48 truncate ... font-normal text-xs leading-5 text-grey-900 block mr-4`}
-        title={parameter.name}
-      >
+      <h6 className={`w-48 truncate ... font-normal text-xs leading-5 text-grey-900 block mr-4`} title={parameter.name}>
         {parameter.name}
       </h6>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, FocusEventHandler} from 'react';
+import {FocusEventHandler, useState} from 'react';
 
 import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
@@ -42,7 +42,7 @@ export const Input = ({
         <input
           {...rules}
           onBlur={onBlur}
-          className={classNames('w-full text-base text-grey-900 outline-none', inputClassName)}
+          className={classNames('w-full text-base text-grey-900 outline-none placeholder:capitalize', inputClassName)}
           type={type === 'password' ? (hidePassword ? 'text' : 'password') : type}
           placeholder={placeholder}
           {...rest}

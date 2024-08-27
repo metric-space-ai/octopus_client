@@ -1,6 +1,6 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
 import {
   createTeamMemberApi,
@@ -8,7 +8,7 @@ import {
   getAllTeamMembersApi,
   updateTeamMemberApi,
 } from '@/services/settings.service';
-import {ICreateUser, IUser, ValidationErrors} from '@/types';
+import {ICreateUser, IUser} from '@/types';
 
 interface TeamMembersStates {
   entities: IUser[] | null;
@@ -30,7 +30,7 @@ const teamMembersSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getAllTeamMembers.pending, (state, action) => {
+      .addCase(getAllTeamMembers.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -80,16 +80,15 @@ export const updateTeamMember = createAsyncThunk(
       if (status === 200) toast.success(`Successful update.`);
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -102,16 +101,15 @@ export const addNewTeamMember = createAsyncThunk(
       if (status === 201) toast.success(`The new user has been added.`);
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -125,16 +123,15 @@ export const deleteTeamMember = createAsyncThunk(
         toast.success(`user has successfully been removed.`);
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

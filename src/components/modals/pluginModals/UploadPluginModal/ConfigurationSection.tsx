@@ -1,15 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {Fragment, useEffect, useState} from 'react';
-import CustomCheckbox from '@/components/custom-checkbox';
+
+import {Listbox, Popover, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, ClipboardDocumentIcon, InformationCircleIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import {HexColorPicker} from 'react-colorful';
+import {useDispatch} from 'react-redux';
+
+import {getAiFunctionsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {AppDispatch} from '@/app/lib/store';
+import CustomCheckbox from '@/components/custom-checkbox';
+import {WASPAPPTEMPLATECOLOR} from '@/constant';
 import {bytesCalculator} from '@/helpers';
 import {IPlugin, IResources, TWaspAppBgColor} from '@/types';
-import classNames from 'classnames';
-import {Disclosure, Listbox, Transition, Popover} from '@headlessui/react';
-import {WASPAPPTEMPLATECOLOR} from '@/constant';
-import {AppDispatch} from '@/app/lib/store';
-import {useDispatch} from 'react-redux';
-import {getAiFunctionsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
-import {HexColorPicker} from 'react-colorful';
 
 type Props = {
   setActivatedCPU: React.Dispatch<React.SetStateAction<[] | (string | number)[]>>;
@@ -213,7 +216,7 @@ const ConfigurationSection = ({
                   >
                     <div>
                       <Popover>
-                        {({open}) => (
+                        {() => (
                           <>
                             <Popover.Button
                               onClick={() => setPopoverOpen(!popoverOpen)}
@@ -318,7 +321,7 @@ const ConfigurationSection = ({
 
       {plugin.ai_functions && (
         <div className='flex flex-col w-full gap-3 max-h-[160px] custom-scrollbar-thumb'>
-          {plugin.ai_functions?.map((aiFunc, index) => (
+          {plugin.ai_functions?.map((aiFunc) => (
             <div
               key={aiFunc.id}
               className={classNames('flex flex-col gap-2 text-left pl- pt-3 border-t border-grey-400')}

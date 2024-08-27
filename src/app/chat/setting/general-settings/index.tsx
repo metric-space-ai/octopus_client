@@ -1,15 +1,11 @@
 'use client';
 
-import {useState} from 'react';
-import SelectBaseFontSize from '@/components/select-base-font-size';
 import LanguageSettings from '@/components/language-settings';
-import { useAuthContext } from '@/contexts/authContext';
-
+import SelectBaseFontSize from '@/components/select-base-font-size';
+import {useAuthContext} from '@/contexts/authContext';
 
 const GeneralSettings = () => {
-  const {user,onUpdateProfile} = useAuthContext();
-  const [loading, setLoading] = useState(false);
-
+  const {user, onUpdateProfile} = useAuthContext();
 
   return (
     <div className='w-full pt-[84px] flex flex-col items-center'>

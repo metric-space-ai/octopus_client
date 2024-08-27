@@ -1,50 +1,40 @@
 import React, {useState} from 'react';
-import {AnimateDots, LogoIcon} from './svgs';
-import {FileMarkdownContent} from './file-markdown';
-import {MarkdownContent} from './markdown';
+
 import {
   CommandLineIcon,
-  ExclamationTriangleIcon,
   HandThumbDownIcon,
-  InformationCircleIcon,
   LanguageIcon,
-  NoSymbolIcon,
   ShieldCheckIcon,
-  ShieldExclamationIcon,
   SpeakerWaveIcon,
-  TrashIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {SensitiveMarkdownContent} from './sensitive-markdown';
-import {IconButton} from './buttons';
+
 import {useChatStore} from '@/store';
-import {IChatMessage} from '@/types';
-import {ProvideFeedbackModal} from './modals';
+
+import {IconButton} from './buttons';
 import {Input} from './input';
+import {MarkdownContent} from './markdown';
+import {ProvideFeedbackModal} from './modals';
+import {LogoIcon} from './svgs';
 
 // type Props = {
 //   item: IChatMessage;
 // };
-const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
-  const {
-    enabledContentSafety,
-  } = useChatStore();
-  const [isSensitive, setIsSensitive] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isFileMessage, setIsFileMessage] = useState(false);
-  const [alertModalOpen, setAlertModalOpen] = useState(false);
+const AgentPromptLine = ({desc}: {desc: string}) => {
+  const {enabledContentSafety} = useChatStore();
+
   const [showOriginal, setShowOriginal] = useState(false);
   //   const [response, setResponse] = useState(item.response);
-  const [showTranslatorModal, setShowTranslatorModal] = useState(false);
+
   const [showProvideFeedbackModal, setShowProvideFeedbackModal] = useState(false);
   const [showTextField, setShowTextField] = useState(false);
 
   //   const prevMessage = item.response;
 
   const handleOriginalOne = async () => {
-    setLoading(true);
-    // setResponse(prevMessage);
-    setLoading(false);
+    // setLoading(true);
+    // // setResponse(prevMessage);
+    // setLoading(false);
     setShowOriginal(false);
   };
   return (
@@ -55,7 +45,7 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
             <LogoIcon width={22} height={20} color='#F5F5F5' />
 
             <div className='bg-[white] rounded-full absolute bottom-[-5px] right-[-5px]'>
-              {enabledContentSafety && isSensitive && (
+              {enabledContentSafety && (
                 <div className='p-1'>
                   <ShieldCheckIcon width={15} height={15} color='#DB3A34' />
                 </div>
@@ -102,10 +92,7 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
           )}
           <MarkdownContent content={desc} />
           {showTextField ? (
-            <IconButton
-              className=' !bg-grey-0 absolute top-5 right-5'
-              onClick={() => setShowTextField(!showTextField)}
-            >
+            <IconButton className=' !bg-grey-0 absolute top-5 right-5' onClick={() => setShowTextField(!showTextField)}>
               <XMarkIcon className='w-5 h-5 text-grey-900' width={20} height={20} />
             </IconButton>
           ) : (
@@ -129,7 +116,7 @@ const AgentPromptLine = ({desc, when}: {desc: string; when: string}) => {
                 <p className='text-grey-400'>View original</p>
               </div>
             )}
-            <IconButton className='!p-0' onClick={() => setShowTranslatorModal(true)}>
+            <IconButton className='!p-0'>
               <LanguageIcon className='w-5 h-5 text-grey-400' />
             </IconButton>
             <div className='w-[1px] h-5 bg-grey-600' />

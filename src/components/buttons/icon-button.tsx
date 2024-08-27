@@ -1,4 +1,4 @@
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary' | 'secondary' | 'dark' | 'disabled' | 'grey' | 'negative';
@@ -32,7 +32,7 @@ export const IconButton = ({
   const activityStyle = () => (disabled ? 'cursor-default' : 'cursor-pointer');
   const content = (
     <button
-      className={classnames(
+      className={classNames(
         'flex items-center p-2 justify-center gap-2 rounded-full',
         style,
         className,

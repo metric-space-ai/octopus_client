@@ -2,11 +2,13 @@
 
 import React, {PropsWithChildren, useEffect, useState} from 'react';
 
+import {AxiosError} from 'axios';
 import {useRouter} from 'next/navigation';
 import {toast} from 'react-hot-toast';
 
 import {useApiClient} from '@/hooks';
 import {useAuthStore} from '@/store';
+import {TCompany} from '@/types';
 import {IRegisterPayload, IUpdateUserPayload, IUpdateUserProfilePayload} from '@/types/auth';
 import {IUser, IUserProfile, IUserSetup} from '@/types/user';
 
@@ -22,10 +24,6 @@ import {
   updateUserProfile,
   updateUserProfilePic,
 } from '../services/auth.service';
-import {AxiosError} from 'axios';
-import {IPlugin} from '@/types/plugin';
-import {paths} from '@/config/path';
-import {TCompany} from '@/types';
 
 interface IAuthContext {
   isAuthenticated: boolean;
@@ -44,14 +42,42 @@ interface IAuthContext {
   onUpdateProfile: (payload: IUpdateUserProfilePayload) => void;
   companyIsLoading: boolean;
   getCurrentUserCompany: () => void;
-  putCurrentUserCompany: (payload: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>) => void;
+  putCurrentUserCompany: (
+    payload: {
+      id: TCompany['id'];
+    } & Partial<Pick<TCompany, 'address' | 'name' | 'custom_style' | 'allowed_domains'>>,
+    // Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style' | 'allowed_domains'>,
+  ) => void;
   onUpdateSingleUser: (payload: IUpdateUserPayload) => void;
   getCurrentUser: () => void;
   onUpdateProfilePicture: (payload: FormData) => void;
   onLogout: () => void;
 }
+const defaultAuthContext: IAuthContext = {
+  isAuthenticated: false,
+  user: null,
+  setUser: (key) => console.warn('setUser function not implemented', {key}),
+  currentUser: null,
+  currentUserCompany: null,
+  loading: false,
+  authLoading: false,
+  setupInfo: undefined,
+  setupInfoLoading: false,
+  onCheckSetup: () => console.warn('onCheckSetup function not implemented'),
+  onLogin: (email, password) => console.warn('onLogin function not implemented', {password, email}),
+  onRegister: (payload) => console.warn('onRegister function not implemented', payload),
+  onUploadPlugin: (payload) => console.warn('onUploadPlugin function not implemented', payload),
+  onUpdateProfile: (payload) => console.warn('onUpdateProfile function not implemented', payload),
+  companyIsLoading: false,
+  getCurrentUserCompany: () => console.warn('getCurrentUserCompany function not implemented'),
+  putCurrentUserCompany: (payload) => console.warn('putCurrentUserCompany function not implemented', payload),
+  onUpdateSingleUser: (payload) => console.warn('onUpdateSingleUser function not implemented', payload),
+  getCurrentUser: () => console.warn('getCurrentUser function not implemented'),
+  onUpdateProfilePicture: (payload) => console.warn('onUpdateProfilePicture function not implemented', payload),
+  onLogout: () => console.warn('onLogout function not implemented'),
+};
 
-const AuthContext = React.createContext<IAuthContext>(null!);
+const AuthContext = React.createContext<IAuthContext>(defaultAuthContext);
 
 const AuthProvider = ({children}: PropsWithChildren) => {
   const router = useRouter();
@@ -70,7 +96,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
 
   useEffect(() => {
     if (!user) return;
-    let html = document.getElementsByTagName('html')[0];
+    const html = document.getElementsByTagName('html')[0];
     html.style.fontSize = `${user.text_size}px`;
   }, [user]);
 
@@ -145,6 +171,7 @@ const AuthProvider = ({children}: PropsWithChildren) => {
   const handleUploadNewPlugin = async (payload: FormData) => {
     setLoading(true);
     try {
+      console.log({payload});
       // // const {status, data} = await uploadNewPlugin(payload);
       // if (status === 201) {
       //   setSelectedPlugin(data);
@@ -201,28 +228,34 @@ const AuthProvider = ({children}: PropsWithChildren) => {
         if (err instanceof AxiosError) {
           toast.error(err?.response?.data.error);
         }
-      } finally{
+      } finally {
         setCompanyIsLoading(false);
       }
     }
   };
   const handleUpdateCurrentUserCompanyById = async (
-    payload: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>,
+    payload: {
+      id: TCompany['id'];
+    } & Partial<Pick<TCompany, 'address' | 'name' | 'custom_style' | 'allowed_domains'>>,
   ) => {
     if (currentUser && currentUser.company_id) {
-      setCompanyIsLoading(true)
+      setCompanyIsLoading(true);
       try {
         const {status, data} = await updateCompanyByIdApi(payload);
         if (status === 200) {
           setCurrentUserCompany(data);
-          toast.success("The template has been successfully updated.")
+          if (payload.custom_style) {
+            toast.success('The template has been successfully updated.');
+          } else {
+            toast.success('Settings updated successfully');
+          }
         }
       } catch (err) {
         if (err instanceof AxiosError) {
           toast.error(err?.response?.data.error);
         }
-      } finally{
-        setCompanyIsLoading(false)
+      } finally {
+        setCompanyIsLoading(false);
       }
     }
   };

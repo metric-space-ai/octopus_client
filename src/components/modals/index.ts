@@ -6,3 +6,4 @@ export * from './DeleteDocumentModalDialog';
 export * from './DeleteModelModalDialog';
 export * from './AddModelModalDialog';
 export * from './PdfViewerDialog';
+export * from './filesModalDialog';

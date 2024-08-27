@@ -12,7 +12,7 @@ interface AlertModalProps {
   open: boolean;
   loading?: boolean;
   confirmTitle?: string;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   onClose: () => void;
 }
 
@@ -23,7 +23,7 @@ export const AlertModal = ({
   open,
   loading,
   confirmTitle,
-  onConfirm,
+  onConfirm = () => console.warn('onConfirm not implemented'),
   onClose,
 }: AlertModalProps) => {
   return (

@@ -1,9 +1,11 @@
+import React from 'react';
+
+import classNames from 'classnames';
+
 import {Spinner} from '@/components/spinner';
 import {AI_SERVICES_SETUP_STATUS, PLUGINSTATUS} from '@/constant';
 import {spaceBeforeCapitalLetters} from '@/helpers';
 import {TPartialPluginStatus} from '@/types';
-import classNames from 'classnames';
-import React from 'react';
 
 type Props = {
   variant?: TPartialPluginStatus;

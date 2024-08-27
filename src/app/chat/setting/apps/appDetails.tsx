@@ -1,10 +1,10 @@
 import {useState} from 'react';
-import {Disclosure} from '@headlessui/react';
 
-import {TrashIcon, ChevronUpIcon} from '@heroicons/react/24/outline';
-import AppsBadge from './badge';
-import CustomSwitch from '@/components/switch/custom-switch';
+import {Disclosure} from '@headlessui/react';
+import {ChevronUpIcon, TrashIcon} from '@heroicons/react/24/outline';
+
 import {RemoveAppModal} from '@/components/modals/RemoveAppModal';
+import CustomSwitch from '@/components/switch/custom-switch';
 // import {useAuthContext} from '@/contexts/authContext';
 // import {AxiosError} from 'axios';
 // import {
@@ -15,6 +15,8 @@ import {RemoveAppModal} from '@/components/modals/RemoveAppModal';
 // } from '@/services/auth.service';
 // import toast from 'react-hot-toast';
 import {IApp} from '@/types';
+
+import AppsBadge from './badge';
 // import CustomCheckbox from '@/components/custom-checkbox';
 // import {IconButton} from '@/components/buttons';
 // import {Spinner} from '@/components/spinner';
@@ -209,7 +211,7 @@ export default function AppsDetails() {
           </div>
           {apps.length > 0 &&
             apps.map((app) => (
-              <Disclosure>
+              <Disclosure key={`app-${app.id}`}>
                 {({open}) => (
                   <>
                     <div className='flex justify-start py-3 items-center border-t'>
@@ -221,9 +223,7 @@ export default function AppsDetails() {
                           <p className='text-xs leading-5 text-grey-900 font-semibold ml-3'>App name 1</p>
                         </div>
                       </div>
-                      <p className='text-xxs leading-4 w-28 text-grey-800 font-medium'>
-                        0.7 / 24GB on GPU2
-                      </p>
+                      <p className='text-xxs leading-4 w-28 text-grey-800 font-medium'>0.7 / 24GB on GPU2</p>
                       <div className='w-24 text-xs flex justify-center'>
                         <AppsBadge variant='info' label='Setup' />
                       </div>
@@ -247,7 +247,7 @@ export default function AppsDetails() {
                     </div>
                     <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 py-3'>
                       <p className='w-full text-xs leading-5 text-grey-800 font-medium ml-3'>
-                        Enhance your ChatGPT experience with ImageFlow Connect – a powerful app that seamlessly
+                        Enhance your ChatGPT experience with ImageFlow Connect - a powerful app that seamlessly
                         integrates image uploading capabilities into your conversations. With ImageFlow Connect, you can
                         effortlessly share visual context by uploading images directly within the chat interface.
                       </p>

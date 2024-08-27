@@ -1,13 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AnimateDots} from './svgs';
-import {IconButton} from './buttons';
-import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
+
 import {ArrowsPointingOutIcon, DocumentMagnifyingGlassIcon, ExclamationCircleIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import {IWaspApp, TRole} from '@/types';
-import WaspAppGetLogsDialog from './modals/WaspAppModals/WaspAppGetLogsDialog';
-import {useAuthContext} from '@/contexts/authContext';
+
 import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
+import {useAuthContext} from '@/contexts/authContext';
+import {IWaspApp, TRole} from '@/types';
+
+import {IconButton} from './buttons';
+import {IframeWithSrcDialog} from './modals/IframeWithSrcDialog';
+import WaspAppGetLogsDialog from './modals/WaspAppModals/WaspAppGetLogsDialog';
+import {AnimateDots} from './svgs';
 
 interface IAppIframeProps {
   src: string;
@@ -97,6 +100,7 @@ const AppIframe = ({src, loadingTitle, bgColor, waspInfo = undefined, messageId,
             src={src}
             height={height}
             onLoad={onload}
+            allow='clipboard-read; clipboard-write'
           ></iframe>
         </div>
       )}
@@ -135,7 +139,6 @@ const AppIframe = ({src, loadingTitle, bgColor, waspInfo = undefined, messageId,
         <WaspAppGetLogsDialog
           isOpen={openWaspAppLogs}
           onClose={handleCloseWaspAppLogsDialog}
-          waspApp={waspInfo}
           messageId={messageId}
           waspAppId={waspAppId}
         />

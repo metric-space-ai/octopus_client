@@ -1,19 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
+import {UserIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import Image from 'next/image';
 import {useForm} from 'react-hook-form';
 
 import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {ImagesBaseUrl} from '@/constant';
+import {useAuthContext} from '@/contexts/authContext';
 import {authValidator} from '@/helpers/validators';
 
 import WebCamImageTaker from './webcam';
-
-import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
-import {useAuthContext} from '@/contexts/authContext';
-import {ImagesBaseUrl} from '@/constant';
-import {UserIcon} from '@heroicons/react/24/outline';
 
 interface IFormInputs {
   first_name: string;
@@ -23,70 +24,89 @@ interface IFormInputs {
 }
 
 const MyDetailPage = () => {
-  const form = useForm<IFormInputs>();
   const {
     register,
     handleSubmit,
     formState: {errors},
-  } = form;
+    setValue,
+    setError,
+  } = useForm<IFormInputs>();
 
-  const {user, currentUser, onUpdateProfile, loading, onUpdateProfilePicture, getCurrentUser, onUpdateSingleUser} =
-    useAuthContext();
+  const {
+    user,
+    currentUser,
+    onUpdateProfile,
+    loading,
+    onUpdateProfilePicture,
+    getCurrentUser,
+    onUpdateSingleUser,
+    currentUserCompany,
+  } = useAuthContext();
 
   const [takeImageModal, setTakeImageModal] = useState(false);
-  const [emailIsLoading, setEmailIsLoading] = useState(false);
-  const [activeSaveButton, setActiveSaveButton] = useState(false);
-
-  const onSubmit = async (data: IFormInputs) => {
-    const {first_name, last_name, job_title, email} = data;
-    // setLoading(true);
-    // const variables = {email, password, username};
-    // await createUser({variables});
-    if (user) {
-      onUpdateProfile({
-        text_size: user.text_size,
-        language: user.language,
-        name: `${first_name} ${last_name}`,
-        job_title,
-      });
+  const validateEmailDomain = (value: string, isAdmin: boolean): boolean => {
+    if (isAdmin || !currentUserCompany?.allowed_domains || currentUserCompany?.allowed_domains.length === 0)
+      return true; // Admins can have any email
+    const domain = value.split('@')[1];
+    if (currentUserCompany?.allowed_domains) {
+      return currentUserCompany.allowed_domains.includes(domain);
     }
-    if (currentUser) {
-      if (currentUser.email == email) return;
-      onUpdateSingleUser({
-        email,
-        roles: currentUser.roles,
-        is_enabled: currentUser.is_enabled,
-      });
-    }
-    setActiveSaveButton(false);
+    return false;
   };
-
-  const checkInputsHaveValue = () => {
-    setActiveSaveButton(allPropertiesHaveValue(form.getValues()));
+  const onSubmit = async (data: IFormInputs) => {
+    if (!currentUser) return;
+    const {first_name, last_name, job_title, email} = data;
+    const isValidEmail = validateEmailDomain(
+      email,
+      currentUser.roles.includes('ROLE_COMPANY_ADMIN_USER') || currentUser.roles.includes('ROLE_ADMIN'),
+    );
+    if (isValidEmail) {
+      if (user) {
+        // setLoading(true);
+        // const variables = {email, password, username};
+        // await createUser({variables});
+        onUpdateProfile({
+          text_size: user.text_size,
+          language: user.language,
+          name: `${first_name} ${last_name}`,
+          job_title,
+        });
+      }
+      if (currentUser) {
+        if (currentUser.email == email) return;
+        onUpdateSingleUser({
+          email,
+          roles: currentUser.roles,
+          is_enabled: currentUser.is_enabled,
+        });
+      }
+    } else {
+      setError('email', {
+        type: 'manual',
+        message: `Invalid email domain. valid domains: @${currentUserCompany?.allowed_domains?.join(' , @')}`,
+      });
+    }
   };
 
   useEffect(() => {
     if (user) {
-      //This part is temporary, until the first_name and last_name are separate in the API
-      //start
-      let fullName = user.name ? user.name.split(' ', 2) : '';
-      if (fullName.length > 1) {
-        form.setValue('first_name', fullName[0]);
-        form.setValue('last_name', fullName[1]);
+      // Split the full name into first and last names
+      setValue('job_title', user.job_title); // Set the job title
+
+      const fullName = user.name ? user.name.split(' ') : '';
+      if (typeof fullName === 'string') {
+        setValue('first_name', user.name); // Set the entire name as first_name if no last name is present
       } else {
-        form.setValue('first_name', user.name);
+        setValue('first_name', fullName.shift() || ''); // Set the first part as first_name
+        setValue('last_name', fullName.join(' ')); // Set the remaining parts as last_name
       }
-      //end
-      form.setValue('job_title', user.job_title);
     }
     if (currentUser) {
-      form.setValue('email', currentUser.email);
+      setValue('email', currentUser.email); // Set the email
     }
   }, [user, currentUser]);
   useEffect(() => {
-    setEmailIsLoading(true);
-    getCurrentUser();
-    setEmailIsLoading(false);
+    if (!currentUser) getCurrentUser();
   }, []);
 
   return (
@@ -95,12 +115,22 @@ const MyDetailPage = () => {
         <div className='mx-auto mb-8 flex flex-col justify-center'>
           <div className='w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto'>
             {user?.photo_file_name ? (
-              <img src={`${ImagesBaseUrl}${user.photo_file_name}`} alt={user.name} className='m-auto' />
+              <Image
+                width={45}
+                height={45}
+                src={`${ImagesBaseUrl}${user.photo_file_name}`}
+                alt={user.name}
+                className='m-auto'
+                loading='eager'
+              />
             ) : (
               <UserIcon className='m-auto' width={45} height={45} />
             )}
           </div>
-          <span className=' text-danger-500 hover:cursor-pointer hover:underline' onClick={() => setTakeImageModal(true)}>
+          <span
+            className=' text-danger-500 hover:cursor-pointer hover:underline'
+            onClick={() => setTakeImageModal(true)}
+          >
             Retake photo
           </span>
         </div>
@@ -111,14 +141,14 @@ const MyDetailPage = () => {
               placeholder='First name'
               className='w-full sm:w-1/2 pr-2'
               errors={errors.first_name && errors.first_name.message}
-              rules={register('first_name', {...authValidator.first_name, onChange: checkInputsHaveValue})}
+              rules={register('first_name', {...authValidator.first_name})}
             />
             <Input
               label='Last name'
               className='w-full sm:w-1/2 pl-2'
               placeholder='Last name'
               errors={errors.last_name && errors.last_name.message}
-              rules={register('last_name', {...authValidator.last_name, onChange: checkInputsHaveValue})}
+              rules={register('last_name', {...authValidator.last_name})}
             />
           </div>
           <div className='mb-8 flex flex-col gap-5'>
@@ -126,7 +156,7 @@ const MyDetailPage = () => {
               label='Job title'
               placeholder='Job title'
               errors={errors.job_title && errors.job_title.message}
-              rules={register('job_title', {...authValidator.job_title, onChange: checkInputsHaveValue})}
+              rules={register('job_title', {...authValidator.job_title})}
             />
             <Input
               type='email'
@@ -135,8 +165,7 @@ const MyDetailPage = () => {
               errors={errors.email && errors.email.message}
               rules={register('email', {
                 ...authValidator.email,
-                onChange: checkInputsHaveValue,
-                disabled: emailIsLoading,
+                disabled: loading,
               })}
             />
           </div>
@@ -144,9 +173,10 @@ const MyDetailPage = () => {
             <Button type='reset' variant='outline' className='flex-1' title='Cancel' />
             <Button
               loading={loading}
-              variant={!activeSaveButton || loading ? 'disabled' : 'primary'}
-              className={`${!activeSaveButton || loading ? 'pointer-events-none' : ''} flex-1`}
+              variant={loading ? 'disabled' : 'primary'}
+              className={classNames(`flex-1`, loading && 'pointer-events-none')}
               title={loading ? '' : 'Save Changes'}
+              type='submit'
             />
           </div>
         </form>

@@ -1,19 +1,20 @@
-import {Fragment, useState, useEffect, FormEventHandler} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useEffect, useState} from 'react';
+
+import {Dialog, Listbox, Transition} from '@headlessui/react';
+import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {nanoid} from '@reduxjs/toolkit';
+import classNames from 'classnames';
+import toast from 'react-hot-toast';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {Dialog, Transition, Listbox} from '@headlessui/react';
-import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline';
-
-import {Button, IconButton} from '../buttons';
-
-import {AppDispatch} from '@/app/lib/store';
 import {selectModels} from '@/app/lib/features/ollamaModels/modelsSelector';
 import {UpdateModelById, createNewModel, getOllamaModels} from '@/app/lib/features/ollamaModels/modelsSlice';
-import {nanoid} from '@reduxjs/toolkit';
-import {Spinner} from '../spinner';
-import classNames from 'classnames';
+import {AppDispatch} from '@/app/lib/store';
 import {IModel} from '@/types';
-import toast from 'react-hot-toast';
+
+import {Button, IconButton} from '../buttons';
+import {Spinner} from '../spinner';
 
 interface ModalProps {
   open: boolean;
@@ -99,10 +100,7 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
               >
                 <Dialog.Panel className='w-full max-w-md transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl align-middle shadow-xl transition-all'>
                   <div className='flex justify-between items-start mb-6'>
-                    <Dialog.Title
-                      as='h3'
-                      className='text-2xl font-semibold text-grey-900 text-left'
-                    >
+                    <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 text-left'>
                       {selectedModel ? 'Update model' : 'Add a new model'}
                     </Dialog.Title>
                     <IconButton className='top-4 right-4' onClick={handleClose}>
@@ -137,7 +135,7 @@ export const AddModelModalDialog = ({open, onClose, selectedModel}: ModalProps) 
                         >
                           <Listbox.Options className='absolute max-h-60 w-full rounded-b-2xl bg-grey-0 py-1 text-content-primary pr-2 overflow-hidden'>
                             <div className='max-h-58 custom-scrollbar-thumb relative -mr-1'>
-                              {ollamaModels?.map((model, tabIdx) => (
+                              {ollamaModels?.map((model) => (
                                 <Listbox.Option
                                   key={nanoid(8)}
                                   className={({active}) =>

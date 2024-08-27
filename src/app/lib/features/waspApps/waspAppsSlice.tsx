@@ -1,18 +1,18 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
 import {
-  getWaspAppsApi,
-  getWaspAppByIdApi,
-  uploadNewWaspAppApi,
-  updateWaspAppByIdApi,
   deleteWaspAppByIdApi,
-  getWaspAppSourceDocByChatIdAndWaspIdApi,
-  putAllowedUsersForWaspAppAccessApi,
   fullUpdateWaspAppApi,
+  getWaspAppByIdApi,
+  getWaspAppSourceDocByChatIdAndWaspIdApi,
+  getWaspAppsApi,
+  putAllowedUsersForWaspAppAccessApi,
+  updateWaspAppByIdApi,
+  uploadNewWaspAppApi,
 } from '@/services/settings.service';
-import {IChatMessage, IWaspApp, ValidationErrors} from '@/types';
+import {IChatMessage, IWaspApp} from '@/types';
 
 interface WaspAppsStates {
   entities: IWaspApp[] | null;
@@ -63,7 +63,7 @@ const waspAppsSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getAllWaspApps.pending, (state, action) => {
+      .addCase(getAllWaspApps.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -171,18 +171,17 @@ export const getWaspAppById = createAsyncThunk(
   '/waspApps/getWaspAppById',
   async (wasp_id: string, {rejectWithValue}) => {
     try {
-      const {status, data} = await getWaspAppByIdApi(wasp_id);
+      const {data} = await getWaspAppByIdApi(wasp_id);
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -192,18 +191,17 @@ export const getWaspAppSourceDocByChatIdAndWaspId = createAsyncThunk(
   async ({id, wasp_app_id}: Pick<IChatMessage, 'wasp_app_id' | 'id'>, {rejectWithValue}) => {
     if (!wasp_app_id) return;
     try {
-      const {status, data} = await getWaspAppSourceDocByChatIdAndWaspIdApi({wasp_app_id, id});
+      const {data} = await getWaspAppSourceDocByChatIdAndWaspIdApi({wasp_app_id, id});
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -215,16 +213,15 @@ export const updateWaspApp = createAsyncThunk(
       const {status, data} = await updateWaspAppByIdApi(payload);
       if (status === 200) toast.success(`Successful update.`);
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -239,16 +236,15 @@ export const fullUpdateWaspApp = createAsyncThunk(
         dispatch(getAllWaspApps());
         return data;
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -261,16 +257,15 @@ export const uploadNewWaspApp = createAsyncThunk(
       if (status === 201) toast.success(`The new app has been added.`);
       dispatch(getAllWaspApps());
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -285,16 +280,15 @@ export const deleteWaspAppById = createAsyncThunk(
         dispatch(getAllWaspApps());
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -314,16 +308,15 @@ export const putAllowedUsersForWaspAppAccess = createAsyncThunk(
       } else {
         dispatch(getAllWaspApps());
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

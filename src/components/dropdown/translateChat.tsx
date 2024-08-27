@@ -2,14 +2,13 @@ import {Dispatch, Fragment, SetStateAction, useState} from 'react';
 
 import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid';
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
+import {Button} from '@/components/buttons';
 import {LANGUAGES} from '@/constant';
 import {directCall} from '@/services/chat.service';
 import {LanguageType} from '@/types';
-
-import {Button} from '@/components/buttons';
-import toast from 'react-hot-toast';
-import {AxiosError} from 'axios';
 
 export const DropdownTranslateChat = ({
   text,
@@ -80,7 +79,7 @@ export const DropdownTranslateChat = ({
             <div className='relative w-full cursor-default overflow-hidden rounded-xl bg-grey-0 text-left shadow-md sm:text-sm'>
               <Combobox.Input
                 className='w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none'
-                displayValue={(lang: any) => lang.name}
+                displayValue={(lang: LanguageType) => lang.name}
                 onChange={(event) => setQuery(event.target.value)}
               />
               <Combobox.Button

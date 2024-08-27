@@ -2,9 +2,9 @@ import de from './de';
 import type {LocaleType} from './en';
 import en from './en';
 import fa from './fa';
+import hnd from './Hnd';
 import sp from './sp';
 import trk from './trk';
-import hnd from './Hnd';
 import {merge} from '../helpers/merge';
 export type {LocaleType, PartialLocaleType} from './en';
 
@@ -14,7 +14,7 @@ const ALL_LANGS = {
   fa,
   sp,
   trk,
-  hnd
+  hnd,
 };
 
 export type Lang = keyof typeof ALL_LANGS;
@@ -27,7 +27,7 @@ export const ALL_LANG_OPTIONS: Record<Lang, string> = {
   fa: 'Persian',
   sp: 'Spanish',
   trk: 'Turkish',
-  hnd: "Hindi"
+  hnd: 'Hindi',
 };
 
 const LANG_KEY = 'lang';

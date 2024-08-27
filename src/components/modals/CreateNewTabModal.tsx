@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, LockClosedIcon, UserGroupIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
 import {useForm} from 'react-hook-form';
 
 import {TabModes} from '@/constant';
@@ -11,7 +13,6 @@ import {IWorkspace, TRole} from '@/types';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import classNames from 'classnames';
 
 interface ModalProps {
   tab: IWorkspace | null;
@@ -137,9 +138,7 @@ export const CreateNewTabModal = ({tab, open, roles, onClose}: ModalProps) => {
                             <Listbox.Option
                               key={tabIdx}
                               className={({active}) =>
-                                `relative select-none py-2 pl-10 pr-4 ${
-                                  active ? 'bg-grey-100' : 'text-gray-900'
-                                }`
+                                `relative select-none py-2 pl-10 pr-4 ${active ? 'bg-grey-100' : 'text-gray-900'}`
                               }
                               value={tab}
                             >

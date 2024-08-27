@@ -1,11 +1,10 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
 
 import {IconButton} from '../buttons';
-import classNames from 'classnames';
 import {Spinner} from '../spinner';
 
 interface ModalProps {
@@ -17,12 +16,19 @@ interface ModalProps {
 export const PdfViewerDialog = ({open, onClose, url}: ModalProps) => {
   const [loading, setLoading] = useState(false);
 
-  const handleOnloadStart = () => {
-    setLoading(true);
-  };
-  const handleOnloaded = () => {
-    setLoading(false);
-  };
+  // const handleOnloadStart = () => {
+  //   setLoading(true);
+  // };
+  // const handleOnloaded = () => {
+  //   setLoading(false);
+  // };
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => setLoading(false), 2000);
+    } else {
+      setLoading(true);
+    }
+  }, [open]);
   return (
     <>
       <Transition appear show={open} as={Fragment}>
@@ -67,8 +73,6 @@ export const PdfViewerDialog = ({open, onClose, url}: ModalProps) => {
                       type='application/pdf'
                       width='100%'
                       height='100%'
-                      onLoadStart={handleOnloadStart}
-                      onLoad={handleOnloaded}
                     />
                     {/* <iframe
                       width={600}

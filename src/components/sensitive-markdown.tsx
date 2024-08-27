@@ -63,6 +63,7 @@ export function Mermaid(props: {code: string}) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function PreCode(props: {children: any}) {
   const ref = useRef<HTMLPreElement>(null);
   const refText = ref.current?.innerText;

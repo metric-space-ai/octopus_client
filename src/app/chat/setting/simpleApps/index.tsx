@@ -1,11 +1,11 @@
-import {Button} from '@/components/buttons';
 import React, {useState} from 'react';
-import SimpleAppDetails from './SimpleAppDetails';
-import { UploadSimpleAppModal } from '@/components/modals/UploadSimpleAppModal';
 
-type Props = {};
+import {Button} from '@/components/buttons';
+import {UploadSimpleAppModal} from '@/components/modals/UploadSimpleAppModal';
 
-const SimpleApps = (props: Props) => {
+import SimpleAppsDetails from './SimpleAppDetails';
+
+const SimpleApps = () => {
   const [openAddHTMLModal, setOpenAddHTMLModal] = useState(false);
   return (
     <>
@@ -20,7 +20,7 @@ const SimpleApps = (props: Props) => {
           />
         </div>
         <div className='max-w-full'>
-          <SimpleAppDetails />
+          <SimpleAppsDetails />
         </div>
       </div>
       <UploadSimpleAppModal open={openAddHTMLModal} onClose={() => setOpenAddHTMLModal(false)} />

@@ -1,30 +1,29 @@
-import {Fragment, useState} from 'react';
-
-import {AxiosError} from 'axios';
-
-import {useForm} from 'react-hook-form';
-import toast from 'react-hot-toast';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
-import {authValidator} from '@/helpers/validators';
+import {AxiosError} from 'axios';
+import {useForm} from 'react-hook-form';
+import toast from 'react-hot-toast';
+
+import {useAuthContext} from '@/contexts/authContext';
+import {resetPassValidator} from '@/helpers/validators';
+import {resetTeamMemberPasswordApi} from '@/services/settings.service';
+import {IUser} from '@/types';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
 
-import {resetTeamMemberPasswordApi} from '@/services/settings.service';
-
-import {IUser} from '@/types';
-
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  member: IUser;
+  member: IUser | null;
 }
 
 export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps) => {
   const [loading, setLoading] = useState(false);
-
+  const {user, onLogout} = useAuthContext();
   interface IFormInputs {
     newPassword: string;
     confirmNewPassword: string;
@@ -33,17 +32,20 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
     register,
     handleSubmit,
     watch,
+    reset,
     formState: {errors},
   } = useForm<IFormInputs>();
 
   const onSubmit = async (formInputsData: IFormInputs) => {
     setLoading(true);
+    if (!member) return;
     try {
-      const {status} = await resetTeamMemberPasswordApi(member.id, formInputsData.newPassword);
-      console.log('runss');
+      const {status, ...otherProps} = await resetTeamMemberPasswordApi(member.id, formInputsData.newPassword);
+      console.log({otherProps, status});
       if (status === 200) {
-        toast.success('Password successfully reset');
+        toast.success('Password changed successfully!');
         onClose();
+        if (member.id === user?.user_id) onLogout();
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -54,6 +56,15 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        newPassword: '',
+        confirmNewPassword: '',
+      });
+    }
+  }, [open]);
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -85,9 +96,9 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
                   <Dialog.Title
                     as='h3'
                     className='text-2xl font-semibold text-grey-900 max-w-sm break-words'
-                    title={`Reset team member Password: “${member.email}” `}
+                    title={`Reset team member Password: “${member?.email ?? ''}” `}
                   >
-                    {`Reset team member Password: “${member.email}”`}
+                    {`Reset team member Password: “${member?.email ?? ''}”`}
                   </Dialog.Title>
                   <IconButton
                     className='ml-auto !p-1 absolute top-0 right-0'
@@ -98,14 +109,19 @@ export const ResetTeamMemberPasswordModal = ({open, onClose, member}: ModalProps
                     <XMarkIcon className='w-5 h-5 text-content-primary' />
                   </IconButton>
                 </div>
-
+                {member?.id === user?.user_id && (
+                  <h2 className='text-sm text-danger-300'>
+                    <b>Warning:</b> You are about to change the password for your own account. After the change, you
+                    will need to log in again.
+                  </h2>
+                )}
                 <form className='flex flex-col mt-5 gap-5' onSubmit={handleSubmit(onSubmit)}>
                   <Input
                     type='password'
                     label='New Password'
                     placeholder='New Password'
                     errors={errors.newPassword && errors.newPassword.message}
-                    rules={register('newPassword', {...authValidator.password})}
+                    rules={register('newPassword', {...resetPassValidator.newPassword})}
                   />
                   <Input
                     type='password'

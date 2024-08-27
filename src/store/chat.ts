@@ -1,28 +1,28 @@
+import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
 import {create} from 'zustand';
 
 import {
+  RenameTicketApi,
   createChatMessageApi,
   createTicketApi,
   createWorkspaceApi,
   deleteChatMessageApi,
+  deleteContentSafetyApi,
   deleteTicketApi,
   deleteWorkspaceApi,
   getChatMessagesApi,
+  getContentSafetyApi,
   getLatestChatMessageApi,
   getTicketsApi,
   getWorkspacesApi,
+  replaceMessageWithAnonymizedApi,
+  replaceMessageWithNotSensitiveApi,
   updateChatMessageApi,
   updateContentSafetyApi,
-  deleteContentSafetyApi,
-  getContentSafetyApi,
   updateWorkspaceApi,
-  replaceMessageWithAnonymizedApi,
-  RenameTicketApi,
-  replaceMessageWithNotSensitiveApi,
 } from '@/services/chat.service';
 import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 
 interface ChatStore {
   workspaces: IWorkspace[];
@@ -102,7 +102,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       get().setWorkspaceId(res.data.id);
     });
   },
-  updateWorkspace(idx: string, name: string, type: string) {
+  async updateWorkspace(idx: string, name: string, type: string) {
     updateWorkspaceApi(idx, name, type).then((res) => {
       const filteredWorkspaces =
         get().workspaces.flatMap((workspace) => (workspace.id === idx ? {...workspace, ...res.data} : workspace)) ?? [];

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function prettyObject(msg: any) {
   const obj = msg;
   if (typeof msg !== 'string') {

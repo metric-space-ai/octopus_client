@@ -1,15 +1,18 @@
-import {Button} from '@/components/buttons';
 import React, {Fragment} from 'react';
-import {Input} from '../../input';
-import {bytesCalculator} from '@/helpers';
-import {IWaspFormInputs} from '.';
-import {FieldErrors, UseFormHandleSubmit, UseFormRegister} from 'react-hook-form';
-import {waspAppFormValidator} from '@/helpers/validators';
+
 import {Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon} from '@heroicons/react/24/outline';
+import {FieldErrors, UseFormHandleSubmit, UseFormRegister} from 'react-hook-form';
+
+import {Button} from '@/components/buttons';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {INSTANCETYPES} from '@/constant';
-import { EWaspInstanceType } from '@/types';
+import {bytesCalculator} from '@/helpers';
+import {waspAppFormValidator} from '@/helpers/validators';
+import {EWaspInstanceType} from '@/types';
+
+import {IWaspFormInputs} from '.';
+import {Input} from '../../input';
 
 type Props = {
   uploadIsLoading: boolean;

@@ -1,7 +1,8 @@
+import React from 'react';
+
 import {Switch} from '@headlessui/react';
 import {CheckIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import React, {SetStateAction, Dispatch} from 'react';
 
 type Props = {
   active: boolean | undefined;
@@ -27,9 +28,7 @@ const CustomCheckbox = ({active, onChange, title, description, disabled = false,
       {(title || description) && (
         <div className={classNames('ml-3 flex items-center text-left flex-1', bodyClassName)}>
           {title && <p className='font-medium text-sm text-grey-900'>{title}</p>}
-          {description && (
-            <span className='font-medium text-xs text-grey-600 ml-2'>{description}</span>
-          )}
+          {description && <span className='font-medium text-xs text-grey-600 ml-2'>{description}</span>}
         </div>
       )}
     </Switch>

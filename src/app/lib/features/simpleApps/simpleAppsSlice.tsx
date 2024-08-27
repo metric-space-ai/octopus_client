@@ -1,16 +1,9 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
-import {
-  getSimpleAppsApi,
-  getSimpleAppByIdApi,
-  uploadNewSimpleAppApi,
-  updateSimpleAppByIdApi,
-  deleteSimpleAppByIdApi,
-  getSimpleAppsNameApi,
-} from '@/services/settings.service';
-import {ISimpleApp, ValidationErrors} from '@/types';
+import {deleteSimpleAppByIdApi, getSimpleAppsApi, uploadNewSimpleAppApi} from '@/services/settings.service';
+import {ISimpleApp} from '@/types';
 
 interface SimpleAppsStates {
   entities: ISimpleApp[] | null;
@@ -47,7 +40,7 @@ const simpleAppsSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getAllSimpleApps.pending, (state, action) => {
+      .addCase(getAllSimpleApps.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -62,14 +55,14 @@ const simpleAppsSlice = createSlice({
         state.isLoading = false;
         state.entities = action.payload;
       })
-      .addCase(updateSimpleApp.fulfilled, (state, {payload}) => {
+      .addCase(updateSimpleApp.fulfilled, (state) => {
         console.log('updateSimpleApp fulfilled');
         state.isLoading = false;
         if (state.entities) {
           // state.entities = [...state.entities].flatMap((member) => (member.id === payload.id ? payload : member));
         }
       })
-      .addCase(deleteSimpleAppById.fulfilled, (state, {payload}) => {
+      .addCase(deleteSimpleAppById.fulfilled, (state) => {
         console.log('deleteSimpleAppById fulfilled');
         state.isLoading = false;
         if (state.entities) {
@@ -106,7 +99,6 @@ export const getAllSimpleApps = createAsyncThunk('/simpleApps/getAllSimpleApps',
   return data;
 });
 
-
 export const updateSimpleApp = createAsyncThunk(
   '/simpleApps/updateSimpleApp',
   async (member: ISimpleApp, {rejectWithValue}) => {
@@ -114,16 +106,15 @@ export const updateSimpleApp = createAsyncThunk(
       // const {status, data} = await updateSimpleAppByIdApi(member);
       // if (status === 200) toast.success(`Successful update.`);
       // return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -136,16 +127,15 @@ export const uploadNewSimpleApp = createAsyncThunk(
       if (status === 201) toast.success(`The new app has been added.`);
       dispatch(getAllSimpleApps());
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -160,16 +150,15 @@ export const deleteSimpleAppById = createAsyncThunk(
         dispatch(getAllSimpleApps());
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let recognition: any = null;
 if (typeof window !== 'undefined') {
   if ('webkitSpeechRecognition' in window) {

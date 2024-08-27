@@ -1,21 +1,16 @@
+import React, {useState} from 'react';
+
 import {Button} from '@/components/buttons';
-import React, {useEffect, useState} from 'react';
-import ModelsData from './modelsDetails';
-import {useSettingsContext} from '@/contexts/settingsContext';
-import {CreateNewTabModal, DeleteModelModalDialog} from '@/components/modals';
-
-import {useChatStore} from '@/store';
-import {AddSectorModal} from '@/components/modals/AddSectorsModal';
+import {DeleteModelModalDialog} from '@/components/modals';
 import {AddModelModalDialog} from '@/components/modals/AddModelModalDialog';
-import { IModel } from '@/types';
+import {IModel} from '@/types';
 
-type Props = {};
+import ModelsData from './modelsDetails';
 
-const Models = (props: Props) => {
+const Models = () => {
   const [addModelsModal, setAddOllamaModelsModal] = useState(false);
   const [deleteModelsModal, setDeleteModelsModal] = useState(false);
   const [selectedModel, setSelectedModel] = useState<IModel | null>(null);
-  const {settingIsLoading} = useSettingsContext();
 
   const handleCloseModelDialog = () => {
     setSelectedModel(null);
@@ -53,7 +48,10 @@ const Models = (props: Props) => {
             />
           </div>
           <div className='max-w-full'>
-            <ModelsData handleOpenDeleteModelDialog={handleOpenDeleteModelDialog} handleOpenEditModelDialog={handleOpenEditModelDialog} />
+            <ModelsData
+              handleOpenDeleteModelDialog={handleOpenDeleteModelDialog}
+              handleOpenEditModelDialog={handleOpenEditModelDialog}
+            />
           </div>
         </div>
       </div>

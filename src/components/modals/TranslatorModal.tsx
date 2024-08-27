@@ -1,12 +1,11 @@
-import {Dispatch, Fragment, SetStateAction, useState} from 'react';
+import {Dispatch, Fragment, SetStateAction} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
 
-import {LanguageType} from '@/types';
-
 import {IconButton} from '@/components/buttons';
 import {DropdownTranslateChat} from '@/components/dropdown/translateChat';
+import {LanguageType} from '@/types';
 
 interface ModalProps {
   open: boolean;
@@ -55,9 +54,7 @@ export const TranslatorModal = ({
           >
             <Dialog.Panel className='w-1/2 lg:w-1/3 flex flex-col transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
               <div className='flex justify-between items-center'>
-                <Dialog.Title className='text-[24px] font-semibold text-grey-900'>
-                  Translation Language
-                </Dialog.Title>
+                <Dialog.Title className='text-[24px] font-semibold text-grey-900'>Translation Language</Dialog.Title>
                 <IconButton className='absolute right-4' onClick={onClose}>
                   <XMarkIcon className='w-5 h-5 text-content-primary' />
                 </IconButton>

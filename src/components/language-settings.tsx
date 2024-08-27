@@ -1,7 +1,10 @@
-import {Fragment, useEffect, useState, useRef} from 'react';
-import {Combobox, Transition} from '@headlessui/react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {Fragment, useEffect, useState} from 'react';
 
+import {Combobox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/20/solid';
+import classNames from 'classnames';
 
 import {LANGUAGES} from '@/constant';
 import {IUserProfile} from '@/types';
@@ -11,10 +14,10 @@ type Props = {
   user: IUserProfile | null;
 };
 
-const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => {
+const LanguageSettings = ({user, currentLanguage}: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
   const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [filteredLanguages, setFilteredLanguages] = useState(LANGUAGES);
 
   // const clearQuery = () => setQuery('');
@@ -29,6 +32,10 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
     );
   }, [query]);
 
+  useEffect(() => {
+    console.log({user, currentLanguage});
+  }, []);
+
   return (
     <Combobox value={selectedLanguage} onChange={setSelectedLanguage}>
       {({open}) => (
@@ -40,7 +47,12 @@ const LanguageSettings = ({currentLanguage = undefined, user = null}: Props) => 
             language
           </p>
 
-          <div className={`relative w-full cursor-default bg-grey-0 pl-5 pr-12 ${open ? 'rounded-t-xl' : 'rounded-xl'}`}>
+          <div
+            className={classNames(
+              'relative w-full cursor-default bg-grey-0 pl-5 pr-12',
+              open ? 'rounded-t-xl' : 'rounded-xl',
+            )}
+          >
             <Combobox.Input
               className={`w-full border-none h-10 text-sm leading-5 text-left sm:text-sm text-gray-900 focus:outline-none bg-transparent`}
               displayValue={(lang: any) => lang?.name}

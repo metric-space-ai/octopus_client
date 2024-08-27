@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 
+import {CheckIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
+import {useForm} from 'react-hook-form';
+
+import {TabModes} from '@/constant';
+import {authValidator} from '@/helpers/validators';
+import {useChatStore} from '@/store';
+import {IWorkspace} from '@/types';
 
 import {TabMenu} from './menu';
-import {Input} from '../input';
-import {useForm} from 'react-hook-form';
-import {authValidator} from '@/helpers/validators';
-import {IWorkspace} from '@/types';
-import {TabModes} from '@/constant';
-import {useChatStore} from '@/store';
 import {IconButton} from '../buttons';
-import {CheckIcon} from '@heroicons/react/24/outline';
+import {Input} from '../input';
 
 interface IFormInputs {
   name: string;
@@ -40,7 +41,7 @@ export const MoreTab = ({
   onClick,
   onRename,
   onDelete,
-  onClearTab = () => {},
+  onClearTab = () => console.warn('onClearTab function not implemented'),
   isFocused,
 }: MoreTabProps) => {
   const [selected, setSelected] = useState(TabModes[0]);
@@ -67,6 +68,7 @@ export const MoreTab = ({
   useEffect(() => {
     setSelected({name: tab?.type ?? 'Public'});
     setValue('name', title ? title : '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setValue]);
 
   const classSelected = isFocused ? 'bg-grey-0 before:bg-grey-0' : 'bg-grey-';

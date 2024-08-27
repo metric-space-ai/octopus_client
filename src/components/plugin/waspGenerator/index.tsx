@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {Fragment, useState} from 'react';
 
-import {Input} from '@/components/input';
-
+import {Listbox, Transition} from '@headlessui/react';
 import {
   ChatBubbleBottomCenterTextIcon,
   CheckIcon,
@@ -12,22 +12,26 @@ import {
   LockOpenIcon,
   StopIcon,
   TrashIcon,
-  UserGroupIcon,
 } from '@heroicons/react/24/outline';
-
-import {ClockLoadingIcon} from '@/components/svgs';
-import {Listbox, Transition} from '@headlessui/react';
 import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+
 import {Button, IconButton} from '@/components/buttons';
-import {CreativityLevel, AuthMethods, GENERATINGAPPSTEPS, DIRECTORIES, JOBS, FILEVIEW} from './waspGeneratorConstants';
+import {Input} from '@/components/input';
+import {ClockLoadingIcon} from '@/components/svgs';
+
+import {AuthMethods, CreativityLevel, DIRECTORIES, FILEVIEW, GENERATINGAPPSTEPS, JOBS} from './waspGeneratorConstants';
 import {TDirectories} from './waspGeneratorTypes';
-import Highlight from 'react-highlight';
 
 import './../../../assets/a11y-light.css';
 
-type Props = {};
+const DynamicHighlight = dynamic(async () => (await import('react-highlight')).default, {
+  loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
+});
 
-const WaspAppGenerator = (props: Props) => {
+// type Props = {};
+
+const WaspAppGenerator = () => {
   const [selectedCreativityLevel, setSelectedCreativityLevel] = useState(CreativityLevel[0]);
   const [selectedAuthModel, setSelectedAuthModel] = useState(AuthMethods[0]);
   const [lockOpen, setLockOpen] = useState(false);
@@ -177,14 +181,14 @@ const WaspAppGenerator = (props: Props) => {
                       )}
                     >
                       {steps === GENERATINGAPPSTEPS.Second && (
-                        <Highlight
+                        <DynamicHighlight
                           innerHTML={false}
                           // className='text-content-grey-0 [&_.hljs-name]:text-content-blue-light [&_.hljs-tag]:text-content-green [&_.hljs-keyword]:text-content-red-400
                           // [&_.hljs-meta]:text-content-grey-400 [&_.hljs-meta]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500
                           // [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                         >
                           {FILEVIEW.content}
-                        </Highlight>
+                        </DynamicHighlight>
                       )}
                     </div>
                   </div>

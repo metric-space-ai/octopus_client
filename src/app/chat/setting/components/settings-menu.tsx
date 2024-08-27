@@ -1,28 +1,30 @@
 'use client';
 
+import {useEffect, useState} from 'react';
+
 import {
-  Cog6ToothIcon,
-  KeyIcon,
-  UserIcon,
-  UsersIcon,
+  AdjustmentsHorizontalIcon,
+  BriefcaseIcon,
   BuildingOfficeIcon,
   ClipboardDocumentListIcon,
-  DocumentDuplicateIcon,
-  BriefcaseIcon,
-  AdjustmentsHorizontalIcon,
+  Cog6ToothIcon,
   CpuChipIcon,
+  DocumentDuplicateIcon,
+  KeyIcon,
+  LightBulbIcon,
+  UserIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
+import {AxiosError} from 'axios';
 import classNames from 'classnames';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+import toast from 'react-hot-toast';
 
 import {Button} from '@/components/buttons';
-import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER, VERSION_NUM} from '@/constant';
+import {ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER} from '@/constant';
 import {useAuthContext} from '@/contexts/authContext';
-import {TRole} from '@/types';
-import {useEffect, useState} from 'react';
 import {getAppVersionApi} from '@/services/settings.service';
-import toast from 'react-hot-toast';
-import {AxiosError} from 'axios';
+import {TRole} from '@/types';
 
 const SIDEBAR: {
   id: string;
@@ -58,9 +60,9 @@ const SIDEBAR: {
     permission: '',
   },
   {
-    id: 'tab_theme',
-    tab_name: 'theme',
-    title: 'Theme',
+    id: 'tab_company',
+    tab_name: 'company',
+    title: 'Company',
     icon: BriefcaseIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
   },
@@ -70,6 +72,13 @@ const SIDEBAR: {
     title: 'Documents',
     icon: DocumentDuplicateIcon,
     permission: '',
+  },
+  {
+    id: 'tab_knowledge',
+    tab_name: 'knowledge',
+    title: 'Knowledge',
+    icon: LightBulbIcon,
+    permission: ROLE_COMPANY_ADMIN_USER,
   },
   {
     id: 'tab_team-members',
@@ -143,6 +152,7 @@ export const SettingsMenu = () => {
         toast.error(err?.response?.data.error);
       }
     } finally {
+      setVersionIsLoading(false);
     }
   };
   useEffect(() => {

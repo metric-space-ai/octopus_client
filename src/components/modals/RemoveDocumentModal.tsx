@@ -1,11 +1,11 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
-import {useEffect, useRef} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {TrashIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
-import {Button, IconButton} from '../buttons';
 import {IDocument} from '@/types/document';
+
+import {Button, IconButton} from '../buttons';
 
 interface ModalProps {
   open: boolean;
@@ -21,7 +21,7 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
   const [percent, setPercent] = useState(0);
 
   const handleDeleteDocument = () => {
-    // onDelete();
+    onDelete();
     setDeleteStarted(true);
   };
 
@@ -31,6 +31,7 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
         if (percent >= 100) {
           setDeleteConfirmed(true);
           setDeleteStarted(false);
+          setLoading(false);
         } else {
           setPercent((percent) => ++percent);
         }
@@ -120,9 +121,7 @@ export const RemoveDocumentModal = ({open, onClose, onDelete, document}: ModalPr
                 ) : (
                   <>
                     <p className='text-xl font-semibold text-grey-800'>Are you sure?</p>
-                    <p className='text-base font-regular text-grey-600'>
-                      This action cannot be undone.
-                    </p>
+                    <p className='text-base font-regular text-grey-600'>This action cannot be undone.</p>
                     <form className='flex mt-2 gap-2'>
                       <Button
                         type='button'

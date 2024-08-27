@@ -1,6 +1,9 @@
-import {IUpdateUserProfilePayload, IUserProfile} from '@/types';
-import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/24/solid';
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useDeferredValue, useEffect, useState} from 'react';
+
+import {ChevronDownIcon, ChevronUpIcon} from '@heroicons/react/24/solid';
+
+import {IUpdateUserProfilePayload, IUserProfile} from '@/types';
 
 type Props = {
   currentSize: number | undefined;

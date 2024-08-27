@@ -1,25 +1,25 @@
-import {useEffect, Fragment} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useEffect} from 'react';
+
 import {Disclosure, Listbox, Transition} from '@headlessui/react';
+import {CheckIcon, ChevronDownIcon, PencilSquareIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {useDispatch, useSelector} from 'react-redux';
 
-import {TrashIcon, ChevronDownIcon, CheckIcon, PencilSquareIcon} from '@heroicons/react/24/outline';
-import CustomSwitch from '@/components/switch/custom-switch';
-import {IWaspApp} from '@/types';
-import {useSelector, useDispatch} from 'react-redux';
-import {
-  getAllWaspApps,
-  updateWaspApp,
-  handleChangeSelectedWaspApp,
-  handleChangeOpenRemoveWaspAppDialog,
-  putAllowedUsersForWaspAppAccess,
-} from '@/app/lib/features/waspApps/waspAppsSlice';
-
-import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
-
-import './../../../../assets/atelier-cave-dark.css';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
+import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
+import {
+  getAllWaspApps,
+  handleChangeOpenRemoveWaspAppDialog,
+  handleChangeSelectedWaspApp,
+  putAllowedUsersForWaspAppAccess,
+  updateWaspApp,
+} from '@/app/lib/features/waspApps/waspAppsSlice';
 import {AppDispatch} from '@/app/lib/store';
+import CustomSwitch from '@/components/switch/custom-switch';
+import {IWaspApp} from '@/types';
 
+import './../../../../assets/atelier-cave-dark.css';
 type Props = {
   handleOpenExistedWaspAppModal: (waspApp: IWaspApp) => void;
 };
@@ -57,10 +57,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
       <div className='w-full custom-scrollbar-thumb'>
         <div className='flex mb-2'>
           <div className='w-[150px]'>
-            <span
-              className='font-medium text-xs leading-5 text-grey-600'
-              onClick={() => console.log({waspApps})}
-            >
+            <span className='font-medium text-xs leading-5 text-grey-600' onClick={() => console.log({waspApps})}>
               Name
             </span>
           </div>
@@ -95,9 +92,9 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                   <h2 className='text-lg text-primary uppercase'>not found</h2>
                 </div>
               )
-            : waspApps.map((app, index) => (
+            : waspApps.map((app) => (
                 <Disclosure key={app.id}>
-                  {({open}) => (
+                  {() => (
                     <>
                       <div className='flex justify-start py-3 items-center border-t'>
                         <div className='flex gap-3 w-[150px] items-center'>
@@ -207,7 +204,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
                                             {({selected}) => (
                                               <>
                                                 <span className='block truncate ...' title={user.profile?.name}>
-                                                  {user.profile?.name??user.email}
+                                                  {user.profile?.name ?? user.email}
                                                 </span>
                                                 {(selected || app.allowed_user_ids?.includes(user.id)) && (
                                                   <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-content-primary'>
@@ -253,7 +250,7 @@ export default function WaspAppsDetails({handleOpenExistedWaspAppModal}: Props) 
         </div>
         {isLoading && !waspApps && (
           <Disclosure>
-            {({open}) => (
+            {() => (
               <>
                 <div className='flex justify-start py-3 items-center animate-pulse'>
                   <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-52'></div>

@@ -63,6 +63,7 @@ export function Mermaid(props: {code: string}) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function PreCode(props: {children: any}) {
   const ref = useRef<HTMLPreElement>(null);
   const refText = ref.current?.innerText;
@@ -84,7 +85,10 @@ export function PreCode(props: {children: any}) {
   return (
     <>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
-      <pre className='relative text-xs px-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words' ref={ref}>
+      <pre
+        className='relative text-xs px-2.5 py-4 bg-grey-800 rounded-xs overflow-auto [&>*]:whitespace-pre-wrap [&>*]:break-words'
+        ref={ref}
+      >
         <span
           className="absolute right-2 top-2 cursor-pointer after:content-['Copy']"
           onClick={() => {
@@ -135,8 +139,8 @@ export const WarningMarkdownContent = React.memo(_WarningMarkDownContent);
 
 export function WarningMarkdown(
   props: {
-    content: string;
-    loading?: boolean;
+    // content: string;
+    // loading?: boolean;
     fontSize?: number;
     parentRef?: RefObject<HTMLDivElement>;
     defaultShow?: boolean;

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function merge(target: any, source: any) {
   Object.keys(source).forEach(function (key) {
     if (source[key] && typeof source[key] === 'object') {

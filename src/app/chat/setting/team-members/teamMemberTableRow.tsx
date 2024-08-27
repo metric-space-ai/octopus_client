@@ -1,23 +1,23 @@
-import React, {Fragment, useEffect, useState} from 'react';
-import {IPlugin, IUser, TRole} from '@/types';
-import {Listbox, Transition} from '@headlessui/react';
-import {ImagesBaseUrl, ROLESARRAYVALUE, ROLESLABEL, ROLE_ADMIN} from '@/constant';
-// import {useSettingsContext} from '@/contexts/settingsContext';
+import React, {Fragment, useState} from 'react';
 
+import {Listbox, Transition} from '@headlessui/react';
 import {CheckIcon, ChevronDownIcon, LockClosedIcon, TrashIcon, UserIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import Image from 'next/image';
 import {useDispatch} from 'react-redux';
+
 import {updateTeamMember} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {AppDispatch} from '@/app/lib/store';
+import {ImagesBaseUrl, ROLESARRAYVALUE, ROLESLABEL, ROLE_ADMIN} from '@/constant';
+import {IUser, TRole} from '@/types';
 
 type Props = {
   user: IUser;
   deleteUser: (member: IUser) => void;
   resetUserPassword: (member: IUser) => void;
-  plugins: IPlugin[] | undefined;
-  pluginsIsLoading: boolean;
 };
 
-export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading, resetUserPassword}: Props) => {
+export const TeamMemberTableRow = ({user, deleteUser, resetUserPassword}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [roleIsLoading, setRoleIsLoading] = useState(false);
 
@@ -33,6 +33,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading,
       dispatch(updateTeamMember(payload));
       // await updateTeamMember(payload);
     } catch (err) {
+      console.log('updateTeamMember has error...', {err});
     } finally {
       setRoleIsLoading(false);
     }
@@ -40,7 +41,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading,
   const getDateFormat = (dateString = '') => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     const date = new Date(dateString);
-    let monthName = months[date.getMonth()];
+    const monthName = months[date.getMonth()];
     return `${date.getDate()} ${monthName}, ${date.getFullYear()}`;
   };
 
@@ -50,7 +51,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading,
         {/* <img src={userImageSample.src} className='rounded-full w-11 h-11' /> */}
         <div className='flex items-center justify-center w-11 h-11 bg-primary-400/10 rounded-full overflow-hidden'>
           {user.profile?.photo_file_name ? (
-            <img
+            <Image
               src={`${ImagesBaseUrl}public/${user.profile.photo_file_name}`}
               alt={user.profile.name}
               className='object-cover'
@@ -61,12 +62,18 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading,
             <UserIcon className='text-primary-medium' width={45} height={45} />
           )}
         </div>
-        <div className={`flex flex-col gap-0.5 ${user.is_enabled ? 'justify-start' : 'justify-center'}`}>
-          {user.is_enabled && <h6 className='font-semibold text-xs leading-5'>{user.profile?.name}</h6>}
+        <div className={classNames('flex flex-col gap-0.5', user.is_enabled ? 'justify-start' : 'justify-center')}>
+          {user.is_enabled && (
+            <h6 className='font-semibold text-xs leading-5 w-[165px] truncate ...' title={user.profile?.name}>
+              {user.profile?.name}
+            </h6>
+          )}
           <p
-            className={`font-normal text-xs leading-5 w-[165px] truncate ... ${
-              user.is_enabled ? 'text-grey-800' : 'text-grey-600'
-            }`}
+            title={user.email}
+            className={classNames(
+              `font-normal text-xs leading-5 w-[165px] truncate ... `,
+              user.is_enabled ? 'text-grey-800' : 'text-grey-600',
+            )}
           >
             {user.email}
           </p>
@@ -146,6 +153,7 @@ export const TeamMemberTableRow = ({user, deleteUser, plugins, pluginsIsLoading,
           height={16}
           className='text-grey-600 hover:text-grey-800'
           onClick={() => resetUserPassword(user)}
+          title='reset password'
         />
         <TrashIcon
           width={16}

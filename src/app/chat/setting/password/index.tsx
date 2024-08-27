@@ -2,15 +2,17 @@
 
 import {useState} from 'react';
 
+import {isAxiosError} from 'axios';
 import {useForm} from 'react-hook-form';
 import {toast} from 'react-hot-toast';
 
 import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
+import {useAuthContext} from '@/contexts/authContext';
+import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
 import {authValidator} from '@/helpers/validators';
 import {changePassword} from '@/services/auth.service';
 import {useAuthStore} from '@/store';
-import {allPropertiesHaveValue} from '@/helpers/allPropertiesHaveValue';
 
 interface IFormInputs {
   currentPassword: string;
@@ -19,6 +21,7 @@ interface IFormInputs {
 }
 
 const PasswordPage = () => {
+  const {onLogout} = useAuthContext();
   const {
     reset,
     register,
@@ -27,6 +30,7 @@ const PasswordPage = () => {
     getValues,
     formState: {errors},
   } = useForm<IFormInputs>();
+
   const [loading, setLoading] = useState(false);
   const [activeSaveButton, setActiveSaveButton] = useState(false);
 
@@ -34,14 +38,21 @@ const PasswordPage = () => {
 
   const onSubmit = async (data: IFormInputs) => {
     const {currentPassword, newPassword} = data;
+    if (currentPassword === newPassword)
+      return toast.error('The new password cannot be the same as the current password.');
     if (authData) {
       setLoading(true);
       try {
         await changePassword(authData.user_id, currentPassword, newPassword);
         toast.success('Password changed successfully!');
         reset();
-      } catch {
-        toast.error('Something went wrong. Please try again!');
+        setTimeout(() => onLogout(), 1500);
+      } catch (error) {
+        console.log({error});
+        if (isAxiosError(error)) {
+          if (error.response?.status && [403, 401].includes(error.response.status))
+            toast.error('The current password is incorrect.');
+        }
       } finally {
         setLoading(false);
       }
@@ -68,7 +79,6 @@ const PasswordPage = () => {
           placeholder='New Password'
           errors={errors.newPassword && errors.newPassword.message}
           rules={register('newPassword', {...authValidator.password, onChange: checkInputsHaveValue})}
-
         />
         <Input
           type='password'
@@ -92,6 +102,7 @@ const PasswordPage = () => {
             className={`${!activeSaveButton ? 'pointer-events-none' : ''} flex-1`}
             title='Save Changes'
             loading={loading}
+            disabled={loading}
           />
         </div>
       </form>

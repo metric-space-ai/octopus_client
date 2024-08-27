@@ -76,7 +76,6 @@ export interface IPlugin {
   parser_feedback: string | null;
   allowed_user_ids?: string[];
   type: 'Normal' | 'System';
-  logs: string | null;
   color: string | null;
 }
 

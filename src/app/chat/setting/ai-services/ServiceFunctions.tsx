@@ -1,19 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import CustomCheckbox from '@/components/custom-checkbox';
-import {Spinner} from '@/components/spinner';
-import {IAIFunctions} from '@/types';
-import {ExclamationCircleIcon, InformationCircleIcon, TrashIcon} from '@heroicons/react/24/outline';
+
+import {Popover} from '@headlessui/react';
+import {InformationCircleIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
 import {
   deletetAiFunctionsById,
   getAiFunctionsByPluginId,
   updatetAiFunctionsById,
 } from '@/app/lib/features/aiServices/aiServicesSlice';
-import {IconButton} from '@/components/buttons';
 import {AppDispatch} from '@/app/lib/store';
-import {useSelector} from 'react-redux';
-import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
-import {Popover} from '@headlessui/react';
+import {IconButton} from '@/components/buttons';
+import CustomCheckbox from '@/components/custom-checkbox';
+import {Spinner} from '@/components/spinner';
+import {IAIFunctions} from '@/types';
 
 type Props = {
   serviceId: string;

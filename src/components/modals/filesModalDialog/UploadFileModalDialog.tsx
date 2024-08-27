@@ -1,0 +1,307 @@
+import React, {ChangeEvent, DragEvent, Fragment, useEffect, useRef, useState} from 'react';
+
+import {Dialog, Transition} from '@headlessui/react';
+import {ArrowUpTrayIcon, CheckIcon, ClipboardDocumentIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import {useDispatch} from 'react-redux';
+
+import {UpdateFileById, createNewFile, getAllFiles} from '@/app/lib/features/files/filesSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {bytesCalculator} from '@/helpers';
+import {IFile} from '@/types';
+
+import {Button, IconButton} from '../../buttons';
+
+enum EAddFileSteps {
+  SelecFile = 1,
+  Uploaded = 2,
+}
+
+interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+  selectedFile?: IFile | null;
+}
+
+export const UploadFileModalDialog = ({open, onClose, selectedFile}: ModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [loading, setLoading] = useState(false);
+  const [uploadStarted, setUploadStarted] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [file, setFile] = useState<File>();
+  const [fileIsSelected, setFileIsSelected] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [currentStep, setCurrentStep] = useState(EAddFileSteps.SelecFile);
+
+  const inputFileRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmitFirstStep = async () => {
+    if (fileUploaded && file && currentStep === EAddFileSteps.SelecFile) {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log({file, formData});
+      try {
+        const {
+          meta: {requestStatus},
+        } = selectedFile
+          ? await dispatch(UpdateFileById({id: selectedFile.id, file: formData}))
+          : await dispatch(createNewFile(formData));
+        if (requestStatus === 'fulfilled') {
+          setCurrentStep(EAddFileSteps.Uploaded);
+          dispatch(getAllFiles());
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleDragFiles = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+  const handleDropFiles = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const {files} = e.dataTransfer;
+    handleCheckFileIsValid(files[files.length - 1]);
+  };
+  const handleCustomSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files) {
+      const {files} = e.target;
+      handleCheckFileIsValid(files[files.length - 1]);
+    }
+  };
+
+  const handleDeleteFile = () => {
+    setFile(undefined);
+  };
+  const handleCheckFileIsValid = (file: File) => {
+    setFile(file);
+  };
+
+  const handleCloseModal = () => {
+    setUploadStarted(false);
+    setUploadPercentage(0);
+    setFile(undefined);
+    setFileIsSelected(false);
+    setFileUploaded(false);
+    setCurrentStep(EAddFileSteps.SelecFile);
+    setLoading(false);
+    onClose();
+  };
+
+  useEffect(() => {
+    if (file) {
+      setFileIsSelected(true);
+      setUploadStarted(true);
+    } else {
+      setFileIsSelected(false);
+      setFileUploaded(false);
+      setUploadStarted(false);
+      setUploadPercentage(0);
+    }
+  }, [file]);
+
+  useEffect(() => {
+    if (uploadStarted) {
+      const countdown = () => {
+        if (uploadPercentage >= 100) {
+          setFileUploaded(true);
+          console.log(`uploaded`);
+          setUploadStarted(false);
+        } else {
+          setUploadPercentage((percent) => ++percent);
+        }
+      };
+      setTimeout(countdown, 10);
+    }
+  }, [uploadStarted, uploadPercentage]);
+
+  useEffect(() => {
+    if (open) {
+      setCurrentStep(EAddFileSteps.SelecFile);
+    }
+  }, [open]);
+
+  return (
+    <>
+      <Transition appear show={open} as={Fragment}>
+        <Dialog className='relative z-10' as='div' onClose={onClose}>
+          <Transition.Child
+            as={Fragment}
+            enter='ease-out duration-300'
+            enterFrom='opacity-0'
+            enterTo='opacity-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100'
+            leaveTo='opacity-0'
+          >
+            <div className='fixed inset-0 bg-grey-900/50 transition-opacity' />
+          </Transition.Child>
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex min-h-full items-center justify-center p-4 text-center'>
+              <Transition.Child
+                as={Fragment}
+                enter='ease-out duration-300'
+                enterFrom='opacity-0 scale-95'
+                enterTo='opacity-100 scale-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100 scale-100'
+                leaveTo='opacity-0 scale-95'
+              >
+                <Dialog.Panel
+                  className='w-full max-w-md md:max-w-lg lg:max-w-3xl xl:max-w-modal-xxl h-[calc(100vh-64px)] max-h-[652px] flex flex-col
+                transform border border-content-primary bg-grey-100
+                 pb-6 pt-7 px-8 md:pb-8 md:pt-9 md:px-12 xl:pb-11 xl:pt-12 xl:px-16 rounded-xl align-middle shadow-xl transition-all'
+                >
+                  <div className='flex justify-between items-start mb-16 relative'>
+                    <Dialog.Title
+                      onClick={() => console.log({selectedFile})}
+                      as='h3'
+                      className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
+                    >
+                      {selectedFile ? `Update File` : `Upload New File`}
+                    </Dialog.Title>
+
+                    <IconButton className='absolute top-0 right-1' onClick={handleCloseModal}>
+                      <XMarkIcon className='w-5 h-5 text-content-primary' />
+                    </IconButton>
+                  </div>
+                  <div className='flex flex-col flex-auto justify-between '>
+                    {currentStep === EAddFileSteps.SelecFile && (
+                      <div className=' flex flex-col '>
+                        {fileIsSelected && !!file ? (
+                          <>
+                            <div className='flex flex-wrap py-3 px-8 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
+                              <div className='flex gap-4 items-center max-w-full'>
+                                <div className='flex w-56 pr-2 items-center'>
+                                  {fileUploaded && (
+                                    <span className='w-6 h-6 rounded-full flex justify-center items-center mr-6 bg-primary-400/10'>
+                                      <CheckIcon width={16} height={16} className='text-grey-600' />
+                                    </span>
+                                  )}
+                                  <ClipboardDocumentIcon width={24} height={24} className='text-grey-600' />
+                                  <p className='font-semibold text-xs text-grey-900 ml-3 truncate overflow-auto max-w-[calc(100%-36px)]'>
+                                    {file.name}
+                                  </p>
+                                </div>
+                                <span className='text-xs text-grey-600 lg:w-28  ml-auto lg:ml-0 text-right'>
+                                  {bytesCalculator(file.size)}
+                                </span>
+                              </div>
+                              <div className='flex justify-end items-center gap-6'>
+                                {(uploadStarted || fileUploaded) && (
+                                  <div className='flex items-center gap-2 max-w-full'>
+                                    <div className='h-1.5 bg-grey-100 dark:bg-neutral-600 w-[170px] '>
+                                      <div
+                                        className='h-1.5 bg-primary transition-all'
+                                        style={{width: `${uploadPercentage}%`}}
+                                      ></div>
+                                    </div>
+                                    <span className='text-grey-900 text-xs font-medium tracking-[-1px] flex items-center'>
+                                      {`${uploadPercentage} %`}
+                                    </span>
+                                  </div>
+                                )}
+                                <IconButton className='!p-0' onClick={handleDeleteFile}>
+                                  <XMarkIcon className='w-5 h-5 text-content-primary' />
+                                </IconButton>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <div
+                            onDrop={(e) => handleDropFiles(e)}
+                            onDragOver={handleDragFiles}
+                            className='flex flex-col item-center justify-center w-full min-h-[188px] px-4 py-11 mb-6 bg-grey-0 border-2 border-primary
+                             border-dashed rounded-xl'
+                          >
+                            <IconButton
+                              className='top-4 right-4 block mx-auto primary-soft/15 mb-5'
+                              onClick={(e) => {
+                                e.preventDefault();
+                                inputFileRef.current?.click();
+                              }}
+                            >
+                              <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
+                            </IconButton>
+                            <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
+                            <input
+                              type='file'
+                              className='hidden'
+                              hidden
+                              ref={inputFileRef}
+                              onChange={(e) => handleCustomSelectFile(e)}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {currentStep === EAddFileSteps.Uploaded && !!file && (
+                      <div className='flex flex-col lg:flex-row gap-8 justify-between'>
+                        <div className='flex flex-col w-5/12'>
+                          <div className='flex gap-3 mb-6'>
+                            <span className='w-11 h-11 rounded-full bg-primary-400/10 flex justify-center items-center'>
+                              <ClipboardDocumentIcon className='text-secondary-700' width={20} height={20} />
+                            </span>
+                            <div className='flex flex-col justify-evenly text-left'>
+                              <h5 className='font-semibold text-grey-900 text-sm'>{file.name}</h5>
+                              <p className='text-grey-600 font-normal text-xs leading-5'>
+                                {bytesCalculator(file.size)}
+                              </p>
+                            </div>
+                          </div>
+                          <p className='text-grey-600 text-xs leading-5 text-left max-w-md flex items-center'>
+                            <CheckIcon className='inline-block w-5 h-5 text-secondary mr-1' />
+                            File Is Uploaded
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className='flex gap-4 px-4 md:px-8 lg:px-12 xl:px-20 mx-1'>
+                      {currentStep === EAddFileSteps.SelecFile && (
+                        <>
+                          <Button
+                            type='button'
+                            className='flex-1 !h-11'
+                            variant='outline'
+                            title='Cancel'
+                            onClick={handleCloseModal}
+                            disabled={loading}
+                          />
+                          <Button
+                            type='button'
+                            className='flex-1 !h-11'
+                            variant={fileUploaded ? 'primary' : 'disabled'}
+                            title={!loading ? 'Continue' : ''}
+                            loading={loading}
+                            disabled={loading || !fileUploaded}
+                            onClick={handleSubmitFirstStep}
+                          />
+                        </>
+                      )}
+                      {currentStep === EAddFileSteps.Uploaded && (
+                        <Button
+                          type='button'
+                          className='flex-1 !h-11'
+                          variant={'primary'}
+                          title='Close Dialog'
+                          loading={loading}
+                          disabled={loading}
+                          onClick={handleCloseModal}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
+  );
+};

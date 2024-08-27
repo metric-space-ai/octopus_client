@@ -1,8 +1,7 @@
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
-import {IParameter, ValidationErrors} from '@/types';
 import {
   createNewParameterApi,
   deleteParameterByIdApi,
@@ -10,6 +9,7 @@ import {
   getParametersApi,
   updateParameterByIdApi,
 } from '@/services/settings.service';
+import {IParameter} from '@/types';
 
 type ParametersStates = {
   entities: IParameter[] | null;
@@ -32,7 +32,7 @@ const parametersSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getAllParameters.pending, (state, action) => {
+      .addCase(getAllParameters.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -57,14 +57,14 @@ const parametersSlice = createSlice({
           );
         }
       })
-      .addCase(deleteParameterById.fulfilled, (state, {payload}) => {
+      .addCase(deleteParameterById.fulfilled, (state) => {
         console.log('deleteParameterById fulfilled');
         state.isLoading = false;
         if (state.entities) {
           // state.entities = [...state.entities].filter((parameter) => parameter.id !== payload);
         }
       })
-      .addCase(createNewParameter.fulfilled, (state, {payload}) => {
+      .addCase(createNewParameter.fulfilled, (state) => {
         console.log('createNewParameter fulfilled');
         state.isLoading = false;
         if (state.entities) {
@@ -86,7 +86,6 @@ export const getParameter = createAsyncThunk('/parameters/getParameter', async (
   return data;
 });
 
-
 export const updateParameter = createAsyncThunk(
   '/parameters/updateParameter',
   async (payload: {parameter_id: string; name: string; value: string}, {rejectWithValue}) => {
@@ -96,16 +95,15 @@ export const updateParameter = createAsyncThunk(
       if (status === 200) toast.success(`Successful update.`);
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -121,16 +119,15 @@ export const createNewParameter = createAsyncThunk(
       }
 
       return data;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -145,16 +142,15 @@ export const deleteParameterById = createAsyncThunk(
         dispatch(getAllParameters());
       }
       return payload;
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );

@@ -1,18 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect} from 'react';
-import {Disclosure} from '@headlessui/react';
+
+import {PencilSquareIcon, TrashIcon} from '@heroicons/react/24/outline';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {
-  BuildingOfficeIcon,
-  TrashIcon,
-  PencilSquareIcon,
-  UserGroupIcon,
-  LockClosedIcon,
-} from '@heroicons/react/24/outline';
-
-import {AppDispatch} from '@/app/lib/store';
 import {selectModels} from '@/app/lib/features/ollamaModels/modelsSelector';
-import {getAllModels, getOllamaModels} from '@/app/lib/features/ollamaModels/modelsSlice';
+import {getAllModels} from '@/app/lib/features/ollamaModels/modelsSlice';
+import {AppDispatch} from '@/app/lib/store';
 import {IModel} from '@/types';
 
 type Props = {
@@ -63,13 +57,10 @@ export default function ModelsData({handleOpenDeleteModelDialog, handleOpenEditM
                 </div>
               )
             : models?.map((model, index) => (
-                <div className='flex justify-start py-3 items-center border-t'>
+                <div className='flex justify-start py-3 items-center border-t' key={`model-${model.id}`}>
                   <span className='w-10 block text-left text-sm'>{index + 1}</span>
 
-                  <p
-                    className='w-60 text-xs leading-5 text-grey-900 font-semibold truncate ...'
-                    title={model.name}
-                  >
+                  <p className='w-60 text-xs leading-5 text-grey-900 font-semibold truncate ...' title={model.name}>
                     {model.name}
                   </p>
                   {/* <p

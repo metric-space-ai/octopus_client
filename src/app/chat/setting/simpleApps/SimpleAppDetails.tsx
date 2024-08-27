@@ -1,19 +1,23 @@
-import {useState, useEffect, Fragment} from 'react';
-import {Disclosure, Transition} from '@headlessui/react';
+import {Fragment, useEffect, useState} from 'react';
 
-import {TrashIcon, ChevronUpIcon} from '@heroicons/react/24/outline';
+import {Disclosure, Transition} from '@headlessui/react';
+import {ChevronUpIcon, TrashIcon} from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {selectSimpleApps} from '@/app/lib/features/simpleApps/simpleAppsSelector';
+import {deleteSimpleAppById, getAllSimpleApps} from '@/app/lib/features/simpleApps/simpleAppsSlice';
+import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {RemoveSimpleAppModal} from '@/components/modals/RemoveSimpeAppModal';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {ISimpleApp} from '@/types';
-import {useSelector, useDispatch} from 'react-redux';
-import {getAllSimpleApps, deleteSimpleAppById} from '@/app/lib/features/simpleApps/simpleAppsSlice';
-import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
-
-import {RemoveSimpleAppModal} from '@/components/modals/RemoveSimpeAppModal';
-import {selectSimpleApps} from '@/app/lib/features/simpleApps/simpleAppsSelector';
-import Highlight from 'react-highlight';
-
+// import Highlight from 'react-highlight';
 import './../../../../assets/atelier-cave-dark.css';
-import { AppDispatch } from '@/app/lib/store';
+
+const DynamicHighlight = dynamic(async () => (await import('react-highlight')).default, {
+  loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
+});
 
 export default function SimpleAppsDetails() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +37,7 @@ export default function SimpleAppsDetails() {
   };
 
   const handleChangeSimpleAppActivation = async (app_id: string, check: boolean) => {
+    console.log({app_id, check});
     if (!simpleApps) return;
 
     // const payload: ISimpleAppActivation = {operation: check ? 'Enable' : 'Disable', is_enabled: check};
@@ -58,6 +63,7 @@ export default function SimpleAppsDetails() {
   useEffect(() => {
     dispatch(getAllSimpleApps());
     dispatch(getAllTeamMembers());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -96,7 +102,7 @@ export default function SimpleAppsDetails() {
                     <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
-              : simpleApps.map((app, index) => (
+              : simpleApps.map((app) => (
                   <Disclosure key={app.id}>
                     {({open}) => (
                       <>
@@ -146,14 +152,14 @@ export default function SimpleAppsDetails() {
                           >
                             <div className='custom-scrollbar-thumb h-40 w-full bg-background'>
                               {/* <MarkdownContent content={app.code} /> */}
-                              <Highlight
+                              <DynamicHighlight
                                 innerHTML={false}
                                 // className='text-grey-0 [&_.hljs-name]:text-secondary-600 [&_.hljs-tag]:text-secondary [&_.hljs-keyword]:text-danger-300
                                 // [&_.hljs-meta]:text-grey-400 [&_.hljs-meta]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500
                                 // [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500  '
                               >
                                 {app.code}
-                              </Highlight>
+                              </DynamicHighlight>
                             </div>
                           </Transition>
                         </Disclosure.Panel>
@@ -164,7 +170,7 @@ export default function SimpleAppsDetails() {
           </div>
           {isLoading && (
             <Disclosure>
-              {({open}) => (
+              {() => (
                 <>
                   <div className='flex justify-start py-3 items-center animate-pulse'>
                     <div className='h-5 bg-gray-300 rounded-full dark:bg-gray-600 w-52'></div>

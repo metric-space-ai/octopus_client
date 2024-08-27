@@ -1,9 +1,8 @@
-import {Fragment, useState} from 'react';
+import {Fragment} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
 
-import {useChatStore} from '@/store';
 import {IWorkspace} from '@/types';
 
 import {Button, IconButton} from '../buttons';
@@ -16,7 +15,7 @@ interface ModalProps {
 }
 
 export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   return (
     <Transition appear show={open} as={Fragment}>
@@ -62,7 +61,7 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
                     className='flex-1 !h-11'
                     variant='dangerous'
                     title='Delete Agent'
-                    loading={loading}
+                    // loading={loading}
                     onClick={onDelete}
                   />
                   <Button type='button' className='flex-1 !h-11' variant='outline' title='Cancel' onClick={onClose} />

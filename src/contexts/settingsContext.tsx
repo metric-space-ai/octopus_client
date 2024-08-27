@@ -2,19 +2,18 @@
 
 import React, {PropsWithChildren, useState} from 'react';
 
+import {AxiosError} from 'axios';
 import {toast} from 'react-hot-toast';
 
-import {AxiosError} from 'axios';
-
 import {
-  getAllTeamMembersApi,
-  updateTeamMemberApi,
   createTeamMemberApi,
   deleteTeamMemberApi,
+  getAllTeamMembersApi,
+  updateTeamMemberApi,
 } from '@/services/settings.service';
-import {IUser, ICreateUser} from '@/types';
+import {ICreateUser, IUser} from '@/types';
 
-interface ISecttingsContext {
+interface ISettingsContext {
   teamMembers: IUser[] | null;
   setTeamMembers: React.Dispatch<React.SetStateAction<IUser[] | null>>;
   getTeamMembers: () => void;
@@ -25,7 +24,29 @@ interface ISecttingsContext {
   deleteMemberLoading: boolean;
 }
 
-const SettingsContext = React.createContext<ISecttingsContext>(null!);
+// Provide a default value to avoid null assertions
+const defaultContextValue: ISettingsContext = {
+  teamMembers: null,
+  setTeamMembers: () => {
+    console.warn('setTeamMembers function not implemented');
+  },
+  getTeamMembers: () => {
+    console.warn('getTeamMembers function not implemented');
+  },
+  updateTeamMember: (payload: IUser) => {
+    console.warn('updateTeamMember function not implemented', payload);
+  },
+  addNewTeamMember: (payload: ICreateUser) => {
+    console.warn('addNewTeamMember function not implemented', payload);
+  },
+  deleteTeamMember: (payload: string) => {
+    console.warn('deleteTeamMember function not implemented', payload);
+  },
+  settingIsLoading: false,
+  deleteMemberLoading: false,
+};
+
+const SettingsContext = React.createContext<ISettingsContext>(defaultContextValue);
 
 const SettingsProvider = ({children}: PropsWithChildren) => {
   const [settingIsLoading, setSettingIsLoading] = useState<boolean>(false);
@@ -62,7 +83,6 @@ const SettingsProvider = ({children}: PropsWithChildren) => {
       if (err instanceof AxiosError) {
         toast.error(err?.response?.data.error);
       }
-    } finally {
     }
   };
 

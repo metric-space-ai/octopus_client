@@ -1,49 +1,9 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   reactStrictMode: true,
-//   webpack(config) {
-//     config.module.rules.push({
-//       test: /\.svg$/,
-//       use: ['@svgr/webpack'],
-//     });
-
-//     return config;
-//   },
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: 'https',
-//         hostname: 'api.likora.octopus-ai.app',
-//         port: '',
-//         pathname: '/public/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: 'api.preview.octopus-ai.app',
-//         port: '',
-//         pathname: '/public/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: 'api.octopus-ai.app',
-//         port: '',
-//         pathname: '/public/**',
-//       },
-//     ],
-//   },
-// };
-
-// module.exports = nextConfig;
-
-
-// next.config.js
-
 module.exports = (phase, {defaultConfig}) => {
   const env = {
-    NEXT_PUBLIC_DOMAIN: process.env.NEXT_PUBLIC_DOMAIN,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   };
-  
+  const publicHostname = env.NEXT_PUBLIC_BASE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
   // Return the next config along with the environment variables
   return {
     ...defaultConfig,
@@ -56,12 +16,19 @@ module.exports = (phase, {defaultConfig}) => {
       return config;
     },
     images: {
+      domains: [env.NEXT_PUBLIC_BASE_URL, publicHostname],
       remotePatterns: [
+        // {
+        //   protocol: 'https',
+        //   hostname: publicHostname,
+        //   port: '',
+        //   pathname: '/public/**',
+        // },
         {
           protocol: 'https',
-          hostname: env.NEXT_PUBLIC_DOMAIN,
+          hostname: '**',
           port: '',
-          pathname: '/public/**',
+          pathname: '**',
         },
       ],
     },

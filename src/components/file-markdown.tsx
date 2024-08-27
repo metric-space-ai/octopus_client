@@ -1,19 +1,20 @@
-/* eslint-disable @next/next/no-img-element */
-// File Markdown.tsx
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useState} from 'react';
-import classNames from 'classnames';
 
-import {Disclosure, Transition} from '@headlessui/react';
-
-import {IChatMessageFile} from '@/types';
-import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
-import {IconButton} from './buttons';
+import {Disclosure} from '@headlessui/react';
 import {ArrowDownTrayIcon, ArrowsPointingOutIcon, DocumentTextIcon, MusicalNoteIcon} from '@heroicons/react/24/outline';
-import {ExpandMediaDialog} from './modals/expandMediaDialog';
-import AppIframe from './app-iframe';
 import {nanoid} from '@reduxjs/toolkit';
-import {PdfTypeIcon} from './svgs';
+import classNames from 'classnames';
+import Image from 'next/image';
+
+import {APPREQUESTBASEURL, ImagesBaseUrl} from '@/constant';
+import {IChatMessageFile} from '@/types';
+
+import AppIframe from './app-iframe';
+import {IconButton} from './buttons';
 import {PdfViewerDialog} from './modals';
+import {ExpandMediaDialog} from './modals/expandMediaDialog';
+import {PdfTypeIcon} from './svgs';
 
 interface FileMarkdownProps {
   messageId: string;
@@ -111,7 +112,7 @@ export function FileMarkdownContent({
           <div key={media.id} className={classNames('flex items-center gap-4 relative', className)}>
             {media.media_type.includes('image') && (
               <div className='flex relative'>
-                <img
+                <Image
                   src={`${ImagesBaseUrl}${media.file_name}`}
                   width={width}
                   height={height}

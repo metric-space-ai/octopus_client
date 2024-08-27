@@ -1,11 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {ArrowsUpDownIcon} from '@heroicons/react/20/solid';
+import React from 'react';
 
-import {useSettingsContext} from '@/contexts/settingsContext';
-import {ParameterTableRow} from './parametersTableRow';
-import {RemoveParameterModal} from '@/components/modals/RemoveParameterModal';
 import {IParameter} from '@/types';
-import {AddParameterModal} from '@/components/modals/AddParameterModal';
+
+import {ParameterTableRow} from './parametersTableRow';
 
 type Props = {
   parameters: IParameter[] | null;

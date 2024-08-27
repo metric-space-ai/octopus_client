@@ -1,10 +1,9 @@
 import React from 'react';
+
 import {Dialog} from '@headlessui/react';
-
-import {IconButton} from '@/components/buttons';
-
 import {CheckIcon, XMarkIcon} from '@heroicons/react/24/outline';
 
+import {IconButton} from '@/components/buttons';
 import {PLUGINSTATUS} from '@/constant';
 import {TPluginStatus} from '@/types';
 
@@ -23,10 +22,7 @@ type Props = {
 const UploadPluginModalHeaderSection = ({currentStep, ADDPLUGINSTEPS, pluginStatus, handleCloseModal}: Props) => {
   return (
     <div className='flex justify-between items-start mb-10 relative'>
-      <Dialog.Title
-        as='h3'
-        className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'
-      >
+      <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900 text-left absolute left-0 top 0'>
         Upload
       </Dialog.Title>
       <div className='flex mx-auto'>

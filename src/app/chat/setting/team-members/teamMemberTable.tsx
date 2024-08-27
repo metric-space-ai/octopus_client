@@ -1,28 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
+
 import {ArrowsUpDownIcon} from '@heroicons/react/20/solid';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
+import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
+import {AppDispatch} from '@/app/lib/store';
+import {RemoveTeamMemberModal} from '@/components/modals/RemoveTeamMemberModal';
+import {ResetTeamMemberPasswordModal} from '@/components/modals/ResetTeamMemberPasswordModal';
+import {IUser} from '@/types';
 
 import {TeamMemberTableRow} from './teamMemberTableRow';
-import {RemoveTeamMemberModal} from '@/components/modals/RemoveTeamMemberModal';
-import {IUser} from '@/types';
-import {useDispatch, useSelector} from 'react-redux';
-import {deleteTeamMember, getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
-import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
-import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
-import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
-import {AppDispatch} from '@/app/lib/store';
-import {ResetTeamMemberPasswordModal} from '@/components/modals/ResetTeamMemberPasswordModal';
 
-type Props = {};
-
-const TeamMebersTable = (props: Props) => {
+const TeamMebersTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {entities, isLoading} = useSelector(selectTeamMembers);
-  const {entities: plugins, isLoading: pluginsIsLoading} = useSelector(selectAiServicess);
   const [openDeleteUserDialog, setDeleteUserDialog] = useState(false);
   const [openResetMemberPassDialog, setOpenResetMemberPassDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-
-  // const {getTeamMembers, teamMembers, deleteTeamMember} = useSettingsContext();
 
   const handleOpenResetMemberPasswordDialog = (member: IUser) => {
     console.log({member});
@@ -38,23 +35,12 @@ const TeamMebersTable = (props: Props) => {
   const handleCloseResetMemberPasswordDialog = () => {
     setSelectedUser(null);
     setDeleteUserDialog(false);
+    setOpenResetMemberPassDialog(false);
   };
   const handleCloseRemoveMemberDialog = () => {
     setSelectedUser(null);
     setDeleteUserDialog(false);
   };
-
-  const handleAcceptDeleteMember = () => {
-    if (selectedUser) {
-      // deleteTeamMember(selectedUser.id);
-      dispatch(deleteTeamMember(selectedUser.id));
-      handleCloseRemoveMemberDialog();
-    }
-  };
-
-  // useEffect(() => {
-  //   getTeamMembers();
-  // }, []);
 
   useEffect(() => {
     dispatch(getAllTeamMembers());
@@ -98,27 +84,24 @@ const TeamMebersTable = (props: Props) => {
                 key={user.id}
                 deleteUser={handleOpenDeleteDialog}
                 user={user}
-                plugins={plugins}
-                pluginsIsLoading={pluginsIsLoading}
                 resetUserPassword={handleOpenResetMemberPasswordDialog}
               />
             ))
           )}
         </div>
       </div>
-      {selectedUser && openResetMemberPassDialog && (
-        <ResetTeamMemberPasswordModal
-          onClose={handleCloseResetMemberPasswordDialog}
-          open={openResetMemberPassDialog}
-          member={selectedUser}
-        />
-      )}
+
+      <ResetTeamMemberPasswordModal
+        onClose={handleCloseResetMemberPasswordDialog}
+        open={openResetMemberPassDialog}
+        member={selectedUser}
+      />
+
       {selectedUser && openDeleteUserDialog && (
         <RemoveTeamMemberModal
           onClose={handleCloseRemoveMemberDialog}
           open={openDeleteUserDialog}
           member={selectedUser}
-          onDelete={handleAcceptDeleteMember}
         />
       )}
     </>

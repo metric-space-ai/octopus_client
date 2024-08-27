@@ -1,8 +1,6 @@
-import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
+import React, {ChangeEvent, DragEvent, Fragment, useEffect, useRef, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-import {AxiosError} from 'axios';
-
 import {
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
@@ -13,14 +11,18 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-
 import CodeEditor from '@uiw/react-textarea-code-editor';
-
-import {Button, IconButton} from '../../../buttons';
+import {AxiosError} from 'axios';
+import classNames from 'classnames';
 import toast from 'react-hot-toast';
-import {bytesCalculator, downloadAs} from '@/helpers';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
+import {getAllPlugins, handleChangeSelectedPlugin} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {AppDispatch} from '@/app/lib/store';
+import CustomCheckbox from '@/components/custom-checkbox';
 import {PLUGINSTATUS} from '@/constant';
+import {bytesCalculator, downloadAs} from '@/helpers';
 import {
   addPluginConfigurationApi,
   downloadOriginalFunctionBodyApi,
@@ -31,20 +33,15 @@ import {
   updatePluginByIdApi,
   uploadNewPluginApi,
 } from '@/services/settings.service';
-import {getAllPlugins, handleChangeSelectedPlugin} from '@/app/lib/features/aiServices/aiServicesSlice';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '@/app/lib/store';
-import {IDeviceMap, IPlugin, IResources} from '@/types';
-import {selectAiServicess} from '@/app/lib/features/aiServices/aiServicesSelector';
-import {useSelector} from 'react-redux';
+import {IDeviceMap, IResources} from '@/types';
+
+import ConfigurationSection from './ConfigurationSection';
 import InstallationPluginSection from './InstallationPluginSection';
 import InstallationStartedSection from './InstallationStartedSection';
-import ConfigurationSection from './ConfigurationSection';
 import UploadPluginModalHeaderSection from './UploadPluginModalHeaderSection';
-import classNames from 'classnames';
-import CustomCheckbox from '@/components/custom-checkbox';
+import {Button, IconButton} from '../../../buttons';
 
-const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
+// const VALIDPLUGINFILE = {Format: '.py', Type: 'text/x-python'};
 const ADDPLUGINSTEPS = {Upload: 1, Setup: 2, PreparingForInstall: 3, Installation: 4};
 
 interface ModalProps {
@@ -197,15 +194,15 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const handleDeleteFile = () => {
     setFile(undefined);
   };
-  const handleCheckFileIsValid = (file: File) => {
-    if (file.name.includes(VALIDPLUGINFILE.Format) && file.type.includes(VALIDPLUGINFILE.Type)) {
-      setFile(file);
-    } else {
-      toast.error(
-        `An incorrect file has been selected for the selected file. format:${file.name} _ type:${file.type} The expected format is "*.py" and valid type is "text/x-python"`,
-      );
-    }
-  };
+  // const handleCheckFileIsValid = (file: File) => {
+  //   if (file.name.includes(VALIDPLUGINFILE.Format) && file.type.includes(VALIDPLUGINFILE.Type)) {
+  //     setFile(file);
+  //   } else {
+  //     toast.error(
+  //       `An incorrect file has been selected for the selected file. format:${file.name} _ type:${file.type} The expected format is "*.py" and valid type is "text/x-python"`,
+  //     );
+  //   }
+  // };
 
   const handleCloseModal = () => {
     setUploadStarted(false);
@@ -291,6 +288,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     if (installStarted && installPercentage === 1) {
       handleGetInstallationProgress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [installStarted, installPercentage]);
 
   useEffect(() => {
@@ -304,6 +302,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
         setCurrentStep(ADDPLUGINSTEPS.Installation);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep, selectedPlugin]);
 
   useEffect(() => {
@@ -321,6 +320,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     if (selectedPlugin && selectedPlugin.status === PLUGINSTATUS.ParsingStarted) {
       toast.loading('The installation process is underway', {duration: 5000});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPlugin]);
 
   useEffect(() => {
@@ -330,6 +330,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
     if (currentStep === ADDPLUGINSTEPS.Setup && !resources) {
       getResources();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
   useEffect(() => {
@@ -458,14 +459,20 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                               </div>
                               <div className='flex flex-wrap gap-6'>
                                 <div
-                                  className='flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
+                                  className={classNames(
+                                    'flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer',
+                                    downloadIsLoading && 'pointer-events-none',
+                                  )}
                                   onClick={handleDownloadOriginalFunctionBody}
                                 >
                                   <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-grey-0' />
                                   original function body
                                 </div>
                                 <div
-                                  className='flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer'
+                                  className={classNames(
+                                    'flex items-center text-sm bg-primary hover:accent-primary-medium text-grey-0 shadow-sm hover:shadow-lg shadow-primary/50 px-3 py-2 rounded-2xl transition-all duration-150 gap-2 cursor-pointer',
+                                    downloadIsLoading && 'pointer-events-none',
+                                  )}
                                   onClick={handleDownloadProcessedFunctionBody}
                                 >
                                   <ArrowDownTrayIcon className='w-5 h-5 rounded-full text-grey-0' />
@@ -495,9 +502,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                               >
                                 <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                               </IconButton>
-                              <h6 className='font-semibold text-sm text-grey-800 mb-3'>
-                                Drag & drop file to upload
-                              </h6>
+                              <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
                               <p className='text-xs text-grey-600 '>Files in .py file format only</p>
                               <input
                                 type='file'

@@ -60,7 +60,9 @@ export const getCompanyByIdApi = async (id: string) => {
 export const updateCompanyByIdApi = async ({
   id,
   ...payload
-}: Pick<TCompany, 'id' | 'address' | 'name' | 'custom_style'>) => {
+}: {
+  id: TCompany['id'];
+} & Partial<Pick<TCompany, 'address' | 'name' | 'custom_style' | 'allowed_domains'>>) => {
   return apiHub.put<TCompany>(`api/v1/companies/${id}`, payload);
 };
 

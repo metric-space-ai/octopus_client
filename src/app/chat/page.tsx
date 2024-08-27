@@ -1,23 +1,52 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {MicrophoneIcon, PaperAirplaneIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import {useDebouncedCallback} from 'use-debounce';
 
 import {IconButton} from '@/components/buttons';
 import {ChatPrompt} from '@/components/chat-prompt';
 import {Loading} from '@/components/loading';
-import {MessageItem} from '@/components/message-item';
-import {autoGrowTextArea} from '@/helpers';
-import {useScrollToBottom} from '@/hooks';
-import {useChatStore} from '@/store';
-import {Agents} from '@/components/agents';
-import {VoiceChatModal} from '@/components/modals/voiceChatModal';
+// import {MessageItem} from '@/components/message-item';
+import PluginOperationSelection from '@/components/popover/plugin-operation-selection';
 import {useAuthContext} from '@/contexts/authContext';
+import {autoGrowTextArea} from '@/helpers';
+import {usePageVisibility, useScrollToBottom} from '@/hooks';
+import {useChatStore} from '@/store';
+// import {Agents} from '@/components/agents';
+// import {VoiceChatModal} from '@/components/modals/voiceChatModal';
 import {IChatMessage} from '@/types';
 
-const AGENTWIDTH = {expanded: '282px', constricted: '68px'};
+const DynamicMessageItem = dynamic(async () => (await import('@/components/message-item')).MessageItem, {
+  ssr: false,
+  loading: () => <MessageItemSkeleton />,
+});
+const DynamicAgents = dynamic(async () => (await import('@/components/agents')).Agents, {
+  ssr: false,
+  loading: () => null,
+});
+const DynamicVoiceChatModal = dynamic(async () => (await import('@/components/modals/voiceChatModal')).VoiceChatModal, {
+  ssr: false,
+  loading: () => null,
+});
+
+const MessageItemSkeleton = () => {
+  return (
+    <div className='flex flex-col mt-5 text-between_sm_base w-full animate-pulse'>
+      <div className='flex gap-3 w-3/4'>
+        <div className='shrink-0 w-12 h-12 flex bg-grey-50 dark:bg-grey-400 rounded-full' />
+        <div className='flex-1 mt-1 w-3/4 h-7 bg-grey-50 dark:bg-grey-400' />
+      </div>
+      <div className='mt-3 flex gap-3 w-full'>
+        <div className='shrink-0 w-12 h-12 flex bg-grey-50 dark:bg-grey-400 rounded-full' />
+        <div className='flex-1 py-4 px-5 rounded-xl rounded-tl-none flex flex-col bg-grey-50 dark:bg-grey-400 w-full' />
+      </div>
+    </div>
+  );
+};
 
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -41,7 +70,7 @@ export default function ChatPage() {
   const {user} = useAuthContext();
 
   const {scrollRef, setAutoScroll, autoScroll} = useScrollToBottom();
-  const timeoutRef = useRef(0);
+
   const showChatPrompt = messages?.length === 0 || isNewTicket;
   // auto grow input
   const [inputRows, setInputRows] = useState(1);
@@ -58,28 +87,52 @@ export default function ChatPage() {
     },
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const isPageVisible = usePageVisibility();
+
   useEffect(measure, [userInput]);
 
-  const checkMessageResponse = useCallback(
-    (chatId: string) => {
-      if (chatId) {
-        timeoutRef.current = window.setInterval(() => {
-          refreshMessage(chatId);
-        }, 10000);
-      }
-    },
-    [refreshMessage],
-  );
+  // const checkMessageResponse = useCallback(
+  //   (chatId: string) => {
+  //     if (chatId) {
+  //       timeoutRef.current = window.setInterval(() => {
+  //         refreshMessage(chatId);
+  //       }, 10000);
+  //     }
+  //   },
+  //   [refreshMessage],
+  // );
+  // useEffect(() => {
+  //   checkMessageResponse(currentTicketId);
+  //   return () => {
+  //     if (timeoutRef.current) {
+  //       clearInterval(timeoutRef.current);
+  //     }
+  //   };
+  // }, [currentTicketId, checkMessageResponse]);
+  // useEffect(() => {
+  //   // Effect to run whenever the page visibility changes
+  //   if (isPageVisible && currentTicketId) {
+  //     const intervalId = setInterval(() => {
+  //       refreshMessage(currentTicketId);
+  //     }, 10000);
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [isPageVisible, currentTicketId, refreshMessage]);
+
+  const memoizedRefreshMessage = useCallback(() => {
+    if (currentTicketId) {
+      refreshMessage(currentTicketId);
+    }
+  }, [currentTicketId, refreshMessage]);
 
   useEffect(() => {
-    checkMessageResponse(currentTicketId);
-    return () => {
-      if (timeoutRef.current) {
-        clearInterval(timeoutRef.current);
-      }
-    };
-  }, [currentTicketId, checkMessageResponse]);
+    if (isPageVisible) {
+      const intervalId = setInterval(() => {
+        memoizedRefreshMessage();
+      }, 10000);
+      return () => clearInterval(intervalId);
+    }
+  }, [isPageVisible, memoizedRefreshMessage]);
 
   const onInput = (text: string) => {
     setUserInput(text);
@@ -155,8 +208,9 @@ export default function ChatPage() {
           >
             <ShieldCheckIcon width={20} height={20} className='text-danger-500' />
             <span className='block sm:inline'>
-              Content security is currently disabled. Activate Content Safety to resume protection and ensure
-              data privacy.
+              {
+                'Content security is currently disabled. Activate Content Safety to resume protection and ensure data privacy.'
+              }
             </span>
           </div>
         )}
@@ -176,7 +230,7 @@ export default function ChatPage() {
                   item.is_marked_as_not_sensitive ||
                   item.is_anonymized ||
                   !item.is_sensitive) && (
-                  <MessageItem
+                  <DynamicMessageItem
                     key={item.id}
                     item={item}
                     changeSafety={setShowWarningSnackBarWhenSafetyDisabled}
@@ -208,6 +262,7 @@ export default function ChatPage() {
               autoFocus={true}
               disabled={inputIsDisabled}
             />
+            <PluginOperationSelection className='absolute right-12 top-[calc(50%-20px)] flex items-center justify-center p-2 pr-1' />
             <IconButton
               className='absolute right-2 top-[calc(50%-20px)] '
               disabled={inputIsDisabled}
@@ -218,8 +273,10 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
-      <Agents expanded={expandedAgents} setExpanded={setExpandedAgents} />
-      {openVoiceChatModal && <VoiceChatModal open={openVoiceChatModal} onClose={() => setOpenVoiceChatModal(false)} />}
+      <DynamicAgents expanded={expandedAgents} setExpanded={setExpandedAgents} />
+      {openVoiceChatModal && (
+        <DynamicVoiceChatModal open={openVoiceChatModal} onClose={() => setOpenVoiceChatModal(false)} />
+      )}
     </div>
   );
 }

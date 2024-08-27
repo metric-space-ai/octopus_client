@@ -1,35 +1,59 @@
-import React, {Fragment, useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
 import {XMarkIcon} from '@heroicons/react/24/outline';
-
-import {Button, IconButton} from '../../buttons';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from '@/app/lib/store';
-import {IPlugin} from '@/types';
-import {getServiceLogsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
-import Highlight from 'react-highlight';
 import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+import {useDispatch} from 'react-redux';
+
+import {getServiceLogsByPluginId} from '@/app/lib/features/aiServices/aiServicesSlice';
+import {AppDispatch} from '@/app/lib/store';
 import {Spinner} from '@/components/spinner';
+import {IPlugin} from '@/types';
+
+// import Highlight from 'react-highlight';
+import {Button, IconButton} from '../../buttons';
+
+const DynamicMarkdownContent = dynamic(async () => (await import('@/components/markdown')).MarkdownContent, {
+  loading: () => <div className='w-full flex items-center justify-center h-full bg-grey-150 animate-pulse' />,
+});
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   plugin: IPlugin;
-  isLoading: boolean;
 }
 
-export const ShowPluginLogsModal = ({open, onClose, plugin, isLoading}: ModalProps) => {
+export const ShowPluginLogsModal = ({open, onClose, plugin}: ModalProps) => {
+  const [logs, setLogs] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const handleCloseModal = () => {
     onClose();
   };
 
+  const getPluginLogs = async () => {
+    setIsLoading(true);
+    try {
+      const {
+        meta: {requestStatus},
+        payload,
+      } = await dispatch(getServiceLogsByPluginId(plugin.id));
+      if (requestStatus === 'fulfilled' && typeof payload === 'string') {
+        setLogs(payload);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    dispatch(getServiceLogsByPluginId(plugin));
-  }, []);
+    if (!logs && open) getPluginLogs();
+    if (!open) setLogs('');
+  }, [open]);
 
   return (
     <>
@@ -75,27 +99,25 @@ export const ShowPluginLogsModal = ({open, onClose, plugin, isLoading}: ModalPro
                     </IconButton>
                   </div>
                   <div className='flex flex-col justify-between flex-1 gap-6 overflow-hidden'>
-                    <div
-                      className={classNames(
-                        'max-h-full custom-scrollbar-thumb bg-grey-900 text-grey-0 p-1 flex flex-1',
-                        isLoading && 'items-center justify-center',
-                        !isLoading && ' text-left flex-col',
-                        "[&_pre]:flex-1"
-                      )}
-                    >
-                      {isLoading && !plugin.logs ? (
+                    {isLoading && !logs ? (
+                      <div className='w-full h-full flex justify-center items-center'>
                         <Spinner size='medium' />
-                      ) : (
-                        <Highlight
-                          innerHTML={false}
-                          className='text-grey-0 [&_.hljs-keyword]:text-secondary-600 [&_.hljs-string]:text-secondary [&_.hljs-selector-class]:text-danger-300
-                           [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
-                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500 custom-scrollbar-thumb h-full'
-                        >
-                          {plugin.logs ? plugin.logs : 'No Logs Were Found To Display'}
-                        </Highlight>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div
+                        className={classNames(
+                          'max-h-full custom-scrollbar-thumb bg-grey-900 text-grey-0 p-1 flex-1 block',
+                          isLoading && 'flex items-center justify-center',
+                          !isLoading && ' flex text-left',
+                          '[&_pre]:flex-1',
+                        )}
+                      >
+                        <DynamicMarkdownContent
+                          className='bg-grey-900 text-success [&_p]:whitespace-nowrap'
+                          content={logs ? logs : 'No Logs Were Found To Display'}
+                        />
+                      </div>
+                    )}
 
                     <div className='flex gap-4 px-4 md:px-8 lg:px-12 xl:px-20 mx-1 h-11'>
                       <Button

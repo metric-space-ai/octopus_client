@@ -1,6 +1,7 @@
+import React from 'react';
+
 import {Switch} from '@headlessui/react';
 import classNames from 'classnames';
-import React, {SetStateAction, Dispatch} from 'react';
 
 type Props = {
   active: boolean | undefined;

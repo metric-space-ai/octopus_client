@@ -1,11 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
-import teamMembersSlice from './features/teamMembers/teamMemberSlice';
+
 import aiServicesSlice from './features/aiServices/aiServicesSlice';
+import documentsSlice from './features/documents/documentsSlice';
+import filesSlice from './features/files/filesSlice';
+import modelsSlice from './features/ollamaModels/modelsSlice';
 import parametersSlice from './features/parameters/parametersSlice';
 import simpleAppsSlice from './features/simpleApps/simpleAppsSlice';
+import teamMembersSlice from './features/teamMembers/teamMemberSlice';
 import waspAppsSlice from './features/waspApps/waspAppsSlice';
-import documentsSlice from './features/documents/documentsSlice';
-import modelsSlice from './features/ollamaModels/modelsSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -17,6 +19,7 @@ export const makeStore = () => {
       waspApps: waspAppsSlice,
       documents: documentsSlice,
       models: modelsSlice,
+      files: filesSlice,
     },
   });
 };

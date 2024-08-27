@@ -1,4 +1,5 @@
-import {useEffect, useState, useCallback, useRef} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Switch} from '@headlessui/react';
 import {MagnifyingGlassIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
@@ -6,6 +7,7 @@ import {PlusIcon} from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import dynamic from 'next/dynamic';
 
+import {useAuthContext} from '@/contexts/authContext';
 import {useChatStore} from '@/store';
 
 import {Button, IconButton} from './buttons';
@@ -13,8 +15,6 @@ import {AlertModal} from './modals';
 import {SearchBar} from './search';
 import {IconSideBar} from './svgs';
 import Locale from '../locales';
-import {useAuthContext} from '@/contexts/authContext';
-import {IUserProfile} from '@/types';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
   loading: () => null,
@@ -28,7 +28,7 @@ export function SideBar(props: {className?: string}) {
   const [expanded, setExpanded] = useState(true);
   const [showDeactivateConfirmationModal, setShowDeactivateConfirmationModal] = useState(false);
   const [timeDifference, setTimeDifference] = useState('(30:00)');
-  const timeoutRef = useRef(0);
+  const timeoutRef = useRef<number | null>(null);
 
   const checkDataProtection = useCallback(
     (user_id: string) => {
@@ -41,16 +41,41 @@ export function SideBar(props: {className?: string}) {
     [chatStore.contentSafetyDetails],
   );
 
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible' && user) {
+      checkDataProtection(user.user_id);
+    } else if (timeoutRef.current) {
+      clearInterval(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
   useEffect(() => {
-    if (user) {
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Start interval when component mounts if user is on the page
+    if (document.visibilityState === 'visible' && user) {
       checkDataProtection(user.user_id);
     }
+
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (timeoutRef.current) {
         clearInterval(timeoutRef.current);
       }
     };
-  }, [checkDataProtection]);
+  }, [checkDataProtection, user]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     checkDataProtection(user.user_id);
+  //   }
+  //   return () => {
+  //     if (timeoutRef.current) {
+  //       clearInterval(timeoutRef.current);
+  //     }
+  //   };
+  // }, [checkDataProtection]);
 
   useEffect(() => {
     if (!chatStore.enabledContentSafety && chatStore.contentSafetyDetails.content_safety_disabled_until) {

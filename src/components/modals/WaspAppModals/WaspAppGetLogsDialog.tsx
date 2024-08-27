@@ -1,23 +1,28 @@
-import {Button} from '@/components/buttons';
-import {Spinner} from '@/components/spinner';
-import {getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
-import {IWaspApp} from '@/types';
+import React, {Fragment, useEffect, useState} from 'react';
+
 import {Dialog, Transition} from '@headlessui/react';
 import {isAxiosError} from 'axios';
 import classNames from 'classnames';
-import React, {Fragment, useEffect, useState} from 'react';
-import Highlight from 'react-highlight';
+import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
+
+import {Button} from '@/components/buttons';
+import {Spinner} from '@/components/spinner';
+import {getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
+
+const DynamicMarkdownContent = dynamic(async () => (await import('@/components/markdown')).MarkdownContent, {
+  loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
+});
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  waspApp: IWaspApp | undefined;
+
   waspAppId: string;
   messageId: string;
 }
 
-const WaspAppGetLogsDialog = ({isOpen, onClose, waspApp, waspAppId, messageId}: ModalProps) => {
+const WaspAppGetLogsDialog = ({isOpen, onClose, waspAppId, messageId}: ModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [logs, setLogs] = useState('');
 
@@ -32,11 +37,11 @@ const WaspAppGetLogsDialog = ({isOpen, onClose, waspApp, waspAppId, messageId}: 
       if (status === 200) {
         setLogs(data);
       }
-    } catch (error: any) {
+    } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error?.response?.data.error ?? error.message);
       } else {
-        toast.error(error.message ?? 'Something went wrong. Please try again.');
+        toast.error('Something went wrong. Please try again.');
       }
     } finally {
       setIsLoading(false);
@@ -48,6 +53,7 @@ const WaspAppGetLogsDialog = ({isOpen, onClose, waspApp, waspAppId, messageId}: 
       console.log('handleGetWaspAppLogs(waspApp);...');
       handleGetWaspAppLogs();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -82,7 +88,7 @@ const WaspAppGetLogsDialog = ({isOpen, onClose, waspApp, waspAppId, messageId}: 
                 <div className='flex flex-col justify-between flex-1 gap-6 overflow-hidden'>
                   <div
                     className={classNames(
-                      'min-h-[240px] bg-grey-900 text-grey-0 p-1 flex flex-1 max-w-full',
+                      'min-h-[240px] max-h-[60vh] p-1 flex flex-1 max-w-full custom-scrollbar-thumb bg-grey-900 overflow-auto',
                       isLoading && 'items-center justify-center',
                       !isLoading && 'text-left flex-col',
                       '[&_pre]:flex-1',
@@ -93,14 +99,10 @@ const WaspAppGetLogsDialog = ({isOpen, onClose, waspApp, waspAppId, messageId}: 
                       <Spinner size='medium' />
                     ) : (
                       <span style={{direction: 'ltr'}}>
-                        <Highlight
-                          innerHTML={false}
-                          className='text-grey-0 [&_.hljs-keyword]:text-secondary-600 [&_.hljs-string]:text-secondary [&_.hljs-selector-class]:text-danger-300
-                           [&_.hljs-attribute]:text-yellow-300 [&_.hljs-comment]:text-grey-400 [&_.hljs-comment]:italic [&_.hljs-class]:text-green-500  [&_.hljs-params]:text-green-500 
-                           [&_.hljs-function]:text-yellow-200 [&_.hljs-built_in]:text-yellow-500 max-h-[420px] custom-scrollbar-thumb'
-                        >
-                          {logs ? logs : 'No Logs Were Found To Display'}
-                        </Highlight>
+                        <DynamicMarkdownContent
+                          className='bg-grey-900 text-white [&_p]:whitespace-nowrap'
+                          content={logs ? logs : 'No Logs Were Found To Display'}
+                        />
                       </span>
                     )}
                   </div>

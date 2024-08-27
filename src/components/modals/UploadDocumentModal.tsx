@@ -1,19 +1,17 @@
-import React, {Fragment, useState, useEffect, useRef, ChangeEvent, DragEvent} from 'react';
+import React, {ChangeEvent, DragEvent, Fragment, useEffect, useRef, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
 import {ArrowUpTrayIcon, CheckIcon, ClipboardDocumentIcon, XMarkIcon} from '@heroicons/react/24/outline';
-
-import {Button, IconButton} from '../buttons';
-import toast from 'react-hot-toast';
-import {bytesCalculator} from '@/helpers';
-
-import {createNewNextCloudDocumentsApi} from '@/services/settings.service';
 import {AxiosError} from 'axios';
+import toast from 'react-hot-toast';
+import {useDispatch} from 'react-redux';
 
 import {getAllNextCloudDocuments} from '@/app/lib/features/documents/documentsSlice';
-import {useDispatch} from 'react-redux';
 import {AppDispatch} from '@/app/lib/store';
+import {bytesCalculator} from '@/helpers';
+import {createNewNextCloudDocumentsApi} from '@/services/settings.service';
+
+import {Button, IconButton} from '../buttons';
 
 const ADDDOCUMENTSSTEPS = {SelecFile: 1, Uploaded: 2};
 
@@ -42,7 +40,7 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
       formData.append('file', file);
       console.log({file, formData});
       try {
-        const {status, data} = await createNewNextCloudDocumentsApi(formData);
+        const {status} = await createNewNextCloudDocumentsApi(formData);
         if (status === 201) {
           setCurrentStep(ADDDOCUMENTSSTEPS.Uploaded);
           dispatch(getAllNextCloudDocuments());
@@ -221,9 +219,7 @@ export const UploadDocumentModal = ({open, onClose}: ModalProps) => {
                             >
                               <ArrowUpTrayIcon className='text-primary-medium' width={20} height={20} />
                             </IconButton>
-                            <h6 className='font-semibold text-sm text-grey-800 mb-3'>
-                              Drag & drop file to upload
-                            </h6>
+                            <h6 className='font-semibold text-sm text-grey-800 mb-3'>Drag & drop file to upload</h6>
                             <input
                               type='file'
                               className='hidden'

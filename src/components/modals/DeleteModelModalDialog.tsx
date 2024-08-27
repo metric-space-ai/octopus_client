@@ -1,16 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {Fragment, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {selectModels} from '@/app/lib/features/ollamaModels/modelsSelector';
+import {deleteModelById} from '@/app/lib/features/ollamaModels/modelsSlice';
+import {AppDispatch} from '@/app/lib/store';
 import {IModel} from '@/types';
 
 import {Button, IconButton} from '../buttons';
-import {deleteModelById} from '@/app/lib/features/ollamaModels/modelsSlice';
-import {AppDispatch} from '@/app/lib/store';
-import {selectModels} from '@/app/lib/features/ollamaModels/modelsSelector';
-import toast from 'react-hot-toast';
 
 interface ModalProps {
   model: IModel | null;

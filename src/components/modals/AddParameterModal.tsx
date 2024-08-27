@@ -1,26 +1,23 @@
-import {Fragment, useEffect, useState, useRef, FormEventHandler, FormEvent} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {FormEvent, Fragment, useEffect, useRef, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
+import toast from 'react-hot-toast';
+import {useDebouncedCallback} from 'use-debounce';
+
+import {autoGrowTextArea} from '@/helpers';
+import {IParameter} from '@/types';
 
 import {Button, IconButton} from '../buttons';
 import {Input} from '../input';
-import {IParameter} from '@/types';
-import {useDebouncedCallback} from 'use-debounce';
-import {autoGrowTextArea} from '@/helpers';
-import toast from 'react-hot-toast';
-import classNames from 'classnames';
 
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   parameter?: IParameter;
   onSubmitParameter: (payload: IParameter) => void;
-}
-
-interface IFormInputs {
-  value: string;
-  name: string;
 }
 
 export const AddParameterModal = ({open, onClose, parameter, onSubmitParameter}: ModalProps) => {

@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {Fragment, useEffect, useState} from 'react';
 
-import {Disclosure, Listbox, Transition, Popover} from '@headlessui/react';
-
+import {Disclosure, Listbox, Popover, Transition} from '@headlessui/react';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -10,16 +10,17 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-
-import {IPlugin, IUser, TWaspAppBgColor} from '@/types';
 import classNames from 'classnames';
-import PluginsBadge from './badge';
+import {HexColorPicker} from 'react-colorful';
+
+import {Spinner} from '@/components/spinner';
 import CustomSwitch from '@/components/switch/custom-switch';
 import {PLUGINSTATUS, WASPAPPTEMPLATECOLOR} from '@/constant';
-import ServiceFunctions from './ServiceFunctions';
-import {Spinner} from '@/components/spinner';
 import useDebounce from '@/hooks/useDebounce';
-import {HexColorPicker} from 'react-colorful';
+import {IPlugin, IUser, TWaspAppBgColor} from '@/types';
+
+import PluginsBadge from './badge';
+import ServiceFunctions from './ServiceFunctions';
 
 type Props = {
   plugin: IPlugin;
@@ -229,7 +230,7 @@ const ServiceDetailRow = ({
                         text-content-primary z-[1] p-1 pr-2 shadow-[0px_10px_20px_0px] shadow-grey-900/60'
                   >
                     <div className='flex flex-col max-h-60 custom-scrollbar-thumb gap-2'>
-                      {WASPAPPTEMPLATECOLOR.map((color, tabIdx) => (
+                      {WASPAPPTEMPLATECOLOR.map((color) => (
                         <Listbox.Option
                           key={color.id}
                           className={({active}) =>
@@ -261,7 +262,7 @@ const ServiceDetailRow = ({
                       >
                         <div>
                           <Popover>
-                            {({open}) => (
+                            {() => (
                               <>
                                 <Popover.Button
                                   onClick={() => setPopoverOpen(!popoverOpen)}

@@ -1,19 +1,18 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {isAxiosError} from 'axios';
+import toast from 'react-hot-toast';
 
 import {
+  changePluginActivitiesByPluginIdApi,
   deletePluginByIdApi,
   deletetAiFunctionsByIdApi,
   getAiFunctionsByServiceIdApi,
   getAllPluginsApi,
-  putAllowedUsersForAiAccessApi,
-  changePluginActivitiesByPluginIdApi,
-  updatetAiFunctionsByIdApi,
   getServiceLogsByPluginIdApi,
+  putAllowedUsersForAiAccessApi,
+  updatetAiFunctionsByIdApi,
 } from '@/services/settings.service';
-import {IAIFunctions, IPlugin, IPluginActivation, ValidationErrors} from '@/types';
-
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
+import {IAIFunctions, IPlugin, IPluginActivation} from '@/types';
 
 interface AiServicesStates {
   entities: IPlugin[] | undefined;
@@ -49,14 +48,6 @@ const aiServicesSlice = createSlice({
   name: 'aiServices',
   initialState,
   reducers: {
-    mergeLogsToPluginById: (state, {payload}: PayloadAction<{logs: string; service_id: string}>) => {
-      if (state.entities) {
-        const {logs, service_id} = payload;
-        state.entities = [...state.entities].flatMap((plugin) =>
-          plugin.id === service_id ? {...plugin, logs} : plugin,
-        );
-      }
-    },
     mergeFunctionToPluginById: (
       state,
       {payload}: PayloadAction<{service_functions: IAIFunctions[]; service_id: string}>,
@@ -86,7 +77,7 @@ const aiServicesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getAllPlugins.pending, (state, action) => {
+      .addCase(getAllPlugins.pending, (state) => {
         state.isLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -110,7 +101,7 @@ const aiServicesSlice = createSlice({
           );
         }
       })
-      .addCase(getServiceLogsByPluginId.pending, (state, action) => {
+      .addCase(getServiceLogsByPluginId.pending, (state) => {
         state.pluginLogIsLoading = true;
         state.hasError = false;
         state.errorMessage = '';
@@ -126,7 +117,7 @@ const aiServicesSlice = createSlice({
           // state.entities = [...state.entities].flatMap((plugin) =>
           //   plugin.id === payload.id ? {...plugin, ...payload} : plugin,
           // );
-          state.entities = [...state.entities].flatMap((plugin) => (plugin.id === payload.id ? payload : plugin));
+          // state.entities = [...state.entities].flatMap((plugin) => (plugin.id === payload.id ? payload : plugin));
         }
       })
       .addCase(putAllowedUsersForAiAccess.fulfilled, (state, {payload}) => {
@@ -135,17 +126,14 @@ const aiServicesSlice = createSlice({
           state.entities = [...state.entities].flatMap((plugin) => (plugin.id === payload.id ? {...payload} : plugin));
         }
       })
-      .addCase(deletePluginById.fulfilled, (state, {payload}) => {
+      .addCase(deletePluginById.fulfilled, (state) => {
         state.isLoading = false;
-        if (state.entities) {
-          // state.entities = [...state.entities].filter((plugin) => plugin.id !== payload.id);
-        }
       })
 
-      .addCase(updatetAiFunctionsById.pending, (state, action) => {
+      .addCase(updatetAiFunctionsById.pending, (state) => {
         state.updateAiFunctionIsLoading = true;
       })
-      .addCase(updatetAiFunctionsById.rejected, (state, action) => {
+      .addCase(updatetAiFunctionsById.rejected, (state) => {
         state.updateAiFunctionIsLoading = false;
       })
       .addCase(updatetAiFunctionsById.fulfilled, (state, {payload}) => {
@@ -163,10 +151,10 @@ const aiServicesSlice = createSlice({
           );
         }
       })
-      .addCase(deletetAiFunctionsById.pending, (state, action) => {
+      .addCase(deletetAiFunctionsById.pending, (state) => {
         state.deleteFunctionsIsLoading = true;
       })
-      .addCase(deletetAiFunctionsById.rejected, (state, action) => {
+      .addCase(deletetAiFunctionsById.rejected, (state) => {
         state.deleteFunctionsIsLoading = false;
       })
       .addCase(deletetAiFunctionsById.fulfilled, (state, {payload}) => {
@@ -188,7 +176,7 @@ const aiServicesSlice = createSlice({
 export const getAllPlugins = createAsyncThunk('/aiServices/getAllPlugins', async () => {
   // try {
 
-  const {status, data} = await getAllPluginsApi();
+  const {data} = await getAllPluginsApi();
   return data;
   // if (status === 200) {
   // handleGetPluginFunctions(data);
@@ -197,23 +185,22 @@ export const getAllPlugins = createAsyncThunk('/aiServices/getAllPlugins', async
 
 export const getServiceLogsByPluginId = createAsyncThunk(
   '/aiServices/getServiceLogsByPluginId',
-  async (plugin: IPlugin, {rejectWithValue, dispatch}) => {
+  async (id: string, {rejectWithValue}) => {
     try {
-      const {status, data: logs} = await getServiceLogsByPluginIdApi(plugin.id);
+      const {status, data: logs} = await getServiceLogsByPluginIdApi(id);
       if (status === 200) {
-        dispatch(handleChangeSelectedPlugin({...plugin, logs}));
-        return {...plugin, logs};
+        // dispatch(handleChangeSelectedPlugin({...plugin, logs}));
+        return logs;
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -233,16 +220,15 @@ export const putAllowedUsersForAiAccess = createAsyncThunk(
       } else {
         dispatch(getAllPlugins());
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -261,16 +247,15 @@ export const changePluginActivitiesByPluginId = createAsyncThunk(
         toast.success('updated successfully');
         return {plugin_id, ...payload};
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -284,16 +269,16 @@ export const changePluginActivitiesByPluginId = createAsyncThunk(
 //         toast.success('updated successfully');
 //       }
 //       return data;
-//     } catch (err) {
-//       let error = err as AxiosError<ValidationErrors, any>;
+//     } catch (error:any) {
+//
 
-//       if (err instanceof AxiosError) {
-//         toast.error(err?.response?.data.error);
+//       if (error instanceof AxiosError) {
+//         toast.error(error?.response?.data.error);
 //       }
 //       if (!error.response) {
 //         throw error;
 //       }
-//       return rejectWithValue(error.response.data);
+//       return rejectWithValue(error?.response?.data);
 //     }
 //   },
 // );
@@ -307,16 +292,15 @@ export const deletePluginById = createAsyncThunk(
         toast.success(`the plugin has successfully been removed.`);
         dispatch(getAllPlugins());
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -332,23 +316,22 @@ export const deletetAiFunctionsById = createAsyncThunk(
         dispatch(getAiFunctionsByPluginId(service_function.ai_service_id));
         return service_function;
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
 
 export const updatetAiFunctionsById = createAsyncThunk(
   '/aiServices/updatetAiFunctionsById',
-  async (payload: IAIFunctions, {rejectWithValue, dispatch}) => {
+  async (payload: IAIFunctions, {rejectWithValue}) => {
     try {
       const {status, data} = await updatetAiFunctionsByIdApi(payload.ai_service_id, payload.id, {
         is_enabled: payload.is_enabled,
@@ -362,16 +345,15 @@ export const updatetAiFunctionsById = createAsyncThunk(
           return payload;
         }
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -384,16 +366,15 @@ export const getAiFunctionsByPluginId = createAsyncThunk(
       if (status === 200) {
         dispatch(mergeFunctionToPluginById({service_functions, service_id}));
       }
-    } catch (err) {
-      let error = err as AxiosError<ValidationErrors, any>;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.error || 'An error occurred');
+        return rejectWithValue(error.response?.data || 'An error occurred');
+      }
 
-      if (err instanceof AxiosError) {
-        toast.error(err?.response?.data.error);
-      }
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data);
+      // Handle non-Axios errors
+      toast.error('An unexpected error occurred');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
@@ -403,7 +384,6 @@ export const {
   handleChangeSelectedPlugin,
   handleChangeOpenPluginLogsDialog,
   handleChangeOpenRemovePluginDialog,
-  mergeLogsToPluginById,
 } = aiServicesSlice.actions;
 
 export default aiServicesSlice.reducer;

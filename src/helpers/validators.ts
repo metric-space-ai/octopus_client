@@ -1,4 +1,6 @@
-export const authValidator = {
+import {RegisterOptions} from 'react-hook-form';
+
+export const authValidator: Record<string, RegisterOptions> = {
   id: {
     required: 'This field is required.',
   },
@@ -15,7 +17,7 @@ export const authValidator = {
     required: 'This field is required.',
   },
   job_title: {
-    required: 'This field is required.',
+    required: false,
   },
   username: {
     required: 'This field is required.',
@@ -28,7 +30,39 @@ export const authValidator = {
     required: 'This field is required.',
     // pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
     pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*[^a-zA-Z0-9@!#$%&]).{8,}$/i,
-    minLength: 5,
+    minLength: 8,
+  },
+};
+
+export const loginFormValidator: Record<string, RegisterOptions> = {
+  email: {
+    required: 'This field is required.',
+    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+  },
+  password: {
+    required: 'This field is required.',
+    minLength: {
+      value: 8,
+      message: 'The password must contain at least 8 characters',
+    },
+  },
+};
+
+export const companyFormValidator: Record<string, RegisterOptions> = {
+  name: {
+    required: 'This field is required.',
+  },
+  address: {
+    required: 'This field is required.',
+  },
+};
+export const resetPassValidator: Record<string, RegisterOptions> = {
+  newPassword: {
+    required: 'This field is required.',
+    minLength: {
+      value: 8,
+      message: 'The password must contain at least 8 characters',
+    },
   },
 };
 

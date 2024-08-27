@@ -1,23 +1,22 @@
-import React, {Fragment, useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {Fragment, useEffect, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
-
-import {Button} from '../../buttons';
+import {AxiosError} from 'axios';
+import {useForm} from 'react-hook-form';
+import toast from 'react-hot-toast';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import {fullUpdateWaspApp, setUploadSucceeded, uploadNewWaspApp} from '@/app/lib/features/waspApps/waspAppsSlice';
-import {useForm} from 'react-hook-form';
 import {AppDispatch} from '@/app/lib/store';
-
 import {UPLOADWASPAPPSTEPS} from '@/constant';
+import {extractMetaUploadNewWaspAppApi} from '@/services/settings.service';
+import {EWaspInstanceType, IWaspApp} from '@/types';
+
 import UploadWaspAppModalHeader from './UploadWaspAppModalHeader';
 import UploadWaspSelectFileSection from './UploadWaspSelectFileSection';
 import WaspAppDialogFormInputs from './WaspAppDialogForm';
-import {extractMetaUploadNewWaspAppApi} from '@/services/settings.service';
-import {AxiosError} from 'axios';
-import toast from 'react-hot-toast';
-import {EWaspInstanceType, IWaspApp} from '@/types';
+import {Button} from '../../buttons';
 
 interface ModalProps {
   open: boolean;
@@ -134,11 +133,12 @@ export const UploadWaspAppModal = ({open, onClose, selectedWasp}: ModalProps) =>
   }, [initialFileStarted, uploadPercentage]);
 
   useEffect(() => {
-    console.log("check closing")
+    console.log('check closing');
     if (currentStep === UPLOADWASPAPPSTEPS.Upload && uploadSucceeded) {
-      console.log("check closing... run")
+      console.log('check closing... run');
       handleCloseDialog();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadSucceeded]);
   useEffect(() => {
     if (open && selectedWasp) {
@@ -151,6 +151,7 @@ export const UploadWaspAppModal = ({open, onClose, selectedWasp}: ModalProps) =>
       setInstanceType(instance_type);
       setCurrentStep(UPLOADWASPAPPSTEPS.Upload);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (

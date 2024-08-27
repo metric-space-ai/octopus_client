@@ -2,9 +2,9 @@ import {Fragment, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {ExclamationCircleIcon, XMarkIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
 
 import {IconButton} from '../buttons';
-import classNames from 'classnames';
 
 interface ModalProps {
   open: boolean;
@@ -81,6 +81,7 @@ export const IframeWithSrcDialog = ({open, onClose, src, bgColor, description = 
                       }}
                       className={`w-full h-full [&_body]:m-0 flex-1`}
                       src={src}
+                      allow='clipboard-read; clipboard-write'
                     ></iframe>
                   </div>
                 </Dialog.Panel>
