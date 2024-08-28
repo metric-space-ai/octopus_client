@@ -6,7 +6,6 @@ import {toast} from 'react-hot-toast';
 
 import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
-import {authValidator} from '@/helpers/validators';
 import {forgotPassword} from '@/services/auth.service';
 
 interface IFormInputs {
@@ -42,7 +41,10 @@ const ForgetpasswordForm = () => {
         type='email'
         placeholder='Enter your email'
         errors={errors.email && errors.email.message}
-        rules={register('email', authValidator.email)}
+        rules={register('email', {
+          required: 'This field is required.',
+          pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+        })}
       />
       <Button className='mt-6 w-full !h-11 rounded-4xl' loading={loading} title='Reset password' />
     </form>

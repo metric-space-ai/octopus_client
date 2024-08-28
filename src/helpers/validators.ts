@@ -1,6 +1,4 @@
-import {RegisterOptions} from 'react-hook-form';
-
-export const authValidator: Record<string, RegisterOptions> = {
+export const authValidator = {
   id: {
     required: 'This field is required.',
   },
@@ -34,7 +32,7 @@ export const authValidator: Record<string, RegisterOptions> = {
   },
 };
 
-export const loginFormValidator: Record<string, RegisterOptions> = {
+export const loginFormValidator = {
   email: {
     required: 'This field is required.',
     pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -48,7 +46,7 @@ export const loginFormValidator: Record<string, RegisterOptions> = {
   },
 };
 
-export const companyFormValidator: Record<string, RegisterOptions> = {
+export const companyFormValidator = {
   name: {
     required: 'This field is required.',
   },
@@ -56,7 +54,7 @@ export const companyFormValidator: Record<string, RegisterOptions> = {
     required: 'This field is required.',
   },
 };
-export const resetPassValidator: Record<string, RegisterOptions> = {
+export const resetPassValidator = {
   newPassword: {
     required: 'This field is required.',
     minLength: {
