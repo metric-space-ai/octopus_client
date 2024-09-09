@@ -104,11 +104,7 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
   const [hasWaspApp, setHasWaspApp] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
-  const {
-    themeData: {
-      content: {chat_logo},
-    },
-  } = useThemeStore();
+  const {themeData} = useThemeStore();
   const prevMessage = item.response ?? '';
 
   const checkMessageResponse = useCallback(
@@ -441,9 +437,15 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
               {
                 isSensitive && !item.is_marked_as_not_sensitive && !item.is_anonymized ? (
                   <ShieldCheckIcon width={20} height={20} className='text-danger-500' />
-                ) : chat_logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img width={chat_logo.width} height={chat_logo.width} src={chat_logo.url} alt={chat_logo.alt ?? ''} />
+                ) : themeData?.content.chat_logo ? (
+                  <Image
+                    width={themeData.content.chat_logo.width}
+                    height={themeData.content.chat_logo.width}
+                    // src={"https://static.harting.com/assets/logo.png"}
+                    src={themeData.content.chat_logo.url}
+                    alt={themeData.content.chat_logo.alt ?? 'logo'}
+                    className='w-full object-contain bg-grey-0 rounded-full'
+                  />
                 ) : (
                   <LogoIcon width={28} height={18} color='#F5F5F5' />
                 )

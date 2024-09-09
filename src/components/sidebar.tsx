@@ -17,6 +17,7 @@ import {IconSideBar} from './svgs';
 import Locale from '../locales';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
+  ssr: false,
   loading: () => null,
 });
 

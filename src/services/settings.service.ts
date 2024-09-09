@@ -1,4 +1,6 @@
 import {
+  ChatTokenAuditCompanyReport,
+  ChatTokenAuditCompanyReportRequestBody,
   IAIFunctions,
   IChatMessage,
   ICreateUser,
@@ -10,8 +12,10 @@ import {
   IPluginActivation,
   IResources,
   ISimpleApp,
+  ITokenAudit,
   IUser,
   IWaspApp,
+  TDirectCallResponse,
   TNextCluodDoc,
   TOllamaModel,
 } from '@/types';
@@ -138,6 +142,16 @@ export const createNewNextCloudDocumentsApi = (payload: FormData) => {
   });
 };
 
+export const pdfToMarkdownApi = async (fileString: string) => {
+  const payload = {
+    name: 'pdf2markdown',
+    parameters: {
+      file: fileString,
+    },
+  };
+  return apiHub.post<TDirectCallResponse>(`api/v1/ai-functions/direct-call`, payload);
+};
+
 export const updateDocumentByIdApi = (documentId: string, payload: Pick<IDocument, 'file_name'>) => {
   return apiHub.put<IDocument>(`api/v1/nextcloud-files/${documentId}`, payload);
 };
@@ -196,6 +210,20 @@ export const deleteSimpleAppByIdApi = (parameter_id: string) => {
 
 export const getSimpleAppsNameApi = () => {
   return apiHub.get<string[]>(`api/v1/simple-apps/names`);
+};
+
+//Tokens Audits Api
+export const getChatTokenAuditsApi = () => {
+  return apiHub.get<ITokenAudit[]>(`api/v1/chat-token-audits`);
+};
+export const getChatTokenAuditsCompanyReportApi = ({
+  company_id,
+  ends_at,
+  starts_at,
+}: ChatTokenAuditCompanyReportRequestBody) => {
+  return apiHub.get<ChatTokenAuditCompanyReport>(
+    `api/v1/chat-token-audits/${company_id}/report?ends_at=${ends_at}&starts_at=${starts_at}`,
+  );
 };
 
 //Files Api

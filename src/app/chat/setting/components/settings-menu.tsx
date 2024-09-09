@@ -9,6 +9,7 @@ import {
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   CpuChipIcon,
+  CubeTransparentIcon,
   DocumentDuplicateIcon,
   KeyIcon,
   LightBulbIcon,
@@ -78,6 +79,13 @@ const SIDEBAR: {
     tab_name: 'knowledge',
     title: 'Knowledge',
     icon: LightBulbIcon,
+    permission: ROLE_COMPANY_ADMIN_USER,
+  },
+  {
+    id: 'tab_tokens',
+    tab_name: 'tokens',
+    title: 'Tokens',
+    icon: CubeTransparentIcon,
     permission: ROLE_COMPANY_ADMIN_USER,
   },
   {

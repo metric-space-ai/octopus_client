@@ -2,7 +2,8 @@ module.exports = (phase, {defaultConfig}) => {
   const env = {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   };
-  const publicHostname = env.NEXT_PUBLIC_BASE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+  const publicHostname = new URL(env.NEXT_PUBLIC_BASE_URL).hostname;
 
   // Return the next config along with the environment variables
   return {
@@ -16,14 +17,8 @@ module.exports = (phase, {defaultConfig}) => {
       return config;
     },
     images: {
-      domains: [env.NEXT_PUBLIC_BASE_URL, publicHostname],
+      domains: [publicHostname],
       remotePatterns: [
-        // {
-        //   protocol: 'https',
-        //   hostname: publicHostname,
-        //   port: '',
-        //   pathname: '/public/**',
-        // },
         {
           protocol: 'https',
           hostname: '**',

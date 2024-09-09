@@ -7,6 +7,7 @@ import modelsSlice from './features/ollamaModels/modelsSlice';
 import parametersSlice from './features/parameters/parametersSlice';
 import simpleAppsSlice from './features/simpleApps/simpleAppsSlice';
 import teamMembersSlice from './features/teamMembers/teamMemberSlice';
+import tokensSlice from './features/tokens/tokensSlice';
 import waspAppsSlice from './features/waspApps/waspAppsSlice';
 
 export const makeStore = () => {
@@ -20,6 +21,7 @@ export const makeStore = () => {
       documents: documentsSlice,
       models: modelsSlice,
       files: filesSlice,
+      tokens: tokensSlice,
     },
   });
 };

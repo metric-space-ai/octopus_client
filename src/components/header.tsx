@@ -25,6 +25,7 @@ import {CreateNewTabModal, DeleteTabModal} from './modals';
 import Picture from './picture';
 
 const DynamicMoreTab = dynamic(async () => (await import('@/components/tabs')).MoreTab, {
+  ssr: false,
   loading: () => null,
 });
 
@@ -54,12 +55,11 @@ const MenuItem = () => {
                 width={32}
                 height={32}
                 loading='lazy'
-                className='w-8 h-8'
+                className='w-8 h-8 ring-1 ring-primary-150 rounded-full'
                 src={`${ImagesBaseUrl}${user.photo_file_name}`}
                 onErrorSrc={userIcon.src}
                 blurDataURL={userIcon.src}
                 alt='user avatar'
-                placeholder='blur'
               />
             ) : (
               <UserIcon className='w-6 h-6 text-grey-900' />
@@ -92,7 +92,6 @@ const MenuItem = () => {
                       alt={user.name}
                       onErrorSrc={userIcon.src}
                       blurDataURL={userIcon.src}
-                      placeholder='blur'
                     />
                   ) : (
                     <UserIcon className='m-auto' width={32} height={32} />

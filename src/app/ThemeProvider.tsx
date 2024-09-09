@@ -39,14 +39,14 @@ export default function ThemeProvider({children}: {children: React.ReactNode}) {
         }
         handleSetColorVariable(companyStyleparsedData.cssVariables);
         setThemeData(companyStyleparsedData);
-      } else {
+      } else if (themeData) {
         handleSetColorVariable(themeData.cssVariables);
       }
     }
   }, [companyIsLoading]);
 
   return (
-    <body className={classNames('bg-grey-900', `font-${themeData.font}`)} suppressHydrationWarning={true}>
+    <body className={classNames('bg-grey-900', `font-${themeData?.font ?? 'roboto'}`)} suppressHydrationWarning={true}>
       {children}
     </body>
   );

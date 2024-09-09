@@ -11,6 +11,7 @@ import {Spinner} from '@/components/spinner';
 import {getWaspAppLogsSourceDocByChatIdAndWaspIdApi} from '@/services/settings.service';
 
 const DynamicMarkdownContent = dynamic(async () => (await import('@/components/markdown')).MarkdownContent, {
+  ssr: false,
   loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
 });
 

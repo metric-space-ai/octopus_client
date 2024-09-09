@@ -308,10 +308,10 @@ const ALLTHEMES: Record<TThemeName, IThemeData> = {
   },
 };
 
-const initialsThemeData: IThemeData = ALLTHEMES[APPTHEMENAME];
+const initialsThemeData: IThemeData | null = ALLTHEMES[APPTHEMENAME] ?? null;
 
 interface IThemeStoreProps {
-  themeData: IThemeData;
+  themeData: IThemeData | null;
   setThemeData: (value: IThemeData) => void;
   handleSetColorVariable: (obj: Record<string, string>) => void;
   allThemes: Record<TThemeName, IThemeData>;

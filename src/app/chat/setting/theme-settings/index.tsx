@@ -69,7 +69,7 @@ const ThemeSettings = () => {
   }, []);
 
   useEffect(() => {
-    if (!previewIsOn) handleSetColorVariable(themeData.cssVariables);
+    if (!previewIsOn && themeData) handleSetColorVariable(themeData.cssVariables);
   }, [previewIsOn]);
 
   return (

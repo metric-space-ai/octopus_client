@@ -31,3 +31,8 @@ export interface IKnoledgebook {
   chapters: string[];
   sources: string[];
 }
+
+export interface IDocumentMarkdown {
+  summary: string;
+  markdown: string;
+}

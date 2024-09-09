@@ -24,9 +24,9 @@ const ResetPasswordForm = () => {
   } = useForm<IFormInputs>();
 
   const onSubmit = async (data: IFormInputs) => {
-    const {password} = data;
+    const {password, confirmPassword} = data;
     setLoading(true);
-    resetPasswordApi('', password)
+    resetPasswordApi({token: '', password, repeat_password: confirmPassword})
       .then(() => {
         toast.success('Password changed successfully. Please login to start.');
         router.push('/auth/login');

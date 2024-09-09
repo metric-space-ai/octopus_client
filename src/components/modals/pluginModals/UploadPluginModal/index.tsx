@@ -599,7 +599,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
                       selectedPlugin.status === PLUGINSTATUS.ParsingStarted && <InstallationStartedSection />}
                     {selectedPlugin && selectedPlugin.status === PLUGINSTATUS.Error && (
                       <div className='flex flex-col flex-auto'>
-                        <div className='w-full pt-24 px-7'>
+                        <div className='w-full pt-24 px-7 pb-4'>
                           <div className='flex flex-col items-center justify-center w-full max-h-96 bg-grey-0 rounded-xl p-5'>
                             <ExclamationTriangleIcon className='text-danger mb-8' width={36} height={36} />
                             <h1 className='font-semibold text-center text-xxl mb-6 text-danger-500'>

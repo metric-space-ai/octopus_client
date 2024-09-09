@@ -120,7 +120,7 @@ const MyDetailPage = () => {
                 height={45}
                 src={`${ImagesBaseUrl}${user.photo_file_name}`}
                 alt={user.name}
-                className='m-auto'
+                className='m-auto w-full'
                 loading='eager'
               />
             ) : (

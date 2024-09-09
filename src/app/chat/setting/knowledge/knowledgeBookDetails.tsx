@@ -8,7 +8,7 @@ import {
   FilmIcon,
   GlobeAltIcon,
   MusicalNoteIcon,
-  PencilSquareIcon,
+  // PencilSquareIcon,
   PhotoIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
@@ -22,11 +22,11 @@ import {PdfTypeIcon} from '@/components/svgs';
 import {IFile} from '@/types';
 
 type Props = {
-  onEditFile: (file: IFile) => void;
+  // onEditFile: (file: IFile) => void;
   onDeleteFile: (file: IFile) => void;
   onShowContent: (file: IFile) => void;
 };
-const KnowledgeBookDetails = ({onEditFile, onDeleteFile, onShowContent}: Props) => {
+const KnowledgeBookDetails = ({onDeleteFile, onShowContent}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const {entities: files, isLoading} = useSelector(selectFiles);
 
@@ -136,7 +136,7 @@ const KnowledgeBookDetails = ({onEditFile, onDeleteFile, onShowContent}: Props) 
                       {getFileType(file.file_name) ?? ''}
                     </p>
                     <div className='ml-auto flex gap-3'>
-                      {file.type === 'KnowledgeBook' && (
+                      {['KnowledgeBook', 'Document'].includes(file.type) && getFileType(file.file_name) === 'json' && (
                         <EyeIcon
                           width={16}
                           height={16}
@@ -144,12 +144,12 @@ const KnowledgeBookDetails = ({onEditFile, onDeleteFile, onShowContent}: Props) 
                           onClick={() => onShowContent(file)}
                         />
                       )}
-                      <PencilSquareIcon
+                      {/* <PencilSquareIcon
                         width={16}
                         height={16}
                         onClick={() => onEditFile(file)}
                         className='text-secondary-soft hover:text-secondary-700 cursor-pointer'
-                      />
+                      /> */}
                       <TrashIcon
                         width={16}
                         height={16}

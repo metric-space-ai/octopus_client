@@ -19,6 +19,7 @@ import Plugins from '../pluggins';
 import Sectors from '../sectors';
 import TeamMembers from '../team-members';
 import ThemeSettings from '../theme-settings';
+import Tokens from '../tokens';
 
 type Props = {
   menu: string;
@@ -38,6 +39,7 @@ const SettingsPanel = ({menu}: Props) => {
       {user?.roles.some((role) => [ROLE_ADMIN, ROLE_COMPANY_ADMIN_USER].includes(role as TRole)) ? (
         <>
           {menu === 'knowledge' && <KnowledgeBooks />}
+          {menu === 'tokens' && <Tokens />}
           {menu === 'team-members' && <TeamMembers />}
           {menu === 'sectors' && <Sectors />}
           {menu === 'models' && <Models />}

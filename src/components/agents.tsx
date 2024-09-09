@@ -11,6 +11,7 @@ import {AddPromptAgentModal} from './modals/AddPromptAgentModal';
 import {EditPromptAgentModal} from './modals/EditPromptAgentModal';
 
 const ChatList = dynamic(async () => (await import('./chat-list')).ChatList, {
+  ssr: false,
   loading: () => null,
 });
 

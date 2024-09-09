@@ -2,7 +2,14 @@
 import {useEffect} from 'react';
 
 import {Disclosure} from '@headlessui/react';
-import {DocumentTextIcon, FilmIcon, GlobeAltIcon, MusicalNoteIcon, PhotoIcon} from '@heroicons/react/24/outline';
+import {
+  CodeBracketSquareIcon,
+  DocumentTextIcon,
+  FilmIcon,
+  GlobeAltIcon,
+  MusicalNoteIcon,
+  PhotoIcon,
+} from '@heroicons/react/24/outline';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {selectDocuments} from '@/app/lib/features/documents/documentsSelector';
@@ -16,7 +23,7 @@ export default function DocumentsDetail() {
 
   const getFileType = (fileName: string) => {
     const splited = fileName.split('.');
-    if (splited.length > 1) return splited[splited.length - 1];
+    if (splited.length > 1) return splited[splited.length - 1].toLocaleLowerCase();
   };
 
   useEffect(() => {
@@ -67,6 +74,9 @@ export default function DocumentsDetail() {
                       {getFileType(document)?.includes('mp4') && <FilmIcon className='w-4 h-4 text-primary-medium' />}
                       {getFileType(document)?.includes('mp3') && (
                         <MusicalNoteIcon className='w-4 h-4 text-primary-medium' />
+                      )}
+                      {getFileType(document)?.includes('json') && (
+                        <CodeBracketSquareIcon className='w-4 h-4 text-primary-medium' />
                       )}
                       <p className='text-xs leading-5 text-grey-900 font-semibold truncate ...' title={document}>
                         {document}

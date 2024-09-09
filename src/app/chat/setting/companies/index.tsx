@@ -32,11 +32,11 @@ const companies = () => {
             settings
           </Tab>
         </Tab.List>
-        <Tab.Panels className='max-h-[640px] custom-scrollbar-thumb flex flex-col w-full py-[18px] px-6 rounded-r-xl rounded-bl-xl bg-grey-0'>
-          <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
+        <Tab.Panels className='max-h-[640px] custom-scrollbar-thumb flex flex-col w-full py-[18px] px-6 rounded-r-xl rounded-bl-xl bg-grey-50'>
+          <Tab.Panel className={classNames('rounded-md relative -mx-4', 'focus:outline-none')}>
             <ThemeSettings />
           </Tab.Panel>
-          <Tab.Panel className={classNames('rounded-md bg-grey-0 relative -mx-4', 'focus:outline-none')}>
+          <Tab.Panel className={classNames('rounded-md relative -mx-4', 'focus:outline-none')}>
             <CompanySettings />
           </Tab.Panel>
         </Tab.Panels>

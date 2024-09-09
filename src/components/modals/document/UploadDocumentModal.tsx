@@ -11,7 +11,7 @@ import {AppDispatch} from '@/app/lib/store';
 import {bytesCalculator} from '@/helpers';
 import {createNewNextCloudDocumentsApi} from '@/services/settings.service';
 
-import {Button, IconButton} from '../buttons';
+import {Button, IconButton} from '../../buttons';
 
 const ADDDOCUMENTSSTEPS = {SelecFile: 1, Uploaded: 2};
 

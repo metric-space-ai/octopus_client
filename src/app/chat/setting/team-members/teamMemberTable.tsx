@@ -4,7 +4,6 @@ import React, {useEffect, useState} from 'react';
 import {ArrowsUpDownIcon} from '@heroicons/react/20/solid';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
 import {getAllTeamMembers} from '@/app/lib/features/teamMembers/teamMemberSlice';
 import {selectTeamMembers} from '@/app/lib/features/teamMembers/teamMembersSelector';
 import {AppDispatch} from '@/app/lib/store';
@@ -44,7 +43,6 @@ const TeamMebersTable = () => {
 
   useEffect(() => {
     dispatch(getAllTeamMembers());
-    dispatch(getAllPlugins());
   }, []);
 
   return (

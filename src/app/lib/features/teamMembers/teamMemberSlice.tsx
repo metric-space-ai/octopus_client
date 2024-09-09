@@ -12,6 +12,7 @@ import {ICreateUser, IUser} from '@/types';
 
 interface TeamMembersStates {
   entities: IUser[] | null;
+  entitiesObject: Record<string, IUser> | null;
   isLoading: boolean;
   hasError: boolean;
   errorMessage: string | undefined;
@@ -19,6 +20,7 @@ interface TeamMembersStates {
 // Define the initial state using that type
 const initialState: TeamMembersStates = {
   entities: null,
+  entitiesObject: null,
   isLoading: false,
   hasError: false,
   errorMessage: '',
@@ -43,17 +45,27 @@ const teamMembersSlice = createSlice({
       .addCase(getAllTeamMembers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.entities = action.payload;
+        state.entitiesObject = action.payload.reduce<Record<string, IUser>>((acc, item) => {
+          acc[item.id] = item;
+          return acc;
+        }, {});
       })
       .addCase(updateTeamMember.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].flatMap((member) => (member.id === payload.id ? payload : member));
+          if (state.entitiesObject) {
+            state.entitiesObject[payload.id] = payload;
+          }
         }
       })
       .addCase(deleteTeamMember.fulfilled, (state, {payload}) => {
         state.isLoading = false;
         if (state.entities) {
           state.entities = [...state.entities].filter((member) => member.id !== payload);
+          if (state.entitiesObject) {
+            delete state.entitiesObject[payload];
+          }
         }
       })
       .addCase(addNewTeamMember.fulfilled, (state, {payload}) => {
@@ -62,6 +74,9 @@ const teamMembersSlice = createSlice({
           state.entities = [...state.entities, payload];
         } else {
           state.entities = [payload];
+        }
+        if (state.entitiesObject) {
+          state.entitiesObject[payload.id] = payload;
         }
       });
   },

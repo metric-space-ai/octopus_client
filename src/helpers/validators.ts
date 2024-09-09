@@ -74,11 +74,10 @@ export const keywordValidator = {
 export const parameterValidator = {
   name: {
     required: 'this field is required',
-    maxLength: 40,
+    maxLength: 200,
   },
   value: {
     required: 'this field is required',
-    maxLength: 2000,
   },
 };
 

@@ -27,6 +27,7 @@ import {Spinner} from '../spinner';
 // } from '@/services/auth.service';
 
 const DynamicHighlight = dynamic(async () => (await import('react-highlight')).default, {
+  ssr: false,
   loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
 });
 

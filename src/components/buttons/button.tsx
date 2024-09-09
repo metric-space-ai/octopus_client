@@ -21,7 +21,7 @@ const ButtonStyle = {
   transparent: 'bg-transparent',
   dangerous: 'bg-danger-500',
   outline: 'bg-transparent border border-grey-900',
-  'outline-dark': 'bg-transparent border border-grey-0',
+  'outline-dark': 'bg-transparent border border-grey-900 dark:border-grey-0',
   disabled: 'bg-grey-disabled',
 };
 
@@ -41,7 +41,7 @@ const TextStyle = {
   transparent: 'text-grey-900',
   dangerous: 'text-grey-0',
   outline: 'text-grey-900',
-  'outline-dark': 'text-grey-0',
+  'outline-dark': 'text-grey-900 dark:text-grey-0',
   disabled: 'text-grey-0',
 };
 

@@ -20,21 +20,15 @@ import AiServicesDetails from './ServicesDetails';
 
 const DynamicRemovePluginModal = dynamic(
   async () => (await import('@/components/modals/pluginModals')).RemovePluginModal,
-  {
-    loading: () => null,
-  },
+  {ssr: false, loading: () => null},
 );
 const DynamicUploadPluginModal = dynamic(
   async () => (await import('@/components/modals/pluginModals')).UploadPluginModal,
-  {
-    loading: () => null,
-  },
+  {ssr: false, loading: () => null},
 );
 const DynamicShowPluginLogsModal = dynamic(
   async () => (await import('@/components/modals/pluginModals')).ShowPluginLogsModal,
-  {
-    loading: () => null,
-  },
+  {ssr: false, loading: () => null},
 );
 
 const AiServices = () => {

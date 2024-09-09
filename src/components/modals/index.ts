@@ -7,3 +7,5 @@ export * from './DeleteModelModalDialog';
 export * from './AddModelModalDialog';
 export * from './PdfViewerDialog';
 export * from './filesModalDialog';
+export * from './tokenAuditsDetailsModalDialog';
+export * from './document';

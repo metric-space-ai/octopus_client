@@ -26,33 +26,35 @@ const DynamicGoogleButton = dynamic(async () => (await import('@/components/butt
 
 const LoginPage = () => {
   const {themeData, handleSetColorVariable} = useThemeStore();
-  const {
-    cssVariables,
-    content: {head_logo, title},
-  } = themeData;
+  // const {
+  //   cssVariables,
+  //   content: {head_logo, title},
+  // } = themeData;
 
   useEffect(() => {
-    if (cssVariables) {
-      handleSetColorVariable(cssVariables);
+    if (themeData?.cssVariables) {
+      handleSetColorVariable(themeData.cssVariables);
     }
   }, []);
 
   return (
     <div className='min-h-full grid sm:grid-cols-2 gap-3'>
       <div className='flex flex-col items-center justify-center bg-grey-100 rounded-xl'>
-        {head_logo ? (
+        {themeData?.content.head_logo ? (
           <Image
             className='absolute left-10 top-10'
-            src={head_logo.url}
-            alt={head_logo.alt ?? 'head logo'}
-            width={head_logo.width}
-            height={head_logo.height}
+            src={themeData.content.head_logo.url}
+            alt={themeData.content.head_logo.alt ?? 'head logo'}
+            width={themeData.content.head_logo.width}
+            height={themeData.content.head_logo.height}
             loading='lazy'
           />
         ) : (
           <Logo className='absolute left-10 top-10' withText />
         )}
-        <h1 className='text-32 font-semibold text-grey-900 text-center'>Welcome back to {title ?? 'Octopus AI'}</h1>
+        <h1 className='text-32 font-semibold text-grey-900 text-center'>
+          Welcome back to {themeData?.content.title ?? 'Octopus AI'}
+        </h1>
         <div className='flex flex-col items-center px-4 w-full sm:w-[370px]'>
           <p className='mt-2 text-base text-grey-600'>Please enter your details</p>
           <DynamicLoginForm />

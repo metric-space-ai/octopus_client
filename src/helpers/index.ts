@@ -215,3 +215,12 @@ export function bytesCalculator(size: number) {
 export const spaceBeforeCapitalLetters = (letters: string) => {
   return letters.replace(/([A-Z])/g, ' $1').trim();
 };
+
+export function numberWithCommas(x: string | number): string {
+  if (x === 0 || x === '0' || x === undefined) return '0';
+  const parts = x.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+}
+
+export * from './timeHelper';

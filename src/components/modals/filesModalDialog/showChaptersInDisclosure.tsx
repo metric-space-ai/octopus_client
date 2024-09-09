@@ -7,6 +7,7 @@ type Props = {
   chapters: string[];
 };
 const DynamicMarkdownContent = dynamic(async () => (await import('../../markdown')).MarkdownContent, {
+  ssr: false,
   loading: () => <div className='flex items-center justify-center p-7 h-32 bg-grey-150 animate-pulse' />,
 });
 

@@ -7,12 +7,15 @@ import dynamic from 'next/dynamic';
 import {Spinner} from '@/components/spinner';
 
 const DynamicAiServices = dynamic(async () => (await import('../ai-services')).default, {
+  ssr: false,
   loading: () => <ComponentLoading />,
 });
 const DynamicSimpleApps = dynamic(async () => (await import('../simpleApps')).default, {
+  ssr: false,
   loading: () => <ComponentLoading />,
 });
 const DynamicWaspApps = dynamic(async () => (await import('../waspApps')).default, {
+  ssr: false,
   loading: () => <ComponentLoading />,
 });
 

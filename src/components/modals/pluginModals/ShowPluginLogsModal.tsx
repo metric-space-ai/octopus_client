@@ -16,6 +16,7 @@ import {IPlugin} from '@/types';
 import {Button, IconButton} from '../../buttons';
 
 const DynamicMarkdownContent = dynamic(async () => (await import('@/components/markdown')).MarkdownContent, {
+  ssr: false,
   loading: () => <div className='w-full flex items-center justify-center h-full bg-grey-150 animate-pulse' />,
 });
 
