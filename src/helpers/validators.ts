@@ -1,3 +1,17 @@
+export const resetPassByUserValidator = {
+  token: {
+    required: 'This field is required.',
+  },
+  password: {
+    required: 'This field is required.',
+    // pattern: /^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/i,
+    pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*[^a-zA-Z0-9@!#$%&]).{8,}$/i,
+    minLength: {
+      value: 8,
+      message: 'The password must contain at least 8 characters',
+    },
+  },
+};
 export const authValidator = {
   id: {
     required: 'This field is required.',
