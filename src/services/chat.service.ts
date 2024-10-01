@@ -1,14 +1,36 @@
 import {
   IChatMessage,
   IContentSafety,
+  IScheduledPrompts,
   ISimpleApp,
   ITicket,
   IWorkspace,
+  TCreateScheduledPromptsBody,
   TranslatorResponse,
   TranslatorType,
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
+
+//scheduled-prompts Api
+export const getAllScheduledPromptsApi = () => {
+  return apiHub.get<IScheduledPrompts[]>(`api/v1/scheduled-prompts`);
+};
+export const getScheduledPromptItemMessagesApi = (id: string) => {
+  return apiHub.get<IChatMessage[]>(`api/v1/chat-messages/${id}`);
+};
+
+export const createScheduledPromptsApi = async (payload: TCreateScheduledPromptsBody) => {
+  return apiHub.post<IScheduledPrompts>('api/v1/scheduled-prompts', payload);
+};
+
+export const deleteScheduledPromptsApi = async (id: string) => {
+  return apiHub.delete(`api/v1/scheduled-prompts/${id}`);
+};
+
+export const updateScheduledPromptsApi = async (payload: TCreateScheduledPromptsBody, id: string) => {
+  return apiHub.put<IScheduledPrompts>(`api/v1/scheduled-prompts/${id}`, payload);
+};
 
 export const createWorkspaceApi = async (name: string, type: string) => {
   const payload = {name, type};

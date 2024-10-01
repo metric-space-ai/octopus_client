@@ -11,6 +11,7 @@ import {IconButton} from '@/components/buttons';
 import {ChatPrompt} from '@/components/chat-prompt';
 import {Loading} from '@/components/loading';
 // import {MessageItem} from '@/components/message-item';
+import MessageItemSkeleton from '@/components/messageItemSkeleton';
 import PluginOperationSelection from '@/components/popover/plugin-operation-selection';
 import {useAuthContext} from '@/contexts/authContext';
 import {autoGrowTextArea} from '@/helpers';
@@ -32,21 +33,6 @@ const DynamicVoiceChatModal = dynamic(async () => (await import('@/components/mo
   ssr: false,
   loading: () => null,
 });
-
-const MessageItemSkeleton = () => {
-  return (
-    <div className='flex flex-col mt-5 text-between_sm_base w-full animate-pulse'>
-      <div className='flex gap-3 w-3/4'>
-        <div className='shrink-0 w-12 h-12 flex bg-grey-50 dark:bg-grey-400 rounded-full' />
-        <div className='flex-1 mt-1 w-3/4 h-7 bg-grey-50 dark:bg-grey-400' />
-      </div>
-      <div className='mt-3 flex gap-3 w-full'>
-        <div className='shrink-0 w-12 h-12 flex bg-grey-50 dark:bg-grey-400 rounded-full' />
-        <div className='flex-1 py-4 px-5 rounded-xl rounded-tl-none flex flex-col bg-grey-50 dark:bg-grey-400 w-full' />
-      </div>
-    </div>
-  );
-};
 
 export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -151,12 +137,16 @@ export default function ChatPage() {
   };
 
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key !== 'Enter') return false;
-    if (e.key === 'Enter' && e.nativeEvent.isComposing) return false;
-    if (e.altKey || e.ctrlKey || e.shiftKey) {
-      doSubmit(userInput);
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      doSubmit(userInput);
     }
+    // if (e.key !== 'Enter') return false;
+    // if (e.key === 'Enter' && e.nativeEvent.isComposing) return false;
+    // if (e.altKey || e.ctrlKey || e.shiftKey) {
+    //   doSubmit(userInput);
+    //   e.preventDefault();
+    // }
   };
 
   const handleRegenerateResponse = (chatItem: IChatMessage) => {
@@ -253,7 +243,7 @@ export default function ChatPage() {
                 inputIsDisabled ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder='Ask anything'
-              onInput={(e) => onInput(e.currentTarget.value)}
+              onChange={(e) => onInput(e.currentTarget.value)}
               value={userInput}
               onKeyDown={onInputKeyDown}
               onFocus={() => setAutoScroll(true)}

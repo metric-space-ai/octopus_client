@@ -12,6 +12,14 @@ export const resetPassByUserValidator = {
     },
   },
 };
+export const agentPromptValidator = {
+  prompt: {
+    required: 'This field is required.',
+  },
+  desired_schedule: {
+    required: 'This field is required.',
+  },
+};
 export const authValidator = {
   id: {
     required: 'This field is required.',

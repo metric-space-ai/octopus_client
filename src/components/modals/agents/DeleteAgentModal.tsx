@@ -1,22 +1,45 @@
-import {Fragment} from 'react';
+import {Fragment, useState} from 'react';
 
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
+import {useDispatch} from 'react-redux';
 
-import {IWorkspace} from '@/types';
-
-import {Button, IconButton} from '../buttons';
+import {
+  changeOpenEditSchedulePromptDialog,
+  changeSelectedSchedulePrompt,
+  deleteScheduledPrompt,
+} from '@/app/lib/features/scheduledPrompts/scheduledPromptsSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {Button, IconButton} from '@/components/buttons';
+import {IScheduledPrompts} from '@/types';
 
 interface ModalProps {
-  tab: IWorkspace | null;
+  agent: IScheduledPrompts | null;
   open: boolean;
-  onDelete: () => void;
   onClose: () => void;
 }
 
-export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => {
-  // const [loading, setLoading] = useState(false);
+export const DeleteAgentModal = ({agent, open, onClose}: ModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const onDelete = async () => {
+    console.log(`onDelete... runs`, {agent, open});
+    if (!agent) return onClose();
+    setIsLoading(true);
+    try {
+      const {
+        meta: {requestStatus},
+      } = await dispatch(deleteScheduledPrompt(agent.id));
+      if (requestStatus === 'fulfilled') {
+        dispatch(changeSelectedSchedulePrompt(null));
+        dispatch(changeOpenEditSchedulePromptDialog(false));
 
+        onClose();
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Transition appear show={open} as={Fragment}>
       <Dialog className='relative z-10' as='div' onClose={onClose}>
@@ -42,10 +65,10 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'
             >
-              <Dialog.Panel className='w-full flex flex-col max-w-[460px] transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
+              <Dialog.Panel className='w-full flex flex-col max-w-2xl transform border border-content-primary bg-grey-100 px-10 py-10 rounded-xl shadow-xl transition-all gap-3'>
                 <div className='flex text-left gap-2'>
                   <Dialog.Title as='h3' className='text-2xl font-semibold text-grey-900'>
-                    {`Delete "${tab?.name}" Agent`}
+                    {`Delete "${agent?.prompt}" Agent`}
                   </Dialog.Title>
                   <IconButton className='ml-auto' onClick={onClose}>
                     <XMarkIcon className='w-5 h-5text-content-primary' />
@@ -53,7 +76,7 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
                 </div>
                 <p className='text-xl font-semibold mt-5 text-grey-900'>Are you sure?</p>
                 <p className='text-base font-regular text-grey-800'>
-                  This action is irreversible and will permanently remove the tab and all its associated data.{' '}
+                  This action is irreversible and will permanently remove the Agent and all its associated data.{' '}
                 </p>
                 <form className='flex mt-2 gap-2'>
                   <Button
@@ -61,10 +84,18 @@ export const DeleteAgentModal = ({tab, open, onClose, onDelete}: ModalProps) => 
                     className='flex-1 !h-11'
                     variant='dangerous'
                     title='Delete Agent'
-                    // loading={loading}
+                    loading={isLoading}
                     onClick={onDelete}
+                    disabled={isLoading}
                   />
-                  <Button type='button' className='flex-1 !h-11' variant='outline' title='Cancel' onClick={onClose} />
+                  <Button
+                    type='button'
+                    className='flex-1 !h-11'
+                    variant='outline'
+                    title='Cancel'
+                    onClick={onClose}
+                    disabled={isLoading}
+                  />
                 </form>
               </Dialog.Panel>
             </Transition.Child>

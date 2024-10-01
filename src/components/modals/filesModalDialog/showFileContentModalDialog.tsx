@@ -37,23 +37,36 @@ const ShowFileContentModalDialog = ({isOpen, onClose, file}: ModalProps) => {
   };
 
   useEffect(() => {
-    if (isOpen && file && ['KnowledgeBook', 'Document'].includes(file.type)) {
+    if (isOpen && file) {
       const fetchData = async () => {
         setIsLoading(true);
         try {
           const response = await fetch(file.url);
-
           if (!response.ok) {
             throw new Error('Error fetching the JSON file');
           }
 
-          const data: IKnoledgebook | string | IDocumentMarkdown = await response.json();
-          setJsonData(data);
-          console.log(data);
-          // Creating a downloadable URL from the fetched JSON data
-          const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+          const contentType = response.headers.get('content-type');
+          let fileData;
+          let blob;
+
+          // Check if the content is JSON, otherwise treat it as plain text or other formats
+          if (contentType && contentType.includes('application/json')) {
+            fileData = await response.json();
+            setJsonData(fileData);
+            // Create a JSON blob
+            blob = new Blob([JSON.stringify(fileData, null, 2)], {type: 'application/json'});
+          } else {
+            fileData = await response.text();
+            setJsonData(fileData);
+            // Create a blob for text or other formats
+            blob = new Blob([fileData], {type: contentType || 'text/plain'});
+          }
+
+          // Create a downloadable URL from the blob
           const url = URL.createObjectURL(blob);
           setDownloadUrl(url);
+
           setError('');
         } catch (err) {
           if (err instanceof Error) {
@@ -100,7 +113,7 @@ const ShowFileContentModalDialog = ({isOpen, onClose, file}: ModalProps) => {
             >
               <Dialog.Panel className='w-full max-w-6xl transform overflow-hidden rounded-2xl bg-grey-50 dark:bg-background p-6 text-left align-middle shadow-xl transition-all'>
                 <Dialog.Title as='h3' className='text-lg font-medium leading-6 text-grey-900 dark:text-grey-0 mb-2'>
-                  Knowledge Book Content
+                  {`${file?.type} Content`}
                 </Dialog.Title>
                 <div className='flex flex-col justify-between flex-1 gap-6 overflow-hidden'>
                   {typeof jsonData === 'string' && (
@@ -398,11 +411,11 @@ const ShowFileContentModalDialog = ({isOpen, onClose, file}: ModalProps) => {
                       title='close'
                       onClick={handleClose}
                     />
-                    {downloadUrl && (
+                    {downloadUrl && file && (
                       <Link
                         type='button'
                         className='rounded-xl flex-1 !h-11 flex items-center justify-center gap-4 border border-border bg-primary-150 hover:bg-primary-medium/50 transition-all duration-150'
-                        download={file?.file_name}
+                        download={file.file_name}
                         target='_blank'
                         title='Download File'
                         href={downloadUrl}

@@ -5,6 +5,7 @@ import documentsSlice from './features/documents/documentsSlice';
 import filesSlice from './features/files/filesSlice';
 import modelsSlice from './features/ollamaModels/modelsSlice';
 import parametersSlice from './features/parameters/parametersSlice';
+import scheduledPromptsSlice from './features/scheduledPrompts/scheduledPromptsSlice';
 import simpleAppsSlice from './features/simpleApps/simpleAppsSlice';
 import teamMembersSlice from './features/teamMembers/teamMemberSlice';
 import tokensSlice from './features/tokens/tokensSlice';
@@ -22,6 +23,7 @@ export const makeStore = () => {
       models: modelsSlice,
       files: filesSlice,
       tokens: tokensSlice,
+      scheduledPrompts: scheduledPromptsSlice,
     },
   });
 };

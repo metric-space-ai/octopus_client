@@ -1,13 +1,36 @@
 import React, {useState} from 'react';
 
 import {Button} from '@/components/buttons';
-import {CreateMarkdownModalDialog} from '@/components/modals';
+import {CreateMarkdownModalDialog, DeleteFileModalDialog} from '@/components/modals';
+import ShowFileContentModalDialog from '@/components/modals/filesModalDialog/showFileContentModalDialog';
+import {IFile} from '@/types';
 
-import DocumentsData from './documentsDetails';
+import DocumentsDetails from './documentsDetails';
 
 const Documents = () => {
   // const [addDocumentsModal, setAddDocumentsModal] = useState(false);
   const [addMarkdownModal, setAddMarkdownModal] = useState(false);
+  const [showFileDialogOpen, setShowFileDialogOpen] = useState(false);
+  const [deleteFileDialogOpen, setDeleteFileDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<IFile | null>(null);
+
+  const handleOpenDeleteFileDialog = (file: IFile) => {
+    setSelectedFile(file);
+    setDeleteFileDialogOpen(true);
+  };
+  const handleCloseDeleteFileDialog = () => {
+    setSelectedFile(null);
+    setDeleteFileDialogOpen(false);
+  };
+  const handleOpenShowFileContentDialog = (file: IFile) => {
+    setSelectedFile(file);
+    setShowFileDialogOpen(true);
+  };
+  const handleCloseShowFileContentDialog = () => {
+    setSelectedFile(null);
+    setShowFileDialogOpen(false);
+  };
+
   return (
     <>
       <div className='w-full pt-9 flex flex-col px-6'>
@@ -31,12 +54,29 @@ const Documents = () => {
             </div>
           </div>
           <div className='max-w-full'>
-            <DocumentsData />
+            <DocumentsDetails
+              onDeleteFile={handleOpenDeleteFileDialog}
+              // onEditFile={handleOpenEditFileDialog}
+              onShowContent={handleOpenShowFileContentDialog}
+            />
           </div>
         </div>
       </div>
       {/* <UploadDocumentModal open={addDocumentsModal} onClose={() => setAddDocumentsModal(false)} /> */}
       <CreateMarkdownModalDialog open={addMarkdownModal} onClose={() => setAddMarkdownModal(false)} />
+      {deleteFileDialogOpen && (
+        <DeleteFileModalDialog open={deleteFileDialogOpen} onClose={handleCloseDeleteFileDialog} file={selectedFile} />
+      )}
+      {/* {addFileModalOpen && (
+        <UploadFileModalDialog onClose={handleCloseFileDialog} open={addFileModalOpen} selectedFile={selectedFile} />
+      )} */}
+      {showFileDialogOpen && (
+        <ShowFileContentModalDialog
+          onClose={handleCloseShowFileContentDialog}
+          isOpen={showFileDialogOpen}
+          file={selectedFile}
+        />
+      )}
     </>
   );
 };

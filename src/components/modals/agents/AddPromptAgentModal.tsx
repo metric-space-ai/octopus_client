@@ -3,11 +3,14 @@ import {Fragment, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XMarkIcon} from '@heroicons/react/24/outline';
 import {useForm} from 'react-hook-form';
+import {useDispatch} from 'react-redux';
 
-import {authValidator} from '@/helpers/validators';
+import {createScheduledPrompts} from '@/app/lib/features/scheduledPrompts/scheduledPromptsSlice';
+import {AppDispatch} from '@/app/lib/store';
+import {agentPromptValidator} from '@/helpers/validators';
 
-import {Button, IconButton} from '../buttons';
-import {Input} from '../input';
+import {Button, IconButton} from '../../buttons';
+import {Input} from '../../input';
 
 interface ModalProps {
   open: boolean;
@@ -16,12 +19,13 @@ interface ModalProps {
 }
 
 interface IFormInputs {
-  name: string;
-  id: number;
+  prompt: string;
+  desired_schedule: string;
 }
 
 export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps) => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -30,10 +34,23 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
   } = useForm<IFormInputs>();
 
   const onSubmit = async (data: IFormInputs) => {
-    const {name, id} = data;
-    setLoading(true);
-    console.log('AddPromptAgentModal..onSubmit', {name, id, existed});
-    setLoading(false);
+    const {desired_schedule, prompt} = data;
+    setIsLoading(true);
+
+    try {
+      const {
+        meta: {requestStatus},
+      } = await dispatch(createScheduledPrompts({desired_schedule, prompt}));
+
+      if (requestStatus === 'fulfilled') {
+        onClose();
+      }
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      setIsLoading(false);
+    }
+    console.log('AddPromptAgentModal..onSubmit', {name, existed});
   };
 
   return (
@@ -75,15 +92,15 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
                     <Input
                       className='h-10'
                       placeholder='What'
-                      errors={errors.name && errors.name.message}
-                      rules={register('name', authValidator.name)}
+                      errors={errors.prompt && errors.prompt.message}
+                      rules={register('prompt', agentPromptValidator.prompt)}
                     />
 
                     <Input
                       className='h-10'
                       placeholder='When'
-                      errors={errors.id && errors.id.message}
-                      rules={register('id', authValidator.id)}
+                      errors={errors.desired_schedule && errors.desired_schedule.message}
+                      rules={register('desired_schedule', agentPromptValidator.desired_schedule)}
                     />
 
                     <div className='flex gap-2 pt-1.5'>
@@ -91,14 +108,16 @@ export const AddPromptAgentModal = ({open, onClose, existed = false}: ModalProps
                         className='w-1/2 !h-10 border'
                         variant='transparent'
                         title={`Cancel`}
-                        loading={loading}
+                        loading={isLoading}
                         onClick={onClose}
+                        disabled={isLoading}
                       />
                       <Button
                         className='w-1/2 !h-10'
                         variant='primary'
                         title={`Add an agent`}
-                        loading={loading}
+                        loading={isLoading}
+                        disabled={isLoading}
                         type='submit'
                       />
                     </div>

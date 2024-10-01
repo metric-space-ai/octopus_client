@@ -6,7 +6,7 @@ export interface IFile {
   file_name: string;
   media_type: string;
   original_file_name: string;
-  type: string;
+  type: IFileType;
   url: string;
   created_at: string;
   updated_at: string;
@@ -21,6 +21,13 @@ export interface IFile {
   // "url": "https://api.preview.octopus-ai.app/public/a3355804-08d6-4627-938b-db15a7c56e5f.json",
   // "created_at": "2024-08-14T12:28:34Z",
   // "updated_at": "2024-08-14T12:28:34Z"
+}
+
+export enum IFileType {
+  Document = 'Document',
+  KnowledgeBook = 'KnowledgeBook',
+  Normal = 'Normal',
+  TaskBook = 'TaskBook',
 }
 
 export interface IKnoledgebook {

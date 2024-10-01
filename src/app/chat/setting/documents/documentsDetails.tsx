@@ -1,33 +1,42 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect} from 'react';
 
 import {Disclosure} from '@headlessui/react';
 import {
-  CodeBracketSquareIcon,
   DocumentTextIcon,
+  EyeIcon,
   FilmIcon,
   GlobeAltIcon,
   MusicalNoteIcon,
+  // PencilSquareIcon,
   PhotoIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {selectDocuments} from '@/app/lib/features/documents/documentsSelector';
-import {getAllNextCloudDocuments} from '@/app/lib/features/documents/documentsSlice';
+import {selectFiles} from '@/app/lib/features/files/filesSelector';
+import {getAllFiles} from '@/app/lib/features/files/filesSlice';
 import {AppDispatch} from '@/app/lib/store';
 import {PdfTypeIcon} from '@/components/svgs';
+import {IFile} from '@/types';
 
-export default function DocumentsDetail() {
+type Props = {
+  // onEditFile: (file: IFile) => void;
+  onDeleteFile: (file: IFile) => void;
+  onShowContent: (file: IFile) => void;
+};
+const DocumentsDetails = ({onDeleteFile, onShowContent}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const {entities: documents, isLoading} = useSelector(selectDocuments);
+  const {entities: files, isLoading} = useSelector(selectFiles);
 
   const getFileType = (fileName: string) => {
     const splited = fileName.split('.');
-    if (splited.length > 1) return splited[splited.length - 1].toLocaleLowerCase();
+    if (splited.length > 1) return splited[splited.length - 1];
   };
 
   useEffect(() => {
-    dispatch(getAllNextCloudDocuments());
+    dispatch(getAllFiles());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -35,11 +44,17 @@ export default function DocumentsDetail() {
       <div className='w-full'>
         <div className='mx-auto w-full max-w-[560px] rounded-lg bg-grey-0'>
           <div className='flex mb-2'>
-            <div className='w-80 pl-7'>
+            <div className='w-40 pl-7'>
               <span className='font-medium text-xs leading-5 text-grey-600'>original name</span>
             </div>
-            <div className='w-28 flex justify-center ml-3'>
-              <span className='font-medium text-xs leading-5 text-grey-600'>type</span>
+            <div className='w-24 flex justify-center ml-3'>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Access Type</span>
+            </div>
+            <div className='w-24 flex justify-start ml-3'>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Type</span>
+            </div>
+            <div className='w-20 ml-3 text-center'>
+              <span className='font-medium text-xs leading-5 text-grey-600'>Format</span>
             </div>
           </div>
 
@@ -56,55 +71,116 @@ export default function DocumentsDetail() {
             )} */}
             {/* <div className='flex justify-center py-3 items-center border-t'></div> */}
 
-            {!documents || documents?.length === 0
+            {!files || files?.length === 0 || files.filter((elem) => elem.type !== 'KnowledgeBook').length === 0
               ? !isLoading && (
                   <div className='flex justify-center py-3 items-center border-t'>
                     <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
-              : documents?.map((document) => (
-                  <div className='flex justify-start py-3 items-center border-t' key={document}>
-                    <div className='flex gap-3 w-80 items-center'>
-                      {getFileType(document) === 'html' && <GlobeAltIcon className='w-4 h-4 text-primary-medium' />}
-                      {getFileType(document) === 'txt' && <DocumentTextIcon className='w-4 h-4 text-primary-medium' />}
-                      {(getFileType(document) === 'png' ||
-                        getFileType(document) === 'jpg' ||
-                        getFileType(document) === 'jpeg') && <PhotoIcon className='w-4 h-4 text-primary-medium' />}
-                      {getFileType(document) === 'pdf' && <PdfTypeIcon className='w-4 h-4 text-primary-medium' />}
-                      {getFileType(document)?.includes('mp4') && <FilmIcon className='w-4 h-4 text-primary-medium' />}
-                      {getFileType(document)?.includes('mp3') && (
-                        <MusicalNoteIcon className='w-4 h-4 text-primary-medium' />
-                      )}
-                      {getFileType(document)?.includes('json') && (
-                        <CodeBracketSquareIcon className='w-4 h-4 text-primary-medium' />
-                      )}
-                      <p className='text-xs leading-5 text-grey-900 font-semibold truncate ...' title={document}>
-                        {document}
+              : files
+                  .filter((elem) => elem.type !== 'KnowledgeBook')
+                  ?.map((file) => (
+                    <div className='flex justify-start py-3 items-center border-t' key={file.id}>
+                      <div className='flex gap-3 w-40 items-center'>
+                        <div className='min-w-[1rem]'>
+                          {getFileType(file.file_name) === 'html' && (
+                            <GlobeAltIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {(getFileType(file.file_name) === 'txt' || getFileType(file.file_name) === 'json') && (
+                            <DocumentTextIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {(getFileType(file.file_name) === 'png' ||
+                            getFileType(file.file_name) === 'jpg' ||
+                            getFileType(file.file_name) === 'jpeg') && (
+                            <PhotoIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name) === 'pdf' && (
+                            <PdfTypeIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name)?.includes('mp4') && (
+                            <FilmIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name)?.includes('mp3') && (
+                            <MusicalNoteIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                        </div>
+
+                        <Link
+                          href={file.url}
+                          target='_blank'
+                          className='flex justify-start items-center w-24 text-xs leading-5 font-semibold ml-3 truncate ... underline text-primary-medium'
+                          title={file.original_file_name}
+                        >
+                          {file.original_file_name}
+                        </Link>
+                        {/* <p
+                          className='text-xs leading-5 text-grey-900 font-semibold truncate ...'
+                          title={file.original_file_name}
+                        >
+                          {file.original_file_name}
+                        </p> */}
+                      </div>
+                      <p
+                        className='flex justify-center items-center w-24 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
+                        title={file.access_type ?? ''}
+                      >
+                        {file.access_type ?? ''}
                       </p>
-                    </div>
-                    {/* <p
-                      className='text-xxs leading-4 w-28 text-grey-800 font-medium pl-2 truncate ...'
-                      title={document}
-                    >
-                      {document}
-                    </p> */}
-                    <p
-                      className='flex justify-center items-center w-28 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
-                      title={getFileType(document) ?? ''}
-                    >
-                      {getFileType(document) ?? ''}
-                    </p>
-                    {/* 
+                      <p
+                        className='flex items-center w-24 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
+                        title={file.type ?? ''}
+                      >
+                        {file.type ?? ''}
+                      </p>
+
+                      {/* <Link
+                        href={file.url}
+                        target='_blank'
+                        className='flex justify-start items-center w-24 text-xs leading-5 font-semibold ml-3 truncate ... underline text-primary-medium'
+                        title={file.url ?? ''}
+                      >
+                        {file.url ?? ''}
+                      </Link> */}
+
+                      <p
+                        className='flex justify-center items-center w-20 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
+                        title={getFileType(file.file_name) ?? ''}
+                      >
+                        {getFileType(file.file_name) ?? ''}
+                      </p>
+                      <div className='ml-auto flex gap-3'>
+                        {
+                          <EyeIcon
+                            width={16}
+                            height={16}
+                            className='text-grey-900 cursor-pointer'
+                            onClick={() => onShowContent(file)}
+                          />
+                        }
+                        {/* <PencilSquareIcon
+                        width={16}
+                        height={16}
+                        onClick={() => onEditFile(file)}
+                        className='text-secondary-soft hover:text-secondary-700 cursor-pointer'
+                      /> */}
+                        <TrashIcon
+                          width={16}
+                          height={16}
+                          className='text-danger-500 hover:text-danger-500/50 cursor-pointer'
+                          onClick={() => onDeleteFile(file)}
+                        />
+                      </div>
+                      {/* 
                     <span
                       className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                       onClick={() => handleOpenDeleteDocumentDialog(document)}
                     >
                       <TrashIcon width={16} height={16} className='text-grey-800 cursor-pointer' />
                     </span> */}
-                  </div>
-                ))}
+                    </div>
+                  ))}
           </div>
-          {isLoading && (
+          {isLoading && !files && (
             <Disclosure>
               {() => (
                 <>
@@ -135,4 +211,5 @@ export default function DocumentsDetail() {
       )} */}
     </>
   );
-}
+};
+export default DocumentsDetails;

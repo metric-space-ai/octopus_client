@@ -71,101 +71,106 @@ const KnowledgeBookDetails = ({onDeleteFile, onShowContent}: Props) => {
             )} */}
             {/* <div className='flex justify-center py-3 items-center border-t'></div> */}
 
-            {!files || files?.length === 0
+            {!files || files?.length === 0 || files.filter((elem) => elem.type === 'KnowledgeBook').length === 0
               ? !isLoading && (
                   <div className='flex justify-center py-3 items-center border-t'>
                     <h2 className='text-lg text-primary uppercase'>not found</h2>
                   </div>
                 )
-              : files?.map((file) => (
-                  <div className='flex justify-start py-3 items-center border-t' key={file.id}>
-                    <div className='flex gap-3 w-40 items-center'>
-                      {getFileType(file.file_name) === 'html' && (
-                        <GlobeAltIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      {(getFileType(file.file_name) === 'txt' || getFileType(file.file_name) === 'json') && (
-                        <DocumentTextIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      {(getFileType(file.file_name) === 'png' ||
-                        getFileType(file.file_name) === 'jpg' ||
-                        getFileType(file.file_name) === 'jpeg') && (
-                        <PhotoIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      {getFileType(file.file_name) === 'pdf' && (
-                        <PdfTypeIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      {getFileType(file.file_name)?.includes('mp4') && (
-                        <FilmIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      {getFileType(file.file_name)?.includes('mp3') && (
-                        <MusicalNoteIcon className='w-4 h-4 text-primary-medium min-w-[12px]' />
-                      )}
-                      <p
-                        className='text-xs leading-5 text-grey-900 font-semibold truncate ...'
-                        title={file.original_file_name}
-                      >
-                        {file.original_file_name}
-                      </p>
-                    </div>
-                    {/* <p
+              : files
+                  .filter((elem) => elem.type === 'KnowledgeBook')
+                  ?.map((file) => (
+                    <div className='flex justify-start py-3 items-center border-t' key={file.id}>
+                      <div className='flex gap-3 w-40 items-center'>
+                        <div className='min-w-[1rem]'>
+                          {getFileType(file.file_name) === 'html' && (
+                            <GlobeAltIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {(getFileType(file.file_name) === 'txt' || getFileType(file.file_name) === 'json') && (
+                            <DocumentTextIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {(getFileType(file.file_name) === 'png' ||
+                            getFileType(file.file_name) === 'jpg' ||
+                            getFileType(file.file_name) === 'jpeg') && (
+                            <PhotoIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name) === 'pdf' && (
+                            <PdfTypeIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name)?.includes('mp4') && (
+                            <FilmIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                          {getFileType(file.file_name)?.includes('mp3') && (
+                            <MusicalNoteIcon className='w-4 h-4 text-primary-medium' />
+                          )}
+                        </div>
+                        <p
+                          className='text-xs leading-5 text-grey-900 font-semibold truncate ...'
+                          title={file.original_file_name}
+                        >
+                          {file.original_file_name}
+                        </p>
+                      </div>
+                      {/* <p
                       className='text-xxs leading-4 w-28 text-grey-800 font-medium pl-2 truncate ...'
                       title={document}
                     >
                       {document}
                     </p> */}
-                    <p
-                      className='flex justify-center items-center w-24 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
-                      title={file.access_type ?? ''}
-                    >
-                      {file.access_type ?? ''}
-                    </p>
+                      <p
+                        className='flex justify-center items-center w-24 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
+                        title={file.access_type ?? ''}
+                      >
+                        {file.access_type ?? ''}
+                      </p>
 
-                    <Link
-                      href={file.url}
-                      target='_blank'
-                      className='flex justify-start items-center w-24 text-xs leading-5 font-semibold ml-3 truncate ... underline text-primary-medium'
-                      title={file.url ?? ''}
-                    >
-                      {file.url ?? ''}
-                    </Link>
+                      <Link
+                        href={file.url}
+                        target='_blank'
+                        className='flex justify-start items-center w-24 text-xs leading-5 font-semibold ml-3 truncate ... underline text-primary-medium'
+                        title={file.url ?? ''}
+                      >
+                        {file.url ?? ''}
+                      </Link>
 
-                    <p
-                      className='flex justify-center items-center w-20 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
-                      title={getFileType(file.file_name) ?? ''}
-                    >
-                      {getFileType(file.file_name) ?? ''}
-                    </p>
-                    <div className='ml-auto flex gap-3'>
-                      {['KnowledgeBook', 'Document'].includes(file.type) && getFileType(file.file_name) === 'json' && (
-                        <EyeIcon
-                          width={16}
-                          height={16}
-                          className='text-grey-900 cursor-pointer'
-                          onClick={() => onShowContent(file)}
-                        />
-                      )}
-                      {/* <PencilSquareIcon
+                      <p
+                        className='flex justify-center items-center w-20 text-xs leading-5 text-grey-800 font-semibold ml-3 truncate ...'
+                        title={getFileType(file.file_name) ?? ''}
+                      >
+                        {getFileType(file.file_name) ?? ''}
+                      </p>
+                      <div className='ml-auto flex gap-3'>
+                        {['KnowledgeBook', 'Document'].includes(file.type) &&
+                          getFileType(file.file_name) === 'json' && (
+                            <EyeIcon
+                              width={16}
+                              height={16}
+                              className='text-grey-900 cursor-pointer'
+                              onClick={() => onShowContent(file)}
+                            />
+                          )}
+                        {/* <PencilSquareIcon
                         width={16}
                         height={16}
                         onClick={() => onEditFile(file)}
                         className='text-secondary-soft hover:text-secondary-700 cursor-pointer'
                       /> */}
-                      <TrashIcon
-                        width={16}
-                        height={16}
-                        className='text-danger-500 hover:text-danger-500/50 cursor-pointer'
-                        onClick={() => onDeleteFile(file)}
-                      />
-                    </div>
-                    {/* 
+                        <TrashIcon
+                          width={16}
+                          height={16}
+                          className='text-danger-500 hover:text-danger-500/50 cursor-pointer'
+                          onClick={() => onDeleteFile(file)}
+                        />
+                      </div>
+                      {/* 
                     <span
                       className='ml-auto p-1.5 hover:bg-danger-500/10 cursor-pointer transition rounded-full'
                       onClick={() => handleOpenDeleteDocumentDialog(document)}
                     >
                       <TrashIcon width={16} height={16} className='text-grey-800 cursor-pointer' />
                     </span> */}
-                  </div>
-                ))}
+                    </div>
+                  ))}
           </div>
           {isLoading && !files && (
             <Disclosure>

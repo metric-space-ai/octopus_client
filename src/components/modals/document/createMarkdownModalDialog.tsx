@@ -16,12 +16,12 @@ import toast from 'react-hot-toast';
 import {useDispatch} from 'react-redux';
 
 import {getAllPlugins} from '@/app/lib/features/aiServices/aiServicesSlice';
-import {getAllNextCloudDocuments} from '@/app/lib/features/documents/documentsSlice';
+import {createNewFile, getAllFiles} from '@/app/lib/features/files/filesSlice';
 import {AppDispatch} from '@/app/lib/store';
 import {Button, IconButton} from '@/components/buttons';
 import {Spinner} from '@/components/spinner';
 import {bytesCalculator} from '@/helpers';
-import {createNewNextCloudDocumentsApi, pdfToMarkdownApi} from '@/services/settings.service';
+import {pdfToMarkdownApi} from '@/services/settings.service';
 import {IPlugin} from '@/types';
 
 const DynamicMarkdownContent = dynamic(async () => (await import('@/components/markdown')).MarkdownContent, {
@@ -76,12 +76,15 @@ export const CreateMarkdownModalDialog = ({open, onClose}: ModalProps) => {
       formData.append('file', jsonBlob, `${file?.name}.json`); // Name the file 'pdfContent.json'
 
       // Make the API request to upload the file
-      const {status} = await createNewNextCloudDocumentsApi(formData);
+      const {
+        meta: {requestStatus},
+      } = await dispatch(createNewFile(formData));
+      // const {status} = await createNewNextCloudDocumentsApi(formData);
 
-      if (status === 201) {
+      if (requestStatus === 'fulfilled') {
         toast.success('upload successfull');
         setCurrentStep(ADDDOCUMENTSSTEPS.Uploaded);
-        dispatch(getAllNextCloudDocuments());
+        dispatch(getAllFiles());
         handleCloseModal();
       }
     } catch (err) {

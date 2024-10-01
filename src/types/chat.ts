@@ -58,6 +58,26 @@ export interface IChatMessage {
   wasp_app_id: string | null;
   ai_function_id: string | null;
   ai_function_error: string | null;
+  ai_service_id: null | string;
+  scheduled_prompt_id: null | string;
+  suggested_ai_function_id: null | string;
+  ai_function_call: {
+    arguments: {
+      title: string;
+    };
+    name: string;
+  };
+  bad_reply_comment: null | string;
+  bad_reply_is_harmful: boolean;
+  bad_reply_is_not_helpful: boolean;
+  bad_reply_is_not_true: boolean;
+  bypass_sensitive_information_filter: boolean;
+  progress: number;
+  suggested_llm: null | string;
+  suggested_model: null | string;
+  suggested_secondary_model: boolean;
+  used_llm: string;
+  used_model: string;
 }
 
 export interface IAiFunctionErrorParsed {
