@@ -31,6 +31,14 @@ export interface IContentSafety {
   content_safety_disabled_until: string;
 }
 
+export interface ICreateMessageBody {
+  bypass_sensitive_information_filter: boolean;
+  message: string;
+  suggested_ai_function_id?: string;
+  suggested_llm?: string;
+  suggested_model?: string;
+}
+
 export interface IChatMessage {
   id: string;
   created_at: string;
@@ -78,6 +86,9 @@ export interface IChatMessage {
   suggested_secondary_model: boolean;
   used_llm: string;
   used_model: string;
+
+  suggested_simple_app_id: null | string;
+  suggested_wasp_app_id: null | string;
 }
 
 export interface IAiFunctionErrorParsed {

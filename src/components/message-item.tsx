@@ -738,7 +738,11 @@ export const MessageItem = ({item, changeSafety, regenerateResponse, regenerateI
           confirmTitle={'Deactivate Content Safety'}
           onClose={() => setAlertModalOpen(false)}
         />
-        <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
+        <ProvideFeedbackModal
+          open={showProvideFeedbackModal}
+          onClose={() => setShowProvideFeedbackModal(false)}
+          message={item}
+        />
         <TranslatorModal
           open={showTranslatorModal}
           onClose={() => setShowTranslatorModal(false)}

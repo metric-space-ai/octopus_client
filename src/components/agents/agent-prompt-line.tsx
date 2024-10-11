@@ -7,7 +7,6 @@ import {
   HandThumbDownIcon,
   InformationCircleIcon,
   LanguageIcon,
-  ShieldCheckIcon,
   SpeakerWaveIcon,
 } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
@@ -262,7 +261,11 @@ const AgentPromptLine = ({item}: Props) => {
         </div>
         {/* </div> */}
       </div>
-      <ProvideFeedbackModal open={showProvideFeedbackModal} onClose={() => setShowProvideFeedbackModal(false)} />
+      <ProvideFeedbackModal
+        open={showProvideFeedbackModal}
+        onClose={() => setShowProvideFeedbackModal(false)}
+        message={item}
+      />
       <TranslatorModal
         open={showTranslatorModal}
         onClose={() => setShowTranslatorModal(false)}

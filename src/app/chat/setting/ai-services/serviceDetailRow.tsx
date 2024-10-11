@@ -210,7 +210,7 @@ const ServiceDetailRow = ({
                   <div className='relative'>
                     {isLoading && <Spinner size='small' className='absolute left-0 block' />}
                     <span
-                      className='items-center w-4 h-4 rounded-full block shadow-[0px_10px_20px_0px] shadow-grey-900/5'
+                      className='items-center w-4 h-4 rounded-full block shadow-md shadow-grey-900/5'
                       style={{backgroundColor: currentColor ?? WASPAPPTEMPLATECOLOR[0].value}}
                     />
                   </div>
@@ -324,7 +324,11 @@ const ServiceDetailRow = ({
             </span>
           </div>
           <Disclosure.Panel className='pl-5 flex justify-between items-center mt-2 pb-3'>
-            <ServiceFunctions serviceId={plugin.id} ai_functions={plugin.ai_functions} />
+            <ServiceFunctions
+              serviceId={plugin.id}
+              ai_functions={plugin.ai_functions}
+              changeIsDisabled={plugin.type === 'System'}
+            />
           </Disclosure.Panel>
         </Fragment>
       )}

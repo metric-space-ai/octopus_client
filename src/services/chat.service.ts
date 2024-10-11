@@ -1,6 +1,9 @@
+import axios from 'axios';
+
 import {
   IChatMessage,
   IContentSafety,
+  ICreateMessageBody,
   IScheduledPrompts,
   ISimpleApp,
   ITicket,
@@ -11,6 +14,24 @@ import {
 } from '@/types';
 
 import apiHub from '../hooks/useApiClient';
+
+//feedback-api
+export const sendSlackMessageApi = async (message: string) => {
+  // return apiHub.post<unknown>('api/sendSlackMessage', {message});
+  const response = await axios.post('/api/sendSlackMessage', {message});
+  return response.data;
+
+  // const payload = {
+  //   channel: NEXTPUBLICSLACKCHANNELID,
+  //   text: message,
+  // };
+
+  // return apiHub.post<unknown>(NEXTPUBLICSLACKWEBHOOKURL ?? 'https://slack.com/api/chat.postMessage', payload, {
+  //   headers: {
+  //     Authorization: `Bearer ${NEXTPUBLICSLACKBOTTOKEN}`,
+  //   },
+  // });
+};
 
 //scheduled-prompts Api
 export const getAllScheduledPromptsApi = () => {
@@ -78,12 +99,7 @@ export const getChatMessageApplicationCodeApi = async (appId: string) => {
   return apiHub.get<string>(`api/v1/simple-apps/${appId}/code`);
 };
 
-export const createChatMessageApi = async (
-  ticketId: string,
-  message: string,
-  bypass_sensitive_information_filter: boolean,
-) => {
-  const payload = {message, bypass_sensitive_information_filter};
+export const createChatMessageApi = async (ticketId: string, payload: ICreateMessageBody) => {
   return apiHub.post<IChatMessage>(`api/v1/chat-messages/${ticketId}`, payload);
 };
 

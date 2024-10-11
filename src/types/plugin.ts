@@ -14,6 +14,7 @@ export interface IAIFunctions {
   id: string;
   ai_service_id: string;
   description: string;
+  display_name: string;
   formatted_name: string;
   is_enabled: boolean;
   name: string;
@@ -77,6 +78,9 @@ export interface IPlugin {
   allowed_user_ids?: string[];
   type: 'Normal' | 'System';
   color: string | null;
+
+  ai_service_generator_id?: null | string;
+  priority?: number;
 }
 
 export interface IDeviceMap {

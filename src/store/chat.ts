@@ -22,7 +22,16 @@ import {
   updateContentSafetyApi,
   updateWorkspaceApi,
 } from '@/services/chat.service';
-import {IChatMessage, IContentSafety, ITicket, IWorkspace} from '@/types';
+import {
+  IAIFunctions,
+  IChatMessage,
+  IContentSafety,
+  ICreateMessageBody,
+  IModel,
+  ITicket,
+  IWaspApp,
+  IWorkspace,
+} from '@/types';
 
 interface ChatStore {
   workspaces: IWorkspace[];
@@ -35,6 +44,16 @@ interface ChatStore {
   contentSafetyDetails: IContentSafety;
   enabledContentSafety: boolean;
   inputIsDesabled: boolean;
+
+  selectedManualWaspApp: IWaspApp | undefined;
+  selectedManualOllamaModel: IModel | undefined;
+  selectedManualAiFunc: IAIFunctions | undefined;
+  selectedManualLlm: string | undefined;
+  setSelectedManualWaspApp: (value: IWaspApp | undefined) => void;
+  setSelectedManualOllamaModel: (value: IModel | undefined) => void;
+  setSelectedManualAiFunc: (value: IAIFunctions | undefined) => void;
+  setSelectedManualLlm: (value: string | undefined) => void;
+
   checkChatInputIsDisabled: () => void;
   createNewWorkspace: (name: string, type: string) => void;
   updateWorkspace: (idx: string, name: string, type: string) => void;
@@ -45,7 +64,7 @@ interface ChatStore {
   changeNewTicketToggle: (toggle?: boolean) => void;
   deleteTicket: (idx: string) => void;
   renameTicket: (idx: string, payload: {name: string}) => void;
-  newMessage: (message: string, sensitivty_check: boolean) => Promise<void>;
+  newMessage: (payload: ICreateMessageBody) => Promise<void>;
   editMessage: (chatMessage: IChatMessage, newMssage: string) => void;
   updateMessage: (chatMessage: IChatMessage) => void;
   deleteMessage: (chatMessage: IChatMessage, hasLoading?: boolean) => void;
@@ -60,6 +79,10 @@ interface ChatStore {
 }
 
 export const useChatStore = create<ChatStore>()((set, get) => ({
+  selectedManualWaspApp: undefined,
+  selectedManualOllamaModel: undefined,
+  selectedManualAiFunc: undefined,
+  selectedManualLlm: undefined,
   workspaces: [],
   tickets: [],
   contentSafetyDetails: {
@@ -82,6 +105,18 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       !message.is_anonymized &&
       !message.is_marked_as_not_sensitive;
     set({inputIsDesabled: isSensitive});
+  },
+  setSelectedManualWaspApp(value) {
+    set({selectedManualWaspApp: value});
+  },
+  setSelectedManualOllamaModel(value) {
+    set({selectedManualOllamaModel: value});
+  },
+  setSelectedManualAiFunc(value) {
+    set({selectedManualAiFunc: value});
+  },
+  setSelectedManualLlm(value) {
+    set({selectedManualLlm: value});
   },
   getWorkspaces() {
     getWorkspacesApi().then((res) => {
@@ -248,11 +283,12 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
       }
     }
   },
-  async newMessage(message: string, sensitivty_check: boolean) {
+  async newMessage(payload: ICreateMessageBody) {
+    // async newMessage(message: string, sensitivty_check: boolean) {
     const isNewTicket = get().isNewTicket;
     const currentWorkspaceId = get().currentWorkspaceId;
     const currentTicketId = get().currentTicketId;
-    const bypass_sensitive_information_filter = sensitivty_check;
+    // const bypass_sensitive_information_filter = sensitivty_check;
     if (isNewTicket || !currentTicketId) {
       // create new ticket
       set({messages: []});
@@ -261,7 +297,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           const ticketId = res.data.id;
           set({currentTicketId: ticketId});
           // send new message
-          createChatMessageApi(ticketId, message, bypass_sensitive_information_filter).then((res) => {
+          createChatMessageApi(ticketId, payload).then((res) => {
             const messages = get().messages;
             get().updateMessage(res.data);
             set({messages: [...messages, {...res.data}]});
@@ -272,7 +308,7 @@ export const useChatStore = create<ChatStore>()((set, get) => ({
           console.log(e);
         });
     } else if (currentTicketId) {
-      createChatMessageApi(currentTicketId, message, bypass_sensitive_information_filter).then((res) => {
+      createChatMessageApi(currentTicketId, payload).then((res) => {
         const messages = get().messages;
         set({messages: [...messages, {...res.data}]});
         set({isNewTicket: false});

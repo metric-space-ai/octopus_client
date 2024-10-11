@@ -11,16 +11,25 @@ type Props = {
   onChange: (checked: boolean) => void;
   disabled?: boolean;
   bodyClassName?: string;
+  className?: string;
 };
 
-const CustomCheckbox = ({active, onChange, title, description, disabled = false, bodyClassName = ''}: Props) => {
+const CustomCheckbox = ({
+  active,
+  onChange,
+  title,
+  description,
+  disabled = false,
+  className,
+  bodyClassName = '',
+}: Props) => {
   return (
-    <Switch checked={active} onChange={onChange} className={`flex `} disabled={disabled}>
-      <span className='sr-only'>Use setting</span>
+    <Switch checked={active} onChange={onChange} className={classNames('flex', className)} disabled={disabled}>
+      <span className='sr-only'>{title}</span>
       <div
         className={classNames(
-          `relative inline-flex h-4 w-4 cursor-pointer rounded-2xs border-[1.25px] border-grey-900
-        transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-grey-0 focus-visible:ring-opacity-75`,
+          'c-custom-checkbox relative inline-flex h-4 w-4 cursor-pointer rounded-2xs border-[1.25px] border-grey-900 transition-colors duration-200 ease-in-out',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-grey-0 focus-visible:ring-opacity-75',
         )}
       >
         {active && <CheckIcon width={14} height={14} className='text-primary stroke-4 m-auto' />}

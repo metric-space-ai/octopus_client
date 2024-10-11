@@ -16,6 +16,7 @@ import {
   IUser,
   IWaspApp,
   TDirectCallResponse,
+  TLlmModel,
   TNextCluodDoc,
   TOllamaModel,
 } from '@/types';
@@ -246,6 +247,11 @@ export const UpdateFileByIdApi = ({id, file}: {id: string; file: FormData}) => {
 };
 export const deleteFileByIdApi = (id: string) => {
   return apiHub.delete<null>(`api/v1/files/${id}`);
+};
+
+//llm Api
+export const getllmModelsApi = () => {
+  return apiHub.get<TLlmModel>(`api/v1/llms`);
 };
 
 //Models Api

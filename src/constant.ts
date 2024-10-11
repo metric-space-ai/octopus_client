@@ -6,6 +6,9 @@ import {PartialTRoleLabel, TRecordPluginStatus, TRole, TThemeName, TWaspAppBgCol
 export const APPREQUESTBASEURL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 export const APPTHEMENAME: TThemeName = (process.env.NEXT_PUBLIC_THEME_NAME as TThemeName) ?? 'default-dark';
 export const WASPAPPREQUESTBASEURL = process.env.NEXT_PUBLIC_WASP_BASE_URL ?? '';
+export const NEXTPUBLICSLACKWEBHOOKURL = process.env.NEXT_PUBLIC_SLACK_WEBHOOK_URL ?? '';
+export const NEXTPUBLICSLACKCHANNELID = process.env.NEXT_PUBLIC_SLACK_CHANNEL_ID ?? '';
+export const NEXTPUBLICSLACKBOTTOKEN = process.env.NEXT_PUBLIC_SLACK_BOT_TOKEN ?? '';
 export const VERSION_NUM = 'v0.7.0';
 export const RUNTIME_CONFIG_DOM = 'danger-runtime-config';
 export const DEFAULT_API_HOST = 'https://chatgpt1.nextweb.fun/api/proxy';

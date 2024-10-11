@@ -19,7 +19,7 @@ import {usePageVisibility, useScrollToBottom} from '@/hooks';
 import {useChatStore} from '@/store';
 // import {Agents} from '@/components/agents';
 // import {VoiceChatModal} from '@/components/modals/voiceChatModal';
-import {IChatMessage} from '@/types';
+import {IChatMessage, ICreateMessageBody} from '@/types';
 
 const DynamicMessageItem = dynamic(async () => (await import('@/components/message-item')).MessageItem, {
   ssr: false,
@@ -52,6 +52,9 @@ export default function ChatPage() {
     enabledContentSafety,
     inputIsDesabled,
     deleteMessage,
+    selectedManualOllamaModel,
+    selectedManualAiFunc,
+    selectedManualLlm,
   } = useChatStore();
   const {user} = useAuthContext();
 
@@ -131,7 +134,20 @@ export default function ChatPage() {
   };
   const doSubmit = (userInput: string) => {
     if (userInput.trim() === '') return;
-    newMessage(userInput, !enabledContentSafety);
+    const payload: ICreateMessageBody = {
+      bypass_sensitive_information_filter: !enabledContentSafety,
+      message: userInput,
+    };
+    if (selectedManualAiFunc) payload.suggested_ai_function_id = selectedManualAiFunc.id;
+    if (selectedManualLlm) payload.suggested_llm = selectedManualLlm;
+    if (selectedManualOllamaModel) payload.suggested_model = selectedManualOllamaModel.id;
+
+    //       selectedManualWaspApp
+    // selectedManualOllamaModel
+    // selectedManualAiFunc
+    // selectedManualLlm
+
+    newMessage(payload);
     setUserInput('');
     setAutoScroll(true);
   };
