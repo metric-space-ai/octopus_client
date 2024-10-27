@@ -4,6 +4,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {MicrophoneIcon, PaperAirplaneIcon, ShieldCheckIcon} from '@heroicons/react/24/outline';
+import classNames from 'classnames';
 import dynamic from 'next/dynamic';
 import {useDebouncedCallback} from 'use-debounce';
 
@@ -16,6 +17,7 @@ import PluginOperationSelection from '@/components/popover/plugin-operation-sele
 import {useAuthContext} from '@/contexts/authContext';
 import {autoGrowTextArea} from '@/helpers';
 import {usePageVisibility, useScrollToBottom} from '@/hooks';
+import useCustomSpeechRecognition from '@/hooks/useCustomSpeechRecognition';
 import {useChatStore} from '@/store';
 // import {Agents} from '@/components/agents';
 // import {VoiceChatModal} from '@/components/modals/voiceChatModal';
@@ -41,6 +43,7 @@ export default function ChatPage() {
   const [expandedAgents, setExpandedAgents] = useState(false);
   const [openVoiceChatModal, setOpenVoiceChatModal] = useState(false);
   const [showWarningSnackBarWhenSafetyDisabled, setShowWarningSnackBarWhenSafetyDisabled] = useState(false);
+  const {transcript, isListening, startListening, stopListening, hasRecognitionSupport} = useCustomSpeechRecognition();
 
   const {
     loading,
@@ -53,8 +56,9 @@ export default function ChatPage() {
     inputIsDesabled,
     deleteMessage,
     selectedManualOllamaModel,
+    selectedManualWaspApp,
     selectedManualAiFunc,
-    selectedManualLlm,
+    // selectedManualLlm,
   } = useChatStore();
   const {user} = useAuthContext();
 
@@ -139,8 +143,9 @@ export default function ChatPage() {
       message: userInput,
     };
     if (selectedManualAiFunc) payload.suggested_ai_function_id = selectedManualAiFunc.id;
-    if (selectedManualLlm) payload.suggested_llm = selectedManualLlm;
-    if (selectedManualOllamaModel) payload.suggested_model = selectedManualOllamaModel.id;
+    // if (selectedManualLlm) payload.suggested_llm = selectedManualLlm;
+    if (selectedManualOllamaModel) payload.suggested_model = selectedManualOllamaModel.name;
+    if (selectedManualWaspApp) payload.suggested_wasp_app_id = selectedManualWaspApp.id;
 
     //       selectedManualWaspApp
     // selectedManualOllamaModel
@@ -168,6 +173,11 @@ export default function ChatPage() {
   const handleRegenerateResponse = (chatItem: IChatMessage) => {
     doSubmit(chatItem.message);
     deleteMessage(chatItem, false);
+  };
+
+  const handleStartVoiceRecognition = () => {
+    // speehOnSoundEffect.play();
+    startListening();
   };
 
   useEffect(() => {
@@ -198,6 +208,18 @@ export default function ChatPage() {
     }
   }, [isNewTicket]);
 
+  useEffect(() => {
+    if (!hasRecognitionSupport) {
+      alert("Browser doesn't support speech recognition.");
+    }
+  }, [hasRecognitionSupport]);
+  useEffect(() => {
+    if (!isListening && transcript.length > 0) {
+      onInput(`${userInput}${transcript}`);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isListening]);
   return (
     <div className='relative flex h-chat-screen-height rounded-bl-xl w-full'>
       <div
@@ -249,8 +271,30 @@ export default function ChatPage() {
         </div>
         <div className='relative w-full p-5 border-box flex flex-col'>
           <div className='relative flex-1 flex'>
-            <IconButton className='absolute left-3 top-[calc(50%-20px)] ' onClick={() => setOpenVoiceChatModal(true)}>
-              <MicrophoneIcon className='w-5 h-5 text-grey-900' width={20} height={20} />
+            <IconButton
+              className={classNames(
+                'absolute left-3 top-[calc(50%-20px)] cursor-pointer rounded-full',
+                isListening ? 'animate-ring-3s ring-4 ring-primary/[0.11] !bg-danger-500/25' : 'bg-grey-0',
+                loading && 'pointer-events-none',
+              )}
+              //  onClick={() => setOpenVoiceChatModal(true)}
+              onClick={isListening ? stopListening : handleStartVoiceRecognition}
+            >
+              {/* <span
+                className={classNames(
+                  'absolute left-3 top-[calc(50%-20px)]',
+                  isListening ? 'animate-ring-3s ring-4 ring-primary/[0.11] bg-danger-500' : 'bg-grey-0',
+                  'cursor-pointer',
+                  loading && 'pointer-events-none',
+                )}
+              > */}
+              {/* <MicrophoneIcon className={classNames('w-5 h-5', isListening ? 'text-grey-0' : 'text-grey-900')} /> */}
+              <MicrophoneIcon
+                className={classNames('rounded-full', isListening ? 'text-danger-500' : 'text-grey-900')}
+                width={20}
+                height={20}
+              />
+              {/* </span> */}
             </IconButton>
             <textarea
               ref={inputRef}
@@ -258,7 +302,7 @@ export default function ChatPage() {
               className={`w-full border py-4 pr-[90px] pl-14 rounded-4xl resize-none outline-none focus:border-grey-900 custom-scrollbar-thumb ${
                 inputIsDisabled ? 'opacity-40 cursor-not-allowed' : ''
               }`}
-              placeholder='Ask anything'
+              placeholder={isListening ? 'Is Listening' : 'Ask anything'}
               onChange={(e) => onInput(e.currentTarget.value)}
               value={userInput}
               onKeyDown={onInputKeyDown}

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 
+import {ClipboardIcon} from '@heroicons/react/24/outline';
 import {useRouter} from 'next/navigation';
 import {useForm} from 'react-hook-form';
 import {toast} from 'react-hot-toast';
@@ -8,7 +9,6 @@ import {Button} from '@/components/buttons';
 import {Input} from '@/components/input';
 import {resetPassByUserValidator} from '@/helpers/validators';
 import {resetPasswordApi} from '@/services/auth.service';
-import {ClipboardIcon} from '@heroicons/react/24/outline';
 
 interface IFormInputs {
   token: string;

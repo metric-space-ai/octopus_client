@@ -12,7 +12,7 @@ import {getAllModels} from '@/app/lib/features/ollamaModels/modelsSlice';
 import {selectWaspApps} from '@/app/lib/features/waspApps/waspAppsSelector';
 import {getAllWaspApps} from '@/app/lib/features/waspApps/waspAppsSlice';
 import {AppDispatch} from '@/app/lib/store';
-import {getAiFunctionsByServiceIdApi, getllmModelsApi} from '@/services/settings.service';
+import {getAiFunctionsByServiceIdApi} from '@/services/settings.service';
 import {useChatStore} from '@/store';
 import {IAIFunctions, IModel, IPlugin, IWaspApp} from '@/types';
 
@@ -34,15 +34,15 @@ const PluginOperationSelection = ({className}: Props) => {
     EOperationSelection.Auto,
   );
   const [aiFunctionAutoSelection, setAiFunctionAutoSelection] = useState<EOperationSelection>(EOperationSelection.Auto);
-  const [llmModelsAutoSelection, setLlmModelsAutoSelection] = useState<EOperationSelection>(EOperationSelection.Auto);
+  // const [llmModelsAutoSelection, setLlmModelsAutoSelection] = useState<EOperationSelection>(EOperationSelection.Auto);
 
   // const [selectedManualWaspApp, setSelectedManualWaspApp] = useState<IWaspApp>();
   // const [selectedManualOllamaModel, setSelectedManualOllamaModel] = useState<IModel>();
   // const [selectedManualAiFunc, setSelectedManualAiFunc] = useState<IAIFunctions>();
   // const [selectedManualLlm, setSelectedManualLlm] = useState<string>();
 
-  const [llmModels, setLlmModels] = useState<string[]>();
-  const [llmModelsIsLoading, setLlmModelsIsLoading] = useState(false);
+  // const [llmModels, setLlmModels] = useState<string[]>();
+  // const [llmModelsIsLoading, setLlmModelsIsLoading] = useState(false);
   const [aiFunctions, setAiFunctions] = useState<IAIFunctions[]>();
   const [servicesFunctionIsLoading, setServicesFunctionIsLoading] = useState(false);
 
@@ -50,37 +50,37 @@ const PluginOperationSelection = ({className}: Props) => {
     selectedManualWaspApp,
     selectedManualOllamaModel,
     selectedManualAiFunc,
-    selectedManualLlm,
+    // selectedManualLlm,
     setSelectedManualWaspApp,
     setSelectedManualOllamaModel,
     setSelectedManualAiFunc,
-    setSelectedManualLlm,
+    // setSelectedManualLlm,
   } = useChatStore();
 
   const dispatch = useDispatch<AppDispatch>();
   const {entities: waspAppEntities, isLoading: waspEntitiesIsLoading} = useSelector(selectWaspApps);
   const {entities: ollamaModelEntities, ollamaIsLoading} = useSelector(selectModels);
 
-  const memoizedLlmModels = useMemo(() => {
-    if (!llmModels) return null;
-    return llmModels.map((llm) => (
-      <RadioGroup.Option key={`llm-model-${llm}`} value={llm} className='flex cursor-pointer'>
-        {({checked}) => (
-          <div className='flex w-full items-center gap-3'>
-            <RadioButtonSelect selected={checked} />
-            <div className='flex items-center gap-1.5'>
-              <RadioGroup.Label
-                as='p'
-                className='font-semibold text-gray-900 text-sm leading-normal truncate max-w-[160px]'
-              >
-                {llm}
-              </RadioGroup.Label>
-            </div>
-          </div>
-        )}
-      </RadioGroup.Option>
-    ));
-  }, [llmModels]);
+  // const memoizedLlmModels = useMemo(() => {
+  //   if (!llmModels) return null;
+  //   return llmModels.map((llm) => (
+  //     <RadioGroup.Option key={`llm-model-${llm}`} value={llm} className='flex cursor-pointer'>
+  //       {({checked}) => (
+  //         <div className='flex w-full items-center gap-3'>
+  //           <RadioButtonSelect selected={checked} />
+  //           <div className='flex items-center gap-1.5'>
+  //             <RadioGroup.Label
+  //               as='p'
+  //               className='font-semibold text-gray-900 text-sm leading-normal truncate max-w-[160px]'
+  //             >
+  //               {llm}
+  //             </RadioGroup.Label>
+  //           </div>
+  //         </div>
+  //       )}
+  //     </RadioGroup.Option>
+  //   ));
+  // }, [llmModels]);
 
   const memoizedAiFunctions = useMemo(() => {
     if (!aiFunctions) return null;
@@ -145,10 +145,10 @@ const PluginOperationSelection = ({className}: Props) => {
         setAiFunctionAutoSelection(value);
         if (value === EOperationSelection.Auto) setSelectedManualAiFunc(undefined);
         break;
-      case 'llm':
-        setLlmModelsAutoSelection(value);
-        if (value === EOperationSelection.Auto) setSelectedManualLlm(undefined);
-        break;
+      // case 'llm':
+      //   setLlmModelsAutoSelection(value);
+      //   if (value === EOperationSelection.Auto) setSelectedManualLlm(undefined);
+      // break;
       default:
         break;
     }
@@ -160,28 +160,28 @@ const PluginOperationSelection = ({className}: Props) => {
   const handleChangeSeletedManualOllamaModel = (value: IModel) => {
     setSelectedManualOllamaModel(value);
   };
-  const handleChangeSeletedManualLlm = (value: string) => {
-    setSelectedManualLlm(value);
-  };
+  // const handleChangeSeletedManualLlm = (value: string) => {
+  //   setSelectedManualLlm(value);
+  // };
 
   const handleChangeSeletedManualWaspApp = (value: IWaspApp) => {
     setSelectedManualWaspApp(value);
   };
 
-  const handleGetAllLlmModels = async () => {
-    setLlmModelsIsLoading(true);
-    try {
-      const {status, data: llmModels} = await getllmModelsApi();
-      if (status === 200) {
-        const flatAndSortedModels = Object.values(llmModels).flat().sort();
-        setLlmModels(flatAndSortedModels);
-      }
-    } catch (err) {
-      console.log({err});
-    } finally {
-      setLlmModelsIsLoading(false);
-    }
-  };
+  // const handleGetAllLlmModels = async () => {
+  //   setLlmModelsIsLoading(true);
+  //   try {
+  //     const {status, data: llmModels} = await getllmModelsApi();
+  //     if (status === 200) {
+  //       const flatAndSortedModels = Object.values(llmModels).flat().sort();
+  //       setLlmModels(flatAndSortedModels);
+  //     }
+  //   } catch (err) {
+  //     console.log({err});
+  //   } finally {
+  //     setLlmModelsIsLoading(false);
+  //   }
+  // };
 
   const fetchAiServices = async () => {
     setServicesFunctionIsLoading(true);
@@ -209,7 +209,7 @@ const PluginOperationSelection = ({className}: Props) => {
   useEffect(() => {
     dispatch(getAllWaspApps());
     dispatch(getAllModels());
-    handleGetAllLlmModels();
+    // handleGetAllLlmModels();
     if (!aiFunctions) fetchAiServices();
   }, []);
 
@@ -235,8 +235,7 @@ const PluginOperationSelection = ({className}: Props) => {
               <Popover.Panel className='absolute -right-10 bottom-16 z-10 mt-3 w-screen max-w-[313px] px-4 sm:px-0'>
                 <div className='flex flex-col rounded-lg p-5 bg-grey-0 shadow-operation-selection gap-2'>
                   <h2 className='font-semibold text-base text-grey-900 mb-2'>Operation Selection</h2>
-
-                  <div className='overflow-hidden'>
+                  {/* <div className='overflow-hidden'>
                     <h3 className='font-semibold text-sm mb-2 text-grey-900'>llm</h3>
                     <RadioGroup
                       value={llmModelsAutoSelection}
@@ -325,80 +324,7 @@ const PluginOperationSelection = ({className}: Props) => {
                         )}
                       </div>
                     </RadioGroup>
-                  </div>
-                  <span className='w-3/4 mx-auto bg-grey-50/90 h-[1px]' />
-                  <div className='overflow-hidden'>
-                    <h3 className='font-semibold text-sm mb-2.5 text-grey-900'>Ai-Function</h3>
-                    <RadioGroup
-                      value={aiFunctionAutoSelection}
-                      onChange={(value) => handleChangeAiFuncAutoSelection(value, 'aiFunc')}
-                    >
-                      <RadioGroup.Label className='sr-only'>Ai-Function Operation Selection</RadioGroup.Label>
-                      <div className='flex flex-col gap-2'>
-                        <RadioGroup.Option
-                          key='ai-func-Operation-auto'
-                          value={EOperationSelection.Auto}
-                          className={() => `relative flex cursor-pointer`}
-                        >
-                          {({checked}) => (
-                            <>
-                              <div className='flex w-full items-center gap-1 text-sm'>
-                                <RadioButtonSelect selected={checked} />
-
-                                <RadioGroup.Label as='p' className={`text-gray-900 font-medium text-sm`}>
-                                  {'Auto'}
-                                </RadioGroup.Label>
-                              </div>
-                            </>
-                          )}
-                        </RadioGroup.Option>
-                        <RadioGroup.Option
-                          key='ai-func-Operation-manual'
-                          value={EOperationSelection.Manual}
-                          className={() => `relative flex cursor-pointer`}
-                        >
-                          {({checked}) => (
-                            <>
-                              <div className='flex w-full items-center gap-1 text-sm'>
-                                <RadioButtonSelect selected={checked} />
-
-                                <RadioGroup.Label as='p' className={`font-medium text-gray-900 text-sm`}>
-                                  {'Manual'}
-                                </RadioGroup.Label>
-                              </div>
-                            </>
-                          )}
-                        </RadioGroup.Option>
-                        {aiFunctionAutoSelection === EOperationSelection.Manual && (
-                          <div className='pl-7 flex flex-col'>
-                            {servicesFunctionIsLoading && (
-                              <div className='flex items-center justify-center h-12'>
-                                <ArrowPathIcon className='animate-spin w-6 h-6' />
-                              </div>
-                            )}
-
-                            {!servicesFunctionIsLoading && (
-                              <RadioGroup value={selectedManualAiFunc} onChange={handleChangeSeletedManualAiFunc}>
-                                <RadioGroup.Label className='sr-only'>
-                                  Ai-Function Operation Manual Selection
-                                </RadioGroup.Label>
-                                <div className='flex flex-col gap-2 py-1 max-h-36 custom-scrollbar-thumb'>
-                                  {!aiFunctions || aiFunctions?.length === 0 ? (
-                                    <div className='flex items-center justify-center h-12'>
-                                      <h4 className='capitalize text-grey-900'>not found any Ai-Function</h4>
-                                    </div>
-                                  ) : (
-                                    memoizedAiFunctions
-                                  )}
-                                </div>
-                              </RadioGroup>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  <span className='w-3/4 mx-auto bg-grey-50/90 h-[1px]' />
+                  </div> */}{' '}
                   <div className='overflow-hidden'>
                     <h3 className='font-semibold text-sm mb-2.5 text-grey-900'>Model</h3>
                     <RadioGroup
@@ -464,6 +390,78 @@ const PluginOperationSelection = ({className}: Props) => {
                                     </div>
                                   ) : (
                                     memoizedOllamaModelEntities
+                                  )}
+                                </div>
+                              </RadioGroup>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <span className='w-3/4 mx-auto bg-grey-50/90 h-[1px]' />
+                  <div className='overflow-hidden'>
+                    <h3 className='font-semibold text-sm mb-2.5 text-grey-900'>Ai-Function</h3>
+                    <RadioGroup
+                      value={aiFunctionAutoSelection}
+                      onChange={(value) => handleChangeAiFuncAutoSelection(value, 'aiFunc')}
+                    >
+                      <RadioGroup.Label className='sr-only'>Ai-Function Operation Selection</RadioGroup.Label>
+                      <div className='flex flex-col gap-2'>
+                        <RadioGroup.Option
+                          key='ai-func-Operation-auto'
+                          value={EOperationSelection.Auto}
+                          className={() => `relative flex cursor-pointer`}
+                        >
+                          {({checked}) => (
+                            <>
+                              <div className='flex w-full items-center gap-1 text-sm'>
+                                <RadioButtonSelect selected={checked} />
+
+                                <RadioGroup.Label as='p' className={`text-gray-900 font-medium text-sm`}>
+                                  {'Auto'}
+                                </RadioGroup.Label>
+                              </div>
+                            </>
+                          )}
+                        </RadioGroup.Option>
+                        <RadioGroup.Option
+                          key='ai-func-Operation-manual'
+                          value={EOperationSelection.Manual}
+                          className={() => `relative flex cursor-pointer`}
+                        >
+                          {({checked}) => (
+                            <>
+                              <div className='flex w-full items-center gap-1 text-sm'>
+                                <RadioButtonSelect selected={checked} />
+
+                                <RadioGroup.Label as='p' className={`font-medium text-gray-900 text-sm`}>
+                                  {'Manual'}
+                                </RadioGroup.Label>
+                              </div>
+                            </>
+                          )}
+                        </RadioGroup.Option>
+                        {aiFunctionAutoSelection === EOperationSelection.Manual && (
+                          <div className='pl-7 flex flex-col'>
+                            {servicesFunctionIsLoading && (
+                              <div className='flex items-center justify-center h-12'>
+                                <ArrowPathIcon className='animate-spin w-6 h-6' />
+                              </div>
+                            )}
+
+                            {!servicesFunctionIsLoading && (
+                              <RadioGroup value={selectedManualAiFunc} onChange={handleChangeSeletedManualAiFunc}>
+                                <RadioGroup.Label className='sr-only'>
+                                  Ai-Function Operation Manual Selection
+                                </RadioGroup.Label>
+                                <div className='flex flex-col gap-2 py-1 max-h-36 custom-scrollbar-thumb'>
+                                  {!aiFunctions || aiFunctions?.length === 0 ? (
+                                    <div className='flex items-center justify-center h-12'>
+                                      <h4 className='capitalize text-grey-900'>not found any Ai-Function</h4>
+                                    </div>
+                                  ) : (
+                                    memoizedAiFunctions
                                   )}
                                 </div>
                               </RadioGroup>

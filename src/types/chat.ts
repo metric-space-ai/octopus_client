@@ -37,6 +37,8 @@ export interface ICreateMessageBody {
   suggested_ai_function_id?: string;
   suggested_llm?: string;
   suggested_model?: string;
+  suggested_simple_app_id?: string;
+  suggested_wasp_app_id?: string;
 }
 
 export interface IChatMessage {
