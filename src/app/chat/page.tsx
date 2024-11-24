@@ -280,31 +280,20 @@ export default function ChatPage() {
               //  onClick={() => setOpenVoiceChatModal(true)}
               onClick={isListening ? stopListening : handleStartVoiceRecognition}
             >
-              {/* <span
-                className={classNames(
-                  'absolute left-3 top-[calc(50%-20px)]',
-                  isListening ? 'animate-ring-3s ring-4 ring-primary/[0.11] bg-danger-500' : 'bg-grey-0',
-                  'cursor-pointer',
-                  loading && 'pointer-events-none',
-                )}
-              > */}
-              {/* <MicrophoneIcon className={classNames('w-5 h-5', isListening ? 'text-grey-0' : 'text-grey-900')} /> */}
               <MicrophoneIcon
                 className={classNames('rounded-full', isListening ? 'text-danger-500' : 'text-grey-900')}
                 width={20}
                 height={20}
               />
-              {/* </span> */}
             </IconButton>
             <textarea
               ref={inputRef}
-              // className='w-full border py-[10px] pr-[90px] pl-[14px] rounded-full resize-none outline-none focus:border-grey-900'
               className={`w-full border py-4 pr-[90px] pl-14 rounded-4xl resize-none outline-none focus:border-grey-900 custom-scrollbar-thumb ${
                 inputIsDisabled ? 'opacity-40 cursor-not-allowed' : ''
               }`}
               placeholder={isListening ? 'Is Listening' : 'Ask anything'}
               onChange={(e) => onInput(e.currentTarget.value)}
-              value={userInput}
+              value={isListening ? `${userInput}${transcript}` : userInput}
               onKeyDown={onInputKeyDown}
               onFocus={() => setAutoScroll(true)}
               onBlur={() => setAutoScroll(false)}

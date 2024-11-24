@@ -73,9 +73,10 @@ export const CreateMarkdownModalDialog = ({open, onClose}: ModalProps) => {
 
       // Create FormData and append the JSON Blob as a file
       const formData = new FormData();
-      formData.append('file', jsonBlob, `${file?.name}.json`); // Name the file 'pdfContent.json'
+      formData.append('file', jsonBlob, `${file?.name}.json`);
+      formData.append('type', 'Normal');
+      formData.append('access_type', 'Company');
 
-      // Make the API request to upload the file
       const {
         meta: {requestStatus},
       } = await dispatch(createNewFile(formData));
@@ -352,7 +353,12 @@ export const CreateMarkdownModalDialog = ({open, onClose}: ModalProps) => {
                         <div className=' flex flex-col '>
                           {fileIsSelected && !!file ? (
                             <>
-                              <div className='flex flex-wrap py-3 px-8 bg-grey-0 rounded-xl w-full items-center justify-between relative'>
+                              <div
+                                className={classNames(
+                                  'flex flex-wrap py-3 px-8 bg-grey-0 rounded-xl w-full items-center justify-between relative',
+                                  loading && 'pointer-events-none',
+                                )}
+                              >
                                 <div className='flex gap-4 items-center max-w-full'>
                                   <div className='flex w-56 pr-2 items-center'>
                                     {fileUploaded && (

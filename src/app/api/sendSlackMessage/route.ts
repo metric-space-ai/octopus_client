@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({data: slackResponse.data});
   } catch (error) {
-    console.error('Error sending message to Slack:', error);
-    return NextResponse.json({error: 'Error sending message to Slack'}, {status: 500});
+    console.error('Error sending feedback:', error);
+    return NextResponse.json({error: 'Error sending feedback'}, {status: 500});
   }
 }

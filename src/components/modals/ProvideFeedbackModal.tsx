@@ -50,7 +50,7 @@ export const ProvideFeedbackModal = ({open, onClose, message}: ModalProps) => {
     }
   }, [open, reset]);
 
-  const sendSlackMessage = async (message: string) => {
+  const sendSlackMessage = async (message: unknown) => {
     try {
       const response = await sendSlackMessageApi(message);
       return response.data;
@@ -85,90 +85,23 @@ export const ProvideFeedbackModal = ({open, onClose, message}: ModalProps) => {
     //   }
     // `;
 
-    const payload = {
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `*Feedback for message:*\n${message.response ?? 'N/A'}`,
-          },
-        },
-        {
-          type: 'section',
-          fields: [
-            {
-              type: 'mrkdwn',
-              text: `*Harmful:* ${data.harmful ? 'Yes' : 'No'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Untrue:* ${data.untrue ? 'Yes' : 'No'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Unhelpful:* ${data.unhelpful ? 'Yes' : 'No'}`,
-            },
-          ],
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `*Feedback:* ${data.feedback}`,
-          },
-        },
-        {
-          type: 'context',
-          elements: [
-            {
-              type: 'mrkdwn',
-              text: `*Used Model:* ${message.used_model ?? 'N/A'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Message Wasp App Id:* ${message.wasp_app_id ?? 'N/A'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Suggested Wasp App Id:* ${message.suggested_wasp_app_id ?? 'N/A'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Simple App Id:* ${message.simple_app_id ?? 'N/A'}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Suggested Simple App Id:* ${message.suggested_simple_app_id ?? 'N/A'}`,
-            },
-          ],
-        },
-        {
-          type: 'context',
-          elements: [
-            {
-              type: 'mrkdwn',
-              text: `*User:* ${message.profile.name ?? 'N/A'} / ${message.user_id}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Message Id:* ${message.id}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Workspace:* ${currentWorkspaceId}`,
-            },
-            {
-              type: 'mrkdwn',
-              text: `*Chatroom:* ${currentTicketId}`,
-            },
-          ],
-        },
-      ],
-    };
+    const payload = `Feedback for message: ${message.response ? `\n${message.response}` : 'N/A'}
+\nHarmful: ${data.harmful ? 'Yes' : 'No'} -- Untrue: ${data.untrue ? 'Yes' : 'No'} -- Unhelpful: ${
+      data.unhelpful ? 'Yes' : 'No'
+    }
+\nFeedback: ${data.feedback}
+Used Model: ${message.used_model ?? 'N/A'}
+Message Wasp App Id: ${message.wasp_app_id ?? 'N/A'}
+Suggested Wasp App Id: ${message.suggested_wasp_app_id ?? 'N/A'}
+Simple App Id: ${message.simple_app_id ?? 'N/A'}
+Suggested Simple App Id: ${message.suggested_simple_app_id ?? 'N/A'}
+User: ${message.profile.name ?? 'N/A'} / ${message.user_id}
+Message Id: ${message.id}
+Workspace: ${currentWorkspaceId}
+Chatroom: ${currentTicketId}`;
     // console.log({ticket, workspace, payload});
     try {
-      await sendSlackMessage(JSON.stringify(payload));
+      await sendSlackMessage(payload);
       toast.success('Feedback sent successfully!');
       onClose(); // Close modal after successful submission
     } catch (error) {

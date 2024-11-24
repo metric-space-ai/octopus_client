@@ -150,7 +150,9 @@ export const pdfToMarkdownApi = async (fileString: string) => {
       file: fileString,
     },
   };
-  return apiHub.post<TDirectCallResponse>(`api/v1/ai-functions/direct-call`, payload);
+  return apiHub.post<TDirectCallResponse>(`api/v1/ai-functions/direct-call`, payload, {
+    timeout: 120000, // 120 seconds
+  });
 };
 
 export const updateDocumentByIdApi = (documentId: string, payload: Pick<IDocument, 'file_name'>) => {

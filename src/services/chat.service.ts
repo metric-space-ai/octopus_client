@@ -16,7 +16,7 @@ import {
 import apiHub from '../hooks/useApiClient';
 
 //feedback-api
-export const sendSlackMessageApi = async (message: string) => {
+export const sendSlackMessageApi = async (message: unknown) => {
   // return apiHub.post<unknown>('api/sendSlackMessage', {message});
   const response = await axios.post('/api/sendSlackMessage', {message});
   return response.data;
