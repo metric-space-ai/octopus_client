@@ -2,6 +2,8 @@
 
 [Octopus Client](https://github.com/metric-space-ai/octopus_client) is a client part of [Octopus Software](https://github.com/metric-space-ai/octopus). It provides a web-based user interface that communicates with the [Octopus Server](https://github.com/metric-space-ai/octopus_server).
 
+![Octopus Client](https://github.com/metric-space-ai/octopus_server/blob/1e5a2df514f7ad32e6a20d1faa697207dcbb3ab5/data/screenshot.png)
+
 ## Octopus Client high-level features
 
 Octopus Client provides a user interface for the following Octopus Server features:
