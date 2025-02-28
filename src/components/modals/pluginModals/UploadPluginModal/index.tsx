@@ -71,7 +71,7 @@ export const UploadPluginModal = ({open, onClose}: ModalProps) => {
   const [pluginInstalled, setPluginInstalled] = useState(false);
   const [activatedCPU, setActivatedCPU] = useState<(keyof IDeviceMap)[] | []>([]);
   const [pluginType, setPluginType] = useState('Normal');
-  const [bypassCodeCheck, setBypassCodeCheck] = useState(false);
+  const [bypassCodeCheck, setBypassCodeCheck] = useState(true);
   const [color, setColor] = useState('');
 
   const inputFileRef = useRef<HTMLInputElement>(null);
