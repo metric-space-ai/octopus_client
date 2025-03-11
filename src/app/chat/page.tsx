@@ -55,10 +55,10 @@ export default function ChatPage() {
     enabledContentSafety,
     inputIsDesabled,
     deleteMessage,
-    selectedManualOllamaModel,
+    // selectedManualOllamaModel,
     selectedManualWaspApp,
     selectedManualAiFunc,
-    // selectedManualLlm,
+    selectedManualLlm,
   } = useChatStore();
   const {user} = useAuthContext();
 
@@ -143,11 +143,13 @@ export default function ChatPage() {
       message: userInput,
     };
     if (selectedManualAiFunc) payload.suggested_ai_function_id = selectedManualAiFunc.id;
-    // if (selectedManualLlm) payload.suggested_llm = selectedManualLlm;
-    if (selectedManualOllamaModel) payload.suggested_model = selectedManualOllamaModel.name;
+    if (selectedManualLlm) {
+      payload.suggested_llm = selectedManualLlm.llm;
+      payload.suggested_model = selectedManualLlm.model;
+    }
     if (selectedManualWaspApp) payload.suggested_wasp_app_id = selectedManualWaspApp.id;
 
-    //       selectedManualWaspApp
+    // selectedManualWaspApp
     // selectedManualOllamaModel
     // selectedManualAiFunc
     // selectedManualLlm

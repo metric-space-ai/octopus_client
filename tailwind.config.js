@@ -76,7 +76,7 @@ module.exports = {
         'chat-screen-height': 'calc(100vh - 72px)',
         'capture-button': '104px',
         84: '84px',
-        21: '5.25rem',        
+        21: '5.25rem',
         '34-px': '34px',
         '9.5': '2.375rem',
         'profile-drawer': '168px',

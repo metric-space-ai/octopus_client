@@ -31,6 +31,7 @@ import {
   ITicket,
   IWaspApp,
   IWorkspace,
+  TLlmSelected,
 } from '@/types';
 
 interface ChatStore {
@@ -48,11 +49,11 @@ interface ChatStore {
   selectedManualWaspApp: IWaspApp | undefined;
   selectedManualOllamaModel: IModel | undefined;
   selectedManualAiFunc: IAIFunctions | undefined;
-  selectedManualLlm: string | undefined;
+  selectedManualLlm: TLlmSelected | undefined;
   setSelectedManualWaspApp: (value: IWaspApp | undefined) => void;
   setSelectedManualOllamaModel: (value: IModel | undefined) => void;
   setSelectedManualAiFunc: (value: IAIFunctions | undefined) => void;
-  setSelectedManualLlm: (value: string | undefined) => void;
+  setSelectedManualLlm: (value: TLlmSelected | undefined) => void;
 
   checkChatInputIsDisabled: () => void;
   createNewWorkspace: (name: string, type: string) => void;
